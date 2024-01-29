@@ -12,8 +12,8 @@ public class PassWordEncodeTest {
 	@Test
 	public void 암호화() {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-		String result = encoder.encode("4444");
+		String result = encoder.encode("1234");
 		System.out.println(result);
-		assertTrue(encoder.matches("4444", result));
+		assertTrue(encoder.matches("1234", result));
 	}
 }

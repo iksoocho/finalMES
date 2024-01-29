@@ -7,8 +7,8 @@
 			   PASS,
 			   NAME,
 			   PHONE,
-			   'ROLE_' || upper(RESPONSBILITY) RESPONSBILITY
-		FROM MEMBER2
+			   'ROLE_' || upper(RESPONSIBILITY) RESPONSIBILITY
+		FROM MEMBER
 		WHERE MID = #{mid}
 	</select>
 </mapper>

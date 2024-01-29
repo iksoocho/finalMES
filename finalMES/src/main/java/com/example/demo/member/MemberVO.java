@@ -8,6 +8,6 @@ public class MemberVO {
 	String pass;
 	String name;
 	String phone;
-	String responsbility;
+	String responsibility;
 	
 }

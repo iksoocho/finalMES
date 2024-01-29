@@ -40,7 +40,7 @@
             th:classappend="${empStat.first} ? 'trbold'">
             <td th:text="${empStat.count}">1</td>
             <td><a
-               href="@{info.do(employeeId=${emp.employeeId}, name=${emp.firstName})}"
+               th:href="@{info.do(employeeId=${emp.employeeId}, name=${emp.firstName})}"
                th:text="${emp.employeeId}">100</a></td>
             <td th:text="|${emp.firstName} ${emp.lastName}|">scott</td>
             <td th:text="${#dates.format(emp.hireDate, 'yyyy-MM-dd')}">2024-01-01</td>
