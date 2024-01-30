@@ -14,8 +14,18 @@
 <link href="/css/styles.css" rel="stylesheet" />
 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
 	crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" /> 
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+
+
 </head>
 <body>
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<script src="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.js"></script>
+
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
 	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
 		<!-- Navbar Brand-->
 		<a class="navbar-brand ps-3" href="index.html">빠따 MES</a>
@@ -86,8 +96,12 @@
 						<div class="collapse" id="collapseLayouts2"
 							aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
-								<a class="nav-link" href="/empList">사원관리</a> 
-								<a class="nav-link" href="/">2</a>
+								<a class="nav-link" href="/orderInsert">주문 관리</a> 
+								<a class="nav-link" href="/orderList">주문 조회</a>
+								<a class="nav-link" href="/">입출고 관리</a>
+								<a class="nav-link" href="/">반품 관리</a>
+								<a class="nav-link" href="/">반품 조회</a>
+								<a class="nav-link" href="/">거래처 조회</a>
 							</nav>
 						</div>
 						
@@ -104,8 +118,11 @@
 						<div class="collapse" id="collapseLayouts3"
 							aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
-								<a class="nav-link" href="/empList">사원관리</a> 
-								<a class="nav-link" href="/">3</a>
+								<a class="nav-link" href="/matOrder">발주관리</a>
+								<a class="nav-link" href="/matInput">입고관리</a>
+								<a class="nav-link" href="/material">재고관리</a> 
+								<a class="nav-link" href="/matOutput">출고관리</a>
+								<a class="nav-link" href="/matReturn">반품관리</a>
 							</nav>
 						</div>
 						
@@ -122,8 +139,9 @@
 						<div class="collapse" id="collapseLayouts4"
 							aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
-								<a class="nav-link" href="/empList">사원관리</a> 
-								<a class="nav-link" href="/">4</a>
+								<a class="nav-link" href="/planManage">생산계획관리</a> 
+								<a class="nav-link" href="/planOrder">생산지시관리</a>
+								<a class="nav-link" href="/">공정실적관리</a>
 							</nav>
 						</div>
 						
@@ -158,8 +176,10 @@
 						<div class="collapse" id="collapseLayouts6"
 							aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
-								<a class="nav-link" href="/empList">사원관리</a> 
-								<a class="nav-link" href="/">6</a>
+								<a class="nav-link" href="/facManagement">설비관리</a> 
+								<a class="nav-link" href="/">설비점검관리</a>
+								<a class="nav-link" href="/facNotop">설비비가동관리</a>
+								<a class="nav-link" href="/">설비수리관리</a>
 							</nav>
 						</div>
 						
@@ -191,9 +211,11 @@
 			</footer>
 		</div>
 	</div>
+	
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
 		crossorigin="anonymous"></script>
 	<script src="/js/scripts.js"></script>
+	
 </body>
 </html>

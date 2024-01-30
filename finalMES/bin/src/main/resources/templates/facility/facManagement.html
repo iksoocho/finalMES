@@ -11,30 +11,32 @@
 <title>설비등록</title>
  <style>
         #layoutSidenav_content {
-            margin-top: 20px;
+            margin-top: 20px; /* 상단 마진 추가 */
         }
 		
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px; 
+            margin-bottom: 20px; /* 테이블 아래쪽 마진 추가 */
         }
 
         input[type="text"],
         input[type="date"] {
             width: 200px;
-            box-sizing: border-box; 
+            box-sizing: border-box; /* 입력 요소의 너비에 padding과 border 포함 */
         }
 
+        /* 체크박스 레이아웃 수정 */
         label {
-            display: block; 
-            margin-bottom: 5px; 
+            display: block; /* 각 라벨을 새로운 라인에 표시 */
+            margin-bottom: 5px; /* 라벨 아래쪽 마진 추가 */
         }
 
         input[type="checkbox"] {
-            margin-right: 5px; 
+            margin-right: 5px; /* 체크박스 사이 간격 추가 */
         }
 
+        /* 버튼 간격 조절 */
         button {
             margin-right: 5px;
         }
@@ -108,10 +110,6 @@
 				                <option value="account5">현진</option>
 		                	</select>
 						</td>
-					</tr>
-					<tr>
-						<th>이미지</th>
-						<td colspan="2"><input type="file"></td>
 					</tr>
 					<tr>
 						<td colspan="6">
@@ -252,7 +250,8 @@
 						</div>
 					</div>
 				</div>
-			</div>	
+			</div>
+		
 	</section>
 </body>
 </html>
