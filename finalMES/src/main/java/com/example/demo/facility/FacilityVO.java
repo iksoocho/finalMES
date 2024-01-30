@@ -1,5 +1,16 @@
 package com.example.demo.facility;
 
-public class FacilityVO {
+import java.util.Date;
 
+import lombok.Data;
+
+@Data
+public class FacilityVO {
+	String facCode;
+	String facName;
+	Number facHigtem;
+	Number facLowesttem;
+	Date facDate;
+	String facInscycle;
+	String facImage;
 }
