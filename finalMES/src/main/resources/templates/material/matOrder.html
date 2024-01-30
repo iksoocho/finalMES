@@ -240,11 +240,11 @@ button {
 
 
 
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">닫기</button>
-							<button type="button" class="btn btn-primary">작성완료</button>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">닫기</button>
+								<button type="button" class="btn btn-primary">작성완료</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -358,44 +358,44 @@ button {
 					</table>
 				</div>
 			</div>
-			<script>
-				function sortTableByOrderCode() {
-					var table, rows, switching, i, x, y, shouldSwitch;
-					table = document.getElementById("orderTable");
-					switching = true;
-					while (switching) {
-						switching = false;
-						rows = table.getElementsByTagName("tr");
-						for (i = 1; i < (rows.length - 1); i++) {
-							shouldSwitch = false;
-							x = rows[i].getElementsByTagName("td")[1];
-							y = rows[i + 1].getElementsByTagName("td")[1];
-							if (x.innerHTML.toLowerCase() > y.innerHTML
-									.toLowerCase()) {
-								shouldSwitch = true;
-								break;
-							}
-						}
-						if (shouldSwitch) {
-							rows[i].parentNode.insertBefore(rows[i + 1],
-									rows[i]);
-							switching = true;
+		</div>
+		<script>
+			function sortTableByOrderCode() {
+				var table, rows, switching, i, x, y, shouldSwitch;
+				table = document.getElementById("orderTable");
+				switching = true;
+				while (switching) {
+					switching = false;
+					rows = table.getElementsByTagName("tr");
+					for (i = 1; i < (rows.length - 1); i++) {
+						shouldSwitch = false;
+						x = rows[i].getElementsByTagName("td")[1];
+						y = rows[i + 1].getElementsByTagName("td")[1];
+						if (x.innerHTML.toLowerCase() > y.innerHTML
+								.toLowerCase()) {
+							shouldSwitch = true;
+							break;
 						}
 					}
+					if (shouldSwitch) {
+						rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+						switching = true;
+					}
 				}
-				$(document).ready(
-						function() {
-							window.toggleCheckboxes = function() {
-								// #selectAllCheckbox 체크박스의 상태 가져오기
-								var isChecked = $("#selectAllCheckbox").prop(
-										"checked");
+			}
+			$(document).ready(
+					function() {
+						window.toggleCheckboxes = function() {
+							// #selectAllCheckbox 체크박스의 상태 가져오기
+							var isChecked = $("#selectAllCheckbox").prop(
+									"checked");
 
-								// 모든 체크박스의 상태를 변경
-								$(".moreInfo input[type='checkbox']").prop(
-										"checked", isChecked);
-							}
-						});
-			</script>
+							// 모든 체크박스의 상태를 변경
+							$(".moreInfo input[type='checkbox']").prop(
+									"checked", isChecked);
+						}
+					});
+		</script>
 	</section>
 </body>
 </html>
