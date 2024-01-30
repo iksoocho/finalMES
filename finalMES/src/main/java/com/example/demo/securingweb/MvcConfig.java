@@ -20,6 +20,7 @@ public class MvcConfig implements WebMvcConfigurer {
 		registry.addViewController("/management").setViewName("facility/management");
 		// asdasdsadfgadfgasdfg
 		
+
 		// 강현진
 		// 발주관리
 		registry.addViewController("/matOrder").setViewName("material/matOrder");
@@ -31,6 +32,12 @@ public class MvcConfig implements WebMvcConfigurer {
 		registry.addViewController("/matOutput").setViewName("material/matOutput");
 		// 반품관리
 		registry.addViewController("/matReturn").setViewName("material/matReturn");
+
+		
+		//생산
+		registry.addViewController("/planManage").setViewName("produce/planManage");
+		registry.addViewController("/planOrder").setViewName("produce/planOrder");
+
 
 	}
 
