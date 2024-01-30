@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>생산지시관리</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container">
+			<!-- ============================모달창============================ -->
+			<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">title</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<!-- ============================모달 내용============================ -->
+						<div class="modal-body">
+							<div>
+								<h4>생산계획서</h4>
+								<!-- <button class="btn btn-secondary" style="float: right; margin: 0 5px;">선택</button> -->
+								<table class="table">
+									<thead>
+										<tr>
+											<th></th>
+											<th>생산계획코드</th>
+											<th>생산계획명</th>
+											<th>담당자</th>
+											<th>계획일자</th>
+											<th>비고</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><input type="checkbox"></td>
+											<td>계획코드</td>
+											<td>계획명</td>
+											<td>담당자</td>
+											<td>계획일자</td>
+											<td>비고</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="mt-5">
+								<h4>생산상세계획</h4>
+								<table class="table">
+									<thead>
+										<tr>
+											<th>생산계획코드</th>
+											<th>제품코드</th>
+											<th>계획량</th>
+											<th>계획시작일자</th>
+											<th>계획종료일자</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th>생산계획코드</th>
+											<th>제품코드</th>
+											<th>계획량</th>
+											<th>계획시작일자</th>
+											<th>계획종료일자</th>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save
+								changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- ============================메인============================ -->
+			<h2>생산지시관리</h2>
+			<div>
+				<div>
+					<button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button>
+					<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right;">생산계획서 조회</button>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>No</th>
+								<th>생산지시코드</th>
+								<th>주문코드</th>
+								<th>계획명</th>
+								<th>담당자</th>
+								<th>생산지시일자</th>
+								<th>납기/마감일자</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>계획코드</td>
+								<td>주문코드</td>
+								<td><input type="text"></td>
+								<td><input type="text"></td>
+								<td><input type="date"></td>
+								<td><input type="date"></td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- ============================생산상세계획============================ -->
+				<div class="mt-4">
+					<button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>생산지시코드</th>
+								<th>제품코드</th>
+								<th>공정코드</th>
+								<th>계획량</th>
+								<th>지시량</th>
+								<th>작업자</th>
+								<th>비고</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>지시코드</td>
+								<td>제품코드</td>
+								<td>공정코드</td>
+								<td>계획량</td>
+								<td><input type="number"></td>
+								<td><input type="text"></td>
+								<td><input type="text"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- ============================BOM============================ -->
+				<div class="mt-4">
+					<button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>자재코드</th>
+								<th>수량</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>지시코드</td>
+								<td>제품코드</td>
+								<td>공정코드</td>
+								<td>계획량</td>
+								<td><input type="number"></td>
+								<td><input type="text"></td>
+								<td><input type="text"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</section>
+</body>
+
+
+</html>

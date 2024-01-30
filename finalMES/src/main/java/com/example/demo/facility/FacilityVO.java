@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class FacilityVO {
 	String facCode;
+	String businessCode;
 	String facName;
 	Number facHigtem;
 	Number facLowesttem;
