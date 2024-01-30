@@ -19,6 +19,7 @@ public class EmpController {
 	EmpMapper empMapper;
 
 	
+
 //	  @GetMapping("/empList") 
 //	  public String list(Model model) {
 //		  model.addAttribute("list", empMapper.getEmpList(null)); 
@@ -31,5 +32,8 @@ public class EmpController {
 	public List<EmpVO> getEmpList() {
 		return empMapper.getEmpList(null);
 	}
+
+	
+
 
 }

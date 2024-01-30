@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>비가동관리</title>
+<style>
+th, td {
+	border: 1px solid black;
+	padding: 8px;
+	text-align: center;
+}
+
+table, th, td {
+	border: none;
+}
+
+.select {
+	text-align: center;
+}
+</style>
+</head>
+<body>
+	<section layout:fragment="content">
+		<h1>비가동관리</h1>
+		<div class="container text-center">
+			<div class="row">	
+				<div class="col">
+					<br>
+					<input class="select" type="text" placeholder="설비명을 입력하세요" />
+					<button>조회</button>
+					<br>
+					<table>
+						<thead>
+							<tr>
+								<th>No.</th>
+								<th>설비점검코드</th>
+								<th>설비코드</th>
+								<th>설비명</th>
+								<th>담당자</th>
+								<th>설비상태</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td></td>
+								<td>1</td>
+								<td>1</td>
+								<td>분쇄기</td>
+								<td>박규현</td>
+								<td>사용대기</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>2</td>
+								<td>2</td>
+								<td>추출기</td>
+								<td>조익수</td>
+								<td>사용대기</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>3</td>
+								<td>3</td>
+								<td>배합기</td>
+								<td>윤성오</td>
+								<td>비가동</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>4</td>
+								<td>4</td>
+								<td>혼합기</td>
+								<td>김준성</td>
+								<td>비가동</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>5</td>
+								<td>5</td>
+								<td>여과기</td>
+								<td>강현진</td>
+								<td>사용중</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col">
+					<h3>비가동등록 들어갈거임</h3>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
