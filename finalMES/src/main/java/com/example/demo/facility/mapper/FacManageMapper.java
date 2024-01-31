@@ -8,5 +8,4 @@ import com.example.demo.facility.FacManageVO;
 public interface FacManageMapper {
 	public FacManageVO getFacManage(String facCode);
 	public List<FacManageVO> getfacList(FacManageVO facManageVO);
-	
 }

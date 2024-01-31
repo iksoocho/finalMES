@@ -6,6 +6,8 @@ import com.example.demo.facility.FacManageVO;
 
 public interface FacManageService {
 	public FacManageVO getFacility(String facCode);
-	public List<FacManageVO> FacList(FacManageVO faManageVO);
-
+	// 리스트
+	public List<FacManageVO> FacList(FacManageVO facManageVO);
+	// 등록
+	
 }

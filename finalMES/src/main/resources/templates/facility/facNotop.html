@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <head>
 <meta charset="UTF-8">
 <title>비가동관리</title>
@@ -38,7 +41,6 @@ table, th, td {
 						<thead>
 							<tr>
 								<th>No.</th>
-								<th>설비점검코드</th>
 								<th>설비코드</th>
 								<th>설비명</th>
 								<th>담당자</th>
@@ -46,15 +48,14 @@ table, th, td {
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td></td>
-								<td>1</td>
-								<td>1</td>
-								<td>분쇄기</td>
-								<td>박규현</td>
-								<td>사용대기</td>
+							<tr th:each="fac: ${list}">
+							<td th:text="${facStat.count}"></td>
+								<td th:text="${fac.facCode}"></td>
+								<td th:text="${fac.facPerson}"></td>
+								<!-- 날짜변환  -->
+								<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
 							</tr>
-							<tr>
+							<!-- <tr>
 								<td></td>
 								<td>2</td>
 								<td>2</td>
@@ -85,13 +86,15 @@ table, th, td {
 								<td>여과기</td>
 								<td>강현진</td>
 								<td>사용중</td>
-							</tr>
+							</tr> -->
 						</tbody>
 					</table>
 				</div>
 				<div class="col">
 					
 				</div>
+			</div>
+		</div>
 	</section>
 </body>
 </html>

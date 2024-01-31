@@ -5,23 +5,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.example.demo.facility.mapper.FacManageMapper;
-
+import com.example.demo.facility.mapper.FacNotopMapper;
 
 @Controller
-public class FacManageController {
+public class FacNotopController {
 	
 	@Autowired
-	FacManageMapper facManageMapper;
-
-	// 설비 전체조회
-	@GetMapping("/facManagement")
-	public String list(Model model) {
-		model.addAttribute("list", facManageMapper.getfacList(null));
-		return "facility/facManagement";
-
-	}
+	FacNotopMapper facNotopMapper;
 	
-	// 설비등록
-
- }
+	// 비가동조회
+	@GetMapping("/facNotop")
+	public String list(Model model) {
+		model.addAttribute("list", facNotopMapper.getfacNotList(null));
+		return "facility/facNotop";
+	}
+}

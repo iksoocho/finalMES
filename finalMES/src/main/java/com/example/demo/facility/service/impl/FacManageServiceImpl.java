@@ -21,11 +21,10 @@ public class FacManageServiceImpl implements FacManageService {
 	}
 
 	@Override
-	public List<FacManageVO> FacList(FacManageVO facilityVO) {
-		return facManageMapper.getfacList(facilityVO);
+	public List<FacManageVO> FacList(FacManageVO facManageVO) {
+		return facManageMapper.getfacList(facManageVO);
 	}
 
-	
+	 
 
-	}
-
+}
