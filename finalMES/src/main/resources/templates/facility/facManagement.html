@@ -1,77 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org"
-	layout:decorate="~{layout}">
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <title>설비등록</title>
- <style>
-        #layoutSidenav_content {
-            margin-top: 20px; /* 상단 마진 추가 */
-        }
-		
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px; /* 테이블 아래쪽 마진 추가 */
-        }
+<style>
+#layoutSidenav_content {
+	margin-top: 20px;
+}
 
-        input[type="text"],
-        input[type="date"] {
-            width: 200px;
-            box-sizing: border-box; /* 입력 요소의 너비에 padding과 border 포함 */
-        }
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
 
-        /* 체크박스 레이아웃 수정 */
-        label {
-            display: block; /* 각 라벨을 새로운 라인에 표시 */
-            margin-bottom: 5px; /* 라벨 아래쪽 마진 추가 */
-        }
+input[type="text"], input[type="date"] {
+	width: 200px;
+	box-sizing: border-box;
+}
 
-        input[type="checkbox"] {
-            margin-right: 5px; /* 체크박스 사이 간격 추가 */
-        }
+label {
+	display: block;
+	margin-bottom: 5px;
+}
 
-        /* 버튼 간격 조절 */
-        button {
-            margin-right: 5px;
-        }
-		label {
-			
-		}
-		#myModal3 {
-			text-align: center;
-		}
+input[type="checkbox"] {
+	margin-right: 5px;
+}
+
+button {
+	margin-right: 5px;
+}
+
+label {
+	
+}
+
+#myModal3 {
+	text-align: center;
+}
 </style>
 </head>
 <body>
-<section layout:fragment="content">
+	<section layout:fragment="content">
 
 		<div id="layoutSidenav_content" class="container text-center">
 			<table class="table">
 				<tbody>
 					<tr>
-                    	<th>설비코드 *</th>
-                    	<td colspan="2"><input type="text" id="equipmentCode"
-                        name="equipmentCode" required></td>
-                    	<th>설비명 *</th>
-                    	<td colspan="2"><input type="text" id="equipmentName"
-                        name="equipmentName" required data-toggle="modal"
-                        data-target="#myModal1"></td>
-                	</tr>
-					 <tr>
-                    	<th>공정코드 *</th>
-                    	<td colspan="2"><input type="text" id="processCode"
-                        name="processCode" required></td>
-                    	<th>공정명 *</th>
-                    	<td colspan="2"><input type="text" id="processName"
-                        name="processName" required data-toggle="modal"
-                        data-target="#myModal2"></td>
-                	</tr>
+						<th>설비코드 *</th>
+						<td colspan="2"><input type="text" id="equipmentCode"
+							name="equipmentCode" required></td>
+						<th>설비명 *</th>
+						<td colspan="2"><input type="text" id="equipmentName"
+							name="equipmentName" required data-toggle="modal"
+							data-target="#myModal1"></td>
+					</tr>
+					<tr>
+						<th>공정코드 *</th>
+						<td colspan="2"><input type="text" id="processCode"
+							name="processCode" required></td>
+						<th>공정명 *</th>
+						<td colspan="2"><input type="text" id="processName"
+							name="processName" required data-toggle="modal"
+							data-target="#myModal2"></td>
+					</tr>
 					<tr>
 						<th>최고온도</th>
 						<td colspan="2"><input type="text" id="purchaseDate"
@@ -83,175 +84,191 @@
 					<tr>
 						<th>담당자 *</th>
 						<td colspan="2"><input type="text" id="facName"
-                        name="facName" required data-toggle="modal"
-                        data-target="#myModal3"></td>
-                		<th>점검주기 선택</th>
-		                	<td>
-		                    	<select id="checkInterval" name="checkInterval">
-		                    		<option value="daily">선택</option>
-				                       <option value="daily">매일</option>
-				                       <option value="weekly">매주</option>
-				                       <option value="monthly">매월(30일)</option>
-		                    	</select>
-		                	</td>
+							name="facName" required data-toggle="modal"
+							data-target="#myModal3"></td>
+						<th>점검주기 선택</th>
+						<td><select id="checkInterval" name="checkInterval">
+								<option value="daily">선택</option>
+								<option value="daily">매일</option>
+								<option value="weekly">매주</option>
+								<option value="monthly">매월(30일)</option>
+						</select></td>
 					</tr>
-					<tr>					
+					<tr>
 						<th>입고일</th>
 						<td colspan="2"><input type="date" id="purchaseDate"
 							name="purchaseDate" required></td>
 						<th>제조업체</th>
-						<td>
-							<select id="checkInterval" name="checkInterval">
+						<td><select id="checkInterval" name="checkInterval">
 								<option value="account">제조업체명</option>
-		                    	<option value="account1">익수</option>
-				                <option value="account2">준성</option>
-				                <option value="account3">규현</option>
-				                <option value="account4">성오</option>
-				                <option value="account5">현진</option>
-		                	</select>
-						</td>
+								<option value="account1">익수</option>
+								<option value="account2">준성</option>
+								<option value="account3">규현</option>
+								<option value="account4">성오</option>
+								<option value="account5">현진</option>
+						</select></td>
 					</tr>
 					<tr>
-						<td colspan="6">
-							<button type="submit" class="btn btn-outline-success">저장</button>
-							<button type="button" class="btn btn-outline-danger">삭제</button>
-							<button type="button" class="btn btn-outline-info">
-								<a href="/facList">설비조회</a>
-							</button>
-						</td>
+						<th>이미지</th>
+						<td colspan="2"><input type="file"></td>
+					</tr>		
+				</tbody>
+				
+				<!-- 하단의 설비 리스트 -->
+				<tr>
+					<th>No.</th>
+					<th>설비코드</th>
+					<th>설비명</th>
+					<th>담당자</th>
+					<th>입고일</th>
+				</tr>
+				<tbody>
+					<tr th:each="fac: ${list}">
+					<td th:text="${facStat.count}"></td>
+						<td th:text="${fac.facCode}"></td>
+						<td th:text="${fac.facName}"></td>
+						<td th:text="${fac.facPerson}"></td>
+						<!-- 날짜변환  -->
+						<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
 					</tr>
 				</tbody>
-			</table>
+				<tr>
+				<td colspan="6">
+					<button type="submit" class="btn btn-outline-success">저장</button>
+					<button type="button" class="btn btn-outline-danger">삭제</button>
+				</td>
+			</tr>
+			</table>			
 		</div>
 
 
 
 		<!-- 설비코드 모달창 -->
-			<div class="modal" id="myModal1">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<!-- 모달 헤더 -->
-						<div class="modal-header">
-							<h4 class="modal-title">설비명</h4>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-						</div>
-						<div class="modal-body">
-							<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-							<table class="table">
-								<thead>
-							        <tr>
-							        	<th>No.</th>
-							        	<th>설비명</th>
-							        	<th>제조업체</th>
-							        </tr>
-							     </thead>
-							     <tbody>
-							     	 <tr>
-							         	<th>1</th>
-							          	<th>분쇄기</th>
-							          	<th>분쇄제조업체_A</th>
-							        </tr>
-							         <tr>
-							         	<th>2</th>
-							          	<th>혼합기</th>
-							          	<th>혼합제조업체_A</th>
-							        </tr>
-							     </tbody>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal">닫기</button>
-						</div>
+		<div class="modal" id="myModal1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 모달 헤더 -->
+					<div class="modal-header">
+						<h4 class="modal-title">설비명</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>설비명</th>
+									<th>제조업체</th>
+								</tr>
+							</thead>
+							<tbody>
+							<tr th:each="fac: ${list}">
+								<td th:text="${fac.facName}"></td>
+								<td th:text="${fac.facPerson}"></td>
+								<!-- 날짜변환  -->
+								<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
+							</tr>
+								<tr>
+									<th>2</th>
+									<th>혼합기</th>
+									<th>혼합제조업체_A</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
 					</div>
 				</div>
 			</div>
-			
-			<!-- 공정명모달 -->
-			<div class="modal" id="myModal2">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<!-- 모달 헤더 -->
-						<div class="modal-header">
-							<h4 class="modal-title">공정명</h4>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-						</div>
-						<div class="modal-body">
-							<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-							<table class="table">
-								<thead>
-							        <tr>
-							        	<th>No.</th>
-							        	<th>공정명</th>
-							        	<th>공정코드</th>
-							        </tr>
-							     </thead>
-							     <tbody>
-							     	 <tr>
-							         	<th>1</th>
-							          	<th>아메리카노</th>
-							          	<th>Ame_01</th>
-							        </tr>	
-							         <tr>
-							         	<th>2</th>
-							          	<th>스위트아메리카노</th>
-							          	<th>SweAme_01</th>
-							        </tr>				        
-							     </tbody>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal">닫기</button>
-						</div>
+		</div>
+
+		<!-- 공정명모달 -->
+		<div class="modal" id="myModal2">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 모달 헤더 -->
+					<div class="modal-header">
+						<h4 class="modal-title">공정명</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>공정명</th>
+									<th>공정코드</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>1</th>
+									<th>아메리카노</th>
+									<th>Ame_01</th>
+								</tr>
+								<tr>
+									<th>2</th>
+									<th>스위트아메리카노</th>
+									<th>SweAme_01</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
 					</div>
 				</div>
 			</div>
-			
-			<!-- 담당자모달 -->
-			<div class="modal" id="myModal3">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<!-- 모달 헤더 -->
-						<div class="modal-header">
-							<h4 class="modal-title">담당자명</h4>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-						</div>
-						<div class="modal-body">
-							<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-							<table class="table">
-								<thead>
-							        <tr>
-							        	<th>담당자</th>
-							        </tr>
-							     </thead>
-							     <tbody>
-							     	 <tr>
-							         	<th>조익수</th>
-							        </tr>
-							         <tr>
-							         	<th>김준성</th>
-							        </tr>
-							        <tr>
-							         	<th>박규현</th>
-							        </tr>
-							        <tr>
-							         	<th>윤성오</th>
-							        </tr>
-							        <tr>
-							         	<th>강현진</th>
-							        </tr>
-							     </tbody>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal">닫기</button>
-						</div>
+		</div>
+
+		<!-- 담당자모달 -->
+		<div class="modal" id="myModal3">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 모달 헤더 -->
+					<div class="modal-header">
+						<h4 class="modal-title">담당자명</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>담당자</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>조익수</th>
+								</tr>
+								<tr>
+									<th>김준성</th>
+								</tr>
+								<tr>
+									<th>박규현</th>
+								</tr>
+								<tr>
+									<th>윤성오</th>
+								</tr>
+								<tr>
+									<th>강현진</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
 					</div>
 				</div>
 			</div>
-		
+		</div>
 	</section>
 </body>
 </html>

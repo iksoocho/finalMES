@@ -6,146 +6,196 @@
 <meta charset="UTF-8">
 <title>발주 관리 ^^</title>
 <style>
+th {
+	background-color: rgba(250, 250, 250);
+}
+
+.containerOne {
+	margin: 20px;
+	text-align: center;
+}
+
+.containerTwo {
+	margin-top: 20px;
+}
+
+table {
+	width: 100%;
+}
+
+h4 {
+	text-align: left;
+}
+
+tr {
+	height: 42px;
+}
+
+input[type=text], input[type=date], select {
+	width: 90%;
+}
+
+.orderInfoOne th {
+	border: solid 1px gray;
+	text-align: center;
+	width: 156px;
+}
+
+.orderInfoOne td, .orderInfoTwo td {
+	border: solid 1px gray;
+	width: 500px;
+}
+
+.orderInfoTwo {
+	margin-top: 10px;
+	border: solid 1px gray;
+}
+
+.orderInfoTwo th {
+	border: solid 1px gray;
+	width: 156px;
+}
+
+.moreInfo, .moreInfo th, .moreInfo td, .orderInfoOne {
+	border: solid 1px gray;
+}
+
+.ttlCount {
+	text-align: right;
+	padding-right: 10px;
+}
+
+h5 {
+	display: inline-block;
+	float: left;
+	margin-top: 8px;
+}
+
 button {
 	float: right;
-	background-color: #0080ff;
-	color: #ffffff;
-	border: none;
-	padding: 10px 20px;
-	border-radius: 5px;
-	font-size: 16px;
+	margin-right: 5px;
+	margin-bottom: 10px;
 }
 
-#moreInfo {
-	border: solid 1px black;
-	justify-content: center;
-	align-items: center;
+.space {
+	height: 10px;
+	border: solid 1px #fff;
 }
 
-#moreInfo th {
-	border: solid 1px black;
+.number {
+	text-align: right;
+	padding-right: 10px;
 }
 
-#moreInfo td {
-	border: solid 1px black;
+.containerThree {
+	margin-top: 30px;
+}
+
+.red {
+	color: red;
+}
+
+.serch {
+	padding-left: 11px;
+	padding-right: 22px;
+}
+
+.serch input {
+	margin-top: 1px;
+	width: 40%;
+	background-color: rgba(250, 250, 250);
+	border: solid 1px gray;
+	border-radius: 2px;
+}
+
+.serch button {
+	margin: 0px;
+	width: 50px;
+	height: 30px;
+}
+
+.serch p {
+	font-size: 12px;
+}
+
+.readInput {
+	background-color: rgba(250, 250, 250);
+	border: solid 1px gray;
+	border-radius: 2px;
+}
+
+.total {
+	background-color: rgba(255, 0, 0, 0.5);
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<section layout:fragment="content">
-		<div class="container">
-			<h1>발주 관리</h1>
-			<div>
-				<button class="btn btn-info" data-bs-toggle="modal"
-					data-bs-target="#exampleModal">등록</button>
+		<div class=""></div>
+		<h1>발주 관리</h1>
+		<div>
 
-				<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
-					aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel">발주 등록</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								<table class="table">
-									<thead>
-										<tr>
-											<th>발주 코드</th>
-											<td><input type="text"></td>
-											<th>발주 명</th>
-											<td><input type="text"></td>
-											<td></td>
-											<td></td>
-										</tr>
-										<tr>
-											<th>자재 코드</th>
-											<td><input type="text"></td>
-											<th>거래처 명</th>
-											<td><input type="text"></td>
-											<td></td>
-											<td></td>
-										</tr>
-										<tr>
-											<th>수량</th>
-											<td><input type="number"></td>
-											<th>발주일</th>
-											<td><input type="date"></td>
-											<th>담당자</th>
-											<td><input type="text"></td>
-											<td></td>
-										</tr>
-									</thead>
-								</table>
-								<button>초기화</button>
-								<br>
-								<div>
-									<h5>상세정보</h5>
-									<button>삭제</button>
-									<button>추가</button>
-									<button>품목정보 불러오기</button>
-									<br> <br>
-									<table class="table" id="moreInfo">
-										<tr>
-											<th rowspan="2"></th>
-											<th rowspan="2"><input type="checkbox"></th>
-											<th colspan="2">품목정보</th>
-											<th rowspan="2">납기일자</th>
-											<th colspan="3">금액정보</th>
-											<th rowspan="2">비고</th>
-										</tr>
-										<tr>
-											<th>품목명</th>
-											<th>단위</th>
-											<th>수량</th>
-											<th>단가</th>
-										</tr>
-									</table>
-								</div>
+			<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">발주 등록</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>발주 코드</th>
+										<td><input type="text"></td>
+										<th>발주 명</th>
+										<td><input type="text"></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<th>자재 코드</th>
+										<td><input type="text"></td>
+										<th>거래처 명</th>
+										<td><input type="text"></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<th>수량</th>
+										<td><input type="number"></td>
+										<th>발주일</th>
+										<td><input type="date"></td>
+										<th>담당자</th>
+										<td><input type="text"></td>
+										<td></td>
+									</tr>
+								</thead>
+							</table>
+							<button>초기화</button>
+						</div>
 
 
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary"
-									data-bs-dismiss="modal">닫기</button>
-								<button type="button" class="btn btn-primary">작성완료</button>
-							</div>
+
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-primary">작성완료</button>
 						</div>
 					</div>
 				</div>
-
-
-				<table id="orderTable" class="table">
-					<tbody>
-						<tr>
-							<th>No.</th>
-							<th onclick="sortTableByOrderCode()">발주코드 (정렬기능 넣자)</th>
-							<th>발주명</th>
-							<th>자재 코드</th>
-							<th>거래처 명</th>
-							<th>수량</th>
-							<th>발주일</th>
-							<th>납기일</th>
-							<th>담당자</th>
-						</tr>
-						<tr>
-							<th>1</th>
-							<th>mat_code</th>
-							<th>라벨지</th>
-							<th>mat_label</th>
-							<th>포스코</th>
-							<th>5000</th>
-							<th>2024-01-30</th>
-							<th>2024-02-02</th>
-							<th>강현진</th>
-						</tr>
-					</tbody>
-				</table>
 			</div>
+			<button class="btn btn-primary" data-bs-toggle="modal"
+				data-bs-target="#exampleModal">등록</button>
+		
+
 		</div>
-		<script>
+		<div id="grid"></div>
+		<script th:inline="javascript">
 			function sortTableByOrderCode() {
 				var table, rows, switching, i, x, y, shouldSwitch;
 				table = document.getElementById("orderTable");
@@ -169,6 +219,70 @@ button {
 					}
 				}
 			}
+
+			$(document).ready(
+					function() {
+						window.toggleCheckboxes = function() {
+							// #selectAllCheckbox 체크박스의 상태 가져오기
+							var isChecked = $("#selectAllCheckbox").prop(
+									"checked");
+
+							// 모든 체크박스의 상태를 변경
+							$(".moreInfo input[type='checkbox']").prop(
+									"checked", isChecked);
+						}
+					});
+			
+			
+			 let order = [[${list}]]
+			
+			 const grid = new tui.Grid({
+		            el: document.getElementById('grid'),
+		            data: order, // 여기서 emps 데이터를 사용
+		            scrollX: false,
+		            scrollY: false,
+			      columns: [
+			        {
+			          header: '발주코드',
+			          name: 'matOrCode'
+			        },
+			        {
+			          header: '발주명',
+			          name: 'matOrName'
+			        },
+			        {
+			          header: '자재코드',
+			          name: 'matCode'
+			        },
+			        {
+			          header: '거래처명',
+			          name: 'busineesName'
+			        },
+			        {
+			          header: '수량',
+			          name: 'matOrCount'
+			        },
+			        {
+				          header: '발주일',
+				          name: 'genre'
+				    },
+				    {
+				          header: '납기일',
+				          name: 'genre'
+				    },
+				    {
+				          header: '담당자',
+				          name: 'matOrManager'
+				    }
+			      ],
+			      rowHeaders: ['rowNum'],
+		            pageOptions: {
+		                useClient: true,
+		                perPage: 5
+		            }
+			    });
+			
+			
 		</script>
 	</section>
 </body>

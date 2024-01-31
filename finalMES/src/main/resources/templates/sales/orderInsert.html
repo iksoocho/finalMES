@@ -4,9 +4,9 @@
 	layout:decorate="~{layout}">
 
 <head>
-
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
 th {
 	background-color: rgba(250, 250, 250);
@@ -130,6 +130,7 @@ button {
 	background-color: rgba(255, 0, 0, 0.5);
 }
 </style>
+
 </head>
 <body>
 	<section layout:fragment="content">
@@ -154,7 +155,9 @@ button {
 						<th class="red">담당자</th>
 						<td class="serch"><input type="text" readonly> <input
 							type="text" readonly>
-							<button class="btn btn-primary">
+
+							<button type="button" class="btn btn-primary"
+								data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 								<p>검색</p>
 							</button></td>
 						<th>담당자 연락처</th>
@@ -190,8 +193,7 @@ button {
 				<table class="moreInfo">
 					<tr>
 						<th rowspan="2"></th>
-						<th rowspan="2"><input type="checkbox" id="selectAllCheckbox"
-							onclick="toggleCheckboxes()"></th>
+						<th rowspan="2"><input type="checkbox"></th>
 						<th colspan="2">품목정보</th>
 						<th rowspan="2">납기일자</th>
 						<th colspan="3">금액정보</th>
@@ -240,22 +242,41 @@ button {
 				</table>
 			</div>
 		</div>
+
+
+		<!-- Modal -->
+		<!-- ManagerListModal -->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+			data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel">주문 담당자
+							목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<ul>
+							<li th:each="manager : ${managerList}" th:text="${manager}"></li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Understood</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</section>
-</body>
-<!-- jQuery 스크립트를 먼저 로드 -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<!-- 스크립트 코드 추가 -->
-<script>
-	$(document).ready(function() {
-		window.toggleCheckboxes = function() {
-			// #selectAllCheckbox 체크박스의 상태 가져오기
-			var isChecked = $("#selectAllCheckbox").prop("checked");
 
-			// 모든 체크박스의 상태를 변경
-			$(".moreInfo input[type='checkbox']").prop("checked", isChecked);
-		}
-	});
-</script>
 
+
+	<script>
+		
+	</script>
 </html>
 
