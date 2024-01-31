@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,18 +21,20 @@ public class EmpController {
 
 	
 
-//	  @GetMapping("/empList") 
-//	  public String list(Model model) {
-//		  model.addAttribute("list", empMapper.getEmpList(null)); 
-//		  return "emp/empList";
-//	  }
-	 
+	
+	 @GetMapping("/empList")
+	 public String list(Model model) { 
+	 model.addAttribute("list", empMapper.getEmpList(null));
+	 return "emp/empList";
+	 }
+	 	 
 
-	@GetMapping("empList")
-	@ResponseBody
-	public List<EmpVO> getEmpList() {
-		return empMapper.getEmpList(null);
-	}
+	/*
+	 * @GetMapping("empList")
+	 * 
+	 * @ResponseBody public List<EmpVO> getEmpList() { return
+	 * empMapper.getEmpList(null); }
+	 */
 
 	
 

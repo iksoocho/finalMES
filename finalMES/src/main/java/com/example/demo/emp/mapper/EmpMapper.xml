@@ -4,6 +4,6 @@
 <mapper namespace="com.example.demo.emp.mapper.EmpMapper">
 	<select id="getEmpList" resultType="EmpVO">
 		SELECT rownum id, e.* 
-		FROM employees e
+		FROM employee e
 	</select>
 </mapper>

@@ -17,13 +17,14 @@ public class MvcConfig implements WebMvcConfigurer {
 		// 영업관리
 		registry.addViewController("/orderInsert").setViewName("sales/orderInsert");
 		registry.addViewController("/orderList").setViewName("sales/orderList");
-
+		
 		
 		// 설비파트
 		registry.addViewController("/facManagement").setViewName("facility/facManagement");
 		registry.addViewController("/facList").setViewName("facility/facList");
 		registry.addViewController("/facNotop").setViewName("facility/facNotop");
-		
+		registry.addViewController("/facRepair").setViewName("facility/facRepair");
+		registry.addViewController("/facRepList").setViewName("facility/facRepList");
 
 		// asdasdsadfgadfgasdfg
 		
