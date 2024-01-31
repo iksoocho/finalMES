@@ -17,4 +17,13 @@ public class MaterialVO {
 	private int matOutputCount;
 	private int matCount;
 	private String matManager;
+	
+	private String matOrCode;
+	private String matOrName;
+	private String busineesName;
+	private String matOrCount;
+	private String matOrManager;
+	
+	
+	
 }
