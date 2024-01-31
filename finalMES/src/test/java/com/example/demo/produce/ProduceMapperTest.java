@@ -1,4 +1,4 @@
-package com.example.demo.emp;
+package com.example.demo.produce;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,17 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.emp.mapper.EmpMapper;
+import com.example.demo.produce.mapper.InsMapper;
 
 @SpringBootTest
-public class EmpMapperTest {
-	
+public class ProduceMapperTest {
+
 	@Autowired
-	EmpMapper empMapper;
+	InsMapper insMapper;
 	
 	@Test
-	public void 전체조회() {
-		List<EmpVO> list = empMapper.getEmpList(null);
+	public void insList() {
+		List<ProdInsVO> list = insMapper.getInsList(null);
 		assertThat(list.isEmpty()).isEqualTo(false);
 	}
+	
 }

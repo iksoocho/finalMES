@@ -1,58 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
- 	  layout:decorate="~{layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
 <title>empList.html</title>
 
 </head>
 <body>
-<section layout:fragment="content">
-	 <div id="grid"></div>
-	 
-
-    <script>
+	<section layout:fragment="content">
+		<div id="grid"></div>
+		
+		<script th:inline="javascript">
+			let emps = [[${list}]]
+			console.log(emps);
+		
         // TOAST UI Grid 초기화
-        const grid = new tui.Grid({
+         const grid = new tui.Grid({
             el: document.getElementById('grid'),
+            data: emps, // 여기서 emps 데이터를 사용
             scrollX: false,
             scrollY: false,
             columns: [
-                
                 { header: 'Employee ID', name: 'employeeId' },
-                { header: 'Name', name: 'name' },
+                { 
+                    header: 'Name', 
+                    name : 'lastName'
+                },
                 { header: 'Hire Date', name: 'hireDate' },
                 { header: 'Salary', name: 'salary' },
-                { header: 'Grade', name: 'grade' }
+                { 
+                    header: 'Grade', 
+                    formatter: function({row}) {
+                        return row.salary > 10000 ? 'A' : 'B';
+                    }
+                }
             ],
             rowHeaders: ['rowNum'],
             pageOptions: {
-            	useClient: true,
-              perPage: 5
+                useClient: true,
+                perPage: 5
             }
         });
 
-        // 서버에서 데이터 가져오기
-       fetch('/emp/empList')
-	    .then(response => response.json())
-	    .then(data => {
-	    	console.log("data = ", data);
-	        // 데이터를 TOAST UI Grid에 설정
-	        grid.resetData(data.map((emp, index) => ({
-	            
-	            employeeId: emp.employeeId,
-	            name: emp.firstName + ' ' + emp.lastName,
-	            hireDate: emp.hireDate,
-	            salary: emp.salary,
-	            grade: emp.salary > 10000 ? 'A' : 'B'
-	        })));
-	    })
-	    .catch(error => console.error('Error:', error));
+       
         
 
        
     </script>
-</section>
+	
+	</section>
+	
 </body>
 </html>
