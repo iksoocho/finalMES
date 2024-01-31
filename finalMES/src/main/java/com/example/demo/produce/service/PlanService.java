@@ -1,5 +1,9 @@
 package com.example.demo.produce.service;
 
-public interface PlanService {
+import java.util.List;
 
+import com.example.demo.produce.PlanVO;
+
+public interface PlanService {
+	public List<PlanVO> getPlanList();
 }

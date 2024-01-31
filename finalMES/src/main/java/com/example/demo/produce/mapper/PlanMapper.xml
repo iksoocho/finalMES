@@ -2,3 +2,19 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.produce.mapper.PlanMapper">
+	
+	<!-- plan list -->
+	<select id="selectPlanList" resultType="PlanVO">
+		SELECT pp.*, oddl.dlvy_date
+		FROM prod_plan pp
+		LEFT JOIN ord_list ol ON pp.ord_code = ol.ord_code
+		LEFT JOIN ord_d_list oddl ON ol.ord_code = oddl.ord_code
+	</select>
+	
+	<!-- order list -->
+	<select id="selectOrdList" resultType="PlanOrdVO">
+		
+	</select>
+	
+</mapper>
