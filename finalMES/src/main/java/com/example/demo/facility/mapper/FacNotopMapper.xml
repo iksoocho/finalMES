@@ -4,6 +4,22 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.facility.mapper.FacNotopMapper">
 	<select id="getfacNotList" resultType="FacNotopVO">
-		SELECT * FROM fac_notop
+	SELECT
+	    fac_manage.fac_code,
+	    fac_manage.fac_name,
+	    fac_notop.fac_not_sdate,
+	    fac_notop.fac_not_ldate,
+	    fac_notop.fac_not_person,
+	    fac_notop.fac_not_situation,
+	    fac_not_reason,
+	    fac_not_situation,
+	    not_operator.notop_name,
+	    not_operator.notop_content
+	FROM
+	    fac_notop
+	JOIN
+	    fac_manage ON fac_notop.fac_code = fac_manage.fac_code
+	JOIN
+	    not_operator ON fac_notop.notop_code = not_operator.notop_code
 	</select>
 </mapper>	

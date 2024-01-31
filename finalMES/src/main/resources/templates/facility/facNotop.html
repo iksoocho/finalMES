@@ -4,10 +4,8 @@
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <head>
 <meta charset="UTF-8">
 <title>비가동관리</title>
@@ -37,61 +35,74 @@ table, th, td {
 						placeholder="설비명을 입력하세요" />
 					<button>조회</button>
 					<br>
-					<table>
+					<table style="width: 100%; table-layout: fixed;">
 						<thead>
 							<tr>
-								<th>No.</th>
-								<th>설비코드</th>
-								<th>설비명</th>
-								<th>담당자</th>
-								<th>설비상태</th>
+								<th style="width: 10%;">No.</th>
+								<th style="width: 30%;">설비코드</th>
+								<th style="width: 30%;">설비명</th>
+								<th style="width: 40%;">사유</th>
+								<th style="width: 25%;">담당자</th>
+								<th style="width: 45%;">비가동시작일</th>
+								<th style="width: 45%;">비가동종료일</th>
+								<th style="width: 10%;">상태</th>
 							</tr>
 						</thead>
+
 						<tbody>
 							<tr th:each="fac: ${list}">
-							<td th:text="${facStat.count}"></td>
+								<td th:text="${facStat.count}"></td>
 								<td th:text="${fac.facCode}"></td>
-								<td th:text="${fac.facPerson}"></td>
+								<td th:text="${fac.facName}"></td>
+								<td th:text="${fac.facNotReason}"></td>
+								<td th:text="${fac.facNotPerson}"></td>
 								<!-- 날짜변환  -->
-								<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${#dates.format(fac.facNotSdate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${#dates.format(fac.facNotLdate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${fac.facNotSituation}"></td>
 							</tr>
-							<!-- <tr>
-								<td></td>
-								<td>2</td>
-								<td>2</td>
-								<td>추출기</td>
-								<td>조익수</td>
-								<td>사용대기</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>3</td>
-								<td>3</td>
-								<td>배합기</td>
-								<td>윤성오</td>
-								<td>비가동</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>4</td>
-								<td>4</td>
-								<td>혼합기</td>
-								<td>김준성</td>
-								<td>비가동</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>5</td>
-								<td>5</td>
-								<td>여과기</td>
-								<td>강현진</td>
-								<td>사용중</td>
-							</tr> -->
 						</tbody>
 					</table>
 				</div>
+
 				<div class="col">
-					
+				<br>
+				<br>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>설비코드</th>
+								<td><input type="text" class="form-control" name="facCode"
+									required></td>
+							</tr>
+							<tr>
+								<th>설비명</th>
+								<td><input type="text" class="form-control" name="facName"
+									required></td>
+							</tr>
+							<tr>
+								<th>비가동내용</th>
+								<td><input type="text" class="form-control"
+									name="NotopContent" required></td>
+							</tr>
+							<tr>
+								<th>담당자</th>
+								<td><input type="text" class="form-control"
+									name="facNotPerson" required></td>
+							</tr>
+							<tr>
+								<th>비가동시작일</th>
+								<td><input type="date" class="form-control"
+									name="facNotSdate" required></td>
+							</tr>
+							<tr>
+								<th>비가동종료일</th>
+								<td><input type="date" class="form-control"
+									name="facNotLdate" required></td>
+							</tr>
+						</thead>
+					</table>
+					<button type="submit" class="btn btn-primary">등록</button>
 				</div>
 			</div>
 		</div>
