@@ -1,5 +1,7 @@
 package com.example.demo.emp;
 
+
+
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +12,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor 
 public class EmpVO { 
+	String userCode;
+	String deptCode;
+	String userPassword;
+	String userName;
+	String userEmail;
+	String userPhone;
+	String userAuthority;
+	
 	private String employeeId;
 	String firstName;
 	String lastName;

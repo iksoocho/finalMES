@@ -4,9 +4,9 @@
 	layout:decorate="~{layout}">
 
 <head>
-
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
 th {
 	background-color: rgba(250, 250, 250);
@@ -130,6 +130,7 @@ button {
 	background-color: rgba(255, 0, 0, 0.5);
 }
 </style>
+
 </head>
 <body>
 	<section layout:fragment="content">
@@ -154,7 +155,8 @@ button {
 						<th class="red">담당자</th>
 						<td class="serch"><input type="text" readonly> <input
 							type="text" readonly>
-							<button type="button" class="btn btn-primary">
+
+							<button type="button" class="btn btn-primary" id="openModalBtn" >
 								<p>검색</p>
 							</button></td>
 						<th>담당자 연락처</th>
@@ -240,10 +242,26 @@ button {
 			</div>
 		</div>
 	</section>
-	
+
+	<div id="childModal">
+		<!-- 모달 내용 -->
+		<div th:replace="common/ManagerListModal.html"></div>
+	</div>
 </body>
-<script>
-	
+
+<script th:inline="javascript">
+	$(document).ready(function() {
+		// 자식 모달 열기
+		$('#openModalBtn').click(function() {
+			console.log('Button clicked!');
+			$('#childModal').show();
+		});
+
+		// 자식 모달 닫기
+		$('#closeModalBtn').click(function() {
+			$('#childModal').hide();
+		});
+	});
 </script>
 
 </html>
