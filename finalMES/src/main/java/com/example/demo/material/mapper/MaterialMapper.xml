@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.example.demo.material.mapper.MaterialMapper">
+	<select id="getMatList" resultType="MaterialVO">
+		SELECT mo.mat_or_code, mo.mat_or_name, mo.mat_code, b.business_name,
+		mo.mat_or_count, mo.mat_or_date, moi.mat_or_due_date,
+		mo.mat_or_manager
+		FROM mat_order mo
+		JOIN business b ON mo.business_code = b.business_code
+		JOIN mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
+	</select>
+
+</mapper>

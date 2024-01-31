@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>생산지시목록</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container">
+			
+			
+			<!-- ============================메인============================ -->
+			<h2>생산지시목록</h2>
+			<div>
+				<div>
+					<!-- <button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button>
+					<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right;">생산계획서 조회</button> -->
+					<table class="table">
+						<thead>
+							<tr>
+								<th>No</th>
+								<th>생산지시코드</th>
+								<th>주문코드</th>
+								<th>계획명</th>
+								<th>담당자</th>
+								<th>생산지시일자</th>
+								<th>납기/마감일자</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="ins : ${insList}">
+								<tr>
+									<td th:text="${insStat.count}"></td>
+									<td th:text="${ins.insCode}"></td>
+									<td th:text="${ins.insCode}"></td>
+									<td th:text="${ins.insTitle}"></td>
+									<td th:text="${ins.insPerson}"></td>
+									<td th:text="${#dates.format(ins.insDate, 'yyyy-MM-dd') }"></td>
+									<td th:text="${ins.insNote}"></td>
+									
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+				<!-- ============================생산상세계획============================ -->
+				<div class="mt-5">
+					<!-- <button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button> -->
+					<table class="table">
+						<thead>
+							<tr>
+								<th>생산지시코드</th>
+								<th>제품코드</th>
+								<th>공정코드</th>
+								<th>계획량</th>
+								<th>지시량</th>
+								<th>작업자</th>
+								<th>비고</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="detail : ${insDetailList}">
+								<tr>
+									<td th:text="${detail.insCode}"></td>
+									<td th:text="${detail.insCode}"></td>
+									<td th:text="${detail.insTitle}"></td>
+									<td th:text="${detail.insPerson}"></td>
+									<td th:text="${#dates.format(detail.insDate, 'yyyy-MM-dd') }"></td>
+									<td th:text="${detail.insNote}"></td>
+									
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+				
+				
+			</div>
+		</div>
+	</section>
+</body>
+
+
+</html>

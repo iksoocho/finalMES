@@ -18,8 +18,29 @@ public class ProduceMapperTest {
 	
 	@Test
 	public void insList() {
-		List<ProdInsVO> list = insMapper.getInsList(null);
+		List<ProdInsVO> list = insMapper.getInsList();
+		String code = null;
+	    if (!list.isEmpty()) {
+	        ProdInsVO firstProdInsVO = list.get(0); // 첫 번째 ProdInsVO 추출
+	        code = firstProdInsVO.getInsCode();
+	    }
+		List<ProdInsDetailVO> detailList = insMapper.getInsDetailList(code);
+		System.out.println("================================");
+		System.out.println(list);
+		System.out.println("================================");
+		System.out.println(detailList);
+		System.out.println("================================");
+		
+		
 		assertThat(list.isEmpty()).isEqualTo(false);
 	}
+	
+//	@Test
+//	public void insDetailList() {
+//		String code = "INS001";
+//		List<ProdInsDetailVO> list = insMapper.getInsDetailList(code);
+//		System.out.println(list);
+//		assertThat(list.isEmpty()).isEqualTo(false);	
+//	}
 	
 }
