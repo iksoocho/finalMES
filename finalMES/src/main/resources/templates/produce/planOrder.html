@@ -36,14 +36,17 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="insList : ${insList}" th:text="${insList}">
-											<td><input type="checkbox"></td>
-											<td>${ insList.insCode }</td>
-											<td>${ insList.insTitle }</td>
-											<td>${ insList.insPerson }</td>
-											<td>${ insList.insDate }</td>
-											<td>${ insList.insNote }</td>
-										</tr>
+										<th:block th:each="ins : ${insList}">
+											<tr>
+												<td><input type="checkbox"></td>
+												<td th:text="${ins.insCode}"></td>
+												<td th:text="${ins.insTitle}"></td>
+												<td th:text="${ins.insPerson}"></td>
+												<td th:text="${#dates.format(ins.insDate, 'yyyy-MM-dd') }"></td>
+												<td th:text="${ins.insNote}"></td>
+												
+											</tr>
+										</th:block>
 									</tbody>
 								</table>
 							</div>

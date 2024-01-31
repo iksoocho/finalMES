@@ -18,7 +18,7 @@ public class ProduceMapperTest {
 	
 	@Test
 	public void insList() {
-		List<ProdInsVO> list = insMapper.getInsList(null);
+		List<ProdInsVO> list = insMapper.getInsList();
 		assertThat(list.isEmpty()).isEqualTo(false);
 	}
 	

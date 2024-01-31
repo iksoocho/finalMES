@@ -7,5 +7,5 @@ import com.example.demo.produce.ProdInsVO;
 
 public interface InsMapper {
 
-	public List<ProdInsVO> getInsList(ProdInsVO prodInsVO);
+	public List<ProdInsVO> getInsList();
 }
