@@ -6,127 +6,6 @@
 <meta charset="UTF-8">
 <title>발주 관리 ^^</title>
 <style>
-th {
-	background-color: rgba(250, 250, 250);
-}
-
-.containerOne {
-	margin: 20px;
-	text-align: center;
-}
-
-.containerTwo {
-	margin-top: 20px;
-}
-
-table {
-	width: 100%;
-}
-
-h4 {
-	text-align: left;
-}
-
-tr {
-	height: 42px;
-}
-
-input[type=text], input[type=date], select {
-	width: 90%;
-}
-
-.orderInfoOne th {
-	border: solid 1px gray;
-	text-align: center;
-	width: 156px;
-}
-
-.orderInfoOne td, .orderInfoTwo td {
-	border: solid 1px gray;
-	width: 500px;
-}
-
-.orderInfoTwo {
-	margin-top: 10px;
-	border: solid 1px gray;
-}
-
-.orderInfoTwo th {
-	border: solid 1px gray;
-	width: 156px;
-}
-
-.moreInfo, .moreInfo th, .moreInfo td, .orderInfoOne {
-	border: solid 1px gray;
-}
-
-.ttlCount {
-	text-align: right;
-	padding-right: 10px;
-}
-
-h5 {
-	display: inline-block;
-	float: left;
-	margin-top: 8px;
-}
-
-button {
-	float: right;
-	margin-right: 5px;
-	margin-bottom: 10px;
-}
-
-.space {
-	height: 10px;
-	border: solid 1px #fff;
-}
-
-.number {
-	text-align: right;
-	padding-right: 10px;
-}
-
-.containerThree {
-	margin-top: 30px;
-}
-
-.red {
-	color: red;
-}
-
-.serch {
-	padding-left: 11px;
-	padding-right: 22px;
-}
-
-.serch input {
-	margin-top: 1px;
-	width: 40%;
-	background-color: rgba(250, 250, 250);
-	border: solid 1px gray;
-	border-radius: 2px;
-}
-
-.serch button {
-	margin: 0px;
-	width: 50px;
-	height: 30px;
-}
-
-.serch p {
-	font-size: 12px;
-}
-
-.readInput {
-	background-color: rgba(250, 250, 250);
-	border: solid 1px gray;
-	border-radius: 2px;
-}
-
-.total {
-	background-color: rgba(255, 0, 0, 0.5);
-}
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -176,6 +55,7 @@ button {
 								</thead>
 							</table>
 							<button>초기화</button>
+							<div id="grid2"></div>
 						</div>
 
 
@@ -191,7 +71,7 @@ button {
 			</div>
 			<button class="btn btn-primary" data-bs-toggle="modal"
 				data-bs-target="#exampleModal">등록</button>
-		
+
 
 		</div>
 		<div id="grid"></div>
@@ -263,16 +143,16 @@ button {
 			          name: 'matOrCount'
 			        },
 			        {
-				          header: '발주일',
-				          name: 'genre'
+				      header: '발주일',
+				      name: 'matOrDate',
 				    },
 				    {
-				          header: '납기일',
-				          name: 'genre'
+				      header: '납기일',
+				      name: 'matOrDueDate',
 				    },
 				    {
-				          header: '담당자',
-				          name: 'matOrManager'
+				      header: '담당자',
+				      name: 'matOrManager'
 				    }
 			      ],
 			      rowHeaders: ['rowNum'],
@@ -281,6 +161,57 @@ button {
 		                perPage: 5
 		            }
 			    });
+			 
+			 
+			 
+			
+				
+			 const grid2 = new tui.Grid({
+		            el: document.getElementById('grid2'),
+		            data: order, // 여기서 emps 데이터를 사용
+		            scrollX: true,
+		            scrollY: true,
+			      columns: [
+			        {
+			          header: '발주코드',
+			          name: 'matOrCode'
+			        },
+			        {
+			          header: '발주명',
+			          name: 'matOrName'
+			        },
+			        {
+			          header: '자재코드',
+			          name: 'matCode'
+			        },
+			        {
+			          header: '거래처명',
+			          name: 'busineesName'
+			        },
+			        {
+			          header: '수량',
+			          name: 'matOrCount'
+			        },
+			        {
+				      header: '발주일',
+				      name: 'matOrDate',
+				    },
+				    {
+				      header: '납기일',
+				      name: 'matOrDueDate',
+				    },
+				    {
+				      header: '담당자',
+				      name: 'matOrManager'
+				    }
+			      ],
+			      rowHeaders: ['rowNum'],
+		            pageOptions: {
+		                useClient: true,
+		                perPage: 5
+		            }
+			    });
+			
 			
 			
 		</script>
