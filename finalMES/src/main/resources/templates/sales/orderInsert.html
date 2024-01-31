@@ -156,7 +156,8 @@ button {
 						<td class="serch"><input type="text" readonly> <input
 							type="text" readonly>
 
-							<button type="button" class="btn btn-primary" id="openModalBtn" >
+							<button type="button" class="btn btn-primary"
+								data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 								<p>검색</p>
 							</button></td>
 						<th>담당자 연락처</th>
@@ -241,28 +242,41 @@ button {
 				</table>
 			</div>
 		</div>
+
+
+		<!-- Modal -->
+		<!-- ManagerListModal -->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+			data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel">주문 담당자
+							목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<ul>
+							<li th:each="manager : ${managerList}" th:text="${manager}"></li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Understood</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</section>
 
-	<div id="childModal">
-		<!-- 모달 내용 -->
-		<div th:replace="common/ManagerListModal.html"></div>
-	</div>
-</body>
 
-<script th:inline="javascript">
-	$(document).ready(function() {
-		// 자식 모달 열기
-		$('#openModalBtn').click(function() {
-			console.log('Button clicked!');
-			$('#childModal').show();
-		});
 
-		// 자식 모달 닫기
-		$('#closeModalBtn').click(function() {
-			$('#childModal').hide();
-		});
-	});
-</script>
-
+	<script>
+		
+	</script>
 </html>
 

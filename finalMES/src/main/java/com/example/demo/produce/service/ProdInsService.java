@@ -5,5 +5,5 @@ import java.util.List;
 import com.example.demo.produce.ProdInsVO;
 
 public interface ProdInsService {
-	public List<ProdInsVO> getInsList(ProdInsVO prodInsVO);
+	public List<ProdInsVO> getInsList();
 }
