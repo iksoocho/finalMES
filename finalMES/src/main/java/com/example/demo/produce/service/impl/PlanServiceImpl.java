@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
 import com.example.demo.produce.PlanVO;
@@ -24,6 +25,12 @@ public class PlanServiceImpl implements PlanService{
 		// TODO Auto-generated method stub
 		return planMapper.selectPlanList();
 	}
+	
+	@Override
+	public List<PlanDVO> getPlanDList(String planCode) {
+		// TODO Auto-generated method stub
+		return planMapper.selectPlanDList(planCode);
+	}
 
 	@Override
 	public List<PlanOrdVO> getOrdList() {
@@ -36,5 +43,7 @@ public class PlanServiceImpl implements PlanService{
 		// TODO Auto-generated method stub
 		return planMapper.selectOrdDList(ordCode);
 	}
+
+	
 
 }
