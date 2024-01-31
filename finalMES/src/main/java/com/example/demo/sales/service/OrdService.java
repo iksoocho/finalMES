@@ -1,7 +1,7 @@
 package com.example.demo.sales.service;
 
-import com.example.demo.sales.OrdVO;
+import com.example.demo.sales.vo.order.OrderVO;
 
 public interface OrdService {
-	public OrdVO getOrder(String ocd);
+	public OrderVO getOrder(String ocd);
 }
