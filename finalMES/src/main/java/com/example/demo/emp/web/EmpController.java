@@ -18,12 +18,20 @@ public class EmpController {
 
 	
 
-	  @GetMapping("/empList")
-	  public String list(Model model) {
-		  model.addAttribute("list", empMapper.getEmpList(null)); 
-		  return "emp/empList";
-	  }
+
+	
+	 @GetMapping("/empList")
+	 public String list(Model model) { 
+	 model.addAttribute("list", empMapper.getEmpList(null));
+	 return "emp/empList";
+	 }
 	 
+	/*
+	 * @GetMapping("empList")
+	 * 
+	 * @ResponseBody public List<EmpVO> getEmpList() { return
+	 * empMapper.getEmpList(null); }
+	 */
 
 //	@GetMapping("empList")
 //	@ResponseBody
