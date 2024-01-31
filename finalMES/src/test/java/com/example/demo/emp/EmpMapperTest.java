@@ -21,7 +21,4 @@ public class EmpMapperTest {
 		List<EmpVO> list = empMapper.getEmpList(null);
 		assertThat(list.isEmpty()).isEqualTo(false);
 	}
-	
-	
-	
 }
