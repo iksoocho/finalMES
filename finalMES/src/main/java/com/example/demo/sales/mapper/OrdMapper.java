@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 
@@ -20,4 +21,6 @@ public interface OrdMapper {
 	public List<OrderVO> getOrderList(OrderVO orderVO);
 
 	public List<OrderDetailVO> getOrderDetailList(OrderDetailVO orderDetailVO);
+	
+	public List<BusinessListVO> getBusinessList(); // 거래처 목록 조회
 }
