@@ -6,15 +6,22 @@
 	
 	<!-- plan list -->
 	<select id="selectPlanList" resultType="PlanVO">
-		SELECT pp.*, oddl.dlvy_date
-		FROM prod_plan pp
-		LEFT JOIN ord_list ol ON pp.ord_code = ol.ord_code
-		LEFT JOIN ord_d_list oddl ON ol.ord_code = oddl.ord_code
+		SELECT *
+		FROM prod_plan
 	</select>
 	
 	<!-- order list -->
 	<select id="selectOrdList" resultType="PlanOrdVO">
-		
+		SELECT *
+		FROM ord_list
+		  
+	</select>
+	
+	<!-- order detail list -->
+	<select id="selectOrdDList" resultType="PlanOrdDVO">
+		SELECT *
+		FROM ord_d_list
+		WHERE ord_code = #{ordCode}  
 	</select>
 	
 </mapper>
