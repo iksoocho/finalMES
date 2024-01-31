@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>출고 관리^^</title>
+<head>
+<style>
+/* 모달 스타일링 */
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+	background-color: #fff;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+}
+
+.close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container">
+			<h1>출고 관리</h1>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>출고번호</th>
+						<th>출고일자</th>
+						<th>자재코드</th>
+						<th>자재명</th>
+						<th>출고량(공정이동??)</th>
+						<th>현재고량(이때 출고량은 현 재고량을 넘을수 없음)</th>
+						<th>남은재고</th>
+					</tr>
+					<tr>
+						<th>1</th>
+						<th>mat_out_1</th>
+						<th>2024-03-03</th>
+						<th>mat_label</th>
+						<th>라벨지</th>
+						<th>4500</th>
+						<th>5000</th>
+						<th>500</th>
+					</tr>
+				</thead>
+			</table>
+
+		</div>
+
+		<script>
+			
+		</script>
+	</section>
+
+</body>
+</html>

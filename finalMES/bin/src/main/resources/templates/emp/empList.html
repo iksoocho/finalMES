@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+ 	  layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>empList.html</title>
+
+</head>
+<body>
+<section layout:fragment="content">
+	 <div id="grid"></div>
+	 
+
+    <script>
+        // TOAST UI Grid 초기화
+        const grid = new tui.Grid({
+            el: document.getElementById('grid'),
+            scrollX: false,
+            scrollY: false,
+            columns: [
+                
+                { header: 'Employee ID', name: 'employeeId' },
+                { header: 'Name', name: 'name' },
+                { header: 'Hire Date', name: 'hireDate' },
+                { header: 'Salary', name: 'salary' },
+                { header: 'Grade', name: 'grade' }
+            ],
+            rowHeaders: ['rowNum'],
+            pageOptions: {
+            	useClient: true,
+              perPage: 5
+            }
+        });
+
+        // 서버에서 데이터 가져오기
+       fetch('/emp/empList')
+	    .then(response => response.json())
+	    .then(data => {
+	    	console.log("data = ", data);
+	        // 데이터를 TOAST UI Grid에 설정
+	        grid.resetData(data.map((emp, index) => ({
+	            
+	            employeeId: emp.employeeId,
+	            name: emp.firstName + ' ' + emp.lastName,
+	            hireDate: emp.hireDate,
+	            salary: emp.salary,
+	            grade: emp.salary > 10000 ? 'A' : 'B'
+	        })));
+	    })
+	    .catch(error => console.error('Error:', error));
+        
+
+       
+    </script>
+</section>
+</body>
+</html>
