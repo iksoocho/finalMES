@@ -96,16 +96,18 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>계획코드</td>
-								<td>주문코드</td>
-								<td><input type="text"></td>
-								<td><input type="text"></td>
-								<td><input type="date"></td>
-								<td><input type="date"></td>
-
-							</tr>
+							<th:block th:each="plan : ${list}">
+								<tr>
+									<td th:text="${planStat.count}"></td>
+									<td th:text="${plan.planCode}"></td>
+									<td th:text="${plan.ordCode}"></td>
+									<td th:text="${plan.planTitle}"></td>
+									<td th:text="${plan.planPerson}"></td>
+									<td th:text="${#dates.format(plan.planDate, 'yyyy-MM-dd')}"></td>
+									<td th:text="${#dates.format(plan.dlvyDate, 'yyyy-MM-dd')}"></td>
+	
+								</tr>
+							</th:block>
 						</tbody>
 					</table>
 				</div>
