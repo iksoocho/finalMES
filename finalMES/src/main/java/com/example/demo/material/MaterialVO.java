@@ -18,12 +18,16 @@ public class MaterialVO {
 	private int matCount;
 	private String matManager;
 	
-	private String matOrCode;
-	private String matOrName;
-	private String busineesName;
-	private String matOrCount;
-	private String matOrManager;
+//	private String matOrCode;
+//	private String matOrName;
+//	private String busineesName;
+//	private String matOrCount;
+//	private Date matOrDate;
+//	private Date matOrDueDate;
+//	private String matOrManager;
 	
-	
+
 	
 }
+
+

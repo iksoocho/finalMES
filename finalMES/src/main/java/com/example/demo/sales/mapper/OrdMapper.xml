@@ -31,4 +31,9 @@
 		SELECT * FROM ord_d_list
 		WHERE ord_d_code = #{ordDCode}
 	</select>
+	
+	<select id="getBusinessList" resultType="BusinessListVO">
+		SELECT business_code, business_name, business_manager, business_manager_phone 
+		FROM business
+	</select>
 </mapper>
