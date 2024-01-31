@@ -129,6 +129,18 @@ button {
 .total {
 	background-color: rgba(255, 0, 0, 0.5);
 }
+
+.modal-body ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.modal-body li {
+	border-bottom: solid 1px rgba(220, 220, 220);
+	margin: 15px;
+	padding: 10px;
+}
 </style>
 
 </head>
@@ -156,8 +168,7 @@ button {
 						<td class="serch"><input type="text" readonly> <input
 							type="text" readonly>
 
-							<button type="button" class="btn btn-primary"
-								data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+							<button type="button" class="btn btn-primary">
 								<p>검색</p>
 							</button></td>
 						<th>담당자 연락처</th>
@@ -169,7 +180,8 @@ button {
 						<th class="red">거래처</th>
 						<td class="serch"><input type="text" readonly> <input
 							type="text" readonly>
-							<button class="btn btn-primary">
+							<button class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#staticBackdrop">
 								<p>검색</p>
 							</button></td>
 						<th>거래처 담당자</th>
@@ -252,31 +264,35 @@ button {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">주문 담당자
-							목록</h1>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel">거래처 목록
+						</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<ul>
-							<li th:each="manager : ${managerList}" th:text="${manager}"></li>
+							<li th:each="business : ${businessList}"
+								th:data-businessCode="${business.businessCode}"
+								th:data-businessName="${business.businessName}"
+								th:data-businessManager="${business.businessManager}"
+								th:data-businessManagerPhone="${business.businessManagerPhone}"
+								th:text="${business.businessCode + ' ' + business.businessName}">
+							</li>
 						</ul>
+
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Understood</button>
+							data-bs-dismiss="modal">닫기</button>
+						
 					</div>
 				</div>
 			</div>
 		</div>
 
 	</section>
+<script>
 
-
-
-	<script>
-		
-	</script>
+</script>
 </html>
 

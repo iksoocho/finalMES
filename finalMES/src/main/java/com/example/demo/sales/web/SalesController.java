@@ -25,7 +25,7 @@ public class SalesController {
 		return "sales/orderList";
 	}
 
-	@GetMapping("/ordInsert")
+	@GetMapping("/orderInsert")
 	public String getBusinessList(Model model) {
 		List<BusinessListVO> businessList = ordService.getBusinessList();
 		model.addAttribute("businessList", businessList);
