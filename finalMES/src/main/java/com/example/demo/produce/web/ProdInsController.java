@@ -16,12 +16,20 @@ public class ProdInsController {
 	@Autowired
 	ProdInsService prodInsService;
 	
-	@GetMapping("insList")
+	@GetMapping("/planOrder")
 	public String insList(Model model){
 		List<ProdInsVO> list = prodInsService.getInsList();
 		model.addAttribute("insList", list);
 		
 		return "produce/planOrder";
+	}
+	
+	@GetMapping("/planOrderList")
+	public String insAllList(Model model){
+		List<ProdInsVO> list = prodInsService.getInsList();
+		model.addAttribute("insList", list);
+		
+		return "produce/planOrderList";
 	}
 	
 }

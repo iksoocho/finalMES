@@ -10,4 +10,11 @@
 	  	FROM prod_instruction 
 	  
 	  </select>
+	  
+	  <!-- Ins Detail List -->
+	  <select id="getInsDetailList" parameterType="String" resultType="ProdInsDetailVO">
+	  	SELECT * 
+	  	FROM prod_d_ins
+	  	WHERE ins_code= #{insCode}
+	  </select>
   </mapper>
