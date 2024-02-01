@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,7 +20,7 @@ public class ProdInsController {
 	@Autowired
 	ProdInsService prodInsService;
 	
-	@GetMapping("/planOrder")
+	@GetMapping("planOrder")
 	public String insList(Model model){
 		List<ProdInsVO> list = prodInsService.getInsList();
 		model.addAttribute("insList", list);
@@ -27,7 +28,7 @@ public class ProdInsController {
 		return "produce/planOrder";
 	}
 	
-	@GetMapping("/planOrderList")
+	@GetMapping("planOrderList")
 	public String insAllList(Model model){
 		List<ProdInsVO> list = prodInsService.getInsList();
 		String code = null;
@@ -41,17 +42,18 @@ public class ProdInsController {
 		return "produce/planOrderList";
 	}
 	
-	@GetMapping("/planOrderDetail")
+	@GetMapping("planOrderDetail")
 	@ResponseBody
 	public List<ProdInsDetailVO> getPlanOrderDetailList(@RequestParam String insCode){
-		System.out.println("상세조회 : " + prodInsService.getInsDetailList(insCode));
+//		System.out.println("상세조회 : " + prodInsService.getInsDetailList(insCode));
 		return prodInsService.getInsDetailList(insCode);
 	}
 	
-	@GetMapping("/workRegist")
-	public String workForm(@RequestParam("radioButtonId") String dInsCode, Model model) {
-		
-		return "/produce/workRegist";
+	@GetMapping("workRegist")
+	public String workRegist(@RequestParam String dInsCode, Model model) {
+		ProdInsDetailVO vo = prodInsService.getCheckDetailList(dInsCode);
+		model.addAttribute("vo", vo);
+		return "produce/workRegist";
 	}
 	
 }
