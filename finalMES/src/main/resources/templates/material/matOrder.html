@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -7,8 +8,10 @@
 <title>발주 관리 ^^</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
 input {
 	padding-left: 10px;
@@ -154,7 +157,7 @@ button {
 		<div class=""></div>
 		<h1>발주 관리</h1>
 		<div>
-
+			<!-- 메인 -->
 			<table class="table">
 				<thead>
 					<tr>
@@ -198,7 +201,67 @@ button {
 		</div>
 
 		<button class="btn btn-primary" data-bs-toggle="modal"
-			data-bs-target="#exampleModal">추가</button>
+			data-bs-target="#exampleModal">등록</button>
+
+
+		<!--  ============	모달창 ============-->
+		<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">발주 등록</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+
+						<!-- 	모달 내용 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>발주 코드</th>
+									<td><input type="text" name="matOrCode"></td>
+									<th>발주 명</th>
+									<td><input type="text" name="matOrName"></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<th>자재 코드</th>
+									<td><input type="text" name="matCode"></td>
+									<th>거래처 명</th>
+									<td><input type="text" name="busineesName"></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<!-- 									<th>발주일</th> -->
+									<!-- 									<td><input type="date" name="matOrDate"></td> -->
+									<th>납기일</th>
+									<td><input type="date" name="matOrDueDate"></td>
+									<td></td>
+								</tr>
+								<tr>
+									<th>수량</th>
+									<td><input type="number" min=0 name="matOrCount"></td>
+									<th>담당자 *</th>
+									<td colspan="2"><input type="text" name="matOrManager"
+										required></td>
+								</tr>
+							</thead>
+						</table>
+
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-primary" id="submitButton" >작성완료</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 		<!-- Modal -->
@@ -279,6 +342,62 @@ button {
 
 		<div id="grid"></div>
 		<script th:inline="javascript">
+		document.getElementById("submitButton").addEventListener("click", function() {
+			  // 발주 등록 정보 수집
+			  var matOrCode = document.getElementsByName("matOrCode")[0].value;
+			  var matOrName = document.getElementsByName("matOrName")[0].value;
+			  var matCode = document.getElementsByName("matCode")[0].value;
+			  var busineesName = document.getElementsByName("busineesName")[0].value;
+			  var matOrDueDate = document.getElementsByName("matOrDueDate")[0].value;
+			  var matOrCount = document.getElementsByName("matOrCount")[0].value;
+			  var matOrManager = document.getElementsByName("matOrManager")[0].value;
+
+			  // 수집한 정보를 이용하여 발주 등록 처리
+			  // 여기서는 예시로 콘솔에 수집한 정보를 출력하는 것으로 대체하였습니다.
+			  console.log("발주 코드: " + matOrCode);
+			  console.log("발주 명: " + matOrName);
+			  console.log("자재 코드: " + matCode);
+			  console.log("거래처 명: " + busineesName);
+			  console.log("납기일: " + matOrDueDate);
+			  console.log("수량: " + matOrCount);
+			  console.log("담당자: " + matOrManager);
+
+			  // 추가적인 발주 등록 처리 로직을 구현해야 합니다.
+		    var data = {
+		        matOrCode: matOrCode,
+		        matOrName: matOrName,
+		        matCode: matCode,
+		        busineesName: busineesName,
+		        matOrDueDate: matOrDueDate,
+		        matOrCount: matOrCount,
+		        matOrManager: matOrManager
+		    };
+			    fetch("/matOrder", {
+			        method: "POST",
+			        body: JSON.stringify(data),
+			        headers: {
+			            "Content-Type": "application/json"
+			        }
+			    })
+			    .then(response => {
+			        if (response.ok) {
+			            // 요청이 성공적으로 처리되었을 때 실행되는 코드
+			            console.log(response);
+			            alert("요청이 성공적으로 처리되었습니다.");
+			        } else {
+			            // 요청이 실패하였을 때 실행되는 코드
+			            console.log(response);
+			            alert("요청 처리 중 오류가 발생했습니다.");
+			        }
+			    })
+			    .catch(error => {
+			        console.log(error);
+			        alert(error.message);
+			    });
+			});
+		
+
+		
 		function updateInputFields(liElement) {
 			// 클릭한 <li> 요소에서 데이터 속성을 가져옴
 			var businessCode = liElement.getAttribute('data-businessCode');
@@ -375,19 +494,20 @@ button {
 			        {
 				      header: '발주일',
 				      name: 'matOrDate',
-				      formatter: (value) => {
-				    	    try {
-				    	        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-				    	        return value.toLocaleDateString('ko-KR', options);
-				    	    } catch (error) {
-				    	        console.error('Formatter Error:', error);
-				    	        return value; // 에러가 발생하면 그냥 원본 값을 반환하도록 설정
-				    	    }
-				    	},
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '납기일',
-				      name: 'matOrDueDate'
+				      name: 'matOrDueDate',
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '담당자',
@@ -430,10 +550,20 @@ button {
 			        {
 				      header: '발주일',
 				      name: 'matOrDate',
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '납기일',
 				      name: 'matOrDueDate',
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '담당자',
