@@ -10,6 +10,13 @@
 		FROM prod_plan
 	</select>
 	
+	<!-- plan by ordCode -->
+	<select id="selectPlanByOrdCode" resultType="PlanVO">
+		SELECT *
+		FROM prod_plan
+		WHERE ord_code = #{ordCode}
+	</select>
+	
 	<!-- plan detail list -->
 	<select id="selectPlanDList" resultType="PlanDVO">
 		
@@ -41,6 +48,12 @@
 		FROM ord_d_list
 		WHERE ord_code = #{ordCode}  
 	</select>
+	
+	<insert id="insertPlanInfo" parameterType="PlanVO">
+		INSERT INTO
+		prod_plan(ord_code, plan_title, plan_person, plan_date)
+		VALUES(#{ordCode},#{planTitle},#{planPerson},#{planDate})
+	</insert>
 	
 	
 	

@@ -11,7 +11,7 @@ public class PlanDVO {
 	private String dplanCode;
 	private String planCode;
 	private String prodCode;
-	private int dPlanCount;
+	private int dplanCount;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dPlanStartDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
