@@ -13,4 +13,6 @@ public class ProdInsDetailVO {
 	private Date dInsSdate;
 	private Date dInsEdate;
 	private String dInsNote;
+	
+	
 }
