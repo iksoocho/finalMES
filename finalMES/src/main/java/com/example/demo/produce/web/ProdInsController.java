@@ -41,9 +41,12 @@ public class ProdInsController {
 		return "produce/planOrderList";
 	}
 	
+	
+	
 	@GetMapping("/planOrderDetail")
 	@ResponseBody
 	public List<ProdInsDetailVO> getPlanOrderDetailList(@RequestParam String insCode){
+		System.out.println("상세조회 : " + prodInsService.getInsDetailList(insCode));
 		return prodInsService.getInsDetailList(insCode);
 	}
 	
