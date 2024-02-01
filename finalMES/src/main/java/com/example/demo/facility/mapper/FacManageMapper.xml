@@ -10,10 +10,9 @@
 	</select>
 	
 	<delete id="deleteFac" parameterType="String">
-	DELETE FROM fac_manage
-	WHERE fac_code IN (SELECT f.fac_code
-	FROM fac_manage f
-	JOIN process p ON f.proc_code = p.proc_code
-	WHERE facCode = #{fac_code}
+	DELETE fm, p
+	FROM fac_manage fm
+	INNER JOIN process p ON fm.proc_code = p.proc_code
+	WHERE fm.fac_code = #{facCode}
 	</delete>
 </mapper>
