@@ -12,13 +12,20 @@
 	
 	<!-- plan detail list -->
 	<select id="selectPlanDList" resultType="PlanDVO">
-		SELECT DISTINCT pdp.*, oddl.dlvy_date, pl.prod_count
+		
+		
+		SELECT pdp.d_plan_code, pdp.plan_code, pdp.prod_code, pdp.d_plan_count, pdp.d_plan_start_date, 
+		       pdp.d_plan_end_date, pdp.d_plan_priority, pdp.d_plan_note, 
+		       MAX(oddl.dlvy_date) AS dlvy_date, MAX(pl.prod_count) AS prod_count
 		FROM prod_d_plan pdp
 		LEFT JOIN prod_plan pp ON pdp.plan_code = pp.plan_code
 		LEFT JOIN ord_list ol ON pp.ord_code = ol.ord_code
 		LEFT JOIN ord_d_list oddl ON ol.ord_code = oddl.ord_code
 		LEFT JOIN prod_lot pl ON pdp.prod_code = pl.prod_code
-		WHERE pdp.plan_code = #{planCode}  
+		where pdp.plan_code = #{planCode}
+		GROUP BY pdp.d_plan_code, pdp.plan_code, pdp.prod_code, pdp.d_plan_count, pdp.d_plan_start_date, 
+        pdp.d_plan_end_date, pdp.d_plan_priority, pdp.d_plan_note
+ 
 	</select>
 	
 	<!-- order list -->

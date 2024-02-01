@@ -130,10 +130,15 @@
 	
 		                    data.forEach(detail => {
 		                        const tr = document.createElement('tr');
+		                        
+		                        const date = new Date(detail.dlvyDate);
+		                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                        
 		                        tr.innerHTML = `
 		                            <td>${detail.prodCode}</td>
 		                            <td>${detail.ordCount}</td>
-		                            <td>${detail.dlvyDate}</td>
+		                            <td>${formattedDate}</td>
+		                            
 		                        `;
 		                        tbody.appendChild(tr);
 		                    });
@@ -147,6 +152,7 @@
 		                });
 		        });
 		    });
+		    
 		    
 		    const planDetails = document.getElementById('planDetails');
 		    const table2 = document.createElement('table');
@@ -179,13 +185,25 @@
 		                    // 테이블 본문을 업데이트합니다.
 		                    const tbody2 = document.createElement('tbody');
 	
+		                    	                    
+		                    
 		                    data.forEach(detail => {
 		                    	console.log(detail);
 		                        const tr2 = document.createElement('tr');
+		                        
+		                        const date = new Date(detail.dlvyDate);
+		                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                        
 		                        tr2.innerHTML = `
 		                            <td>${detail.dplanCode}</td>
 		                            <td>${detail.planCode}</td>
 		                            <td>${detail.prodCode}</td>
+		                            <td><input type="date"></td>
+		                            <td><input type="date"></td>
+		                            <td>${detail.prodCount}</td>
+		                            <td><input type="number"></td>
+		                            <td><input type="number"></td>
+		                            <td>${formattedDate}</td>
 		                        `;
 		                        tbody2.appendChild(tr2);
 		                    });
