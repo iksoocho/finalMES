@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container">
+			<h1>작업등록</h1>
+			<div>
+				<div class="row">
+					<label for="WorkDate" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업일자</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg" placeholder="작업일자"
+							aria-label="WorkDate" id="WorkDate">
+					</div>
+					<label for="Worker" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업자</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg" placeholder="작업자"
+							aria-label="Worker" id="Worker">
+					</div>
+				</div>
+				<div class="row mt-4">
+					<label for="FacCode" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">설비코드</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg" placeholder="설비코드"
+							aria-label="FacCode" id="FacCode">
+					</div>
+					<label for="WorkCount" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업량</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg" placeholder="주문량"
+							aria-label="WorkCount" id="WorkCount">
+					</div>
+				</div>
+				<div class="row mt-4">
+					<div class="col-6">
+						<p>테스트</p>
+					</div>
+					<div class="col-6">
+						<div class="row">
+							<div class="col d-grid gap-2">
+								<button class="btn btn-success text-center fw-bolder fs-5" type="button" id="workStart">작업시작</button>
+							</div>								
+							<div class="col">
+								<input type="text" class="form-control form-control-lg text-center" placeholder=" -- : -- "
+									aria-label="workStart" id="workStart" >
+							</div>
+						</div>
+						<div class="row mt-4">
+							<div class="col d-grid gap-2">
+								<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workEnd">작업종료</button>
+							</div>								
+							<div class="col">
+								<input type="text" class="form-control form-control-lg text-center" placeholder=" -- : -- "
+									aria-label="workEnd" id="workEnd" >
+							</div>
+						</div>
+						<div class="row mt-4">
+							<label for="badCount" class="col col-form-label col-form-label-lg text-center fw-bolder">불량수량</label>
+							<div class="col">
+								<div class="row">
+									<div class="col-9">
+										<input type="text" class="form-control form-control-lg" placeholder="0"
+											aria-label="badCount" id="badCount">
+									</div>
+									<div class="col-3 d-grid gap-2">
+										<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workEnd">+</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

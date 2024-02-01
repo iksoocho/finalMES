@@ -19,7 +19,7 @@ public class MaterialTest {
 
 		@Test
 		public void 전체조회() {
-			List<MatOrderVO> list = materialMapper.getMatList(null);
+			List<MatOrderVO> list = materialMapper.getMatOrderList();
 			System.out.println(list);
 			assertThat(list.isEmpty()).isEqualTo(false);
 		}

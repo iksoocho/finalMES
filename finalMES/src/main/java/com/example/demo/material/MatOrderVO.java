@@ -26,4 +26,9 @@ public class MatOrderVO {
 	private Date matOrDueDate;
 	
 	
+	private String businessName;
+	private String businessManager;
+	private String businessManagerPhone;
+	
+	
 }
