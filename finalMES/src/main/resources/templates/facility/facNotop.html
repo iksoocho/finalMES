@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<head>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<head>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
 <title>비가동관리</title>
 <style>
@@ -24,6 +26,40 @@ table, th, td {
 	text-align: center;
 }
 </style>
+<script>
+	// 모달창 내부에 있는 데이터 input 에 담는 함수
+	function updateInputFields(Element) {
+		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
+		var facCode = Element.getAttribute('data-facCode');
+		var facName = Element.getAttribute('data-facName');
+
+		// 입력 필드의 값 설정
+		document.getElementById('equipmentCode').value = facCode;
+		document.getElementById('equipmentName').value = facName;
+	}
+
+	function updateInputFields1(Element) {
+		var facNotPerson = Element.getAttribute('data-facNotPerson');
+		document.getElementById('facNotPerson').value = facNotPerson;
+	}
+
+	function updateStatus(Element) {
+		var statusElement = Element.getAttribute('data-statusElement');
+		var statusText = "";
+		switch (statusElement) {
+		case "0":
+			statusText = "대기";
+			break;
+		case "1":
+			statusText = "가동중";
+			break;
+		case "2":
+			statusText = "비가동";
+			break;
+		}
+		Element.innerText = statusText;
+	}
+</script>
 </head>
 <body>
 	<section layout:fragment="content">
@@ -43,9 +79,7 @@ table, th, td {
 								<th style="width: 30%;">설비명</th>
 								<th style="width: 40%;">사유</th>
 								<th style="width: 25%;">담당자</th>
-								<th style="width: 45%;">비가동시작일</th>
-								<th style="width: 45%;">비가동종료일</th>
-								<th style="width: 10%;">상태</th>
+								<th style="width: 20%;">상태</th>
 							</tr>
 						</thead>
 
@@ -56,53 +90,130 @@ table, th, td {
 								<td th:text="${fac.facName}"></td>
 								<td th:text="${fac.facNotReason}"></td>
 								<td th:text="${fac.facNotPerson}"></td>
-								<!-- 날짜변환  -->
-								<td th:text="${#dates.format(fac.facNotSdate, 'yyyy-MM-dd')}"></td>
-								<td th:text="${#dates.format(fac.facNotLdate, 'yyyy-MM-dd')}"></td>
-								<td th:text="${fac.facNotSituation}"></td>
+								<td>
+								    <span th:switch="${fac.facNotSituation}">
+								        <span th:case="0">🟡</span>
+								        <span th:case="1">🟢</span>
+								        <span th:case="2">🔴</span>
+								        <span th:default="Unknown"></span>
+								    </span>
+								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 
 				<div class="col">
-				<br>
-				<br>
+					<br> <br>
 					<table class="table">
 						<thead>
 							<tr>
-								<th>설비코드</th>
-								<td><input type="text" class="form-control" name="facCode"
-									required></td>
+								<th>설비코드 *</th>
+								<td colspan="2"><input type="text" id="equipmentCode"
+									name="equipmentCode" required></td>
+								<th>설비명 *</th>
+								<td colspan="2"><input type="text" id="equipmentName"
+									name="equipmentName" required data-toggle="modal"
+									data-target="#myModal"></td>
+							</tr>
+
+							<tr>
+								<th>사유</th>
+								<td colspan="2"><input type="text" id="facContent"
+									name="facContent" required></td>
+								<th>담당자 *</th>
+								<td colspan="2"><input type="text" id="facNotPerson"
+									name="facNotPerson" required data-toggle="modal"
+									data-target="#myModal1"></td>
 							</tr>
 							<tr>
-								<th>설비명</th>
-								<td><input type="text" class="form-control" name="facName"
-									required></td>
-							</tr>
-							<tr>
-								<th>비가동내용</th>
-								<td><input type="text" class="form-control"
-									name="NotopContent" required></td>
-							</tr>
-							<tr>
-								<th>담당자</th>
-								<td><input type="text" class="form-control"
-									name="facNotPerson" required></td>
-							</tr>
-							<tr>
-								<th>비가동시작일</th>
-								<td><input type="date" class="form-control"
-									name="facNotSdate" required></td>
-							</tr>
-							<tr>
-								<th>비가동종료일</th>
-								<td><input type="date" class="form-control"
-									name="facNotLdate" required></td>
+								<th>시작일</th>
+								<td colspan="2"><input type="date" id="equipmentCode"
+									name="equipmentCode" required></td>
+								<th>종료일</th>
+								<td colspan="2"><input type="date" id="equipmentName"
+									name="equipmentName" required data-toggle="modal"
+									data-target="#myModal3"></td>
 							</tr>
 						</thead>
 					</table>
 					<button type="submit" class="btn btn-primary">등록</button>
+				</div>
+			</div>
+		</div>
+		<!-- 설비코드 모달창 -->
+		<div class="modal" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 모달 헤더 -->
+					<div class="modal-header">
+						<h4 class="modal-title">설비명</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>설비명</th>
+									<th>제조업체</th>
+									<th>담당자</th>
+									<th>입고일</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="fac: ${list}">
+									<td th:text="${facStat.count}"></td>
+									<td th:text="${fac.facName}" th:data-facCode="${fac.facCode}"
+										th:data-facName="${fac.facName}"
+										th:data-facPerson="${fac.facNotPerson}"
+										onclick="updateInputFields(this)" data-bs-dismiss="modal"></td>
+									<td th:text="${fac.businessCode}"></td>
+									<td th:text="${fac.facNotPerson}"></td>
+									<!-- 날짜변환  -->
+
+									<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 담당자모달 -->
+		<div class="modal" id="myModal1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 모달 헤더 -->
+					<div class="modal-header">
+						<h4 class="modal-title">담당자명</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+						<table class="table">
+							<thead>
+							</thead>
+							<tbody>
+								<tr th:each="fac: ${list}">
+									<td th:text="${facStat.count}"></td>
+									<td th:text="${fac.facNotPerson}"
+										th:data-facNotPerson="${fac.facNotPerson}"
+										onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
+					</div>
 				</div>
 			</div>
 		</div>

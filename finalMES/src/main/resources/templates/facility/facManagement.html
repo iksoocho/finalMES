@@ -3,7 +3,8 @@
 	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -45,13 +46,75 @@ label {
 	text-align: center;
 }
 </style>
+<script>
+	// 모달창 내부에 있는 데이터 input 에 담는 함수
+	function updateInputFields(Element) {
+		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
+		var facCode = Element.getAttribute('data-facCode');
+		var facName = Element.getAttribute('data-facName');
+
+		// 입력 필드의 값 설정
+		document.getElementById('equipmentCode').value = facCode;
+		document.getElementById('equipmentName').value = facName;
+
+	}
+
+	function updateInputFields1(Element) {
+		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
+		var procCode = Element.getAttribute('data-procCode');
+		var procName = Element.getAttribute('data-procName');
+
+		// 입력 필드의 값 설정
+		document.getElementById('processCode').value = procCode;
+		document.getElementById('processName').value = procName;
+	}
+
+	function updateInputFields2(Element) {
+		var facPerson = Element.getAttribute('data-facPerson');
+		document.getElementById('facName').value = facPerson;
+	}
+	
+	function deleteFacility() {
+	    var confirmation = confirm("설비를 삭제하시겠습니까?");
+	    
+	    if (confirmation) {
+	        // Get the selected facility code
+	        var equipmentCode = document.getElementById('equipmentCode').value;
+
+	        // Perform AJAX request to delete the facility
+	        // Replace 'your_delete_url' with the actual URL endpoint for deleting
+	        // Pass the equipmentCode to the server for identification
+
+	        // Example using fetch API:
+	        fetch('' + equipmentCode, {
+	            method: 'DELETE',
+	            headers: {
+	                'Content-Type': 'application/json',
+	            },
+	        })
+	        .then(response => response.json())
+	        .then(data => {
+	            // Handle the response from the server, e.g., refresh the page or update the UI
+	            console.log('Success:', data);
+	        })
+	        .catch((error) => {
+	            console.error('Error:', error);
+	        });
+	    }
+	}
+</script>
+
 </head>
 <body>
-	<section layout:fragment="content">
 
+	<section layout:fragment="content">
+		<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 		<div id="layoutSidenav_content" class="container text-center">
+
 			<table class="table">
+
 				<tbody>
+
 					<tr>
 						<th>설비코드 *</th>
 						<td colspan="2"><input type="text" id="equipmentCode"
@@ -108,9 +171,9 @@ label {
 					<tr>
 						<th>이미지</th>
 						<td colspan="2"><input type="file"></td>
-					</tr>		
+					</tr>
 				</tbody>
-				
+
 				<!-- 하단의 설비 리스트 -->
 				<tr>
 					<th>No.</th>
@@ -118,24 +181,27 @@ label {
 					<th>설비명</th>
 					<th>담당자</th>
 					<th>입고일</th>
+					<th>점검주기</th>
 				</tr>
 				<tbody>
 					<tr th:each="fac: ${list}">
-					<td th:text="${facStat.count}"></td>
+						<td th:text="${facStat.count}"></td>
 						<td th:text="${fac.facCode}"></td>
 						<td th:text="${fac.facName}"></td>
 						<td th:text="${fac.facPerson}"></td>
 						<!-- 날짜변환  -->
 						<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
+						<td th:text="${fac.facInscycle}"></td>
 					</tr>
 				</tbody>
 				<tr>
-				<td colspan="6">
-					<button type="submit" class="btn btn-outline-success">저장</button>
-					<button type="button" class="btn btn-outline-danger">삭제</button>
-				</td>
-			</tr>
-			</table>			
+					<td colspan="6">
+						<!-- <button type="submit" class="btn btn-outline-success">저장</button> -->
+
+						<<button type="button" id="deleteBtn" class="btn btn-outline-danger" onclick="deleteFacility()">삭제</button>
+					</td>
+				</tr>
+			</table>
 		</div>
 
 
@@ -157,19 +223,21 @@ label {
 									<th>No.</th>
 									<th>설비명</th>
 									<th>제조업체</th>
+									<th>담당자</th>
+									<th>입고일</th>
 								</tr>
 							</thead>
 							<tbody>
-							<tr th:each="fac: ${list}">
-								<td th:text="${fac.facName}"></td>
-								<td th:text="${fac.facPerson}"></td>
-								<!-- 날짜변환  -->
-								<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
-							</tr>
-								<tr>
-									<th>2</th>
-									<th>혼합기</th>
-									<th>혼합제조업체_A</th>
+								<tr th:each="fac: ${list}">
+									<td th:text="${facStat.count}"></td>
+									<td th:text="${fac.facName}" th:data-facCode="${fac.facCode}"
+										th:data-facName="${fac.facName}"
+										th:data-facPerson="${fac.facPerson}"
+										onclick="updateInputFields(this)" data-bs-dismiss="modal"></td>
+									<td th:text="${fac.businessCode}"></td>
+									<td th:text="${fac.facPerson}"></td>
+									<!-- 날짜변환  -->
+									<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -199,18 +267,19 @@ label {
 									<th>No.</th>
 									<th>공정명</th>
 									<th>공정코드</th>
+									<th>공정등록일</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<th>1</th>
-									<th>아메리카노</th>
-									<th>Ame_01</th>
-								</tr>
-								<tr>
-									<th>2</th>
-									<th>스위트아메리카노</th>
-									<th>SweAme_01</th>
+								<tr th:each="fac: ${list}">
+									<td th:text="${facStat.count}"></td>
+									<td th:text="${fac.procName}"
+										th:data-procCode="${fac.procCode}"
+										th:data-procName="${fac.procName}"
+										onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
+									<td th:text="${fac.procCode}"></td>
+									<!-- 날짜변환  -->
+									<td th:text="${#dates.format(fac.procDate, 'yyyy-MM-dd')}"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -241,20 +310,11 @@ label {
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<th>조익수</th>
-								</tr>
-								<tr>
-									<th>김준성</th>
-								</tr>
-								<tr>
-									<th>박규현</th>
-								</tr>
-								<tr>
-									<th>윤성오</th>
-								</tr>
-								<tr>
-									<th>강현진</th>
+								<tr th:each="fac: ${list}">
+									<td th:text="${facStat.count}"></td>
+									<td th:text="${fac.facPerson}"
+										th:data-facPerson="${fac.facPerson}"
+										onclick="updateInputFields2(this)" data-bs-dismiss="modal"></td>
 								</tr>
 							</tbody>
 						</table>
