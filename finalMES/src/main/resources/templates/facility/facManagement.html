@@ -67,6 +67,7 @@ label {
 		// 입력 필드의 값 설정
 		document.getElementById('processCode').value = procCode;
 		document.getElementById('processName').value = procName;
+		
 	}
 
 	function updateInputFields2(Element) {
@@ -74,34 +75,6 @@ label {
 		document.getElementById('facName').value = facPerson;
 	}
 	
-	function deleteFacility() {
-	    var confirmation = confirm("설비를 삭제하시겠습니까?");
-	    
-	    if (confirmation) {
-	        // Get the selected facility code
-	        var equipmentCode = document.getElementById('equipmentCode').value;
-
-	        // Perform AJAX request to delete the facility
-	        // Replace 'your_delete_url' with the actual URL endpoint for deleting
-	        // Pass the equipmentCode to the server for identification
-
-	        // Example using fetch API:
-	        fetch('' + equipmentCode, {
-	            method: 'DELETE',
-	            headers: {
-	                'Content-Type': 'application/json',
-	            },
-	        })
-	        .then(response => response.json())
-	        .then(data => {
-	            // Handle the response from the server, e.g., refresh the page or update the UI
-	            console.log('Success:', data);
-	        })
-	        .catch((error) => {
-	            console.error('Error:', error);
-	        });
-	    }
-	}
 </script>
 
 </head>
@@ -195,11 +168,6 @@ label {
 					</tr>
 				</tbody>
 				<tr>
-					<td colspan="6">
-						<!-- <button type="submit" class="btn btn-outline-success">저장</button> -->
-
-						<<button type="button" id="deleteBtn" class="btn btn-outline-danger" onclick="deleteFacility()">삭제</button>
-					</td>
 				</tr>
 			</table>
 		</div>
@@ -311,7 +279,6 @@ label {
 							</thead>
 							<tbody>
 								<tr th:each="fac: ${list}">
-									<td th:text="${facStat.count}"></td>
 									<td th:text="${fac.facPerson}"
 										th:data-facPerson="${fac.facPerson}"
 										onclick="updateInputFields2(this)" data-bs-dismiss="modal"></td>
