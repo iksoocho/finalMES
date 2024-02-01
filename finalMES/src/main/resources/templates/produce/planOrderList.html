@@ -16,8 +16,6 @@
 			<h2>생산지시목록</h2>
 			<div>
 				<div>
-					<!-- <button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button>
-					<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right;">생산계획서 조회</button> -->
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -31,16 +29,16 @@
 							</tr>
 						</thead>
 						<tbody class="ins">
-								<tr th:each="ins : ${insList}"
-									th:data-ins-code="${ins.insCode}" class="ins-row">
-									<td th:text="${insStat.count}"></td>
-									<td th:text="${ins.insCode}"></td>
-									<td th:text="${ins.insCode}"></td>
-									<td th:text="${ins.insTitle}"></td>
-									<td th:text="${ins.insPerson}"></td>
-									<td th:text="${#dates.format(ins.insDate, 'yyyy-MM-dd') }"></td>
-									<td th:text="${ins.insNote}"></td>
-								</tr>
+							<tr th:each="ins : ${insList}"
+								th:data-ins-code="${ins.insCode}" class="ins-row">
+								<td th:text="${insStat.count}"></td>
+								<td th:text="${ins.insCode}"></td>
+								<td th:text="${ins.insCode}"></td>
+								<td th:text="${ins.insTitle}"></td>
+								<td th:text="${ins.insPerson}"></td>
+								<td th:text="${#dates.format(ins.insDate, 'yyyy-MM-dd') }"></td>
+								<td th:text="${ins.insNote}"></td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -60,57 +58,65 @@
 							</tr>
 						</thead>
 						<tbody id="detailPlanOrder">
-							<th:block th:each="detail : ${detailList}">
-								<tr>
-									<th>
-										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="flexRadioDefault" th:id="${detail.dInsCode}" >
-										  <label class="form-check-label" th:for="${detail.dInsCode}"></label>
-										</div>
-									</th>
-									<td th:text="${detail.insCode}"></td>
-									<td th:text="${detail.prodCode}"></td>
-									<td th:text="${detail.dInsCount}"></td>
-									<td th:text="${#dates.format(detail.dInsSdate, 'yyyy-MM-dd') }"></td>
-									<td th:text="${#dates.format(detail.dInsEdate, 'yyyy-MM-dd') }"></td>
-									<td th:text="${detail.dInsNote}"></td>
-								</tr>
-							</th:block>
+							<tr th:block th:each="detail : ${detailList}">
+								<td>
+									<div class="form-check">
+									  <input class="form-check-input" type="radio" name="flexRadioDefault" th:id="${detail.dInsCode}" >
+									  <label class="form-check-label" th:for="${detail.dInsCode}"></label>
+									</div>
+								</td>
+								<td th:text="${detail.insCode}"></td>
+								<td th:text="${detail.prodCode}"></td>
+								<td th:text="${detail.dInsCount}"></td>
+								<td th:text="${#dates.format(detail.dInsSdate, 'yyyy-MM-dd') }"></td>
+								<td th:text="${#dates.format(detail.dInsEdate, 'yyyy-MM-dd') }"></td>
+								<td th:text="${detail.dInsNote}"></td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
+	<script>
+	document.querySelectorAll('.ins-row').forEach(row => {
+		row.addEventListener('click', function() {
+			const insCode = this.getAttribute('data-ins-code');
+			console.log('insCode : ', insCode);
+			fetch('/planOrderDetail?insCode=' + insCode)
+				.then(response => response.json())
+				.then(data => {
+					const detailsTbody = document.getElementById('detailPlanOrder');
+					detailsTbody.innerHTML = ''; // 기존 내용 초기화
+	
+					// 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
+					data.forEach(detail => {
+						const tr = document.createElement('tr');
+						const sDate = new Date(detail.dinsSdate);
+						const eDate = new Date(detail.dinsEdate);
+						const formatSdate = sDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+						const formatEdate = eDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+						console.log(detail);
+						tr.innerHTML = `
+							<td>
+								<div class="form-check">
+								  <input class="form-check-input" type="radio" name="flexRadioDefault" th:id="${detail.dInsCode}" >
+								  <label class="form-check-label" th:for="${detail.dInsCode}"></label>
+								</div>
+							</td>
+							<td>${detail.insCode}</td>
+							<td>${detail.prodCode}</td>
+							<td>${detail.dinsCount}</td>
+							<td>${formatSdate}</td>
+							<td>${formatEdate}</td>
+							<td>${detail.dinsNote}</td>
+						`;
+						detailsTbody.appendChild(tr);
+					});
+				});
+		});
+	});
+	</script>
 	</section>
 </body>
-<script>
-document.querySelectorAll('.ins-row').forEach(row => {
-    row.addEventListener('click', function() {
-        const insCode = this.getAttribute('data-ins-code');
-        fetch('/planOrderDetail?insCode=' + insCode)
-            .then(response => response.json())
-            .then(data => {
-                const detailsTbody = document.getElementById('detailPlanOrder');
-                detailsTbody.innerHTML = ''; // 기존 내용 초기화
-
-                // 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-                data.forEach(detail => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                    	<td>${detail.insCode}</td>
-						<td>${detail.prodCode}</td>
-						<td>${detail.dInsCount}</td>
-						<td>${#dates.format(detail.dInsSdate, 'yyyy-MM-dd')</td>
-						<td>${#dates.format(detail.dInsEdate, 'yyyy-MM-dd')</td>
-						<td>${detail.dInsNote}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                
-            });
-    });
-});
-</script>
 
 </html>
