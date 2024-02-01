@@ -41,6 +41,10 @@ input[type=text], input[type=date], select {
 	width: 90%;
 }
 
+input[type=number] {
+	width: 60%;
+}
+
 .orderInfoOne th {
 	border: solid 1px gray;
 	text-align: center;
@@ -142,9 +146,8 @@ button {
 	position: relative;
 }
 
-.modal-body li {
+.modal-body td {
 	border-bottom: solid 1px rgba(220, 220, 220);
-	padding: 10px;
 	cursor: pointer;
 }
 
@@ -153,6 +156,17 @@ button {
 }
 </style>
 <script>
+	function displaySelectedProduct(element) {
+		var prodCode = element.getAttribute('data-prodCode');
+		var prodName = element.getAttribute('data-prodName');
+		var prodUnit = element.getAttribute('data-prodUnit');
+		var prodPrice = element.getAttribute('data-prodPrice');
+
+		// 선택한 상품 정보를 selectedProduct div에 표시
+		document.getElementById('selectedProduct').innerHTML = '선택한 상품: '
+				+ prodCode + ' - ' + prodName + ' (' + prodUnit + ') - 가격: '
+				+ prodPrice;
+	}
 	function updateInputFields(liElement) {
 		// 클릭한 <li> 요소에서 데이터 속성을 가져옴
 		var businessCode = liElement.getAttribute('data-businessCode');
@@ -250,7 +264,7 @@ button {
 			</div>
 			<div class="containerThree">
 				<h5>상세정보</h5>
-
+				<div id="selectedProduct"></div>
 				<button class="btn btn-primary">삭제</button>
 				<button class="btn btn-primary">추가</button>
 				<button class="btn btn-success" data-bs-toggle="modal"
@@ -267,7 +281,7 @@ button {
 					<tr>
 						<th>품목명</th>
 						<th>단위</th>
-						<th>수량</th>
+						<th style="width: 8%">수량</th>
 						<th>단가</th>
 						<th>총금액</th>
 					</tr>
@@ -277,22 +291,12 @@ button {
 						<td>아메리카노</td>
 						<td>EA</td>
 						<td>2024-01-30</td>
-						<td class="number">10</td>
+						<td class="number"><input type="number" /></td>
 						<td class="number">2,000</td>
 						<td class="number">20,000</td>
 						<td>어쩌구저쩌구</td>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td><input type="checkbox"></td>
-						<td>카페라떼</td>
-						<td>EA</td>
-						<td>2024-01-30</td>
-						<td class="number">20</td>
-						<td class="number">2,500</td>
-						<td class="number">50,000</td>
-						<td>어쩌구저쩌구</td>
-					</tr>
+
 					<tr class="total">
 						<td></td>
 						<td colspan="4">합계</td>
@@ -304,6 +308,7 @@ button {
 					<tr>
 						<td colspan="9" class="ttlCount">총건수: 2</td>
 					</tr>
+
 				</table>
 			</div>
 		</div>
@@ -322,14 +327,14 @@ button {
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
-					
+
 					<div class="modal-body">
 
 						<table>
 							<thead>
 								<tr>
-									<td>거래처코드</td>
-									<td>거래처명</td>
+									<th>거래처코드</th>
+									<th>거래처명</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -363,34 +368,36 @@ button {
 				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="modal-title fs-5" id="staticBackdropLabel"
-							style="font-weight: bold">거래처 목록</h1>
+							style="font-weight: bold">품목 목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
 
 					<div class="modal-body">
+						<table>
+							<thead>
+								<tr>
+									<th>상품 코드</th>
+									<th>상품 이름</th>
+									<th>상품 단위</th>
+									<th>상품 가격</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="prod : ${productList}"
+									th:data-prodCode="${prod.prodCode}"
+									th:data-prodName="${prod.prodName}"
+									th:data-prodUnit="${prod.prodUnit}"
+									th:data-prodPrice="${prod.prodPrice}" data-bs-dismiss="modal"
+									th:onclick="'displaySelectedProduct(this)'">
+									<td th:text="${prod.prodCode}"></td>
+									<td th:text="${prod.prodName}"></td>
+									<td th:text="${prod.prodUnit}"></td>
+									<td th:text="${prod.prodPrice}"></td>
+								</tr>
+							</tbody>
+						</table>
 
-						<hr style="margin-top: 10px;">
-						<div class="modal-body" style="padding: 0px">
-							<table>
-								<thead>
-									<tr>
-										<th>상품 코드</th>
-										<th>상품 이름</th>
-										<th>상품 단위</th>
-										<th>상품 가격</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="prod : ${productList}">
-										<td th:text="${prod.prodCode}"></td>
-										<td th:text="${prod.prodName}"></td>
-										<td th:text="${prod.prodUnit}"></td>
-										<td th:text="${prod.prodPrice}"></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
