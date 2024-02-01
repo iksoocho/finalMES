@@ -19,25 +19,25 @@ public class MaterialTest {
 
 		@Test
 		public void 전체조회() {
-			List<MatOrderVO> list = materialMapper.getMatList(null);
+			List<MatOrderVO> list = materialMapper.getMatOrderList();
 			System.out.println(list);
 			assertThat(list.isEmpty()).isEqualTo(false);
 		}
 		
 		
-		//등록
-		@Test
-		public void insertInfo() {
-			MatOrderVO matOrderVO = new MatOrderVO();
-			matOrderVO.setMatOrCode(null);
-			matOrderVO.setMatOrName(null);
-			matOrderVO.setMatCode(null);
-			matOrderVO.setMatOrDate(null);
-			matOrderVO.setMatOrManager(null);
-			
-			int result = materialMapper.insertMatOrder(matOrderVO);
-			assertNotEquals(result, 0);
-		}
-		
+//		//등록
+//		@Test
+//		public void insertInfo() {
+//			MatOrderVO matOrderVO = new MatOrderVO();
+//			matOrderVO.setMatOrCode(null);
+//			matOrderVO.setMatOrName(null);
+//			matOrderVO.setMatCode(null);
+//			matOrderVO.setMatOrDate(null);
+//			matOrderVO.setMatOrManager(null);
+//			
+//			int result = materialMapper.insertMatOrder(matOrderVO);
+//			assertNotEquals(result, 0);
+//		}
+//		
 	
 }

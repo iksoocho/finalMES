@@ -23,7 +23,13 @@ public class MatOrderVO {
 	//발주상세
 	private String matOrInfoCode;
 	private int matOrICount;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date matOrDueDate;
+	
+	
+	private String businessName;
+	private String businessManager;
+	private String businessManagerPhone;
 	
 	
 }
