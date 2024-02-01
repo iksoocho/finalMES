@@ -27,6 +27,12 @@ public class PlanServiceImpl implements PlanService{
 	}
 	
 	@Override
+	public List<PlanVO> getPlanByOrdCode(String ordCode) {
+		// TODO Auto-generated method stub
+		return planMapper.selectPlanByOrdCode(ordCode);
+	}
+	
+	@Override
 	public List<PlanDVO> getPlanDList(String planCode) {
 		// TODO Auto-generated method stub
 		return planMapper.selectPlanDList(planCode);
@@ -43,6 +49,18 @@ public class PlanServiceImpl implements PlanService{
 		// TODO Auto-generated method stub
 		return planMapper.selectOrdDList(ordCode);
 	}
+
+	@Override
+	public int insertPlanInfo(PlanVO planVO) {
+		int result = planMapper.insertPlanInfo(planVO);
+		if(result ==1) {
+			return 1;
+		}else {
+			return -1;
+		}
+	}
+
+	
 
 	
 
