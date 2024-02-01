@@ -18,14 +18,11 @@ public class MaterialController {
 	
 
 	@GetMapping("matOrder")
-	public String list(Model model) {
+	public String getMatlist(Model model) {
 		List<MatOrderVO> list = materialService.getMaterialOrderList();
 		model.addAttribute("list", list);
 		return "material/matOrder";
 	}
-	
-
-
 	
 
 }
