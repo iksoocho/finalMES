@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class PlanDVO {
-	private String dPlanCode;
+	private String dplanCode;
 	private String planCode;
 	private String prodCode;
 	private int dPlanCount;
@@ -21,4 +21,6 @@ public class PlanDVO {
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dlvyDate;
+	
+	private int prodCount;
 }
