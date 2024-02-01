@@ -200,17 +200,18 @@ button {
 			<div id="grid2"></div>
 		</div>
 
-		<button class="btn btn-primary" data-bs-toggle="modal"
-			data-bs-target="#exampleModal">등록</button>
-
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+			data-bs-target="#staticBackdrop">등록</button>
 
 		<!--  ============	모달창 ============-->
-		<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal fade modal-xl" id="staticBackdrop" data-bs-backdrop="static"
+			data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">발주 등록</h5>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel">
+							발주 등록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
@@ -253,11 +254,11 @@ button {
 						</table>
 
 
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">닫기</button>
-							<button type="button" class="btn btn-primary" id="submitButton" >작성완료</button>
-						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+						<button type="button" class="btn btn-primary" id="submitButton">작성완료</button>
 					</div>
 				</div>
 			</div>
