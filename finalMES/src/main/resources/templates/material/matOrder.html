@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -5,118 +6,466 @@
 <head>
 <meta charset="UTF-8">
 <title>발주 관리 ^^</title>
-<style>
-</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<style>
+input {
+	padding-left: 10px;
+}
+
+th {
+	background-color: rgba(250, 250, 250);
+}
+
+.containerOne {
+	margin: 20px;
+	text-align: center;
+}
+
+.containerTwo {
+	margin-top: 20px;
+}
+
+table {
+	width: 100%;
+}
+
+h4 {
+	text-align: left;
+}
+
+tr {
+	height: 42px;
+}
+
+input[type=text], input[type=date], select {
+	width: 90%;
+}
+
+.orderInfoOne th {
+	border: solid 1px gray;
+	text-align: center;
+	width: 156px;
+}
+
+.orderInfoOne td, .orderInfoTwo td {
+	border: solid 1px gray;
+	width: 500px;
+}
+
+.orderInfoTwo {
+	margin-top: 10px;
+	border: solid 1px gray;
+}
+
+.orderInfoTwo th {
+	border: solid 1px gray;
+	width: 156px;
+}
+
+.moreInfo, .moreInfo th, .moreInfo td, .orderInfoOne {
+	border: solid 1px gray;
+}
+
+.ttlCount {
+	text-align: right;
+	padding-right: 10px;
+}
+
+h5 {
+	display: inline-block;
+	float: left;
+	margin-top: 8px;
+}
+
+button {
+	float: right;
+	margin-right: 5px;
+	margin-bottom: 10px;
+}
+
+.space {
+	height: 10px;
+	border: solid 1px #fff;
+}
+
+.number {
+	text-align: right;
+	padding-right: 10px;
+}
+
+.containerThree {
+	margin-top: 30px;
+}
+
+.red {
+	color: red;
+}
+
+.serch {
+	padding-left: 11px;
+	padding-right: 22px;
+}
+
+.serch input {
+	margin-top: 1px;
+	width: 40%;
+	background-color: rgba(250, 250, 250);
+	border: solid 1px gray;
+	border-radius: 2px;
+}
+
+.serch button {
+	margin: 0px;
+	width: 50px;
+	height: 30px;
+}
+
+.serch p {
+	font-size: 12px;
+}
+
+.readInput {
+	background-color: rgba(250, 250, 250);
+	border: solid 1px gray;
+	border-radius: 2px;
+}
+
+.total {
+	background-color: rgba(255, 0, 0, 0.5);
+}
+
+.modal-body ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.modal-body li {
+	border-bottom: solid 1px rgba(220, 220, 220);
+	margin: 15px;
+	padding: 10px;
+}
+</style>
 </head>
 <body>
 	<section layout:fragment="content">
 		<div class=""></div>
 		<h1>발주 관리</h1>
 		<div>
+			<!-- 메인 -->
+			<table class="table">
+				<thead>
+					<tr>
+						<th>발주 코드</th>
+						<td><input type="text"></td>
+						<th>발주 명</th>
+						<td><input type="text"></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th>자재 코드</th>
+						<td><input type="text"></td>
+						<th class="red">거래처</th>
+						<td class="serch"><input type="text"
+							id="selectedBusinessCode" readonly> <input type="text"
+							id="selectedBusinessName" readonly>
+							<button class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#staticBackdrop">
+								<p>검색</p>
+							</button></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th>수량</th>
+						<td><input type="number"></td>
+						<th>발주일</th>
+						<td><input type="date" id="registrationDate"></td>
+						<th>담당자 *</th>
+						<td colspan="2"><input type="text" id="facName"
+							name="facName" required data-toggle="modal"
+							data-target="#myModal3"></td>
+						<td></td>
+					</tr>
+				</thead>
+			</table>
+			<button class="btn btn-primary">초기화</button>
+			<button class="btn btn-primary">조회</button>
+			<div id="grid2"></div>
+		</div>
 
-			<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
-				aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">발주 등록</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<table class="table">
-								<thead>
-									<tr>
-										<th>발주 코드</th>
-										<td><input type="text"></td>
-										<th>발주 명</th>
-										<td><input type="text"></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<th>자재 코드</th>
-										<td><input type="text"></td>
-										<th>거래처 명</th>
-										<td><input type="text"></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<th>수량</th>
-										<td><input type="number"></td>
-										<th>발주일</th>
-										<td><input type="date"></td>
-										<th>담당자</th>
-										<td><input type="text"></td>
-										<td></td>
-									</tr>
-								</thead>
-							</table>
-							<button>초기화</button>
-							<div id="grid2"></div>
-						</div>
+		<button class="btn btn-primary" data-bs-toggle="modal"
+			data-bs-target="#exampleModal">등록</button>
 
 
+		<!--  ============	모달창 ============-->
+		<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">발주 등록</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+
+						<!-- 	모달 내용 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>발주 코드</th>
+									<td><input type="text" name="matOrCode"></td>
+									<th>발주 명</th>
+									<td><input type="text" name="matOrName"></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<th>자재 코드</th>
+									<td><input type="text" name="matCode"></td>
+									<th>거래처 명</th>
+									<td><input type="text" name="busineesName"></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<!-- 									<th>발주일</th> -->
+									<!-- 									<td><input type="date" name="matOrDate"></td> -->
+									<th>납기일</th>
+									<td><input type="date" name="matOrDueDate"></td>
+									<td></td>
+								</tr>
+								<tr>
+									<th>수량</th>
+									<td><input type="number" min=0 name="matOrCount"></td>
+									<th>담당자 *</th>
+									<td colspan="2"><input type="text" name="matOrManager"
+										required></td>
+								</tr>
+							</thead>
+						</table>
 
 
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">닫기</button>
-							<button type="button" class="btn btn-primary">작성완료</button>
+							<button type="button" class="btn btn-primary" id="submitButton" >작성완료</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<button class="btn btn-primary" data-bs-toggle="modal"
-				data-bs-target="#exampleModal">등록</button>
-
-
 		</div>
+
+
+		<!-- Modal -->
+		<!-- ManagerListModal -->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+			data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel">거래처 목록
+						</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<ul>
+							<li th:each="mat : ${list}"
+								th:data-businessCode="${mat.businessCode}"
+								th:data-businessName="${mat.businessName}"
+								th:data-businessManager="${mat.businessManager}"
+								th:text="${mat.businessCode + ' ' + mat.businessName}"
+								data-bs-dismiss="modal" onclick="updateInputFields(this)"></li>
+						</ul>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 담당자모달 -->
+		<div class="modal" id="myModal3">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 모달 헤더 -->
+					<div class="modal-header">
+						<h4 class="modal-title">담당자명</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>담당자</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>조익수</th>
+								</tr>
+								<tr>
+									<th>김준성</th>
+								</tr>
+								<tr>
+									<th>박규현</th>
+								</tr>
+								<tr>
+									<th>윤성오</th>
+								</tr>
+								<tr>
+									<th>강현진</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div id="grid"></div>
 		<script th:inline="javascript">
-			function sortTableByOrderCode() {
-				var table, rows, switching, i, x, y, shouldSwitch;
-				table = document.getElementById("orderTable");
-				switching = true;
-				while (switching) {
-					switching = false;
-					rows = table.getElementsByTagName("tr");
-					for (i = 1; i < (rows.length - 1); i++) {
-						shouldSwitch = false;
-						x = rows[i].getElementsByTagName("td")[1];
-						y = rows[i + 1].getElementsByTagName("td")[1];
-						if (x.innerHTML.toLowerCase() > y.innerHTML
-								.toLowerCase()) {
-							shouldSwitch = true;
-							break;
-						}
-					}
-					if (shouldSwitch) {
-						rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-						switching = true;
-					}
-				}
-			}
+		document.getElementById("submitButton").addEventListener("click", function() {
+			  // 발주 등록 정보 수집
+			  var matOrCode = document.getElementsByName("matOrCode")[0].value;
+			  var matOrName = document.getElementsByName("matOrName")[0].value;
+			  var matCode = document.getElementsByName("matCode")[0].value;
+			  var busineesName = document.getElementsByName("busineesName")[0].value;
+			  var matOrDueDate = document.getElementsByName("matOrDueDate")[0].value;
+			  var matOrCount = document.getElementsByName("matOrCount")[0].value;
+			  var matOrManager = document.getElementsByName("matOrManager")[0].value;
 
-			$(document).ready(
-					function() {
-						window.toggleCheckboxes = function() {
-							// #selectAllCheckbox 체크박스의 상태 가져오기
-							var isChecked = $("#selectAllCheckbox").prop(
-									"checked");
+			  // 수집한 정보를 이용하여 발주 등록 처리
+			  // 여기서는 예시로 콘솔에 수집한 정보를 출력하는 것으로 대체하였습니다.
+			  console.log("발주 코드: " + matOrCode);
+			  console.log("발주 명: " + matOrName);
+			  console.log("자재 코드: " + matCode);
+			  console.log("거래처 명: " + busineesName);
+			  console.log("납기일: " + matOrDueDate);
+			  console.log("수량: " + matOrCount);
+			  console.log("담당자: " + matOrManager);
 
-							// 모든 체크박스의 상태를 변경
-							$(".moreInfo input[type='checkbox']").prop(
-									"checked", isChecked);
-						}
-					});
-			
+			  // 추가적인 발주 등록 처리 로직을 구현해야 합니다.
+		    var data = {
+		        matOrCode: matOrCode,
+		        matOrName: matOrName,
+		        matCode: matCode,
+		        busineesName: busineesName,
+		        matOrDueDate: matOrDueDate,
+		        matOrCount: matOrCount,
+		        matOrManager: matOrManager
+		    };
+			    fetch("/matOrder", {
+			        method: "POST",
+			        body: JSON.stringify(data),
+			        headers: {
+			            "Content-Type": "application/json"
+			        }
+			    })
+			    .then(response => {
+			        if (response.ok) {
+			            // 요청이 성공적으로 처리되었을 때 실행되는 코드
+			            console.log(response);
+			            alert("요청이 성공적으로 처리되었습니다.");
+			        } else {
+			            // 요청이 실패하였을 때 실행되는 코드
+			            console.log(response);
+			            alert("요청 처리 중 오류가 발생했습니다.");
+			        }
+			    })
+			    .catch(error => {
+			        console.log(error);
+			        alert(error.message);
+			    });
+			});
+		
+
+		
+		function updateInputFields(liElement) {
+			// 클릭한 <li> 요소에서 데이터 속성을 가져옴
+			var businessCode = liElement.getAttribute('data-businessCode');
+			var businessName = liElement.getAttribute('data-businessName');
+			var businessManager = liElement.getAttribute('data-businessManager');
+			var businessManagerPhone = liElement
+					.getAttribute('data-businessManagerPhone');
+
+			// 입력 필드의 값 설정
+			document.getElementById('selectedBusinessCode').value = businessCode;
+			document.getElementById('selectedBusinessName').value = businessName;
+			document.getElementById('selectedBusinessManager').value = businessManager;
+			document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
+		}
+		function selectBusiness(liElement) {
+			// 거래처를 선택한 후 모달을 닫기 위한 코드
+			updateInputFields(liElement);
+		}
+
+		// 페이지 로드 시에 호출되는 함수
+		document.addEventListener('DOMContentLoaded', function() {
+			// 현재 날짜를 가져오는 함수 호출
+			var currentDate = getCurrentDate();
+
+			// 입력 필드에 현재 날짜 설정
+			document.getElementById('registrationDate').value = currentDate;
+		});
+
+		// 현재 날짜를 반환하는 함수
+		function getCurrentDate() {
+			var today = new Date();
+			var year = today.getFullYear();
+			var month = ('0' + (today.getMonth() + 1)).slice(-2); // 0을 추가해서 두 자리로 만듦
+			var day = ('0' + today.getDate()).slice(-2); // 0을 추가해서 두 자리로 만듦
+			return year + '-' + month + '-' + day;
+		}
+		function generateOrdCode(businessCode) {
+			// 오늘 날짜 가져오기
+			var currentDate = getCurrentDate();
+
+			// 주문 횟수 (예시로 001부터 시작하도록 설정)
+			var orderCount = 1;
+
+			// 주문서 번호 생성 (거래처코드 + 오늘날짜 + 주문횟수)
+			var ordCode = businessCode + currentDate
+					+ ('00' + orderCount).slice(-3);
+
+			// 주문 횟수 증가
+			orderCount++;
+
+			return ordCode; // 변수 이름을 ordCode로 수정
+		}
+
+		function selectBusiness(liElement) {
+			// 거래처 코드를 가져오기
+			var businessCode = liElement.getAttribute('data-businessCode');
+
+			// 주문서 번호 생성
+			var orderNumber = generateOrdCode(businessCode); // generateOrdCode 함수로 수정
+
+			// 생성된 주문서 번호를 input 창에 표시
+			document.getElementById('ordCode').value = orderNumber;
+		}
 			
 			 let order = [[${list}]]
 			
 			 const grid = new tui.Grid({
+				 	
 		            el: document.getElementById('grid'),
 		            data: order, // 여기서 emps 데이터를 사용
 		            scrollX: false,
@@ -145,10 +494,20 @@
 			        {
 				      header: '발주일',
 				      name: 'matOrDate',
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '납기일',
 				      name: 'matOrDueDate',
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '담당자',
@@ -161,10 +520,6 @@
 		                perPage: 5
 		            }
 			    });
-			 
-			 
-			 
-			
 				
 			 const grid2 = new tui.Grid({
 		            el: document.getElementById('grid2'),
@@ -195,10 +550,20 @@
 			        {
 				      header: '발주일',
 				      name: 'matOrDate',
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '납기일',
 				      name: 'matOrDueDate',
+				      formatter : function dateFormatter(params) {
+				    	  const date = new Date(params.value);
+				    	  const isoDate = date.toISOString().split('T')[0];
+				    	  return isoDate;
+				    	}
 				    },
 				    {
 				      header: '담당자',
@@ -211,10 +576,7 @@
 		                perPage: 5
 		            }
 			    });
-			
-			
-			
-		</script>
+</script>
 	</section>
 </body>
 </html>

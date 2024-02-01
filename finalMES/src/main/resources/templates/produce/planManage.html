@@ -37,7 +37,13 @@
 									<tbody>
 										<tr th:each="ord : ${ordList}"
 											th:data-ord-code="${ord.ordCode}" class="ord-row">
-											<td><input type="checkbox"></td>
+											<td>
+												<div class="form-check">
+													<input class="form-check-input" type="radio"
+														name="flexRadioDefault" th:id="${ord.ordCode}">
+													<label class="form-check-label" th:for="${ord.ordCode}"></label>
+												</div>
+											</td>
 											<td th:text="${ord.ordCode}"></td>
 											<td th:text="${#dates.format(ord.ordDate, 'yyyy-MM-dd')}"></td>
 											<td th:text="${ord.ordNote}"></td>
@@ -50,10 +56,8 @@
 
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save
-								changes</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" id="addPlanBtn">추가</button>
 						</div>
 					</div>
 				</div>
@@ -64,11 +68,11 @@
 			<div>
 				<div>
 					<button class="btn btn-secondary"
-						style="float: right; margin: 0 5px;">저장</button>
+						style="float: right; margin: 0 5px;"  id="planInsert">저장</button>
 					<button class="btn btn-secondary" data-bs-toggle="modal"
 						data-bs-target="#exampleModal" style="float: right;">주문서
 						조회</button>
-					<table class="table">
+					<table class="table table-hover" id="planTable">
 						<thead>
 							<tr>
 								<th>No</th>
@@ -81,26 +85,28 @@
 							</tr>
 						</thead>
 						<tbody>
-							<th:block th:each="plan : ${list}">
-								<tr>
-									<td th:text="${planStat.count}"></td>
-									<td th:text="${plan.planCode}"></td>
-									<td th:text="${plan.ordCode}"></td>
-									<td th:text="${plan.planTitle}"></td>
-									<td th:text="${plan.planPerson}"></td>
-									<td th:text="${#dates.format(plan.planDate, 'yyyy-MM-dd')}"></td>
+
+							<tr th:each="plan : ${list}" th:data-plan-code="${plan.planCode}"
+								class="plan-row">
+								<td th:text="${planStat.count}"></td>
+								<td th:text="${plan.planCode}"></td>
+								<td th:text="${plan.ordCode}"></td>
+								<td th:text="${plan.planTitle}"></td>
+								<td th:text="${plan.planPerson}"></td>
+								<td th:text="${#dates.format(plan.planDate, 'yyyy-MM-dd')}"></td>
 
 
-								</tr>
-							</th:block>
+							</tr>
+
 						</tbody>
 					</table>
 				</div>
 				<!-- ============================생산상세계획============================ -->
+
 				<div class="mt-4">
 					<button class="btn btn-secondary"
 						style="float: right; margin: 0 5px;">저장</button>
-					<table class="table">
+					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th>No</th>
@@ -114,7 +120,7 @@
 								<th>납기/마감일자</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="planDetails">
 							<th:block th:each="planD : ${dList}">
 								<tr>
 									<td>1</td>
@@ -122,8 +128,8 @@
 									<td th:text="${planD.prodCode}"></td>
 									<td><input type="date"></td>
 									<td><input type="date"></td>
-									<td>현재재고</td>
-									<td th:text="${planD.dPlanCount}"></td>
+									<td th:text="${planD.prodCount}"></td>
+									<td th:text="${planD.dplanCount}"></td>
 									<td><input type="number"></td>
 									<td th:text="${#dates.format(planD.dlvyDate, 'yyyy-MM-dd')}"></td>
 								</tr>
@@ -135,50 +141,193 @@
 			</div>
 		</div>
 		<script>
-		document.querySelectorAll('.ord-row').forEach(row => {
-		    row.addEventListener('click', function() {
-		        const ordCode = this.getAttribute('data-ord-code');
-		        fetch('/orderDetail?ordCode=' + ordCode)
-		            .then(response => response.json())
-		            .then(data => {
-		                const detailsContainer = document.getElementById('orderDetails');
-		                detailsContainer.innerHTML = ''; // 기존 내용 초기화
-
-		                // 테이블 및 thead 구성
-		                const table = document.createElement('table');
-		                table.className = 'table';
-		                table.innerHTML = `
-		                    <thead>
-		                        <tr>
-		                            <th>제품 코드</th>
-		                            <th>주문 수량</th>
-		                            <th>납기일자</th>
-		                        </tr>
-		                    </thead>
-		                `;
-
-		                // tbody 생성
-		                const tbody = document.createElement('tbody');
-
-		                // 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-		                data.forEach(detail => {
-		                    const tr = document.createElement('tr');
-		                    tr.innerHTML = `
-		                        <td>${detail.prodCode}</td>
-		                        <td>${detail.ordCount}</td>
-		                        <td>${detail.dlvyDate}</td>
-		                    `;
-		                    tbody.appendChild(tr);
+			 // 초기에 모달 창을 만들 때 테이블 헤더를 미리 추가합니다.
+		    const detailsContainer = document.getElementById('orderDetails');
+		    const table = document.createElement('table');
+		    table.className = 'table';
+	
+		    const thead = document.createElement('thead');
+		    thead.innerHTML = `
+		        <tr>
+		            <th>제품 코드</th>
+		            <th>주문 수량</th>
+		            <th>납기일자</th>
+		        </tr>
+		    `;
+		    table.appendChild(thead);
+	
+		    detailsContainer.appendChild(table);
+	
+		    document.querySelectorAll('.ord-row').forEach(row => {
+		        row.addEventListener('click', function() {
+		            const ordCode = this.getAttribute('data-ord-code');
+		            fetch('/orderDetail?ordCode=' + ordCode)
+		                .then(response => response.json())
+		                .then(data => {
+		                    // 테이블 본문을 업데이트합니다.
+		                    const tbody = document.createElement('tbody');
+	
+		                    data.forEach(detail => {
+		                        const tr = document.createElement('tr');
+		                        
+		                        const date = new Date(detail.dlvyDate);
+		                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                        
+		                        tr.innerHTML = `
+		                            <td>${detail.prodCode}</td>
+		                            <td>${detail.ordCount}</td>
+		                            <td>${formattedDate}</td>
+		                            
+		                        `;
+		                        tbody.appendChild(tr);
+		                    });
+	
+		                    // 기존 테이블 본문을 제거하고 새로운 테이블 본문으로 교체합니다.
+		                    const existingTbody = table.querySelector('tbody');
+		                    if (existingTbody) {
+		                        table.removeChild(existingTbody);
+		                    }
+		                    table.appendChild(tbody);
 		                });
-
-		                // 완성된 tbody를 테이블에 추가
-		                table.appendChild(tbody);
-
-		                // 완성된 테이블을 detailsContainer에 추가
-		                detailsContainer.appendChild(table);
-		            });
+		        });
 		    });
-		});
+		    
+		    
+		    
+		    
+		    
+		    document.querySelectorAll('.plan-row').forEach(row => {
+				row.addEventListener('click', function() {
+					const  planCode = this.getAttribute('data-plan-code');
+					
+					 fetch('/planDetail?planCode=' + planCode)
+						.then(response => response.json())
+						.then(data => {
+							const detailsTbody = document.getElementById('planDetails');
+							detailsTbody.innerHTML = ''; // 기존 내용 초기화
+			
+							// 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
+							data.forEach(detail => {
+								const tr = document.createElement('tr');
+								const date = new Date(detail.dlvyDate);
+		                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+								console.log(detail);
+								tr.innerHTML = `
+									<td>${detail.dplanCode}</td>
+		                            <td>${detail.planCode}</td>
+		                            <td>${detail.prodCode}</td>
+		                            <td><input type="date"></td>
+		                            <td><input type="date"></td>
+		                            <td>${detail.prodCount}</td>
+		                            <td>${detail.dplanCount}</td>
+		                            <td><input type="number"></td>
+		                            <td>${formattedDate}</td>
+								`;
+								detailsTbody.appendChild(tr);
+							});
+						});
+				});
+			});
+		    
+		    
+		    
+		    
+		    document.getElementById('addPlanBtn').addEventListener('click', function() {
+		        var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
+		        if (!selectedRadio) {
+		            alert('주문을 선택해주세요.');
+		            return;
+		        }
+
+		        var ordCode = selectedRadio.id;
+		        
+		                // 서버로부터 받은 데이터를 사용하여 테이블에 행 추가
+		                var planTable = document.getElementById('planTable');
+		                var newRow = planTable.insertRow(-1);
+		                newRow.className = "plan-row new-row";
+		                
+		                var newNo = planTable.rows.length;
+
+		                var cell1 = newRow.insertCell(0);
+		                var cell2 = newRow.insertCell(1);
+		                var cell3 = newRow.insertCell(2);
+		                var cell4 = newRow.insertCell(3);
+		                var cell5 = newRow.insertCell(4);
+		                var cell6 = newRow.insertCell(5);
+		                
+		                var planTitleInput = document.createElement('input');
+		                planTitleInput.type = 'text'
+		                
+		                var dateInput = document.createElement('input');
+		                dateInput.type = 'date'
+		                var today = new Date();
+		                var dd = String(today.getDate()).padStart(2, '0');
+		                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		                var yyyy = today.getFullYear();
+
+		                today = yyyy + '-' + mm + '-' + dd;
+		                dateInput.value = today;
+		                // ... 추가 셀 생성 및 데이터 설정
+
+		                cell1.innerHTML = newNo - 1; // 서버로부터 받은 데이터 사용
+		                cell2.innerHTML = '';
+		                cell3.innerHTML = ordCode;
+		                cell4.appendChild(planTitleInput);
+		                cell5.innerHTML = '조익수';
+		                cell6.appendChild(dateInput);
+		                
+		                // 모달 닫기
+		                var exampleModal = document.getElementById('exampleModal');
+		                var modal = bootstrap.Modal.getInstance(exampleModal);
+		                modal.hide();
+		           
+		    });
+		    
+		    
+		    
+		    //insert
+		    document.querySelector('#planInsert').addEventListener('click', function() {
+		        // 'new-row' 클래스를 가진 행들만 선택
+		        var newPlanRows = document.querySelectorAll('#planTable .new-row');
+
+		        var planData = Array.from(newPlanRows).map(row => {
+		            return {
+		                
+		            	ordCode: row.querySelector('td:nth-child(3)').innerText,
+		                planTitle: row.querySelector('td:nth-child(4) input').value, // input 요소의 value 속성 사용
+		                planPerson: row.querySelector('td:nth-child(5)').innerText,
+		                planDate: row.querySelector('td:nth-child(6) input').value // input 요소의 value 속성 사용
+		            };
+		        });
+		        
+		        console.log(planData);
+		        console.log(JSON.stringify(planData));
+		        
+		        
+		        // AJAX 요청으로 서버에 데이터 전송
+		        fetch('/planInsert', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		                
+		            },
+		            body: JSON.stringify(planData)
+		        })
+		        .then(response => {
+		            if (!response.ok) {
+		                throw new Error('Network response was not ok');
+		            }
+		            return response.json();
+		        })
+		        .then(data => {
+		            console.log('Success:', data);
+		            window.location.href = 'planManage'; // 성공적으로 처리된 후 리디렉트
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		        });
+		    });
+		   
 		</script>
 	</section>
 

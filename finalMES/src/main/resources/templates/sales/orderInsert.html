@@ -8,6 +8,10 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
+input {
+	padding-left: 10px;
+}
+
 th {
 	background-color: rgba(250, 250, 250);
 }
@@ -134,15 +138,59 @@ button {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	width: 100%;
+	position: relative;
 }
 
 .modal-body li {
 	border-bottom: solid 1px rgba(220, 220, 220);
-	margin: 15px;
 	padding: 10px;
+	cursor: pointer;
+}
+
+.modal-body hr {
+	margin: 0;
 }
 </style>
+<script>
+	function updateInputFields(liElement) {
+		// 클릭한 <li> 요소에서 데이터 속성을 가져옴
+		var businessCode = liElement.getAttribute('data-businessCode');
+		var businessName = liElement.getAttribute('data-businessName');
+		var businessManager = liElement.getAttribute('data-businessManager');
+		var businessManagerPhone = liElement
+				.getAttribute('data-businessManagerPhone');
 
+		// 입력 필드의 값 설정
+		document.getElementById('selectedBusinessCode').value = businessCode;
+		document.getElementById('selectedBusinessName').value = businessName;
+		document.getElementById('selectedBusinessManager').value = businessManager;
+		document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
+
+	}
+	/* function selectBusiness(liElement) {
+		// 거래처를 선택한 후 모달을 닫기 위한 코드
+		updateInputFields(liElement);
+	} */
+
+	// 페이지 로드 시에 호출되는 함수
+	document.addEventListener('DOMContentLoaded', function() {
+		// 현재 날짜를 가져오는 함수 호출
+		var currentDate = getCurrentDate();
+
+		// 입력 필드에 현재 날짜 설정
+		document.getElementById('registrationDate').value = currentDate;
+	});
+
+	// 현재 날짜를 반환하는 함수
+	function getCurrentDate() {
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = ('0' + (today.getMonth() + 1)).slice(-2); // 0을 추가해서 두 자리로 만듦
+		var day = ('0' + today.getDate()).slice(-2); // 0을 추가해서 두 자리로 만듦
+		return year + '-' + month + '-' + day;
+	}
+</script>
 </head>
 <body>
 	<section layout:fragment="content">
@@ -155,9 +203,9 @@ button {
 				<table class="orderInfoOne">
 					<tr>
 						<th>주문서번호</th>
-						<td><input type="text"></td>
+						<td><input type="text" id="ordCode" readonly></td>
 						<th>등록일</th>
-						<td><input type="date"></td>
+						<td><input type="date" id="registrationDate"></td>
 						<th>주문서상태</th>
 						<td><select>
 								<option value="선택하세요">선택하세요
@@ -178,16 +226,19 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text" readonly> <input
-							type="text" readonly>
+						<td class="serch"><input type="text"
+							id="selectedBusinessCode" readonly> <input type="text"
+							id="selectedBusinessName" readonly>
 							<button class="btn btn-primary" data-bs-toggle="modal"
 								data-bs-target="#staticBackdrop">
 								<p>검색</p>
 							</button></td>
 						<th>거래처 담당자</th>
-						<td><input class="readInput" type="text" readonly></td>
+						<td><input class="readInput" type="text"
+							id="selectedBusinessManager" readonly></td>
 						<th>거래처 연락처</th>
-						<td><input class="readInput" type="text" readonly></td>
+						<td><input class="readInput" type="text"
+							id="selectedBusinessManagerPhone" readonly></td>
 					</tr>
 					<tr>
 						<th>납기일자</th>
@@ -199,9 +250,11 @@ button {
 			</div>
 			<div class="containerThree">
 				<h5>상세정보</h5>
+
 				<button class="btn btn-primary">삭제</button>
 				<button class="btn btn-primary">추가</button>
-				<button class="btn btn-success">품목정보 불러오기</button>
+				<button class="btn btn-success" data-bs-toggle="modal"
+					data-bs-target="#staticBackdropOne">품목정보 불러오기</button>
 				<table class="moreInfo">
 					<tr>
 						<th rowspan="2"></th>
@@ -264,35 +317,90 @@ button {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">거래처 목록
-						</h1>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">거래처 목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
+					
 					<div class="modal-body">
-						<ul>
-							<li th:each="business : ${businessList}"
-								th:data-businessCode="${business.businessCode}"
-								th:data-businessName="${business.businessName}"
-								th:data-businessManager="${business.businessManager}"
-								th:data-businessManagerPhone="${business.businessManagerPhone}"
-								th:text="${business.businessCode + ' ' + business.businessName}">
-							</li>
-						</ul>
 
+						<table>
+							<thead>
+								<tr>
+									<td>거래처코드</td>
+									<td>거래처명</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="business : ${businessList}"
+									th:data-businessCode="${business.businessCode}"
+									th:data-businessName="${business.businessName}"
+									th:data-businessManager="${business.businessManager}"
+									th:data-businessManagerPhone="${business.businessManagerPhone}"
+									data-bs-dismiss="modal" onclick="updateInputFields(this)">
+									<td th:text="${business.businessCode}"></td>
+									<td th:text="${business.businessName}"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">닫기</button>
-						
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<!-- ProductListModal -->
+		<div class="modal fade modal-xl" id="staticBackdropOne"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">거래처 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+
+						<hr style="margin-top: 10px;">
+						<div class="modal-body" style="padding: 0px">
+							<table>
+								<thead>
+									<tr>
+										<th>상품 코드</th>
+										<th>상품 이름</th>
+										<th>상품 단위</th>
+										<th>상품 가격</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="prod : ${productList}">
+										<td th:text="${prod.prodCode}"></td>
+										<td th:text="${prod.prodName}"></td>
+										<td th:text="${prod.prodUnit}"></td>
+										<td th:text="${prod.prodPrice}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+
 					</div>
 				</div>
 			</div>
 		</div>
 
 	</section>
-<script>
-
-</script>
 </html>
 

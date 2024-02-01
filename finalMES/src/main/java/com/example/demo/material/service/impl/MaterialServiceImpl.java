@@ -3,11 +3,14 @@ package com.example.demo.material.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
 import com.example.demo.material.mapper.MaterialMapper;
 import com.example.demo.material.service.MaterialService;
 
+@Service
 public class MaterialServiceImpl implements MaterialService {
 	
 	@Autowired
@@ -21,10 +24,17 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	// 발주 리스트 정보
 	@Override
-	public List<MatOrderVO> getMaterialList(MatOrderVO matOrderVO) {
-		return materialMapper.getMatList(matOrderVO);
+	public List<MatOrderVO> getMaterialOrderList() {
+		return materialMapper.getMatOrderList();
 	}
 
+	@Override
+	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode) {
+		// TODO Auto-generated method stub
+		return materialMapper.getMaterialOrdInfoList(matordCode);
+	}
+	
+	
 	// 발주 등록
 	@Override
 	public int insertMaterialOrder(MatOrderVO matOrderVO) {
@@ -36,6 +46,8 @@ public class MaterialServiceImpl implements MaterialService {
 			return -1;
 		}
 	}
+
+
 	
 	
 }
