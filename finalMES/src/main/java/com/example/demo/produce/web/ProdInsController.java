@@ -41,6 +41,8 @@ public class ProdInsController {
 		return "produce/planOrderList";
 	}
 	
+	
+	
 	@GetMapping("/planOrderDetail")
 	@ResponseBody
 	public List<ProdInsDetailVO> getPlanOrderDetailList(@RequestParam String insCode){

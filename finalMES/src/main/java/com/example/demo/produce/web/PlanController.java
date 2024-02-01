@@ -40,11 +40,19 @@ public class PlanController {
 				
 	}
 	
+	@GetMapping("planDetail")
+	@ResponseBody
+	public List<PlanDVO> getPlanDList(@RequestParam String planCode){
+		return planService.getPlanDList(planCode);
+	}
+	
 	@GetMapping("orderDetail")
 	@ResponseBody
 	public List<PlanOrdDVO> getOrdDList(@RequestParam String ordCode) {
 	    return planService.getOrdDList(ordCode);
 	}
+	
+	
 	
 
 	
