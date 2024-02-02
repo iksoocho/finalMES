@@ -156,17 +156,6 @@ button {
 }
 </style>
 <script>
-	function displaySelectedProduct(element) {
-		var prodCode = element.getAttribute('data-prodCode');
-		var prodName = element.getAttribute('data-prodName');
-		var prodUnit = element.getAttribute('data-prodUnit');
-		var prodPrice = element.getAttribute('data-prodPrice');
-
-		// 선택한 상품 정보를 selectedProduct div에 표시
-		document.getElementById('selectedProduct').innerHTML = '선택한 상품: '
-				+ prodCode + ' - ' + prodName + ' (' + prodUnit + ') - 가격: '
-				+ prodPrice;
-	}
 	function updateInputFields(liElement) {
 		// 클릭한 <li> 요소에서 데이터 속성을 가져옴
 		var businessCode = liElement.getAttribute('data-businessCode');
@@ -191,9 +180,9 @@ button {
 	document.addEventListener('DOMContentLoaded', function() {
 		// 현재 날짜를 가져오는 함수 호출
 		var currentDate = getCurrentDate();
-
 		// 입력 필드에 현재 날짜 설정
 		document.getElementById('registrationDate').value = currentDate;
+
 	});
 
 	// 현재 날짜를 반환하는 함수
@@ -203,6 +192,75 @@ button {
 		var month = ('0' + (today.getMonth() + 1)).slice(-2); // 0을 추가해서 두 자리로 만듦
 		var day = ('0' + today.getDate()).slice(-2); // 0을 추가해서 두 자리로 만듦
 		return year + '-' + month + '-' + day;
+	}
+	var rowCount = 1; // 행 번호 초기화
+
+	function addProductRow(prodName, prodUnit, dlvyDate, quantity, unitPrice, prodCode, ttlPrice
+			) {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+
+		// 기존 행 선택 또는 필요한 경우 새로운 행 생성
+		var newRow = rows[rowCount - 1] || tbody.insertRow(-1);
+
+		// 선택된 행 또는 새로운 행에 셀 추가 또는 업데이트
+		var cellNumber = newRow.cells[0] || newRow.insertCell(0);
+		var cellCheckbox = newRow.cells[1] || newRow.insertCell(1);
+		var cellProdName = newRow.cells[2] || newRow.insertCell(2);
+		var cellProdUnit = newRow.cells[3] || newRow.insertCell(3);
+		var cellDlvyDate = newRow.cells[4] || newRow.insertCell(4); // 납기일자 셀 추가
+		var cellOrdCount = newRow.cells[5] || newRow.insertCell(5);
+		var cellUnitPrice = newRow.cells[6] || newRow.insertCell(6);
+		var cellTtlPrice = newRow.cells[7] || newRow.insertCell(7); 
+		// 선택된 또는 새로운 행의 데이터 업데이트
+		cellNumber.innerHTML = rowCount++;
+		cellCheckbox.innerHTML = '<input type="checkbox">';
+		cellProdName.innerHTML = prodName;
+		cellProdUnit.innerHTML = prodUnit;
+		cellDlvyDate.innerHTML = '<input type="date" id="dlvyDate_' + rowCount + '" value="' + dlvyDate + '">';
+		cellOrdCount.innerHTML = '<input type="number" id="ordCount_' + rowCount + '" name="ordCount" value="' + quantity + '">';
+		cellUnitPrice.innerHTML = unitPrice;
+		cellTtlPrice.innerHTML = '<input type="number" id="ttlPrice_' + rowCount + '" name="ttlCount" value="0">'
+		// 초기에 빈 행의 가시성을 전환
+		toggleEmptyRowsVisibility();
+
+		// 새로 추가된 행에 클래스 설정
+		newRow.classList.remove('initially-hidden');
+
+		var hiddenInput = document.createElement('input');
+		hiddenInput.type = 'hidden';
+		hiddenInput.name = 'prodCode';
+		hiddenInput.id = 'prodCode' + rowCount;
+		cellNumber.appendChild(hiddenInput);
+
+		hiddenInput.id = 'prodCode' + rowCount;
+	}
+
+	// 초기에 빈 행의 가시성을 전환하는 함수
+	function toggleEmptyRowsVisibility() {
+		var tbody = document.getElementById('productTableBody');
+		var emptyRows = tbody.getElementsByClassName('initially-hidden');
+
+		for (var i = 0; i < emptyRows.length; i++) {
+			emptyRows[i].style.display = 'table-row';
+		}
+	}
+
+	function displaySelectedProduct(element) {
+		var prodCode = element.getAttribute('data-prodCode');
+		var prodName = element.getAttribute('data-prodName');
+		var prodUnit = element.getAttribute('data-prodUnit');
+		var prodPrice = element.getAttribute('data-prodPrice');
+
+		// 사용자가 입력한 납기일자 값을 가져오기
+		var dlvyDateInput = document.getElementById('dlvyDate');
+		var dlvyDate = dlvyDateInput ? dlvyDateInput.value : '';
+
+		// 콘솔에 납기일자 기록
+		console.log('사용자가 입력한 납기일자:', dlvyDate);
+
+		// 선택한 품목을 테이블에 추가
+		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice);
 	}
 </script>
 </head>
@@ -217,12 +275,16 @@ button {
 				<table class="orderInfoOne">
 					<tr>
 						<th>주문서번호</th>
-						<td><input type="text" id="ordCode" readonly></td>
+						<td><input type="text" id="ordCode" name="ordCode" readonly></td>
 						<th>등록일</th>
-						<td><input type="date" id="registrationDate"></td>
+						<td><input type="date" id="registrationDate" name="ordDate"
+							readonly></td>
 						<th>주문서상태</th>
-						<td><select>
-								<option value="선택하세요">선택하세요
+						<td><select name="ordState">
+								<option value="0" selected>등록전
+								<option value="1" disabled>등록완료
+								<option value="2" disabled>진행중
+								<option value="3" disabled>종결
 						</select></td>
 					</tr>
 					<tr>
@@ -241,8 +303,8 @@ button {
 					<tr>
 						<th class="red">거래처</th>
 						<td class="serch"><input type="text"
-							id="selectedBusinessCode" readonly> <input type="text"
-							id="selectedBusinessName" readonly>
+							id="selectedBusinessCode" name="businessCode" readonly> <input
+							type="text" id="selectedBusinessName" readonly>
 							<button class="btn btn-primary" data-bs-toggle="modal"
 								data-bs-target="#staticBackdrop">
 								<p>검색</p>
@@ -256,9 +318,9 @@ button {
 					</tr>
 					<tr>
 						<th>납기일자</th>
-						<td><input type="date"></td>
+						<td><input type="date" id="dlvyDate"></td>
 						<th>비고</th>
-						<td><input type="text"></td>
+						<td><input type="text" name="ordNote"></td>
 					</tr>
 				</table>
 			</div>
@@ -266,49 +328,111 @@ button {
 				<h5>상세정보</h5>
 				<div id="selectedProduct"></div>
 				<button class="btn btn-primary">삭제</button>
-				<button class="btn btn-primary">추가</button>
-				<button class="btn btn-success" data-bs-toggle="modal"
-					data-bs-target="#staticBackdropOne">품목정보 불러오기</button>
-				<table class="moreInfo">
-					<tr>
-						<th rowspan="2"></th>
-						<th rowspan="2"><input type="checkbox"></th>
-						<th colspan="2">품목정보</th>
-						<th rowspan="2">납기일자</th>
-						<th colspan="3">금액정보</th>
-						<th rowspan="2">비고</th>
-					</tr>
-					<tr>
-						<th>품목명</th>
-						<th>단위</th>
-						<th style="width: 8%">수량</th>
-						<th>단가</th>
-						<th>총금액</th>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td><input type="checkbox"></td>
-						<td>아메리카노</td>
-						<td>EA</td>
-						<td>2024-01-30</td>
-						<td class="number"><input type="number" /></td>
-						<td class="number">2,000</td>
-						<td class="number">20,000</td>
-						<td>어쩌구저쩌구</td>
-					</tr>
+				<button class="btn btn-primary" data-bs-toggle="modal"
+					data-bs-target="#staticBackdropOne">추가</button>
 
-					<tr class="total">
-						<td></td>
-						<td colspan="4">합계</td>
-						<td class="number">30</td>
-						<td class="number">4,500</td>
-						<td class="number">70,000</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td colspan="9" class="ttlCount">총건수: 2</td>
-					</tr>
+				<table class="moreInfo" id="productTable">
+					<thead>
+						<tr>
+							<th rowspan="2" style="width: 50px;"></th>
+							<th rowspan="2"><input type="checkbox"></th>
+							<th colspan="2">품목정보</th>
+							<th rowspan="2" style="width: 400px;">납기일자</th>
+							<th colspan="3">금액정보</th>
+							<th rowspan="2">비고</th>
+						</tr>
 
+
+						<tr>
+							<th style="width: 300px;">품목명</th>
+							<th>단위</th>
+							<th style="width: 8%">수량</th>
+							<th style="width: 200px;">단가</th>
+							<th>총금액</th>
+						</tr>
+					</thead>
+					<tbody id="productTableBody">
+						<!-- 6개의 빈 데이터 행 -->
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr class="total">
+							<td></td>
+							<td colspan="4">합계</td>
+							<td class="number"></td>
+							<td class="number"></td>
+							<td class="number"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="9" class="ttlCount">총건수: 2</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>

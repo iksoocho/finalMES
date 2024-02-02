@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
+import com.example.demo.produce.WorkLoadVO;
 import com.example.demo.produce.service.ProdInsService;
 
 @Controller
@@ -50,9 +50,13 @@ public class ProdInsController {
 	}
 	
 	@GetMapping("workRegist")
-	public String workRegist(@RequestParam String dInsCode, Model model) {
+	public String workRegist(@RequestParam String dInsCode, @RequestParam String prodCode, Model model) {
 		ProdInsDetailVO vo = prodInsService.getCheckDetailList(dInsCode);
+		List<WorkLoadVO> load = prodInsService.getWorkPageLoadData(prodCode);
+		System.out.println(load);
 		model.addAttribute("vo", vo);
+		model.addAttribute("load", load);
+		
 		return "produce/workRegist";
 	}
 	

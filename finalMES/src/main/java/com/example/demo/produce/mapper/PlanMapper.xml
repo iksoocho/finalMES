@@ -49,10 +49,17 @@
 		WHERE ord_code = #{ordCode}  
 	</select>
 	
-	<insert id="insertPlanInfo" parameterType="PlanVO">
+	<insert id="insertPlanInfo" parameterType="PlanVO" useGeneratedKeys="true" keyProperty="planCode">
 		INSERT INTO
 		prod_plan(ord_code, plan_title, plan_person, plan_date)
 		VALUES(#{ordCode},#{planTitle},#{planPerson},#{planDate})
+	</insert>
+	
+	<insert id="insertPlanDInfo" parameterType="PlanDVO" >
+		INSERT INTO
+		prod_d_plan(plan_code, prod_code, d_plan_count, d_plan_start_date, d_plan_end_date, d_plan_priority, d_plan_note)
+		VALUES(#{planCode},#{prodCode},#{dplanCount},#{dPlanStartDate},#{dPlanEndDate},#{dPlanPriority},#{dPlanNote})
+		
 	</insert>
 	
 	

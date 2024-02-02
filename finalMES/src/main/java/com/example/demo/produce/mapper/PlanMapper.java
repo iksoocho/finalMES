@@ -17,4 +17,6 @@ public interface PlanMapper {
 	
 	public int insertPlanInfo(PlanVO planVO);
 	
+	public int insertPlanDInfo(PlanDVO planDVO);
+	
 }

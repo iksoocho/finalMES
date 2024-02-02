@@ -8,14 +8,14 @@
 </head>
 <body>
 	<section layout:fragment="content">
-		<div class="container">
+		<div class="container w-75">
 			<h1>작업등록</h1>
 			<div>
 				<div class="row">
 					<label for="WorkDate" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업일자</label>
 					<div class="col-3">
-						<input type="text" class="form-control form-control-lg" placeholder="작업일자"
-							aria-label="WorkDate" id="WorkDate">
+						<input type="text" class="form-control form-control-lg text-center" placeholder="작업일자"
+							aria-label="WorkDate" id="WorkDate" readonly>
 					</div>
 					<label for="Worker" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업자</label>
 					<div class="col-3">
@@ -24,9 +24,9 @@
 					</div>
 				</div>
 				<div class="row mt-4">
-					<label for="FacCode" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">설비코드</label>
+					<label for="FacCode" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">공정흐름코드</label>
 					<div class="col-3">
-						<input type="text" class="form-control form-control-lg" placeholder="설비코드"
+						<input type="text" class="form-control form-control-lg" placeholder="공정흐름코드"
 							aria-label="FacCode" id="FacCode">
 					</div>
 					<label for="WorkCount" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업량</label>
@@ -38,6 +38,24 @@
 				<div class="row mt-4">
 					<div class="col-6">
 						<p th:text="${vo}"></p>
+						<p th:text="${load[0].prodName}"></p>
+						
+						<table class="table ">
+			              <thead>
+			                <tr>
+			                  <th>공정명</th>
+			                  <th>설비코드</th>
+			                  <th>상태</th>
+			                </tr>
+			              </thead>
+			              <tbody>
+			                <tr th:block th:each="list : ${load}">
+			                  <td th:text="${list.procName}"></td>
+			                  <td >설비코드</td>
+			                  <td>ㅇㅁㅇ</td>
+			                </tr>
+			              </tbody>
+			            </table>
 						
 					</div>
 					<div class="col-6">
@@ -77,6 +95,19 @@
 				</div>
 			</div>
 		</div>
+		
+		<script>
+	    	document.addEventListener('DOMContentLoaded', (event) => {
+		        var today = new Date();
+		        var dd = String(today.getDate()).padStart(2, '0');
+		        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+		        var yy = today.getFullYear().toString().substr(-2);
+		        
+		        today = yy + '-' + mm + '-' + dd;
+		
+		        document.getElementById('WorkDate').value = today;
+		    });
+		</script>
 	</section>
 </body>
 </html>

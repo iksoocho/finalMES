@@ -6,174 +6,51 @@
 <meta charset="UTF-8">
 <title>반품관리</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<style>
-th {
-	background-color: rgba(250, 250, 250);
-}
-
-.containerOne {
-	margin: 20px;
-	text-align: center;
-}
-
-.containerTwo {
-	margin-top: 20px;
-}
-
-table {
-	width: 100%;
-}
-
-h4 {
-	text-align: left;
-}
-
-tr {
-	height: 42px;
-}
-
-input[type=text], input[type=date], select {
-	width: 90%;
-}
-
-.orderInfoOne th {
-	border: solid 1px gray;
-	text-align: center;
-	width: 156px;
-}
-
-.orderInfoOne td, .orderInfoTwo td {
-	border: solid 1px gray;
-	width: 500px;
-}
-
-.orderInfoTwo {
-	margin-top: 10px;
-	border: solid 1px gray;
-}
-
-.orderInfoTwo th {
-	border: solid 1px gray;
-	width: 156px;
-}
-
-.moreInfo, .moreInfo th, .moreInfo td, .orderInfoOne {
-	border: solid 1px gray;
-}
-
-.ttlCount {
-	text-align: right;
-	padding-right: 10px;
-}
-
-h5 {
-	display: inline-block;
-	float: left;
-	margin-top: 8px;
-}
-
-button {
-	float: right;
-	margin-right: 5px;
-	margin-bottom: 10px;
-}
-
-.space {
-	height: 10px;
-	border: solid 1px #fff;
-}
-
-.number {
-	text-align: right;
-	padding-right: 10px;
-}
-
-.containerThree {
-	margin-top: 30px;
-}
-
-.red {
-	color: red;
-}
-
-.serch {
-	padding-left: 11px;
-	padding-right: 22px;
-}
-
-.serch input {
-	margin-top: 1px;
-	width: 40%;
-	background-color: rgba(250, 250, 250);
-	border: solid 1px gray;
-	border-radius: 2px;
-}
-
-.serch button {
-	margin: 0px;
-	width: 50px;
-	height: 30px;
-}
-
-.serch p {
-	font-size: 12px;
-}
-
-.readInput {
-	background-color: rgba(250, 250, 250);
-	border: solid 1px gray;
-	border-radius: 2px;
-}
-
-.total {
-	background-color: rgba(255, 0, 0, 0.5);
-}
-</style>
 </head>
 <body>
-	<section layout:fragment="content">
-		<div id="grid"></div>
-		<script>
+		<section layout:fragment="content">
+		<h3>반품관리</h3>
 		
-		 const grid = new tui.Grid({
-		      el: document.getElementById('grid'),
-		      data: {
-		        api: {
-		          readData: { url: '/api/readData', method: 'GET' }
-		        }
-		      },
-		      scrollX: false,
-		      scrollY: false,
-		      minBodyHeight: 30,
-		      rowHeaders: ['rowNum'],
-		      pageOptions: {
-		        perPage: 5
-		      },
-		      columns: [
-		        {
-		          header: 'Name',
-		          name: 'name'
-		        },
-		        {
-		          header: 'Artist',
-		          name: 'artist'
-		        },
-		        {
-		          header: 'Type',
-		          name: 'type'
-		        },
-		        {
-		          header: 'Release',
-		          name: 'release'
-		        },
-		        {
-		          header: 'Genre',
-		          name: 'genre'
-		        }
-		      ]
-		    });
-		</script>
 
+
+		<div id="grid" class="container"></div>
+
+		<script>
+			const grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				data : {
+					api : {
+						readData : {
+							url : '/api/readData',
+							method : 'GET'
+						}
+					}
+				},
+				scrollX : false,
+				scrollY : false,
+				minBodyHeight : 30,
+				rowHeaders : [ 'rowNum' ],
+				pageOptions : {
+					perPage : 5
+				},
+				columns : [ {
+					header : 'Name',
+					name : 'name'
+				}, {
+					header : 'Artist',
+					name : 'artist'
+				}, {
+					header : 'Type',
+					name : 'type'
+				}, {
+					header : 'Release',
+					name : 'release'
+				}, {
+					header : 'Genre',
+					name : 'genre'
+				} ]
+			});
+		</script>
 	</section>
 </body>
 </html>
