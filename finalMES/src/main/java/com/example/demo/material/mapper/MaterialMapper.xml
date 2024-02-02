@@ -6,28 +6,73 @@
 	namespace="com.example.demo.material.mapper.MaterialMapper">
 	<select id="getMatOrderList" resultType="MatOrderVO">
 		SELECT mo.mat_or_code,
-		mo.mat_or_name, mo.mat_code, b.business_name,
-		mo.mat_or_count,
-		mo.mat_or_date, moi.mat_or_due_date,
-		mo.mat_or_manager
-		FROM mat_order mo
-		JOIN business b ON mo.business_code = b.business_code
-		JOIN
-		mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
+		       mo.mat_or_name, 
+		       mo.mat_code, 
+		       b.business_name,
+		       mo.mat_or_count,
+		       mo.mat_or_date,
+		       moi.mat_or_due_date,
+		       mo.mat_or_manager
+		 FROM  mat_order      mo
+		 JOIN  business       b     ON mo.business_code = b.business_code
+		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
+	</select>
+	
+	<select id="getMaterialOrdInfoList" resultType="MatOrderInfoVO">
+		SELECT mo.mat_or_code,
+		       mo.mat_or_name, 
+		       mo.mat_code, 
+		       b.business_name,
+		       mo.mat_or_count,
+		       mo.mat_or_date,
+		       moi.mat_or_due_date,
+		       mo.mat_or_manager
+		 FROM  mat_order      mo
+		 JOIN  business       b     ON mo.business_code = b.business_code
+		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
 	</select>
 
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
-		INSERT INTO mat_order (mat_or_code, mat_or_name, mat_code, business_code,
-		mat_or_count, mat_or_date, mat_or_manager)
-		VALUES (
-		#{matOrCode},
-		#{matOrName},
-		#{matCode},
-		#{businessCode},
-		#{matOrCount},
-		#{matOrDate},
-		#{matOrManager}
-		)
+	INSERT INTO mat_order 
+          (
+             mat_code,
+             business_code,
+             mat_or_date, 
+             mat_or_manager,
+             mat_or_count,
+             mat_or_name
+             )
+        VALUES 
+        (
+              #{matCode}, 
+              #{businessCode},
+              #{matOrDate}, 
+              #{matOrManager},
+              #{matOrCount},
+              #{matOrName} 
+        )
 	</insert>
+	
+<!-- 	<insert id="insertMatOrder1" parameterType="MatOrderVO"> -->
+<!-- 	INSERT INTO business -->
+<!--           ( -->
+<!--              business_name -->
+<!--              ) -->
+<!--         VALUES  -->
+<!--         ( -->
+<!--               #{businessName} -->
+<!--         )	 -->
+<!-- 	</insert> -->
+	
+<!-- 	<insert id="insertMatOrder2" parameterType="MatOrderVO"> -->
+<!-- 	INSERT INTO mat_order_info -->
+<!--           ( -->
+<!--              mat_or_due_date -->
+<!--              ) -->
+<!--         VALUES  -->
+<!--         ( -->
+<!--               #{matOrDueDate} -->
+<!--         )			 -->
+<!-- 	</insert> -->
 
 </mapper>
