@@ -7,16 +7,18 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.produce.mapper.InsMapper;
+import com.example.demo.produce.mapper.WorkMapper;
 
 @SpringBootTest
 public class ProduceMapperTest {
 
 	@Autowired
 	InsMapper insMapper;
+	
+	@Autowired
+	WorkMapper workMapper;
 	
 //	@Test
 //	public void insList() {
@@ -45,15 +47,26 @@ public class ProduceMapperTest {
 //		assertThat(list.isEmpty()).isEqualTo(false);	
 //	}
 	
-	@Test
-	public void workForm() {
-		String dInsCode = "DINS002";
-		ProdInsDetailVO vo = insMapper.getCheckDetailList(dInsCode);
-		System.out.println("================================");
-		System.out.println(vo);
-		System.out.println("================================");
-		assertThat(vo == null).isEqualTo(false);
-	}
+//	@Test
+//	public void workForm() {
+//		String dInsCode = "DINS002";
+//		ProdInsDetailVO vo = insMapper.getCheckDetailList(dInsCode);
+//		System.out.println("================================");
+//		System.out.println(vo);
+//		System.out.println("================================");
+//		assertThat(vo == null).isEqualTo(false);
+//	}
 	
+	
+	@Test
+	public void workLoad() {
+		String prodCode = "ame001";
+		List<WorkLoadVO> list = workMapper.getLoadData(prodCode);
+		System.out.println("================================");
+		System.out.println(list);
+		System.out.println("================================");
+		assertThat(list.isEmpty()).isEqualTo(false);	
+		
+	}
 	
 }

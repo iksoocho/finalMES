@@ -1,10 +1,12 @@
 package com.example.demo.produce.web;
 
 
-import java.util.Collections;
 import java.util.List;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanOrdDVO;
@@ -82,10 +85,13 @@ public class PlanController {
 	  public ResponseEntity<?> insertBoardInfoProcess(@RequestBody List<PlanVO> planList) {
 	      for (PlanVO plan : planList) {
 	          planService.insertPlanInfo(plan);
+	          System.out.println(planService.insertPlanInfo(plan));
 	      };
 	      // 성공 응답을 JSON으로 반환
 	      return ResponseEntity.ok().body("{\"status\":\"success\"}");
 	  }
+	
+	
 	
 
 	

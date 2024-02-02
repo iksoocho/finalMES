@@ -15,5 +15,7 @@ public interface PlanService {
 	public List<PlanOrdVO> getOrdList();
 	public List<PlanOrdDVO> getOrdDList(String ordCode);
 	
-	public int insertPlanInfo(PlanVO planVO);
+	//public int insertPlanInfo(PlanVO planVO);
+	public PlanVO insertPlanInfo(PlanVO planVO);
+	public PlanDVO insertPlanDetailInfo(PlanDVO planDVO);
 }
