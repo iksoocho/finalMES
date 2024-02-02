@@ -38,6 +38,24 @@
 				<div class="row mt-4">
 					<div class="col-6">
 						<p th:text="${vo}"></p>
+						<p th:text="${load[0].prodName}"></p>
+						
+						<table class="table ">
+			              <thead>
+			                <tr>
+			                  <th>공정명</th>
+			                  <th>설비코드</th>
+			                  <th>상태</th>
+			                </tr>
+			              </thead>
+			              <tbody>
+			                <tr th:block th:each="list : ${load}">
+			                  <td th:text="${list.procName}"></td>
+			                  <td >설비코드</td>
+			                  <td>ㅇㅁㅇ</td>
+			                </tr>
+			              </tbody>
+			            </table>
 						
 					</div>
 					<div class="col-6">
@@ -90,7 +108,6 @@
 		        document.getElementById('WorkDate').value = today;
 		    });
 		</script>
-		
 	</section>
 </body>
 </html>
