@@ -3,6 +3,7 @@ package com.example.demo.produce.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.produce.PlanDVO;
@@ -50,14 +51,28 @@ public class PlanServiceImpl implements PlanService{
 		return planMapper.selectOrdDList(ordCode);
 	}
 
+//	@Override
+//	public int insertPlanInfo(PlanVO planVO) {
+//		int result = planMapper.insertPlanInfo(planVO);
+//		if(result ==1) {
+//			return 1;
+//		}else {
+//			return -1;
+//		}
+//	}
+	
 	@Override
-	public int insertPlanInfo(PlanVO planVO) {
-		int result = planMapper.insertPlanInfo(planVO);
-		if(result ==1) {
-			return 1;
-		}else {
-			return -1;
-		}
+	public PlanVO insertPlanInfo(PlanVO planVO) {
+	    planMapper.insertPlanInfo(planVO);
+	    // insertPlanInfo 후에 PlanVO 객체는 새로 생성된 키를 포함해야 합니다.
+	    // 이 키는 MyBatis에 의해 자동으로 할당되어야 합니다.
+	    return planVO; 
+	}
+
+	@Override
+	public PlanDVO insertPlanDetailInfo(PlanDVO planDVO) {
+		planMapper.insertPlanDInfo(planDVO);
+		return planDVO;
 	}
 
 	

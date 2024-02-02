@@ -40,8 +40,8 @@
 											<td>
 												<div class="form-check">
 													<input class="form-check-input" type="radio"
-														name="flexRadioDefault" th:id="${ord.ordCode}">
-													<label class="form-check-label" th:for="${ord.ordCode}"></label>
+														name="flexRadioDefault" th:id="${ord.ordCode}"> <label
+														class="form-check-label" th:for="${ord.ordCode}"></label>
 												</div>
 											</td>
 											<td th:text="${ord.ordCode}"></td>
@@ -56,7 +56,8 @@
 
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
 							<button type="button" class="btn btn-primary" id="addPlanBtn">추가</button>
 						</div>
 					</div>
@@ -68,7 +69,7 @@
 			<div>
 				<div>
 					<button class="btn btn-secondary"
-						style="float: right; margin: 0 5px;"  id="planInsert">저장</button>
+						style="float: right; margin: 0 5px;" id="planInsert">저장</button>
 					<button class="btn btn-secondary" data-bs-toggle="modal"
 						data-bs-target="#exampleModal" style="float: right;">주문서
 						조회</button>
@@ -106,15 +107,15 @@
 				<div class="mt-4">
 					<button class="btn btn-secondary"
 						style="float: right; margin: 0 5px;">저장</button>
-					<table class="table table-hover">
+					<table class="table table-hover" id="planDetailTable">
 						<thead>
 							<tr>
-								<th>No</th>
+								
 								<th>생산계획코드</th>
 								<th>제품코드</th>
 								<th>생산계획 시작일자</th>
 								<th>생산계획 종료일자</th>
-								<th>현재재고</th>
+								
 								<th>주문수량</th>
 								<th>계획량</th>
 								<th>납기/마감일자</th>
@@ -137,10 +138,66 @@
 						</tbody>
 					</table>
 				</div>
+				<!-- <br>
+				<br>
+				<div id="grid">
+					<button class="btn btn-secondary"
+						style="float: right; margin: 8px 5px;">저장</button>
+				</div> -->
 
 			</div>
 		</div>
+
+		<!-- <script th:inline="javascript">
+			const grid = new tui.Grid({
+				  el: document.getElementById('grid'), // 그리드 요소 ID가 맞는지 확인하세요
+				  scrollX: false,
+		            scrollY: false,
+				  columns: [
+				    // 데이터 구조에 따라 컬럼을 정의하세요
+				    { name: 'dplanCode', header: '생산계획 코드' },
+				    { name: 'planCode', header: '제품 코드' },
+				    { name: '', header: '시작 일자' },
+				    { name: '', header: '종료 일자' },
+				    { name: 'prodCount', header: '현재 재고' },
+				    { name: 'dplanCount', header: '주문 수량' },
+				    { name: 'planCode', header: '계획량' },
+				    { name: 'formattedDate', header: '납기 일자' },
+				    // 데이터에 따라 다른 컬럼 추가
+				  ],
+				  // 여기에 다른 그리드 옵션을 추가할 수 있습니다
+				  rowHeaders: ['checkbox','rowNum'],
+	            pageOptions: {
+	                useClient: true,
+	                perPage: 5
+	            }
+				});
+	
+				// 행에 대한 이벤트 리스너
+				document.querySelectorAll('.plan-row').forEach(row => {
+				  row.addEventListener('click', function() {
+				    const planCode = this.getAttribute('data-plan-code');
+	
+				    fetch('/planDetail?planCode=' + planCode)
+				      .then(response => response.json())
+				      .then(data => {
+				        // Toast Grid 형식에 맞게 데이터를 수정할 필요가 있으면 수정하세요
+				        const gridData = data.map(detail => {
+				          // 필요하다면 데이터를 포맷팅하세요
+				          const date = new Date(detail.dlvyDate);
+				          detail.formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+				          return detail;
+				        });
+	
+				        // Toast Grid 데이터 업데이트
+				        grid.resetData(gridData);
+				      });
+				  });
+			  });
+    	</script> -->
+
 		<script>
+			let tempOrderDetails = [];
 			 // 초기에 모달 창을 만들 때 테이블 헤더를 미리 추가합니다.
 		    const detailsContainer = document.getElementById('orderDetails');
 		    const table = document.createElement('table');
@@ -164,6 +221,7 @@
 		            fetch('/orderDetail?ordCode=' + ordCode)
 		                .then(response => response.json())
 		                .then(data => {
+		                	tempOrderDetails = data;
 		                    // 테이블 본문을 업데이트합니다.
 		                    const tbody = document.createElement('tbody');
 	
@@ -227,11 +285,11 @@
 							});
 						});
 				});
-			});
+			}); 
 		    
 		    
 		    
-		    
+		    //모달 추가 버튼
 		    document.getElementById('addPlanBtn').addEventListener('click', function() {
 		        var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
 		        if (!selectedRadio) {
@@ -276,6 +334,28 @@
 		                cell5.innerHTML = '조익수';
 		                cell6.appendChild(dateInput);
 		                
+		                
+		                
+		                
+		                var planDetailTable = document.getElementById('planDetailTable');
+		                tempOrderDetails.forEach(detail => {
+		                	const date = new Date(detail.dlvyDate);
+	                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                    var newRow = planDetailTable.insertRow();
+		                    // 각 셀에 데이터 삽입
+		                    newRow.innerHTML = `
+		                        
+		                        <td></td>
+		                        <td>${detail.prodCode}</td>
+		                        <td><input type="date" value="${detail.startDate}"></td>
+		                        <td><input type="date" value="${detail.endDate}"></td>
+		                        
+		                        <td>${detail.ordCount}</td>
+		                        <td><input type="number" value="${detail.planCount}"></td>
+		                        <td>${formattedDate}</td>
+		                    `;
+		                });
+		                
 		                // 모달 닫기
 		                var exampleModal = document.getElementById('exampleModal');
 		                var modal = bootstrap.Modal.getInstance(exampleModal);
@@ -299,6 +379,8 @@
 		                planDate: row.querySelector('td:nth-child(6) input').value // input 요소의 value 속성 사용
 		            };
 		        });
+		        
+		        
 		        
 		        console.log(planData);
 		        console.log(JSON.stringify(planData));
@@ -326,6 +408,9 @@
 		        .catch(error => {
 		            console.error('Error:', error);
 		        });
+		        
+		        
+		        
 		    });
 		   
 		</script>
