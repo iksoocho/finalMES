@@ -6,7 +6,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
@@ -80,18 +80,26 @@ public class PlanController {
 //	  }
 	 
 	
-	  @PostMapping("planInsert")
-	  @ResponseBody
-	  public ResponseEntity<?> insertBoardInfoProcess(@RequestBody List<PlanVO> planList) {
-	      for (PlanVO plan : planList) {
-	          planService.insertPlanInfo(plan);
-	          System.out.println(planService.insertPlanInfo(plan));
-	      };
-	      // 성공 응답을 JSON으로 반환
-	      return ResponseEntity.ok().body("{\"status\":\"success\"}");
-	  }
+//	  @PostMapping("planInsert")
+//	  @ResponseBody
+//	  public ResponseEntity<?> insertBoardInfoProcess(@RequestBody List<PlanVO> planList) {
+//	      for (PlanVO plan : planList) {
+//	          planService.insertPlanInfo(plan);
+//	          System.out.println(planService.insertPlanInfo(plan));
+//	      };
+//	      // 성공 응답을 JSON으로 반환
+//	      return ResponseEntity.ok().body("{\"status\":\"success\"}");
+//	  }
 	
-	
+	@PostMapping("/planInsert")
+    public ResponseEntity<?> insertProduction(@RequestBody PlanCompositeVO planCompositeVO) {
+        try {
+        	planService.insertProductionWithDetails(planCompositeVO.getPlanVO(), planCompositeVO.getPlanDVOList());
+            return ResponseEntity.ok().body("생산 계획 및 상세 정보가 성공적으로 삽입되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생: " + e.getMessage());
+        }
+    }
 	
 
 	

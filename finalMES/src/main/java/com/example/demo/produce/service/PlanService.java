@@ -18,4 +18,6 @@ public interface PlanService {
 	//public int insertPlanInfo(PlanVO planVO);
 	public PlanVO insertPlanInfo(PlanVO planVO);
 	public PlanDVO insertPlanDetailInfo(PlanDVO planDVO);
+	
+	 public void insertProductionWithDetails(PlanVO planVO, List<PlanDVO> planDVOList);
 }

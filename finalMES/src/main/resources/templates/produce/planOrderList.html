@@ -78,7 +78,7 @@
                     </div>
                   </td>
                   <td th:text="${detail.insCode}"></td>
-                  <td th:text="${detail.prodCode}"></td>
+                  <td th:text="${detail.prodCode}" th:id="${detail.prodCode}"></td>
                   <td th:text="${detail.dInsCount}"></td>
                   <td
                     th:text="${#dates.format(detail.dInsSdate, 'yyyy-MM-dd') }"
@@ -133,7 +133,7 @@
 								</div>
 							</td>
 							<td>${detail.insCode}</td>
-							<td>${detail.prodCode}</td>
+							<td id="${detail.prodCode}">${detail.prodCode}</td>
 							<td>${detail.dinsCount}</td>
 							<td>${formatSdate}</td>
 							<td>${formatEdate}</td>
@@ -156,9 +156,13 @@
             if (selectedRadio) {
               // 선택된 라디오 버튼의 ID 가져오기
               const selectedId = selectedRadio.id;
+			  // 선택된 라디오 버튼과 함께 있는 prodCode 값을 가져오기
+              const prodCodeElement = document.querySelector('label[for="' + selectedId + '"]').closest('tr').querySelector('td:nth-child(3)');
+              const prodCode = prodCodeElement.textContent;
+              console.log("선택된 라디오 버튼에 해당하는 prodCode 값:", prodCode);
               // TODO: 선택된 라디오 버튼에 대한 작업 등록 처리
               console.log("선택된 라디오 버튼 ID:", selectedId);
-		      window.location.href = '/workRegist?dInsCode=' + selectedId;
+		      window.location.href = '/workRegist?dInsCode=' + selectedId + '&prodCode=' + prodCode;
             } else {
               alert("작업등록을 할 상세생산지시를 선택해주세요.");
             }

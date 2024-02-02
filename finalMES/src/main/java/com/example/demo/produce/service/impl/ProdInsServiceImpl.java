@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
+import com.example.demo.produce.WorkLoadVO;
 import com.example.demo.produce.mapper.InsMapper;
+import com.example.demo.produce.mapper.WorkMapper;
 import com.example.demo.produce.service.ProdInsService;
 
 @Service
@@ -15,6 +17,9 @@ public class ProdInsServiceImpl implements ProdInsService{
 
 	@Autowired
 	InsMapper insMapper;
+	
+	@Autowired
+	WorkMapper workMapper;
 	
 	@Override
 	public List<ProdInsVO> getInsList() {
@@ -29,6 +34,11 @@ public class ProdInsServiceImpl implements ProdInsService{
 	@Override
 	public ProdInsDetailVO getCheckDetailList(String dInsCode) {
 		return insMapper.getCheckDetailList(dInsCode);
+	}
+
+	@Override
+	public List<WorkLoadVO> getWorkPageLoadData(String prodCode) {
+		return workMapper.getLoadData(prodCode);
 	}
 
 }

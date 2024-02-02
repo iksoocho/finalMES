@@ -157,108 +157,95 @@ button {
 		<div class=""></div>
 		<h1>발주 관리</h1>
 		<div>
+
 			<!-- 메인 -->
 			<table class="table">
 				<thead>
 					<tr>
-						<th>발주 코드</th>
-						<td><input type="text"></td>
 						<th>발주 명</th>
 						<td><input type="text"></td>
-						<td></td>
+						<th>거래처</th>
+						<td><input type="text"
+							id="selectedBusinessCode" readonly>
+							</td>
 						<td></td>
 					</tr>
 					<tr>
 						<th>자재 코드</th>
 						<td><input type="text"></td>
-						<th class="red">거래처</th>
-						<td class="serch"><input type="text"
-							id="selectedBusinessCode" readonly> <input type="text"
-							id="selectedBusinessName" readonly>
-							<button class="btn btn-primary" data-bs-toggle="modal"
-								data-bs-target="#staticBackdrop">
-								<p>검색</p>
-							</button></td>
+						
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<th>수량</th>
 						<td><input type="number"></td>
-						<th>발주일</th>
-						<td><input type="date" id="registrationDate"></td>
 						<th>담당자 *</th>
-						<td colspan="2"><input type="text" id="facName"
+						<td><input type="text"
 							name="facName" required data-toggle="modal"
 							data-target="#myModal3"></td>
 						<td></td>
 					</tr>
 				</thead>
 			</table>
-			<button class="btn btn-primary">초기화</button>
-			<button class="btn btn-primary">조회</button>
+			
+			
+			<button class="btn btn-primary">저장</button>
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+				data-bs-target="#staticBackdrop">조회</button>
+
+
+
+			<h2>현재 자재 재고</h2>
 			<div id="grid2"></div>
 		</div>
 
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-			data-bs-target="#staticBackdrop">등록</button>
+		<button class="btn btn-primary">등록</button>
 
 		<!--  ============	모달창 ============-->
-		<div class="modal fade modal-xl" id="staticBackdrop" data-bs-backdrop="static"
-			data-bs-keyboard="false" tabindex="-1"
+		<div class="modal fade modal-xl" id="staticBackdrop"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 			aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">
-							발주 등록</h1>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel">발주 등록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 
 						<!-- 	모달 내용 -->
-						<table class="table">
+						<table>
 							<thead>
 								<tr>
-									<th>발주 코드</th>
-									<td><input type="text" name="matOrCode"></td>
-									<th>발주 명</th>
-									<td><input type="text" name="matOrName"></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<th>자재 코드</th>
-									<td><input type="text" name="matCode"></td>
-									<th>거래처 명</th>
-									<td><input type="text" name="busineesName"></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<!-- 									<th>발주일</th> -->
-									<!-- 									<td><input type="date" name="matOrDate"></td> -->
-									<th>납기일</th>
-									<td><input type="date" name="matOrDueDate"></td>
-									<td></td>
-								</tr>
-								<tr>
-									<th>수량</th>
-									<td><input type="number" min=0 name="matOrCount"></td>
-									<th>담당자 *</th>
-									<td colspan="2"><input type="text" name="matOrManager"
-										required></td>
+									<th>발주코드</th>
+									<th>거래처명</th>
+									<th>자재코드</th>
+									<th>자재명</th>
 								</tr>
 							</thead>
+							<tbody>
+								<tr th:each="mat : ${oList}"
+									th:data-matCode="${mat.matCode}"
+									th:data-matName="${mat.matName}"
+									th:data-matUnit="${mat.matUnit}"
+									th:data-matStandard="${mat.matStandard}" data-bs-dismiss="modal"
+									th:onclick="'displaySelectedMaterial(this)'">
+									<td th:text="${mat.matCode}"></td>
+									<td th:text="${mat.matName}"></td>
+									<td th:text="${mat.matUnit}"></td>
+									<td th:text="${mat.matStandard}"></td>
+								</tr>
+							</tbody>
 						</table>
-
+					
 
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">닫기</button>
-						<button type="button" class="btn btn-primary" id="submitButton">작성완료</button>
+						<button type="button" class="btn btn-primary" id="orderInsert">작성완료</button>
 					</div>
 				</div>
 			</div>
@@ -267,36 +254,7 @@ button {
 
 		<!-- Modal -->
 		<!-- ManagerListModal -->
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
-			data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">거래처 목록
-						</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<ul>
-							<li th:each="mat : ${list}"
-								th:data-businessCode="${mat.businessCode}"
-								th:data-businessName="${mat.businessName}"
-								th:data-businessManager="${mat.businessManager}"
-								th:text="${mat.businessCode + ' ' + mat.businessName}"
-								data-bs-dismiss="modal" onclick="updateInputFields(this)"></li>
-						</ul>
 
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">닫기</button>
-
-					</div>
-				</div>
-			</div>
-		</div>
 		<!-- 담당자모달 -->
 		<div class="modal" id="myModal3">
 			<div class="modal-dialog">
@@ -340,10 +298,11 @@ button {
 				</div>
 			</div>
 		</div>
-
+		
+		<h2>발주목록</h2>
 		<div id="grid"></div>
 		<script th:inline="javascript">
-		document.getElementById("submitButton").addEventListener("click", function() {
+		document.getElementById("orderInsert").addEventListener("click", function() {
 			  // 발주 등록 정보 수집
 			  var matOrCode = document.getElementsByName("matOrCode")[0].value;
 			  var matOrName = document.getElementsByName("matOrName")[0].value;
@@ -373,12 +332,12 @@ button {
 		        matOrCount: matOrCount,
 		        matOrManager: matOrManager
 		    };
-			    fetch("/matOrder", {
+			    fetch("/matOrderInsert", {
 			        method: "POST",
-			        body: JSON.stringify(data),
 			        headers: {
 			            "Content-Type": "application/json"
-			        }
+			        },
+			        body: JSON.stringify(data)
 			    })
 			    .then(response => {
 			        if (response.ok) {
@@ -397,7 +356,19 @@ button {
 			    });
 			});
 		
-
+		function updateInputMaterial(liElement){
+			var matOrCode = liElement.getAttribute('data-matOrCode');
+			var matOrName = liElement.getAttribute('data-matOrName');
+			var matCode = liElement.getAttribute('data-matCode');
+			var busineesName = liElement.getAttribute('data-busineesName');
+			var matOrDueDate = liElement.getAttribute('data-matOrDueDate');
+			var matOrCount = liElement.getAttribute('data-matOrCount');
+			var matOrManager = liElement.getAttribute('data-matOrManager');
+			
+			document.getElementById('selectedmatOrCode').value = matOrCode;
+			document.getElementById('selectedmatOrCode').value = matOrCode;
+			
+		}
 		
 		function updateInputFields(liElement) {
 			// 클릭한 <li> 요소에서 데이터 속성을 가져옴
@@ -461,6 +432,15 @@ button {
 
 			// 생성된 주문서 번호를 input 창에 표시
 			document.getElementById('ordCode').value = orderNumber;
+		}
+		
+		function displaySelectedMaterial(element){
+			var matCode = element.getAttribute('data-matCode');
+			var matName = element.getAttribute('data-matName');
+			var matUnit = element.getAttribute('data-matUnit');
+			var matStandard = element.getAttribute('data-matStandard');
+			
+			var 
 		}
 			
 			 let order = [[${list}]]
@@ -528,10 +508,6 @@ button {
 		            scrollX: true,
 		            scrollY: true,
 			      columns: [
-			        {
-			          header: '발주코드',
-			          name: 'matOrCode'
-			        },
 			        {
 			          header: '발주명',
 			          name: 'matOrName'
