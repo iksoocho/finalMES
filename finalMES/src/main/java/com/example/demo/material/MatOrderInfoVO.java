@@ -15,4 +15,11 @@ public class MatOrderInfoVO {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date matOrDueDate;
 	
+	//
+	private String matOrName;
+	private String matOrManager;
+	private int matOrCount;
+	private String businessName;
+	
+	
 }

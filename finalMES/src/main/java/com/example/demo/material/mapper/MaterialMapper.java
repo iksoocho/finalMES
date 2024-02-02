@@ -13,6 +13,8 @@ public interface MaterialMapper {
 	public List<MatOrderVO> getMatOrderList();
 	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode);
 	
-	//등록
+	//등록 join 등록 말고 그냥 
 	public int insertMatOrder(MatOrderVO materialVO);
+//	public int insertMatOrder1(MatOrderVO materialVO);
+//	public int insertMatOrder2(MatOrderVO materialVO);
 }
