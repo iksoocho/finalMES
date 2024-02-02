@@ -226,14 +226,16 @@ button {
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="mat : ${mList}"
-									th:data-matOrCode="${mat.matOrCode}"
-									th:data-matOrName="${mat.matOrName}"
-									th:data-matOrManager="${mat.matOrManager}"
+								<tr th:each="mat : ${oList}"
 									th:data-matCode="${mat.matCode}"
-									data-bs-dismiss="modal" onclick="updateInputFields(this)">
-									<td th:text="${mat.matOrCount}"></td>
-									<td th:text="${mat.businessName}"></td>
+									th:data-matName="${mat.matName}"
+									th:data-matUnit="${mat.matUnit}"
+									th:data-matStandard="${mat.matStandard}" data-bs-dismiss="modal"
+									th:onclick="'displaySelectedMaterial(this)'">
+									<td th:text="${mat.matCode}"></td>
+									<td th:text="${mat.matName}"></td>
+									<td th:text="${mat.matUnit}"></td>
+									<td th:text="${mat.matStandard}"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -296,6 +298,7 @@ button {
 				</div>
 			</div>
 		</div>
+		
 		<h2>발주목록</h2>
 		<div id="grid"></div>
 		<script th:inline="javascript">
@@ -429,6 +432,15 @@ button {
 
 			// 생성된 주문서 번호를 input 창에 표시
 			document.getElementById('ordCode').value = orderNumber;
+		}
+		
+		function displaySelectedMaterial(element){
+			var matCode = element.getAttribute('data-matCode');
+			var matName = element.getAttribute('data-matName');
+			var matUnit = element.getAttribute('data-matUnit');
+			var matStandard = element.getAttribute('data-matStandard');
+			
+			var 
 		}
 			
 			 let order = [[${list}]]

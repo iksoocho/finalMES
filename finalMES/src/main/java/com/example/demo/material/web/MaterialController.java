@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
+import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.material.service.MaterialService;
 
 @Controller
@@ -29,8 +30,10 @@ public class MaterialController {
 				code = firstMatVO.getMatOrCode();
 			}
 		List<MatOrderInfoVO> mList = materialService.getMaterialOrdInfoList(code);
+		List<OriginMaterialVO> oList = materialService.getOriginMaterialList();
 		model.addAttribute("list", list);
 		model.addAttribute("mList", mList);
+		model.addAttribute("oList", oList);
 		return "material/matOrder";
 	}
 	

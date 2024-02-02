@@ -31,6 +31,11 @@
 		 JOIN  business       b     ON mo.business_code = b.business_code
 		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
 	</select>
+	
+	<select id="getOriginMaterialList" resultType="OriginMaterialVO">
+		SELECT mat_code, mat_name, mat_unit, mat_standard, mat_safe_stock
+		FROM material
+	</select>
 
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
 	INSERT INTO mat_order 

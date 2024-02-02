@@ -8,6 +8,8 @@ import lombok.Data;
 
 @Data
 public class MaterialVO {
+	
+	// LOT 테이블
 	private String matLotCode;
 	private String matCode;
 	private String matInspectionCode;

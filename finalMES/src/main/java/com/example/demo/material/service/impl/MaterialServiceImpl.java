@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
+import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.material.mapper.MaterialMapper;
 import com.example.demo.material.service.MaterialService;
 
@@ -46,6 +47,12 @@ public class MaterialServiceImpl implements MaterialService {
 		} else {
 			return -1;
 		}
+	}
+
+	@Override
+	public List<OriginMaterialVO> getOriginMaterialList() {
+		// TODO Auto-generated method stub
+		return materialMapper.getOriginMaterialList();
 	}
 
 //	@Override
