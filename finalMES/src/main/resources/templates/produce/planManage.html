@@ -338,20 +338,20 @@
 		                
 		                
 		                var planDetailTable = document.getElementById('planDetailTable');
-		                tempOrderDetails.forEach(detail => {
-		                	const date = new Date(detail.dlvyDate);
-	                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                tempOrderDetails.forEach((detail, index) => {
+		                    const date = new Date(detail.dlvyDate);
+		                    const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 		                    var newRow = planDetailTable.insertRow();
+		                    newRow.className = "plan-detail-row"; // 행에 클래스 추가
+
 		                    // 각 셀에 데이터 삽입
 		                    newRow.innerHTML = `
-		                        
 		                        <td></td>
 		                        <td>${detail.prodCode}</td>
-		                        <td><input type="date" value="${detail.startDate}"></td>
-		                        <td><input type="date" value="${detail.endDate}"></td>
-		                        
+		                        <td><input type="date" name="startDate" ></td>
+		                        <td><input type="date" name="endDate" ></td>
 		                        <td>${detail.ordCount}</td>
-		                        <td><input type="number" value="${detail.planCount}"></td>
+		                        <td><input type="number" name="planCount" value="${detail.planCount || ''}"></td>
 		                        <td>${formattedDate}</td>
 		                    `;
 		                });
@@ -380,10 +380,33 @@
 		            };
 		        });
 		        
-		        
+		        var newPlanDetailRows = document.querySelectorAll('#planDetailTable .plan-detail-row');
+				console.log("planDetailTable : ", planDetailTable);
+		        console.log("Total rows found:", newPlanDetailRows.length); // 찾은 행의 수를 로깅
+				console.log("newPlanDetailRows : ",newPlanDetailRows);
+				
+		        var planDetailData = Array.from(newPlanDetailRows).map(row => {
+		            console.log("Current row:", row); // 현재 행 로깅
+
+		            // 각 셀의 데이터 추출
+		            var prodCode = row.cells[2].innerText;
+		            console.log("prodCode : ", prodCode);
+		            var dPlanStartDate = row.cells[3].querySelector('input').value;
+		            var dPlanEndDate = row.cells[4].querySelector('input').value;
+		            // ... 나머지 데이터 추출
+
+		            console.log("Extracted data:", { prodCode, dPlanStartDate, dPlanEndDate }); // 추출된 데이터 로깅
+
+		            return { prodCode, dPlanStartDate, dPlanEndDate }; // 데이터 반환
+		        });
+
+		        console.log("Collected detail data:", planDetailData);
 		        
 		        console.log(planData);
-		        console.log(JSON.stringify(planData));
+		        
+		        
+		        console.log(planDetailData);
+		        
 		        
 		        
 		        // AJAX 요청으로 서버에 데이터 전송
@@ -393,7 +416,7 @@
 		                'Content-Type': 'application/json',
 		                
 		            },
-		            body: JSON.stringify(planData)
+		            body: JSON.stringify({ planData, planDetailData })
 		        })
 		        .then(response => {
 		            if (!response.ok) {
