@@ -7,6 +7,8 @@
 	SELECT
 	    fac_manage.fac_code,
 	    fac_manage.fac_name,
+	    fac_manage.fac_date,
+	    fac_manage.business_code,
 	    fac_notop.fac_not_sdate,
 	    fac_notop.fac_not_ldate,
 	    fac_notop.fac_not_person,

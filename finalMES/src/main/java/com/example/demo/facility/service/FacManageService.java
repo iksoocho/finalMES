@@ -10,4 +10,6 @@ public interface FacManageService {
 	public List<FacManageVO> FacList(FacManageVO facManageVO);
 	// 등록
 	
+	// 삭제
+	public int deleteFac(String facCode);
 }

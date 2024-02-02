@@ -25,6 +25,8 @@ public class FacManageServiceImpl implements FacManageService {
 		return facManageMapper.getfacList(facManageVO);
 	}
 
-	 
-
+    @Override
+    public int deleteFac(String facCode) {
+        return facManageMapper.deleteFac(facCode);
+    }
 }

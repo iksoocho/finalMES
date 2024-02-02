@@ -26,4 +26,9 @@ public class ProdInsServiceImpl implements ProdInsService{
 		return insMapper.getInsDetailList(insCode);
 	}
 
+	@Override
+	public ProdInsDetailVO getCheckDetailList(String dInsCode) {
+		return insMapper.getCheckDetailList(dInsCode);
+	}
+
 }

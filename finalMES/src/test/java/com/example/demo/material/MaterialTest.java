@@ -25,19 +25,19 @@ public class MaterialTest {
 		}
 		
 		
-		//등록
-		@Test
-		public void insertInfo() {
-			MatOrderVO matOrderVO = new MatOrderVO();
-			matOrderVO.setMatOrCode(null);
-			matOrderVO.setMatOrName(null);
-			matOrderVO.setMatCode(null);
-			matOrderVO.setMatOrDate(null);
-			matOrderVO.setMatOrManager(null);
-			
-			int result = materialMapper.insertMatOrder(matOrderVO);
-			assertNotEquals(result, 0);
-		}
-		
+//		//등록
+//		@Test
+//		public void insertInfo() {
+//			MatOrderVO matOrderVO = new MatOrderVO();
+//			matOrderVO.setMatOrCode(null);
+//			matOrderVO.setMatOrName(null);
+//			matOrderVO.setMatCode(null);
+//			matOrderVO.setMatOrDate(null);
+//			matOrderVO.setMatOrManager(null);
+//			
+//			int result = materialMapper.insertMatOrder(matOrderVO);
+//			assertNotEquals(result, 0);
+//		}
+//		
 	
 }

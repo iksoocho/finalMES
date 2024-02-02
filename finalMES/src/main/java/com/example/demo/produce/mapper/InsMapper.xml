@@ -17,4 +17,11 @@
 	  	FROM prod_d_ins
 	  	WHERE ins_code= #{insCode}
 	  </select>
+
+	  <!-- checked Ins Detail List -->
+	  <select id="getCheckDetailList" parameterType="String" resultType="ProdInsDetailVO">
+	  	SELECT * 
+	  	FROM prod_d_ins
+	  	WHERE d_ins_code= #{dInsCode}
+	  </select>
   </mapper>

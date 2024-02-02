@@ -41,6 +41,10 @@ input[type=text], input[type=date], select {
 	width: 90%;
 }
 
+input[type=number] {
+	width: 60%;
+}
+
 .orderInfoOne th {
 	border: solid 1px gray;
 	text-align: center;
@@ -138,15 +142,31 @@ button {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	width: 100%;
+	position: relative;
 }
 
-.modal-body li {
+.modal-body td {
 	border-bottom: solid 1px rgba(220, 220, 220);
-	margin: 15px;
-	padding: 10px;
+	cursor: pointer;
+}
+
+.modal-body hr {
+	margin: 0;
 }
 </style>
 <script>
+	function displaySelectedProduct(element) {
+		var prodCode = element.getAttribute('data-prodCode');
+		var prodName = element.getAttribute('data-prodName');
+		var prodUnit = element.getAttribute('data-prodUnit');
+		var prodPrice = element.getAttribute('data-prodPrice');
+
+		// 선택한 상품 정보를 selectedProduct div에 표시
+		document.getElementById('selectedProduct').innerHTML = '선택한 상품: '
+				+ prodCode + ' - ' + prodName + ' (' + prodUnit + ') - 가격: '
+				+ prodPrice;
+	}
 	function updateInputFields(liElement) {
 		// 클릭한 <li> 요소에서 데이터 속성을 가져옴
 		var businessCode = liElement.getAttribute('data-businessCode');
@@ -160,11 +180,12 @@ button {
 		document.getElementById('selectedBusinessName').value = businessName;
 		document.getElementById('selectedBusinessManager').value = businessManager;
 		document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
+
 	}
-	function selectBusiness(liElement) {
+	/* function selectBusiness(liElement) {
 		// 거래처를 선택한 후 모달을 닫기 위한 코드
 		updateInputFields(liElement);
-	}
+	} */
 
 	// 페이지 로드 시에 호출되는 함수
 	document.addEventListener('DOMContentLoaded', function() {
@@ -182,33 +203,6 @@ button {
 		var month = ('0' + (today.getMonth() + 1)).slice(-2); // 0을 추가해서 두 자리로 만듦
 		var day = ('0' + today.getDate()).slice(-2); // 0을 추가해서 두 자리로 만듦
 		return year + '-' + month + '-' + day;
-	}
-	function generateOrdCode(businessCode) {
-		// 오늘 날짜 가져오기
-		var currentDate = getCurrentDate();
-
-		// 주문 횟수 (예시로 001부터 시작하도록 설정)
-		var orderCount = 1;
-
-		// 주문서 번호 생성 (거래처코드 + 오늘날짜 + 주문횟수)
-		var ordCode = businessCode + currentDate
-				+ ('00' + orderCount).slice(-3);
-
-		// 주문 횟수 증가
-		orderCount++;
-
-		return ordCode; // 변수 이름을 ordCode로 수정
-	}
-
-	function selectBusiness(liElement) {
-		// 거래처 코드를 가져오기
-		var businessCode = liElement.getAttribute('data-businessCode');
-
-		// 주문서 번호 생성
-		var orderNumber = generateOrdCode(businessCode); // generateOrdCode 함수로 수정
-
-		// 생성된 주문서 번호를 input 창에 표시
-		document.getElementById('ordCode').value = orderNumber;
 	}
 </script>
 </head>
@@ -270,9 +264,11 @@ button {
 			</div>
 			<div class="containerThree">
 				<h5>상세정보</h5>
+				<div id="selectedProduct"></div>
 				<button class="btn btn-primary">삭제</button>
 				<button class="btn btn-primary">추가</button>
-				<button class="btn btn-success">품목정보 불러오기</button>
+				<button class="btn btn-success" data-bs-toggle="modal"
+					data-bs-target="#staticBackdropOne">품목정보 불러오기</button>
 				<table class="moreInfo">
 					<tr>
 						<th rowspan="2"></th>
@@ -285,7 +281,7 @@ button {
 					<tr>
 						<th>품목명</th>
 						<th>단위</th>
-						<th>수량</th>
+						<th style="width: 8%">수량</th>
 						<th>단가</th>
 						<th>총금액</th>
 					</tr>
@@ -295,22 +291,12 @@ button {
 						<td>아메리카노</td>
 						<td>EA</td>
 						<td>2024-01-30</td>
-						<td class="number">10</td>
+						<td class="number"><input type="number" /></td>
 						<td class="number">2,000</td>
 						<td class="number">20,000</td>
 						<td>어쩌구저쩌구</td>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td><input type="checkbox"></td>
-						<td>카페라떼</td>
-						<td>EA</td>
-						<td>2024-01-30</td>
-						<td class="number">20</td>
-						<td class="number">2,500</td>
-						<td class="number">50,000</td>
-						<td>어쩌구저쩌구</td>
-					</tr>
+
 					<tr class="total">
 						<td></td>
 						<td colspan="4">합계</td>
@@ -322,6 +308,7 @@ button {
 					<tr>
 						<td colspan="9" class="ttlCount">총건수: 2</td>
 					</tr>
+
 				</table>
 			</div>
 		</div>
@@ -335,21 +322,81 @@ button {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">거래처 목록
-						</h1>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">거래처 목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
+
 					<div class="modal-body">
-						<ul>
-							<li th:each="business : ${businessList}"
-								th:data-businessCode="${business.businessCode}"
-								th:data-businessName="${business.businessName}"
-								th:data-businessManager="${business.businessManager}"
-								th:data-businessManagerPhone="${business.businessManagerPhone}"
-								th:text="${business.businessCode + ' ' + business.businessName}"
-								data-bs-dismiss="modal" onclick="updateInputFields(this)"></li>
-						</ul>
+
+						<table>
+							<thead>
+								<tr>
+									<th>거래처코드</th>
+									<th>거래처명</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="business : ${businessList}"
+									th:data-businessCode="${business.businessCode}"
+									th:data-businessName="${business.businessName}"
+									th:data-businessManager="${business.businessManager}"
+									th:data-businessManagerPhone="${business.businessManagerPhone}"
+									data-bs-dismiss="modal" onclick="updateInputFields(this)">
+									<td th:text="${business.businessCode}"></td>
+									<td th:text="${business.businessName}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<!-- ProductListModal -->
+		<div class="modal fade modal-xl" id="staticBackdropOne"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">품목 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+						<table>
+							<thead>
+								<tr>
+									<th>상품 코드</th>
+									<th>상품 이름</th>
+									<th>상품 단위</th>
+									<th>상품 가격</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="prod : ${productList}"
+									th:data-prodCode="${prod.prodCode}"
+									th:data-prodName="${prod.prodName}"
+									th:data-prodUnit="${prod.prodUnit}"
+									th:data-prodPrice="${prod.prodPrice}" data-bs-dismiss="modal"
+									th:onclick="'displaySelectedProduct(this)'">
+									<td th:text="${prod.prodCode}"></td>
+									<td th:text="${prod.prodName}"></td>
+									<td th:text="${prod.prodUnit}"></td>
+									<td th:text="${prod.prodPrice}"></td>
+								</tr>
+							</tbody>
+						</table>
 
 					</div>
 					<div class="modal-footer">
