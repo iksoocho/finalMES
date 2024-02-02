@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
+import com.example.demo.material.OriginMaterialVO;
 
 public interface MaterialService {
 	// 단건
@@ -12,6 +13,7 @@ public interface MaterialService {
 	// 발주 전체 모달
 	public List<MatOrderVO> getMaterialOrderList();
 	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode);
+	public List<OriginMaterialVO> getOriginMaterialList();
 	
 	
 	// 등록

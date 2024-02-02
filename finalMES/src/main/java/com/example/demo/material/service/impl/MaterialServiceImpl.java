@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
+import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.material.mapper.MaterialMapper;
 import com.example.demo.material.service.MaterialService;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
-	
+
 	@Autowired
 	MaterialMapper materialMapper;
 
@@ -21,7 +22,7 @@ public class MaterialServiceImpl implements MaterialService {
 	public MatOrderVO getMat(String matCode) {
 		return materialMapper.getMat(matCode);
 	}
-	
+
 	// 발주 리스트 정보
 	@Override
 	public List<MatOrderVO> getMaterialOrderList() {
@@ -33,21 +34,47 @@ public class MaterialServiceImpl implements MaterialService {
 		// TODO Auto-generated method stub
 		return materialMapper.getMaterialOrdInfoList(matordCode);
 	}
-	
-	
+
 	// 발주 등록
 	@Override
 	public int insertMaterialOrder(MatOrderVO matOrderVO) {
 		int result = materialMapper.insertMatOrder(matOrderVO);
-		
-		if(result == 1) {
+//		result = materialMapper.insertMatOrder1(matOrderVO);
+//		result = materialMapper.insertMatOrder2(matOrderVO);
+
+		if (result == 1) {
 			return matOrderVO.getMatOrCount();
 		} else {
 			return -1;
 		}
 	}
 
+	@Override
+	public List<OriginMaterialVO> getOriginMaterialList() {
+		// TODO Auto-generated method stub
+		return materialMapper.getOriginMaterialList();
+	}
 
-	
-	
+//	@Override
+//	public int insertMaterialOrder1(MatOrderVO matOrderVO) {
+//		int result = materialMapper.insertMatOrder1(matOrderVO);
+//
+//		if (result == 1) {
+//			return matOrderVO.getMatOrCount();
+//		} else {
+//			return -1;
+//		}
+//	}
+//
+//	@Override
+//	public int insertMaterialOrder2(MatOrderVO matOrderVO) {
+//		int result = materialMapper.insertMatOrder2(matOrderVO);
+//
+//		if (result == 1) {
+//			return matOrderVO.getMatOrCount();
+//		} else {
+//			return -1;
+//		}
+//	}
+
 }
