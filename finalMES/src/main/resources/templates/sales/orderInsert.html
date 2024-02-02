@@ -154,6 +154,14 @@ button {
 .modal-body hr {
 	margin: 0;
 }
+.ttlPrice{
+	border: none;
+    background-color: transparent;
+    margin-left:50px;
+    padding: 0;
+    width: auto;
+    text-align: right;
+}
 </style>
 <script>
 	function updateInputFields(liElement) {
@@ -195,8 +203,8 @@ button {
 	}
 	var rowCount = 1; // 행 번호 초기화
 
-	function addProductRow(prodName, prodUnit, dlvyDate, quantity, unitPrice, prodCode, ttlPrice
-			) {
+	function addProductRow(prodName, prodUnit, dlvyDate, quantity, unitPrice,
+			prodCode, ttlPrice) {
 		var tbody = document.getElementById('productTableBody');
 		var rows = tbody.getElementsByTagName('tr');
 
@@ -211,16 +219,20 @@ button {
 		var cellDlvyDate = newRow.cells[4] || newRow.insertCell(4); // 납기일자 셀 추가
 		var cellOrdCount = newRow.cells[5] || newRow.insertCell(5);
 		var cellUnitPrice = newRow.cells[6] || newRow.insertCell(6);
-		var cellTtlPrice = newRow.cells[7] || newRow.insertCell(7); 
+		var cellTtlPrice = newRow.cells[7] || newRow.insertCell(7);
 		// 선택된 또는 새로운 행의 데이터 업데이트
 		cellNumber.innerHTML = rowCount++;
 		cellCheckbox.innerHTML = '<input type="checkbox">';
 		cellProdName.innerHTML = prodName;
 		cellProdUnit.innerHTML = prodUnit;
-		cellDlvyDate.innerHTML = '<input type="date" id="dlvyDate_' + rowCount + '" value="' + dlvyDate + '">';
-		cellOrdCount.innerHTML = '<input type="number" id="ordCount_' + rowCount + '" name="ordCount" value="' + quantity + '">';
+		cellDlvyDate.innerHTML = '<input type="date" name="dlvyDate" id="dlvyDate_' + rowCount + '" value="' + dlvyDate + '">';
+		cellOrdCount.innerHTML = '<input type="number" id="ordCount_'
+				+ rowCount + '" name="ordCount" value="' + quantity
+				+ '" oninput="updateTotalPrice(' + rowCount + ')">';
 		cellUnitPrice.innerHTML = unitPrice;
-		cellTtlPrice.innerHTML = '<input type="number" id="ttlPrice_' + rowCount + '" name="ttlCount" value="0">'
+
+		ttlPrice = ttlPrice || 0;
+		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice "id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>';
 		// 초기에 빈 행의 가시성을 전환
 		toggleEmptyRowsVisibility();
 
@@ -261,6 +273,27 @@ button {
 
 		// 선택한 품목을 테이블에 추가
 		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice);
+	}
+
+	function updateTotalPrice(rowNumber) {
+		var ordCountInput = document.getElementById('ordCount_' + rowNumber);
+
+		// Check if the cell exists before attempting to access its value
+		var unitPriceCell = document.getElementById('productTableBody').rows[rowNumber - 2].cells[6];
+		var unitPrice = unitPriceCell ? parseFloat(unitPriceCell.innerText) : 0;
+
+		var ttlPriceInput = document.getElementById('ttlPrice_' + rowNumber);
+
+		// 수량과 단가를 곱하여 총금액을 계산
+		var totalPrice = parseFloat(ordCountInput.value) * unitPrice;
+
+		// Check if totalPrice is NaN, if so, set it to 0
+		if (isNaN(totalPrice)) {
+			totalPrice = 0;
+		}
+
+		// 총금액 입력 필드를 업데이트
+		ttlPriceInput.value = totalPrice ;
 	}
 </script>
 </head>
@@ -335,20 +368,20 @@ button {
 					<thead>
 						<tr>
 							<th rowspan="2" style="width: 50px;"></th>
-							<th rowspan="2"><input type="checkbox"></th>
-							<th colspan="2">품목정보</th>
+							<th rowspan="2" style="width: 50px;"><input type="checkbox"></th>
+							<th colspan="2" style="width: 300px;">품목정보</th>
 							<th rowspan="2" style="width: 400px;">납기일자</th>
-							<th colspan="3">금액정보</th>
+							<th colspan="3" style="width: 300px;">금액정보</th>
 							<th rowspan="2">비고</th>
 						</tr>
 
 
 						<tr>
 							<th style="width: 300px;">품목명</th>
-							<th>단위</th>
-							<th style="width: 8%">수량</th>
-							<th style="width: 200px;">단가</th>
-							<th>총금액</th>
+							<th style="width: 100px;">단위</th>
+							<th style="width: 150px">수량</th>
+							<th style="width: 150px;">단가</th>
+							<th style="width: 200px;">총금액</th>
 						</tr>
 					</thead>
 					<tbody id="productTableBody">
