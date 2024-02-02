@@ -195,7 +195,7 @@ button {
 	}
 	var rowCount = 1; // 행 번호 초기화
 
-	function addProductRow(prodName, prodUnit, dlvyDate, quantity, unitPrice, prodCode,
+	function addProductRow(prodName, prodUnit, dlvyDate, quantity, unitPrice, prodCode, ttlPrice
 			) {
 		var tbody = document.getElementById('productTableBody');
 		var rows = tbody.getElementsByTagName('tr');
@@ -211,7 +211,7 @@ button {
 		var cellDlvyDate = newRow.cells[4] || newRow.insertCell(4); // 납기일자 셀 추가
 		var cellOrdCount = newRow.cells[5] || newRow.insertCell(5);
 		var cellUnitPrice = newRow.cells[6] || newRow.insertCell(6);
-
+		var cellTtlPrice = newRow.cells[7] || newRow.insertCell(7); 
 		// 선택된 또는 새로운 행의 데이터 업데이트
 		cellNumber.innerHTML = rowCount++;
 		cellCheckbox.innerHTML = '<input type="checkbox">';
@@ -220,7 +220,7 @@ button {
 		cellDlvyDate.innerHTML = '<input type="date" id="dlvyDate_' + rowCount + '" value="' + dlvyDate + '">';
 		cellOrdCount.innerHTML = '<input type="number" id="ordCount_' + rowCount + '" name="ordCount" value="' + quantity + '">';
 		cellUnitPrice.innerHTML = unitPrice;
-
+		cellTtlPrice.innerHTML = '<input type="number" id="ttlPrice_' + rowCount + '" name="ttlCount" value="0">'
 		// 초기에 빈 행의 가시성을 전환
 		toggleEmptyRowsVisibility();
 
@@ -337,7 +337,7 @@ button {
 							<th rowspan="2" style="width: 50px;"></th>
 							<th rowspan="2"><input type="checkbox"></th>
 							<th colspan="2">품목정보</th>
-							<th rowspan="2" style="width: 300px;">납기일자</th>
+							<th rowspan="2" style="width: 400px;">납기일자</th>
 							<th colspan="3">금액정보</th>
 							<th rowspan="2">비고</th>
 						</tr>
@@ -347,7 +347,7 @@ button {
 							<th style="width: 300px;">품목명</th>
 							<th>단위</th>
 							<th style="width: 8%">수량</th>
-							<th>단가</th>
+							<th style="width: 200px;">단가</th>
 							<th>총금액</th>
 						</tr>
 					</thead>
