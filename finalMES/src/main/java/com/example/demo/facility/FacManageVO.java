@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class FacManageVO {
 	private String facCode;
+	private String procCode;
 	private String businessCode;
 	private String facName;
 	private int facHig;
@@ -18,7 +19,6 @@ public class FacManageVO {
 	private String facInscycle;
 	private String facImage;
 	private String facPerson;
-	private String procCode;
 	private String procName;
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date procDate;

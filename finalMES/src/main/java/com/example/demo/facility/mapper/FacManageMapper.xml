@@ -15,4 +15,15 @@
 	INNER JOIN process p ON fm.proc_code = p.proc_code
 	WHERE fm.fac_code = #{facCode}
 	</delete>
+	
+	<insert id="insertFac" parameterType="FacManageVO">
+		INSERT INTO fac_manage
+		(proc_code, business_code, fac_name, fac_hig,
+		 fac_low, fac_date, fac_inscycle, fac_image, fac_person)
+		VALUES
+		(#{procCode}, #{businessCode}, #{facName}, #{facHig},
+		 #{facLow}, #{facDate}, #{facInscycle}, #{facImage}, #{facPerson})
+	</insert>
+		
+	
 </mapper>

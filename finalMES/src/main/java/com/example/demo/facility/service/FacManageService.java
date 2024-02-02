@@ -9,7 +9,8 @@ public interface FacManageService {
 	// 리스트
 	public List<FacManageVO> FacList(FacManageVO facManageVO);
 	// 등록
-	
+	public int insertFac(FacManageVO facManageVO);
 	// 삭제
 	public int deleteFac(String facCode);
+
 }

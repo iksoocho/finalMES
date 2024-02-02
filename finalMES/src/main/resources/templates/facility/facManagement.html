@@ -38,45 +38,10 @@ button {
 	margin-right: 5px;
 }
 
-label {
-	
-}
-
 #myModal3 {
 	text-align: center;
 }
 </style>
-<script>
-	// 모달창 내부에 있는 데이터 input 에 담는 함수
-	function updateInputFields(Element) {
-		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
-		var facCode = Element.getAttribute('data-facCode');
-		var facName = Element.getAttribute('data-facName');
-
-		// 입력 필드의 값 설정
-		document.getElementById('equipmentCode').value = facCode;
-		document.getElementById('equipmentName').value = facName;
-
-	}
-
-	function updateInputFields1(Element) {
-		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
-		var procCode = Element.getAttribute('data-procCode');
-		var procName = Element.getAttribute('data-procName');
-
-		// 입력 필드의 값 설정
-		document.getElementById('processCode').value = procCode;
-		document.getElementById('processName').value = procName;
-		
-	}
-
-	function updateInputFields2(Element) {
-		var facPerson = Element.getAttribute('data-facPerson');
-		document.getElementById('facName').value = facPerson;
-	}
-	
-</script>
-
 </head>
 <body>
 
@@ -88,49 +53,33 @@ label {
 
 				<tbody>
 
-					<tr>
-						<th>설비코드 *</th>
-						<td colspan="2"><input type="text" id="equipmentCode"
-							name="equipmentCode" required></td>
+					<tr>					
 						<th>설비명 *</th>
 						<td colspan="2"><input type="text" id="equipmentName"
 							name="equipmentName" required data-toggle="modal"
 							data-target="#myModal1"></td>
+						<th>최고온도</th>
+						<td colspan="2"><input type="text" id="purchaseDate"
+							name="purchaseDate" required></td>
+						
+						
+					</tr>
+					<tr>
+						<th>공정명 *</th>
+						<td colspan="2"><input type="text" id="processName"
+							name="processName" required data-toggle="modal"
+							data-target="#myModal2"></td>
+						<th>최저온도</th>
+						<td colspan="2"><input type="text" id="purchaseDate1"
+							name="purchaseDate1" required></td>
+						
+						
 					</tr>
 					<tr>
 						<th>공정코드 *</th>
 						<td colspan="2"><input type="text" id="processCode"
 							name="processCode" required></td>
-						<th>공정명 *</th>
-						<td colspan="2"><input type="text" id="processName"
-							name="processName" required data-toggle="modal"
-							data-target="#myModal2"></td>
-					</tr>
-					<tr>
-						<th>최고온도</th>
-						<td colspan="2"><input type="text" id="purchaseDate"
-							name="purchaseDate" required></td>
-						<th>최저온도</th>
-						<td colspan="2"><input type="text" id="purchaseDate"
-							name="purchaseDate" required></td>
-					</tr>
-					<tr>
-						<th>담당자 *</th>
-						<td colspan="2"><input type="text" id="facName"
-							name="facName" required data-toggle="modal"
-							data-target="#myModal3"></td>
-						<th>점검주기 선택</th>
-						<td><select id="checkInterval" name="checkInterval">
-								<option value="daily">선택</option>
-								<option value="daily">매일</option>
-								<option value="weekly">매주</option>
-								<option value="monthly">매월(30일)</option>
-						</select></td>
-					</tr>
-					<tr>
-						<th>입고일</th>
-						<td colspan="2"><input type="date" id="purchaseDate"
-							name="purchaseDate" required></td>
+						
 						<th>제조업체</th>
 						<td><select id="checkInterval" name="checkInterval">
 								<option value="account">제조업체명</option>
@@ -142,6 +91,23 @@ label {
 						</select></td>
 					</tr>
 					<tr>
+						<th>담당자 *</th>
+						<td colspan="2"><input type="text" id="facPerson"
+							name="facPerson" required data-toggle="modal"
+							data-target="#myModal3"></td>
+						<th>점검주기 선택</th>
+						<td><select id="checkInterval1" name="checkInterval1">
+								<option value="daily">선택</option>
+								<option value="daily">매일</option>
+								<option value="weekly">매주</option>
+								<option value="monthly">매월(30일)</option>
+						</select></td>
+					</tr>
+					<tr>
+						<th>입고일</th>
+						<td colspan="2"><input type="date" id="purchaseDate2"
+							name="purchaseDate2" required></td>
+
 						<th>이미지</th>
 						<td colspan="2"><input type="file"></td>
 					</tr>
@@ -198,12 +164,11 @@ label {
 							<tbody>
 								<tr th:each="fac: ${list}">
 									<td th:text="${facStat.count}"></td>
-									<td th:text="${fac.facName}" th:data-facCode="${fac.facCode}"
-										th:data-facName="${fac.facName}"
-										th:data-facPerson="${fac.facPerson}"
+									<td th:text="${fac.facName}" th:data-facName="${fac.facName}"
+										th:id="${fac.facName}" th:data-facPerson="${fac.facPerson}"
 										onclick="updateInputFields(this)" data-bs-dismiss="modal"></td>
-									<td th:text="${fac.businessCode}"></td>
-									<td th:text="${fac.facPerson}"></td>
+									<td th:text="${fac.businessCode}" th:id="${fac.businessCode}" ></td>
+									<td th:text="${fac.facPerson}" th:id="${fac.facPerson}"></td>
 									<!-- 날짜변환  -->
 									<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
 								</tr>
@@ -293,6 +258,81 @@ label {
 				</div>
 			</div>
 		</div>
+		<script>
+	// 모달창 내부에 있는 데이터 input 에 담는 함수
+	function updateInputFields(Element) {
+		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
+		var facName = Element.getAttribute('data-facName');
+
+		// 입력 필드의 값 설정
+		document.getElementById('equipmentName').value = facName;
+
+	}
+
+	function updateInputFields1(Element) {
+		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
+		var procCode = Element.getAttribute('data-procCode');
+		var procName = Element.getAttribute('data-procName');
+
+		// 입력 필드의 값 설정
+		document.getElementById('processCode').value = procCode;
+		document.getElementById('processName').value = procName;
+		
+	}
+
+	function updateInputFields2(Element) {
+		var facPerson = Element.getAttribute('data-facPerson');
+		document.getElementById('facPerson').value = facPerson;
+	}
+
+	document.getElementById('saveBtn').addEventListener("click", function() {
+	    	
+		  var procCode = document.getElementsByName("procCode").value;
+		  var businessCode = document.getElementsByName("checkInterval").value;
+		  var facName = document.getElementsByName("facName").value;
+		  var facHig = document.getElementsByName("facHig").value;
+		  var facLow = document.getElementsByName("facLow").value;
+		  var facDate = document.getElementsByName("facDate").value;
+		  var facInscycle = document.getElementsByName("facInscycle").value;
+		  var facImage = document.getElementsByName("facImage").value;
+		  var facPerson = document.getElementsByName("facPerson").value;
+		  
+	    
+	    
+	            var data = {
+	            	procCode: procCode,
+	            	businessCode: businessCode,
+	                facName: facName,
+	                facHig: facHig,
+	                facLow: facLow,
+	                facDate: facDate,
+	                facInscycle: facInscycle,
+	                facImage: facImage,
+	                facPerson: facPerson
+	            };
+	            
+	            fetch("/facManagement", {
+			        method: "POST",
+			        body: JSON.stringify(data),
+			        headers: {
+			            "Content-Type": "application/json"
+			        }
+			    })
+			    .then(response => {
+			        if (response.ok) {
+			            console.log(response);
+			            alert("정상처리");
+			        } else {
+			            console.log(response);
+			            alert("실패");
+			        }
+			    })
+			    .catch(error => {
+			        console.log(error);
+			        alert(오류);
+			    });
+			});
+</script>
 	</section>
 </body>
 </html>
