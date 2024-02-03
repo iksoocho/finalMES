@@ -17,9 +17,16 @@ public class MaterialTest {
 		@Autowired
 		MaterialMapper materialMapper;
 
+//		@Test
+//		public void 전체조회() {
+//			List<MatOrderVO> list = materialMapper.getMatOrderList();
+//			System.out.println(list);
+//			assertThat(list.isEmpty()).isEqualTo(false);
+//		}
+		
 		@Test
-		public void 전체조회() {
-			List<MatOrderVO> list = materialMapper.getMatOrderList();
+		public void 자제조회() {
+			List<OriginMaterialVO> list = materialMapper.getOriginMaterialList1();
 			System.out.println(list);
 			assertThat(list.isEmpty()).isEqualTo(false);
 		}
