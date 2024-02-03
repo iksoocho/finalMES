@@ -24,5 +24,14 @@ public class FacNotopServiceImpl implements FacNotopService{
 	public List<FacNotopVO> FacList(FacNotopVO facNotopVO) {
 		return facNotopMapper.getfacNotList(facNotopVO);
 	}
-	
+
+	@Override
+	public int insertFacNot(FacNotopVO facNotopVO) {
+		int result = facNotopMapper.insertFacNot(facNotopVO);
+		if(result == 1) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
 }
