@@ -35,9 +35,10 @@
 							th:value="${vo.dInsCount}" aria-label="OrderCount" id="OrderCount" readonly>
 					</div>
 				</div>
+				<p th:text="${vo}"></p>
 				<div class="row mt-4">
 					<div class="col-6">
-						<p th:text="${vo}"></p>
+						
 						<p th:text="${load[0].prodName}"></p>
 						
 						<table class="table ">
@@ -101,6 +102,22 @@
 						</div>
 					</div>
 				</div>
+				<div class="row mt-4">
+					<div class="col-6"></div>
+					<div class="col-6">
+						<div class="row">
+							<div class="col d-grid gap-2">
+								<button class="btn btn-secondary text-center fw-bolder fs-5" type="button" id="workSave">작업등록</button>
+							</div>
+							<div class="col d-grid gap-2">
+								<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workCancel">등록취소</button>
+							</div>
+							
+						</div>
+					</div>
+					
+				</div>
+				
 			</div>
 		</div>
 		
@@ -151,9 +168,12 @@
 	    	//+버튼을 누르면 불량수량 1씩 추가
 	    	function increaseCount() {
 	    	    var badValue = document.querySelector('input[id="badCount"]');
+	    	    var maxValue = [[${vo.dInsCount}]];
 	    	    var count = parseInt(badValue.value);
-	    	    count += 1;
-	    	    badValue.value = count;
+	    	    if(count < maxValue){
+		    	    count += 1;
+		    	    badValue.value = count;
+	    	    }
 	    	  }
 
 		</script>
