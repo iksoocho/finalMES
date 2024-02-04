@@ -8,4 +8,6 @@ public interface FacNotopService {
 	public FacNotopVO getFacility(String facCode);
 	// 리스트
 	public List<FacNotopVO> FacList(FacNotopVO facNotopVO);
+	// 등록
+	public int insertFacNot(FacNotopVO facNotopVO);
 }

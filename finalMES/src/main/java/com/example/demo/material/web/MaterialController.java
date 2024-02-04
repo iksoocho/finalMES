@@ -22,7 +22,7 @@ public class MaterialController {
 	
 	// 발주 조회
 	@GetMapping("matOrder")
-	public String getMatlist(Model model) {
+	public String getMaterialOrderList(Model model) {
 		List<MatOrderVO> list = materialService.getMaterialOrderList();
 		String code = null;
 			if(!list.isEmpty()) {
@@ -36,6 +36,21 @@ public class MaterialController {
 		model.addAttribute("oList", oList);
 		return "material/matOrder";
 	}
+	
+	
+	//자재 관리
+	@GetMapping("material")
+	public String getOriginMatList(Model model) {
+		System.out.println("자재관리입니다");
+		List<OriginMaterialVO> matList = materialService.getOriginMaterialList1();
+		System.out.println("값이없요" + matList);
+		model.addAttribute("matList",matList);
+		return "material/material";
+	}
+	
+	// 출고 관리
+//	@GetMapping("matOutput")
+
 	
 	//발주 등록
 	@PostMapping("matOrderInsert")

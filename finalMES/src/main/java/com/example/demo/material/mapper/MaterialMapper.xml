@@ -36,6 +36,32 @@
 		SELECT mat_code, mat_name, mat_unit, mat_standard, mat_safe_stock
 		FROM material
 	</select>
+	
+	
+	<select id="getOriginMaterialList1" resultType="OriginMaterialVO">
+		SELECT m.mat_code,
+			   m.mat_name,
+			   m.mat_safe_stock,
+			   ml.mat_count
+		FROM material 	m
+		JOIN mat_lot 	ml 	ON m.mat_code = ml.mat_code
+	</select>
+	
+	<select id="getOutputList" resultType="MatOutputVO">
+		SELECT b.business_code,
+		 	   mo.mat_out_code, 
+		 	   b.business_name, 
+		 	   ml.mat_manager, 
+		 	   m.mat_name, 
+		 	   ml.mat_lot_code, 
+		 	   ml.mat_count, 
+		 	   mo.mat_out_count, 
+		 	   mo.mat_out_date
+		FROM mat_output mo
+		left JOIN mat_lot    ml ON mo.mat_lot_code = ml.mat_lot_code
+		left JOIN material   m  ON ml.mat_code = m.mat_code
+		full JOIN business   b  ON ml.mat_ins_code = b.business_code;
+	</select>
 
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
 	INSERT INTO mat_order 

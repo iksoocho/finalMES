@@ -13,43 +13,41 @@
 
 
 
-		<div id="grid" class="container"></div>
+		
 
-		<script>
-			const grid = new tui.Grid({
-				el : document.getElementById('grid'),
-				data : {
-					api : {
-						readData : {
-							url : '/api/readData',
-							method : 'GET'
-						}
-					}
-				},
-				scrollX : false,
-				scrollY : false,
-				minBodyHeight : 30,
-				rowHeaders : [ 'rowNum' ],
-				pageOptions : {
-					perPage : 5
-				},
-				columns : [ {
-					header : 'Name',
-					name : 'name'
-				}, {
-					header : 'Artist',
-					name : 'artist'
-				}, {
-					header : 'Type',
-					name : 'type'
-				}, {
-					header : 'Release',
-					name : 'release'
-				}, {
-					header : 'Genre',
-					name : 'genre'
-				} ]
-			});
+		<script th:inline="javascript">
+		let matList = [[${matList}]]
+		
+		 const grid = new tui.Grid({
+
+             el: document.getElementById('grid'),
+             data: matList, // 여기서 emps 데이터를 사용
+             scrollX: false,
+             scrollY: false,
+ 	      columns: [
+ 	        {
+ 	          header: '자재코드',
+ 	          name: 'matCode'
+ 	        },
+ 	        {
+ 	          header: '자재명',
+ 	          name: 'matName'
+ 	        },
+ 	        {
+ 	          header: '총재고량',
+ 	          name: 'matCount'
+ 	        },
+ 	        {
+ 	          header: '안전재고',
+ 	          name: 'matSafeStock'
+ 	        },
+ 	      ],
+ 	      rowHeaders: ['rowNum'],
+             pageOptions: {
+                 useClient: true,
+                 perPage: 5
+             }
+ 	    });
 		</script>
 	</section>
 </body>
