@@ -114,6 +114,8 @@
 					});
 			
 			
+			
+
 			 let order = [[${list}]]
 			
 			 const grid = new tui.Grid({
@@ -145,6 +147,12 @@
 			        {
 				      header: '발주일',
 				      name: 'matOrDate',
+				      formatter: 'date',
+				      formatterOpts: {
+				        format: {
+				          datetime: 'yyyy-MM-dd'
+				        }
+				      }
 				    },
 				    {
 				      header: '납기일',
