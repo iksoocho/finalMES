@@ -92,7 +92,7 @@ button {
 	border: solid 1px #fff;
 }
 
-.number {
+.numberOne, .numberTwo, .numberThree {
 	text-align: right;
 	padding-right: 10px;
 }
@@ -154,13 +154,19 @@ button {
 .modal-body hr {
 	margin: 0;
 }
-.ttlPrice{
+
+.ttlPrice {
 	border: none;
-    background-color: transparent;
-    margin-left:50px;
-    padding: 0;
-    width: auto;
-    text-align: right;
+	background-color: transparent;
+	margin-left: 55px;
+	padding: 0;
+	width: auto;
+	text-align: right;
+}
+
+.unitPrice {
+	text-align: right;
+	padding-right: 32px;
 }
 </style>
 <script>
@@ -191,6 +197,8 @@ button {
 		// 입력 필드에 현재 날짜 설정
 		document.getElementById('registrationDate').value = currentDate;
 
+		// 초기 총합 계산
+		updateTotalSum();
 	});
 
 	// 현재 날짜를 반환하는 함수
@@ -232,12 +240,14 @@ button {
 		cellUnitPrice.innerHTML = unitPrice;
 
 		ttlPrice = ttlPrice || 0;
-		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice "id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>';
+		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice "id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>원';
 		// 초기에 빈 행의 가시성을 전환
 		toggleEmptyRowsVisibility();
 
 		// 새로 추가된 행에 클래스 설정
 		newRow.classList.remove('initially-hidden');
+
+		updateTotalSum();
 
 		var hiddenInput = document.createElement('input');
 		hiddenInput.type = 'hidden';
@@ -246,6 +256,8 @@ button {
 		cellNumber.appendChild(hiddenInput);
 
 		hiddenInput.id = 'prodCode' + rowCount;
+
+		updateTotalCount();
 	}
 
 	// 초기에 빈 행의 가시성을 전환하는 함수
@@ -273,6 +285,8 @@ button {
 
 		// 선택한 품목을 테이블에 추가
 		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice);
+
+		updateTotalCount();
 	}
 
 	function updateTotalPrice(rowNumber) {
@@ -293,7 +307,62 @@ button {
 		}
 
 		// 총금액 입력 필드를 업데이트
-		ttlPriceInput.value = totalPrice ;
+		ttlPriceInput.value = totalPrice;
+
+		updateTotalSum();
+	}
+
+	function updateTotalSum() {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+		var totalQuantity = 0;
+		var totalUnitPrice = 0; // 총 단가를 저장할 변수 추가
+		var totalAmount = 0; // 추가: 총금액의 총합을 저장할 변수
+
+		// 각 행의 수량을 가져와서 총합 계산
+		for (var i = 0; i < rows.length; i++) {
+			var quantityInput = rows[i].querySelector('input[name="ordCount"]');
+			var unitPriceCell = rows[i].cells[6]; // 단가 열에 해당하는 셀
+			var amountCell = rows[i].cells[7];
+
+			if (quantityInput) {
+				totalQuantity += parseFloat(quantityInput.value) || 0;
+			}
+
+			if (unitPriceCell) {
+				totalUnitPrice += parseFloat(unitPriceCell.innerText) || 0;
+			}
+
+			if (amountCell && amountCell.querySelector('input')) {
+				totalAmount += parseFloat(amountCell.querySelector('input').value) || 0;
+			}
+		}
+
+		var totalQuantityCell = document.querySelector('.total .numberOne');
+		var totalUnitPriceCell = document.querySelector('.total .numberTwo'); // 수정된 부분
+		var totalAmountCell = document.querySelector('.total .numberThree');
+
+		totalQuantityCell.innerText = totalQuantity + ' EA';
+		totalUnitPriceCell.innerText = totalUnitPrice + ' 원';
+		totalAmountCell.innerText = totalAmount + ' 원';
+		updateTotalCount();
+
+	}
+
+	function updateTotalCount() {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+		var totalCount = 0;
+
+		// 숨겨진 행을 제외하고 실제 데이터 행만 계산
+		for (var i = 0; i < rows.length; i++) {
+			if (!rows[i].classList.contains('initially-hidden')) {
+				totalCount++;
+			}
+		}
+
+		var totalCountCell = document.querySelector('.ttlCount');
+		totalCountCell.innerText = '총건수: ' + totalCount;
 	}
 </script>
 </head>
@@ -323,7 +392,7 @@ button {
 					<tr>
 						<th class="red">담당자</th>
 						<td class="serch"><input type="text" readonly> <input
-							type="text" readonly>
+							type="text" name="ordManager">
 
 							<button type="button" class="btn btn-primary">
 								<p>검색</p>
@@ -393,18 +462,7 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -415,18 +473,7 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -437,7 +484,7 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -448,7 +495,29 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -457,13 +526,13 @@ button {
 						<tr class="total">
 							<td></td>
 							<td colspan="4">합계</td>
-							<td class="number"></td>
-							<td class="number"></td>
-							<td class="number"></td>
+							<td class="numberOne"></td>
+							<td class="numberTwo"></td>
+							<td class="numberThree"></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td colspan="9" class="ttlCount">총건수: 2</td>
+							<td colspan="9" class="ttlCount">총건수: 0</td>
 						</tr>
 					</tfoot>
 				</table>
