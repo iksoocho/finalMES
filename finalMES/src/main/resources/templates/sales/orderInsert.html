@@ -8,6 +8,10 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
+input {
+	padding-left: 10px;
+}
+
 th {
 	background-color: rgba(250, 250, 250);
 }
@@ -35,6 +39,10 @@ tr {
 
 input[type=text], input[type=date], select {
 	width: 90%;
+}
+
+input[type=number] {
+	width: 60%;
 }
 
 .orderInfoOne th {
@@ -84,7 +92,7 @@ button {
 	border: solid 1px #fff;
 }
 
-.number {
+.numberOne, .numberTwo, .numberThree {
 	text-align: right;
 	padding-right: 10px;
 }
@@ -129,8 +137,234 @@ button {
 .total {
 	background-color: rgba(255, 0, 0, 0.5);
 }
-</style>
 
+.modal-body ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	position: relative;
+}
+
+.modal-body td {
+	border-bottom: solid 1px rgba(220, 220, 220);
+	cursor: pointer;
+}
+
+.modal-body hr {
+	margin: 0;
+}
+
+.ttlPrice {
+	border: none;
+	background-color: transparent;
+	margin-left: 55px;
+	padding: 0;
+	width: auto;
+	text-align: right;
+}
+
+.unitPrice {
+	text-align: right;
+	padding-right: 32px;
+}
+</style>
+<script>
+	function updateInputFields(liElement) {
+		// 클릭한 <li> 요소에서 데이터 속성을 가져옴
+		var businessCode = liElement.getAttribute('data-businessCode');
+		var businessName = liElement.getAttribute('data-businessName');
+		var businessManager = liElement.getAttribute('data-businessManager');
+		var businessManagerPhone = liElement
+				.getAttribute('data-businessManagerPhone');
+
+		// 입력 필드의 값 설정
+		document.getElementById('selectedBusinessCode').value = businessCode;
+		document.getElementById('selectedBusinessName').value = businessName;
+		document.getElementById('selectedBusinessManager').value = businessManager;
+		document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
+
+	}
+	/* function selectBusiness(liElement) {
+		// 거래처를 선택한 후 모달을 닫기 위한 코드
+		updateInputFields(liElement);
+	} */
+
+	// 페이지 로드 시에 호출되는 함수
+	document.addEventListener('DOMContentLoaded', function() {
+		// 현재 날짜를 가져오는 함수 호출
+		var currentDate = getCurrentDate();
+		// 입력 필드에 현재 날짜 설정
+		document.getElementById('registrationDate').value = currentDate;
+
+		// 초기 총합 계산
+		updateTotalSum();
+	});
+
+	// 현재 날짜를 반환하는 함수
+	function getCurrentDate() {
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = ('0' + (today.getMonth() + 1)).slice(-2); // 0을 추가해서 두 자리로 만듦
+		var day = ('0' + today.getDate()).slice(-2); // 0을 추가해서 두 자리로 만듦
+		return year + '-' + month + '-' + day;
+	}
+	var rowCount = 1; // 행 번호 초기화
+
+	function addProductRow(prodName, prodUnit, dlvyDate, quantity, unitPrice,
+			prodCode, ttlPrice) {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+
+		// 기존 행 선택 또는 필요한 경우 새로운 행 생성
+		var newRow = rows[rowCount - 1] || tbody.insertRow(-1);
+
+		// 선택된 행 또는 새로운 행에 셀 추가 또는 업데이트
+		var cellNumber = newRow.cells[0] || newRow.insertCell(0);
+		var cellCheckbox = newRow.cells[1] || newRow.insertCell(1);
+		var cellProdName = newRow.cells[2] || newRow.insertCell(2);
+		var cellProdUnit = newRow.cells[3] || newRow.insertCell(3);
+		var cellDlvyDate = newRow.cells[4] || newRow.insertCell(4); // 납기일자 셀 추가
+		var cellOrdCount = newRow.cells[5] || newRow.insertCell(5);
+		var cellUnitPrice = newRow.cells[6] || newRow.insertCell(6);
+		var cellTtlPrice = newRow.cells[7] || newRow.insertCell(7);
+		// 선택된 또는 새로운 행의 데이터 업데이트
+		cellNumber.innerHTML = rowCount++;
+		cellCheckbox.innerHTML = '<input type="checkbox">';
+		cellProdName.innerHTML = prodName;
+		cellProdUnit.innerHTML = prodUnit;
+		cellDlvyDate.innerHTML = '<input type="date" name="dlvyDate" id="dlvyDate_' + rowCount + '" value="' + dlvyDate + '">';
+		cellOrdCount.innerHTML = '<input type="number" id="ordCount_'
+				+ rowCount + '" name="ordCount" value="' + quantity
+				+ '" oninput="updateTotalPrice(' + rowCount + ')">';
+		cellUnitPrice.innerHTML = unitPrice;
+
+		ttlPrice = ttlPrice || 0;
+		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice "id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>원';
+		// 초기에 빈 행의 가시성을 전환
+		toggleEmptyRowsVisibility();
+
+		// 새로 추가된 행에 클래스 설정
+		newRow.classList.remove('initially-hidden');
+
+		updateTotalSum();
+
+		var hiddenInput = document.createElement('input');
+		hiddenInput.type = 'hidden';
+		hiddenInput.name = 'prodCode';
+		hiddenInput.id = 'prodCode' + rowCount;
+		cellNumber.appendChild(hiddenInput);
+
+		hiddenInput.id = 'prodCode' + rowCount;
+
+		updateTotalCount();
+	}
+
+	// 초기에 빈 행의 가시성을 전환하는 함수
+	function toggleEmptyRowsVisibility() {
+		var tbody = document.getElementById('productTableBody');
+		var emptyRows = tbody.getElementsByClassName('initially-hidden');
+
+		for (var i = 0; i < emptyRows.length; i++) {
+			emptyRows[i].style.display = 'table-row';
+		}
+	}
+
+	function displaySelectedProduct(element) {
+		var prodCode = element.getAttribute('data-prodCode');
+		var prodName = element.getAttribute('data-prodName');
+		var prodUnit = element.getAttribute('data-prodUnit');
+		var prodPrice = element.getAttribute('data-prodPrice');
+
+		// 사용자가 입력한 납기일자 값을 가져오기
+		var dlvyDateInput = document.getElementById('dlvyDate');
+		var dlvyDate = dlvyDateInput ? dlvyDateInput.value : '';
+
+		// 콘솔에 납기일자 기록
+		console.log('사용자가 입력한 납기일자:', dlvyDate);
+
+		// 선택한 품목을 테이블에 추가
+		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice);
+
+		updateTotalCount();
+	}
+
+	function updateTotalPrice(rowNumber) {
+		var ordCountInput = document.getElementById('ordCount_' + rowNumber);
+
+		// Check if the cell exists before attempting to access its value
+		var unitPriceCell = document.getElementById('productTableBody').rows[rowNumber - 2].cells[6];
+		var unitPrice = unitPriceCell ? parseFloat(unitPriceCell.innerText) : 0;
+
+		var ttlPriceInput = document.getElementById('ttlPrice_' + rowNumber);
+
+		// 수량과 단가를 곱하여 총금액을 계산
+		var totalPrice = parseFloat(ordCountInput.value) * unitPrice;
+
+		// Check if totalPrice is NaN, if so, set it to 0
+		if (isNaN(totalPrice)) {
+			totalPrice = 0;
+		}
+
+		// 총금액 입력 필드를 업데이트
+		ttlPriceInput.value = totalPrice;
+
+		updateTotalSum();
+	}
+
+	function updateTotalSum() {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+		var totalQuantity = 0;
+		var totalUnitPrice = 0; // 총 단가를 저장할 변수 추가
+		var totalAmount = 0; // 추가: 총금액의 총합을 저장할 변수
+
+		// 각 행의 수량을 가져와서 총합 계산
+		for (var i = 0; i < rows.length; i++) {
+			var quantityInput = rows[i].querySelector('input[name="ordCount"]');
+			var unitPriceCell = rows[i].cells[6]; // 단가 열에 해당하는 셀
+			var amountCell = rows[i].cells[7];
+
+			if (quantityInput) {
+				totalQuantity += parseFloat(quantityInput.value) || 0;
+			}
+
+			if (unitPriceCell) {
+				totalUnitPrice += parseFloat(unitPriceCell.innerText) || 0;
+			}
+
+			if (amountCell && amountCell.querySelector('input')) {
+				totalAmount += parseFloat(amountCell.querySelector('input').value) || 0;
+			}
+		}
+
+		var totalQuantityCell = document.querySelector('.total .numberOne');
+		var totalUnitPriceCell = document.querySelector('.total .numberTwo'); // 수정된 부분
+		var totalAmountCell = document.querySelector('.total .numberThree');
+
+		totalQuantityCell.innerText = totalQuantity + ' EA';
+		totalUnitPriceCell.innerText = totalUnitPrice + ' 원';
+		totalAmountCell.innerText = totalAmount + ' 원';
+		updateTotalCount();
+
+	}
+
+	function updateTotalCount() {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+		var totalCount = 0;
+
+		// 숨겨진 행을 제외하고 실제 데이터 행만 계산
+		for (var i = 0; i < rows.length; i++) {
+			if (!rows[i].classList.contains('initially-hidden')) {
+				totalCount++;
+			}
+		}
+
+		var totalCountCell = document.querySelector('.ttlCount');
+		totalCountCell.innerText = '총건수: ' + totalCount;
+	}
+</script>
 </head>
 <body>
 	<section layout:fragment="content">
@@ -143,21 +377,24 @@ button {
 				<table class="orderInfoOne">
 					<tr>
 						<th>주문서번호</th>
-						<td><input type="text"></td>
+						<td><input type="text" id="ordCode" name="ordCode" readonly></td>
 						<th>등록일</th>
-						<td><input type="date"></td>
+						<td><input type="date" id="registrationDate" name="ordDate"
+							readonly></td>
 						<th>주문서상태</th>
-						<td><select>
-								<option value="선택하세요">선택하세요
+						<td><select name="ordState">
+								<option value="0" selected>등록전
+								<option value="1" disabled>등록완료
+								<option value="2" disabled>진행중
+								<option value="3" disabled>종결
 						</select></td>
 					</tr>
 					<tr>
 						<th class="red">담당자</th>
 						<td class="serch"><input type="text" readonly> <input
-							type="text" readonly>
+							type="text" name="ordManager">
 
-							<button type="button" class="btn btn-primary"
-								data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+							<button type="button" class="btn btn-primary">
 								<p>검색</p>
 							</button></td>
 						<th>담당자 연락처</th>
@@ -167,78 +404,137 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text" readonly> <input
-							type="text" readonly>
-							<button class="btn btn-primary">
+						<td class="serch"><input type="text"
+							id="selectedBusinessCode" name="businessCode" readonly> <input
+							type="text" id="selectedBusinessName" readonly>
+							<button class="btn btn-primary" data-bs-toggle="modal"
+								data-bs-target="#staticBackdrop">
 								<p>검색</p>
 							</button></td>
 						<th>거래처 담당자</th>
-						<td><input class="readInput" type="text" readonly></td>
+						<td><input class="readInput" type="text"
+							id="selectedBusinessManager" readonly></td>
 						<th>거래처 연락처</th>
-						<td><input class="readInput" type="text" readonly></td>
+						<td><input class="readInput" type="text"
+							id="selectedBusinessManagerPhone" readonly></td>
 					</tr>
 					<tr>
 						<th>납기일자</th>
-						<td><input type="date"></td>
+						<td><input type="date" id="dlvyDate"></td>
 						<th>비고</th>
-						<td><input type="text"></td>
+						<td><input type="text" name="ordNote"></td>
 					</tr>
 				</table>
 			</div>
 			<div class="containerThree">
 				<h5>상세정보</h5>
+				<div id="selectedProduct"></div>
 				<button class="btn btn-primary">삭제</button>
-				<button class="btn btn-primary">추가</button>
-				<button class="btn btn-success">품목정보 불러오기</button>
-				<table class="moreInfo">
-					<tr>
-						<th rowspan="2"></th>
-						<th rowspan="2"><input type="checkbox"></th>
-						<th colspan="2">품목정보</th>
-						<th rowspan="2">납기일자</th>
-						<th colspan="3">금액정보</th>
-						<th rowspan="2">비고</th>
-					</tr>
-					<tr>
-						<th>품목명</th>
-						<th>단위</th>
-						<th>수량</th>
-						<th>단가</th>
-						<th>총금액</th>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td><input type="checkbox"></td>
-						<td>아메리카노</td>
-						<td>EA</td>
-						<td>2024-01-30</td>
-						<td class="number">10</td>
-						<td class="number">2,000</td>
-						<td class="number">20,000</td>
-						<td>어쩌구저쩌구</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td><input type="checkbox"></td>
-						<td>카페라떼</td>
-						<td>EA</td>
-						<td>2024-01-30</td>
-						<td class="number">20</td>
-						<td class="number">2,500</td>
-						<td class="number">50,000</td>
-						<td>어쩌구저쩌구</td>
-					</tr>
-					<tr class="total">
-						<td></td>
-						<td colspan="4">합계</td>
-						<td class="number">30</td>
-						<td class="number">4,500</td>
-						<td class="number">70,000</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td colspan="9" class="ttlCount">총건수: 2</td>
-					</tr>
+				<button class="btn btn-primary" data-bs-toggle="modal"
+					data-bs-target="#staticBackdropOne">추가</button>
+
+				<table class="moreInfo" id="productTable">
+					<thead>
+						<tr>
+							<th rowspan="2" style="width: 50px;"></th>
+							<th rowspan="2" style="width: 50px;"><input type="checkbox"></th>
+							<th colspan="2" style="width: 300px;">품목정보</th>
+							<th rowspan="2" style="width: 400px;">납기일자</th>
+							<th colspan="3" style="width: 300px;">금액정보</th>
+							<th rowspan="2">비고</th>
+						</tr>
+
+
+						<tr>
+							<th style="width: 300px;">품목명</th>
+							<th style="width: 100px;">단위</th>
+							<th style="width: 150px">수량</th>
+							<th style="width: 150px;">단가</th>
+							<th style="width: 200px;">총금액</th>
+						</tr>
+					</thead>
+					<tbody id="productTableBody">
+						<!-- 6개의 빈 데이터 행 -->
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr class="total">
+							<td></td>
+							<td colspan="4">합계</td>
+							<td class="numberOne"></td>
+							<td class="numberTwo"></td>
+							<td class="numberThree"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="9" class="ttlCount">총건수: 0</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -252,31 +548,92 @@ button {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">주문 담당자
-							목록</h1>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">거래처 목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
+
 					<div class="modal-body">
-						<ul>
-							<li th:each="manager : ${managerList}" th:text="${manager}"></li>
-						</ul>
+
+						<table>
+							<thead>
+								<tr>
+									<th>거래처코드</th>
+									<th>거래처명</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="business : ${businessList}"
+									th:data-businessCode="${business.businessCode}"
+									th:data-businessName="${business.businessName}"
+									th:data-businessManager="${business.businessManager}"
+									th:data-businessManagerPhone="${business.businessManagerPhone}"
+									data-bs-dismiss="modal" onclick="updateInputFields(this)">
+									<td th:text="${business.businessCode}"></td>
+									<td th:text="${business.businessName}"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Understood</button>
+							data-bs-dismiss="modal">닫기</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<!-- ProductListModal -->
+		<div class="modal fade modal-xl" id="staticBackdropOne"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">품목 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+						<table>
+							<thead>
+								<tr>
+									<th>상품 코드</th>
+									<th>상품 이름</th>
+									<th>상품 단위</th>
+									<th>상품 가격</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="prod : ${productList}"
+									th:data-prodCode="${prod.prodCode}"
+									th:data-prodName="${prod.prodName}"
+									th:data-prodUnit="${prod.prodUnit}"
+									th:data-prodPrice="${prod.prodPrice}" data-bs-dismiss="modal"
+									th:onclick="'displaySelectedProduct(this)'">
+									<td th:text="${prod.prodCode}"></td>
+									<td th:text="${prod.prodName}"></td>
+									<td th:text="${prod.prodUnit}"></td>
+									<td th:text="${prod.prodPrice}"></td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+
 					</div>
 				</div>
 			</div>
 		</div>
 
 	</section>
-
-
-
-	<script>
-		
-	</script>
 </html>
 

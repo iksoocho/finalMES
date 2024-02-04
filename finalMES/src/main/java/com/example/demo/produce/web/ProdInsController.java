@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
+import com.example.demo.produce.WorkLoadVO;
 import com.example.demo.produce.service.ProdInsService;
 
 @Controller
@@ -19,7 +20,7 @@ public class ProdInsController {
 	@Autowired
 	ProdInsService prodInsService;
 	
-	@GetMapping("/planOrder")
+	@GetMapping("planOrder")
 	public String insList(Model model){
 		List<ProdInsVO> list = prodInsService.getInsList();
 		model.addAttribute("insList", list);
@@ -27,7 +28,7 @@ public class ProdInsController {
 		return "produce/planOrder";
 	}
 	
-	@GetMapping("/planOrderList")
+	@GetMapping("planOrderList")
 	public String insAllList(Model model){
 		List<ProdInsVO> list = prodInsService.getInsList();
 		String code = null;
@@ -41,10 +42,23 @@ public class ProdInsController {
 		return "produce/planOrderList";
 	}
 	
-	@GetMapping("/planOrderDetail")
+	@GetMapping("planOrderDetail")
 	@ResponseBody
 	public List<ProdInsDetailVO> getPlanOrderDetailList(@RequestParam String insCode){
+//		System.out.println("상세조회 : " + prodInsService.getInsDetailList(insCode));
 		return prodInsService.getInsDetailList(insCode);
+	}
+	
+	@GetMapping("workRegist")
+	public String workRegist(@RequestParam String dInsCode, @RequestParam String prodCode, Model model) {
+		ProdInsDetailVO vo = prodInsService.getCheckDetailList(dInsCode);
+		List<WorkLoadVO> load = prodInsService.getWorkPageLoadData(prodCode);
+		System.out.println(vo);
+		System.out.println(load);
+		model.addAttribute("vo", vo);
+		model.addAttribute("load", load);
+		
+		return "produce/workRegist";
 	}
 	
 }

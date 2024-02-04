@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>작업등록</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container w-75">
+			<h1>작업등록</h1>
+			<div>
+				<div class="row">
+					<label for="WorkDate" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업일자</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg text-center" placeholder="작업일자"
+							aria-label="WorkDate" id="WorkDate" readonly>
+					</div>
+					<label for="Worker" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업자</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg text-center" placeholder="작업자"
+							aria-label="Worker" id="Worker">
+					</div>
+				</div>
+				<div class="row mt-4">
+					<label for="FacCode" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">공정흐름코드</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg" placeholder="공정흐름?설비?"
+							aria-label="FacCode" id="FacCode" readonly>
+					</div>
+					<label for="OrderCount" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">계획량</label>
+					<div class="col-3">
+						<input type="text" class="form-control form-control-lg text-center" 
+							th:value="${vo.dInsCount}" aria-label="OrderCount" id="OrderCount" readonly>
+					</div>
+				</div>
+				<p th:text="${vo}"></p>
+				<div class="row mt-4">
+					<div class="col-6">
+						
+						<p th:text="${load[0].prodName}"></p>
+						
+						<table class="table ">
+			              <thead>
+			                <tr>
+			                  <th>공정명</th>
+			                  <th>설비코드</th>
+			                  <th>상태</th>
+			                </tr>
+			              </thead>
+			              <tbody>
+			                <tr th:block th:each="list : ${load}">
+			                  <td th:text="${list.procName}"></td>
+			                  <td >설비코드</td>
+			                  <td>ㅇㅁㅇ</td>
+			                </tr>
+			              </tbody>
+			            </table>
+						
+					</div>
+					<div class="col-6">
+						<div class="row">
+								<label for="workCount" class="col-6 col-form-label col-form-label-lg text-center fw-bolder">작업량</label>
+							<div class="col-6">
+								<input type="number" class="form-control form-control-lg text-center" value="0"
+									aria-label="workCount" id="workCount" th:max="${vo.dInsCount}">
+							</div>
+						</div>
+						<div class="row mt-4">
+							<div class="col d-grid gap-2">
+								<button class="btn btn-success text-center fw-bolder fs-5" type="button" id="workStart">작업시작</button>
+							</div>								
+							<div class="col">
+								<input type="text" class="form-control form-control-lg text-center" placeholder=" -- : -- "
+									aria-label="workStart" id="workStart" readonly>
+							</div>
+						</div>
+						<div class="row mt-4">
+							<div class="col d-grid gap-2">
+								<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workEnd">작업종료</button>
+							</div>								
+							<div class="col">
+								<input type="text" class="form-control form-control-lg text-center" placeholder=" -- : -- "
+									aria-label="workEnd" id="workEnd" readonly>
+							</div>
+						</div>
+						<div class="row mt-4">
+							<label for="badCount" class="col col-form-label col-form-label-lg text-center fw-bolder">불량수량</label>
+							<div class="col">
+								<div class="row">
+									<div class="col-9">
+										<input type="number" class="form-control form-control-lg text-center"
+											aria-label="badCount" id="badCount" value="0" readonly >
+									</div>
+									<div class="col-3 d-grid gap-2">
+										<button class="btn btn-danger text-center fw-bolder fs-5" 
+										type="button" id="badCount" onclick="increaseCount()">+</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mt-4">
+					<div class="col-6"></div>
+					<div class="col-6">
+						<div class="row">
+							<div class="col d-grid gap-2">
+								<button class="btn btn-secondary text-center fw-bolder fs-5" type="button" id="workSave">작업등록</button>
+							</div>
+							<div class="col d-grid gap-2">
+								<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workCancel">등록취소</button>
+							</div>
+							
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+		</div>
+		
+		<script>
+	    	document.addEventListener('DOMContentLoaded', (event) => {
+		        var today = new Date();
+		        var dd = String(today.getDate()).padStart(2, '0');
+		        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+		        var yy = today.getFullYear().toString().substr(-2);
+		        
+		        today = yy + '-' + mm + '-' + dd;
+		
+		        document.getElementById('WorkDate').value = today;
+		    });
+	    	
+	    	// 작업시작 버튼 클릭 시
+	    	document.querySelector('button[id="workStart"]').addEventListener("click", function() {
+	    	  var currentTime = new Date();
+	    	  var hours = currentTime.getHours();
+	    	  var minutes = currentTime.getMinutes();
+	    	  
+	    	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
+	    	  document.querySelector('input[id="workStart"]').value = formatTime(hours, minutes);
+	    	});
+
+	    	// 작업종료 버튼 클릭 시
+	    	document.querySelector('button[id="workEnd"]').addEventListener("click", function() {
+	    	  var currentTime = new Date();
+	    	  var hours = currentTime.getHours();
+	    	  var minutes = currentTime.getMinutes();
+	    	  
+	    	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
+	    	  document.querySelector('input[id="workEnd"]').value = formatTime(hours, minutes);
+	    	});
+
+	    	// 시간을 HH:MM 형식으로 변환하는 함수
+	    	function formatTime(hours, minutes) {
+	    	  hours = padZero(hours);
+	    	  minutes = padZero(minutes);
+	    	  return hours + ":" + minutes;
+	    	}
+
+	    	// 한 자리 숫자의 경우 앞에 0을 붙이는 함수
+	    	function padZero(number) {
+	    	  return number < 10 ? "0" + number : number;
+	    	}
+	    	
+	    	//+버튼을 누르면 불량수량 1씩 추가
+	    	function increaseCount() {
+	    	    var badValue = document.querySelector('input[id="badCount"]');
+	    	    var maxValue = [[${vo.dInsCount}]];
+	    	    var count = parseInt(badValue.value);
+	    	    if(count < maxValue){
+		    	    count += 1;
+		    	    badValue.value = count;
+	    	    }
+	    	  }
+
+		</script>
+	</section>
+</body>
+</html>

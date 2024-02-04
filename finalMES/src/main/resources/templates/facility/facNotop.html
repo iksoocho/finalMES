@@ -1,111 +1,230 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<head>
-<meta charset="UTF-8">
-<title>비가동관리</title>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<title>설비등록</title>
 <style>
-th, td {
-	border: 1px solid black;
-	padding: 8px;
-	text-align: center;
+#layoutSidenav_content {
+	margin-top: 20px;
 }
 
-table, th, td {
-	border: none;
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
 }
 
-.select {
+input[type="text"], input[type="date"] {
+	width: 200px;
+	box-sizing: border-box;
+}
+
+label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+input[type="checkbox"] {
+	margin-right: 5px;
+}
+
+button {
+	margin-right: 5px;
+}
+
+#myModal3 {
 	text-align: center;
 }
 </style>
 </head>
 <body>
+
 	<section layout:fragment="content">
-		<h1>비가동관리</h1>
-		<div class="container text-center">
-			<div class="row">
-				<div class="col">
-					<br> <input class="select" type="text"
-						placeholder="설비명을 입력하세요" />
-					<button>조회</button>
-					<br>
-					<table style="width: 100%; table-layout: fixed;">
-						<thead>
-							<tr>
-								<th style="width: 10%;">No.</th>
-								<th style="width: 30%;">설비코드</th>
-								<th style="width: 30%;">설비명</th>
-								<th style="width: 40%;">사유</th>
-								<th style="width: 25%;">담당자</th>
-								<th style="width: 45%;">비가동시작일</th>
-								<th style="width: 45%;">비가동종료일</th>
-								<th style="width: 10%;">상태</th>
-							</tr>
-						</thead>
 
-						<tbody>
-							<tr th:each="fac: ${list}">
-								<td th:text="${facStat.count}"></td>
-								<td th:text="${fac.facCode}"></td>
-								<td th:text="${fac.facName}"></td>
-								<td th:text="${fac.facNotReason}"></td>
-								<td th:text="${fac.facNotPerson}"></td>
-								<!-- 날짜변환  -->
-								<td th:text="${#dates.format(fac.facNotSdate, 'yyyy-MM-dd')}"></td>
-								<td th:text="${#dates.format(fac.facNotLdate, 'yyyy-MM-dd')}"></td>
-								<td th:text="${fac.facNotSituation}"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
 
-				<div class="col">
+		<div id="layoutSidenav_content" class="container text-center">
+
+			<div class="col">
+				<br> <br>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>설비명 *</th>
+							<td colspan="2"><input type="text" id="facName"
+								name="facName" required data-toggle="modal"
+								data-target="#myModal"></td>
+							<th>담당자</th>
+							<td colspan="2"><input type="text" id="facNotPerson"
+								name="facNotPerson" required></td>
+						<tr>
+							<th>사유</th>
+							<td colspan="2"><input type="text" id="facNotReason"
+								name="facNotReason" required></td>
+							<th>설비상태</th>
+							<td><select id="facNotSituation" name="facNotSituation">
+									<option value="0">대기</option>
+									<option value="1">가동</option>
+									<option value="2">비가동</option>
+							</select></td>
+						<tr>
+							<th>시작일</th>
+							<td colspan="2"><input type="date" id="facNotSdate"
+								name="facNotSdate" required></td>
+							<th>종료일</th>
+							<td colspan="2"><input type="date" id="facNotLdate"
+								name="facNotLdate" required></td>
+						</tr>
+						<tr>
+					</thead>
+				</table>
+				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 				<br>
 				<br>
-					<table class="table">
-						<thead>
-							<tr>
-								<th>설비코드</th>
-								<td><input type="text" class="form-control" name="facCode"
-									required></td>
-							</tr>
-							<tr>
-								<th>설비명</th>
-								<td><input type="text" class="form-control" name="facName"
-									required></td>
-							</tr>
-							<tr>
-								<th>비가동내용</th>
-								<td><input type="text" class="form-control"
-									name="NotopContent" required></td>
-							</tr>
-							<tr>
-								<th>담당자</th>
-								<td><input type="text" class="form-control"
-									name="facNotPerson" required></td>
-							</tr>
-							<tr>
-								<th>비가동시작일</th>
-								<td><input type="date" class="form-control"
-									name="facNotSdate" required></td>
-							</tr>
-							<tr>
-								<th>비가동종료일</th>
-								<td><input type="date" class="form-control"
-									name="facNotLdate" required></td>
-							</tr>
-						</thead>
-					</table>
-					<button type="submit" class="btn btn-primary">등록</button>
+				<br>
+				<div id="grid" class="container"></div>
+			</div>
+		</div>
+
+
+
+		<!-- 설비코드 모달창 -->
+		<div class="modal" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 모달 헤더 -->
+					<div class="modal-header">
+						<h4 class="modal-title">설비명</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>설비명</th>
+									<th>담당자</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="fac: ${list}">
+									<td th:text="${facStat.count}"></td>
+									<td th:text="${fac.facName}" th:data-facName="${fac.facName}"
+										th:data-facNotPerson="${fac.facNotPerson}"
+										onclick="updateInputFields(this)" data-bs-dismiss="modal"></td>
+									<td th:text="${fac.facNotPerson}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
+					</div>
 				</div>
 			</div>
 		</div>
+		<script th:inline="javascript">
+	// 모달창 내부에 있는 데이터 input 에 담는 함수
+	function updateInputFields(Element) {
+		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
+		var facName = Element.getAttribute('data-facName');
+		var facNotPerson = Element.getAttribute('data-facNotPerson');
+
+		// 입력 필드의 값 설정
+		document.getElementById('facName').value = facName;
+		document.getElementById('facNotPerson').value = facNotPerson;
+
+	}
+	
+	document.getElementById('saveBtn').addEventListener("click", function() {
+	    	
+		  /* var facNotCode = document.getElementsByName("facNotCode")[0].value; */
+		  /* var notopCode = document.getElementsByName("notopCode")[0].value; */
+		  var facName = document.getElementsByName("facName")[0].value;
+		  var facNotPerson = document.getElementsByName("facNotPerson")[0].value;
+		  var facNotReason = document.getElementsByName("facNotReason")[0].value;
+		  var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
+		  var facNotSdate = document.getElementsByName("facNotSdate")[0].value;
+		  var facNotLdate = document.getElementsByName("facNotLdate")[0].value;
+		
+		  
+	            var data = {
+	            	/* facNotCode: facNotCode,
+	            	notopCode: notopCode, */
+	            	facName: facName,
+	            	facNotPerson: facNotPerson,
+	            	facNotReason: facNotReason,
+	            	facNotSituation: facNotSituation,
+	            	facNotSdate: facNotSdate,
+	            	facNotLdate: facNotLdate
+	            };
+	            
+	            fetch("/facNotop", {
+			        method: "POST",
+			        body: JSON.stringify(data),
+			        headers: {
+			            "Content-Type": "application/json"
+			        }
+			    })
+			    .then(response => {
+			    	console.log(response.status);
+			        if (response.ok) {
+			            console.log(response);
+			            alert("정상처리");
+			        } else {
+			            console.log(response);
+			            alert("실패");
+			        }
+			    })
+			    .catch(error => {
+			        console.log(error);
+			        alert(오류);
+			    });
+			});
+	
+	
+	// 그리드 페이징
+	let facNotList = [[${list}]]
+	const grid = new tui.Grid({
+		
+		el : document.getElementById('grid'),
+		data : facNotList,
+		scrollX : false,
+		scrollY : false,
+		columns : [ 
+		{
+			header : '설비코드',
+			name : 'facCode'
+		}, 
+		{
+			header : '설비명',
+			name : 'facName'
+		}, 
+		{
+			header : '담당자',
+			name : 'facNotPerson'
+		}, 
+		{
+			header : '상태',
+			name : 'facNotSituation',
+		}
+		],
+		 rowHeaders: ['rowNum'],
+         pageOptions: {
+             useClient: true,
+             perPage: 5
+         }
+	});
+</script>
 	</section>
 </body>
 </html>

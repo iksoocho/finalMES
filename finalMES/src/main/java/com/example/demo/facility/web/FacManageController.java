@@ -1,10 +1,18 @@
 package com.example.demo.facility.web;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+
+import com.example.demo.facility.FacManageVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 
 
@@ -22,6 +30,21 @@ public class FacManageController {
 
 	}
 	
-	// 설비등록
-
+	// 설비삭제
+    @DeleteMapping("/facManagement")
+    public String deleteFac(String facCode) {
+        facManageMapper.deleteFac(facCode);
+        return "facility/facManagement";
+    }
+    
+    // 등록
+    @PostMapping("/facManagement")
+    public String insertFacProcess(@RequestBody FacManageVO facManageVO) {
+    	System.out.println("통신테스트");
+    	System.out.println(facManageVO);
+    	
+    	facManageMapper.insertFac(facManageVO);
+    	System.out.println("xxx");
+		return "facility/facManagement";
+    }
  }

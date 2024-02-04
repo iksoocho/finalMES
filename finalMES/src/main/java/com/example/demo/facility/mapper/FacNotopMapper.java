@@ -10,4 +10,5 @@ import com.example.demo.facility.FacNotopVO;
 public interface FacNotopMapper {
 	public FacNotopVO getFacNotop(String facCode);
 	public List<FacNotopVO> getfacNotList(FacNotopVO facNotopVO);
+	public int insertFacNot(FacNotopVO facNotopVO);
 }

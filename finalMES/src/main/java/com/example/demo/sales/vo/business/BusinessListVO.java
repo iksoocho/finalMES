@@ -6,6 +6,6 @@ import lombok.Data;
 public class BusinessListVO {
 	private String businessCode;
 	private String businessName;
-	private String businessManagerName;
+	private String businessManager;
 	private String businessManagerPhone;
 }

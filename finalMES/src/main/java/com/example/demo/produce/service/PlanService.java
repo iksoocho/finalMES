@@ -9,8 +9,15 @@ import com.example.demo.produce.PlanVO;
 
 public interface PlanService {
 	public List<PlanVO> getPlanList();
+	public List<PlanVO> getPlanByOrdCode(String ordCode);
 	public List<PlanDVO> getPlanDList(String planCode);
 	
 	public List<PlanOrdVO> getOrdList();
 	public List<PlanOrdDVO> getOrdDList(String ordCode);
+	
+	//public int insertPlanInfo(PlanVO planVO);
+	public PlanVO insertPlanInfo(PlanVO planVO);
+	public PlanDVO insertPlanDetailInfo(PlanDVO planDVO);
+	
+	 public void insertProductionWithDetails(PlanVO planVO, List<PlanDVO> planDVOList);
 }

@@ -4,30 +4,26 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.facility.mapper.FacManageMapper">
 	<select id="getfacList" resultType="FacManageVO">
- 		SELECT * FROM fac_manage
+	SELECT fm.*, p.*
+	FROM fac_manage fm
+	JOIN process p ON fm.proc_code = p.proc_code
 	</select>
 	
-<!-- <insert id="insertFacManage" parameterType="com.example.demo.facility.model.FacManage">
-        INSERT INTO fac_manage (
-	        fac_code,
-	        proc_code,
-	        business_code,
-	        fac_name, fac_hig,
-	        fac_low, fac_date,
-	        fac_inscycle,
-	        fac_image,
-	        fac_person
-	        )
-        VALUES (
-	        #{facCode},
-	        #{procCode},
-	        #{businessCode},
-			#{facName},
-			#{facHig},
-			#{facLow},
-			#{facDate},
-			#{facInscycle},
-			#{facImage}, 
-			#{facPerson})
-    </insert> -->
+	<delete id="deleteFac" parameterType="String">
+	DELETE fm, p
+	FROM fac_manage fm
+	INNER JOIN process p ON fm.proc_code = p.proc_code
+	WHERE fm.fac_code = #{facCode}
+	</delete>
+	
+	<insert id="insertFac" parameterType="FacManageVO">
+		INSERT INTO fac_manage
+		(proc_code, business_code, fac_name, fac_hig,
+		 fac_low, fac_date, fac_inscycle, fac_image, fac_person)
+		VALUES
+		(#{procCode}, #{businessCode}, #{facName}, #{facHig},
+		 #{facLow}, #{facDate}, #{facInscycle}, #{facImage}, #{facPerson})
+	</insert>
+		
+	
 </mapper>

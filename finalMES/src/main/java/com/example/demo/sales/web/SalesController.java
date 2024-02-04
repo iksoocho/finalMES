@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.order.OrderVO;
+import com.example.demo.sales.vo.product.ProductListVO;
 
 @Controller
 public class SalesController {
@@ -25,11 +26,15 @@ public class SalesController {
 		return "sales/orderList";
 	}
 
-	@GetMapping("/ordInsert")
+	@GetMapping("/orderInsert")
 	public String getBusinessList(Model model) {
 		List<BusinessListVO> businessList = ordService.getBusinessList();
+		List<ProductListVO> productList = ordService.getProductList();
 		model.addAttribute("businessList", businessList);
+		model.addAttribute("productList", productList);
 		return "sales/orderInsert";
 	}
+	
+	
 
 }

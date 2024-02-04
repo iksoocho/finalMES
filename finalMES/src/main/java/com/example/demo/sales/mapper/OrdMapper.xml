@@ -5,7 +5,8 @@
 
 	<select id="getOrder" resultType="OrderVO">
 		SELECT * FROM ord_list
-		WHERE ord_code = #{ordCode}
+		WHERE
+		ord_code = #{ordCode}
 	</select>
 
 	<select id="getOrderDetail" resultType="OrderDetailVO">
@@ -14,26 +15,40 @@
 	</select>
 
 	<insert id="insertOrder" parameterType="OrderVO">
-		INSERT INTO ord_list(ord_code, business_code, ord_date, ord_manager, ord_state, ord_note)
-		VALUES(#{ordCode}, #{businessCode}, #{ordDate}, #{ordManager}, #{ordState}, #{ordNote})
+		INSERT INTO
+		ord_list(ord_code, business_code, ord_date, ord_manager, ord_state,
+		ord_note)
+		VALUES(#{ordCode}, #{businessCode}, #{ordDate},
+		#{ordManager}, #{ordState}, #{ordNote})
 	</insert>
-	
+
 	<insert id="insertDetailOrder" parameterType="OrderDetailVO">
-		INSERT INTO ord_d_list(ord_d_code, prod_code, ord_code, ord_count, dlvy_date, ttl_price)
-		VALUES(#{ordDCode}, #{prodCode}, #{ordCode}, #{ordCount}, #{dlvyDate}, #{ttlPrice})
+		INSERT INTO
+		ord_d_list(ord_d_code, prod_code, ord_code, ord_count, dlvy_date,
+		ttl_price)
+		VALUES(#{ordDCode}, #{prodCode}, #{ordCode}, #{ordCount},
+		#{dlvyDate}, #{ttlPrice})
 	</insert>
-	
+
 	<select id="getOrderList" resultType="OrderVO">
 		SELECT * FROM ord_list
 	</select>
-	
+
 	<select id="getOrderDetailList" resultType="OrderDetailVO">
-		SELECT * FROM ord_d_list
+		SELECT * FROM
+		ord_d_list
 		WHERE ord_d_code = #{ordDCode}
 	</select>
-	
-	<select id="getBusinessList" resultType="BusinessListVO">
-		SELECT business_code, business_name, business_manager, business_manager_phone 
+
+	<select id="getBusinessList" resultType="BusinessListVO"> <!-- 거래처 목록조회  -->
+		SELECT business_code,
+		business_name, business_manager, business_manager_phone
 		FROM business
+		WHERE business_type = 1
+	</select>
+	
+	<select id="getProductList" resultType="ProductListVO"> <!-- 상품 목록조회 -->
+		SELECT prod_code, prod_name, prod_unit, prod_price 
+		FROM product
 	</select>
 </mapper>

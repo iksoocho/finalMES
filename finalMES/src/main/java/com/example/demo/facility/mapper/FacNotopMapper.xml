@@ -7,6 +7,8 @@
 	SELECT
 	    fac_manage.fac_code,
 	    fac_manage.fac_name,
+	    fac_manage.fac_date,
+	    fac_manage.business_code,
 	    fac_notop.fac_not_sdate,
 	    fac_notop.fac_not_ldate,
 	    fac_notop.fac_not_person,
@@ -22,4 +24,13 @@
 	JOIN
 	    not_operator ON fac_notop.notop_code = not_operator.notop_code
 	</select>
+	
+	<insert id="insertFacNot" parameterType="FacNotopVO">
+		INSERT INTO fac_notop
+		(fac_not_code, fac_code, notop_code, fac_not_sdate, fac_not_ldate, fac_not_person,
+		 fac_not_situation, fac_not_reason)
+		VALUES
+		(#{facNotCode}, #{facCode}, #{notopCode}, #{facNotSdate}, #{facNotLdate}, #{facNotPerson},
+		 #{facNotSituation}, #{facNotReason})
+	</insert>
 </mapper>	
