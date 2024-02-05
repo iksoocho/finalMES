@@ -64,7 +64,7 @@
 		VALUES(#{planCode},#{prodCode},#{dplanCount},#{dPlanStartDate},#{dPlanEndDate})
 	</insert>
 	
-<<<<<<< HEAD
+
 	<update id="updatePlanInfo" parameterType="PlanDVO">
 		UPDATE PROD_D_PLAN
 		SET D_PLAN_START_DATE = #{dplanStartDate},
@@ -74,9 +74,7 @@
 	
 	</update>
 	
-=======
 
->>>>>>> branch 'develope' of https://github.com/iksoocho/finalMES.git
 	
 	
 </mapper>
