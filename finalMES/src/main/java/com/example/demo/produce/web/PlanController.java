@@ -42,6 +42,7 @@ public class PlanController {
 		List<PlanOrdVO> ordList = planService.getOrdList();
 		model.addAttribute("list", list);
 		model.addAttribute("dList", dList);
+		System.out.println("dList : "+ dList);
 		model.addAttribute("ordList", ordList);
 		
 		return "produce/planManage";
@@ -92,13 +93,13 @@ public class PlanController {
 //	  }
 	
 	@PostMapping("/planInsert")
-    public ResponseEntity<?> insertProduction(@RequestBody PlanCompositeVO planCompositeVO) {
-        try {
-        	planService.insertProductionWithDetails(planCompositeVO.getPlanVO(), planCompositeVO.getPlanDVOList());
-            return ResponseEntity.ok().body("생산 계획 및 상세 정보가 성공적으로 삽입되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생: " + e.getMessage());
-        }
+	@ResponseBody
+    public String insertProduction(@RequestBody PlanCompositeVO planCompositeVO) {
+			String msg;
+        	planService.insertProductionWithDetails(planCompositeVO);
+        	msg = "생산 계획 및 상세 정보가 성공적으로 삽입되었습니다.";
+            return msg;
+     
     }
 	
 

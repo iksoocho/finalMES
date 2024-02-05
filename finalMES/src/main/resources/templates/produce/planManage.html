@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>생산계획관리</title>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body>
 	<section layout:fragment="content">
@@ -67,12 +68,13 @@
 			<!-- ============================메인============================ -->
 			<h2>생산계획관리</h2>
 			<div>
-				<div>
-					<button class="btn btn-secondary"
-						style="float: right; margin: 0 5px;" id="planInsert">저장</button>
+				<button class="btn btn-secondary"
+						style="float: right; margin: 8px 5px;" id="planInsert">저장</button>
 					<button class="btn btn-secondary" data-bs-toggle="modal"
-						data-bs-target="#exampleModal" style="float: right;">주문서
+						data-bs-target="#exampleModal" style="float: right; margin: 8px 5px;">주문서
 						조회</button>
+						<div>
+					
 					<table class="table table-hover" id="planTable">
 						<thead>
 							<tr>
@@ -102,20 +104,21 @@
 						</tbody>
 					</table>
 				</div>
+				
 				<!-- ============================생산상세계획============================ -->
 
 				<div class="mt-4">
 					<button class="btn btn-secondary"
-						style="float: right; margin: 0 5px;">저장</button>
+						style="float: right; margin: 8px 5px;">저장</button>
 					<table class="table table-hover" id="planDetailTable">
 						<thead>
 							<tr>
-								
+								<th>상세계획코드</th>
 								<th>생산계획코드</th>
 								<th>제품코드</th>
 								<th>생산계획 시작일자</th>
 								<th>생산계획 종료일자</th>
-								
+								<th>재고량</th>
 								<th>주문수량</th>
 								<th>계획량</th>
 								<th>납기/마감일자</th>
@@ -127,11 +130,11 @@
 									<td>1</td>
 									<td th:text="${planD.planCode}"></td>
 									<td th:text="${planD.prodCode}"></td>
-									<td><input type="date"></td>
-									<td><input type="date"></td>
+									<td><input type="date" ></td>
+									<td><input type="date" ></td>
 									<td th:text="${planD.prodCount}"></td>
 									<td th:text="${planD.dplanCount}"></td>
-									<td><input type="number"></td>
+									<td><input type="number" ></td>
 									<td th:text="${#dates.format(planD.dlvyDate, 'yyyy-MM-dd')}"></td>
 								</tr>
 							</th:block>
@@ -148,54 +151,132 @@
 			</div>
 		</div>
 
-		<!-- <script th:inline="javascript">
-			const grid = new tui.Grid({
-				  el: document.getElementById('grid'), // 그리드 요소 ID가 맞는지 확인하세요
+		
+    <!-- 	<script th:inline="javascript">
+    	let plan = [[${list}]]
+    	document.addEventListener('DOMContentLoaded', function() {
+    	    var planGrid = new tui.Grid({
+    	        el: document.getElementById('planGrid'),
+    	        data:plan,
+    	        // 그리드 컬럼 설정
+    	        columns: [
+    	            
+    	            { header: '생산계획코드', name: 'planCode' },
+    	            { header: '주문코드', name: 'ordCode' },
+    	            { header: '계획명', name: 'planTitle' },
+    	            { header: '담당자', name: 'planPerson' },
+    	            {
+    	                header: '생산계획일자', 
+    	                name: 'planDate',
+    	                formatter: function({value}) {
+    	                    if (value) {
+    	                        var date = new Date(value);
+    	                        var year = date.getFullYear();
+    	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    	                        var day = date.getDate().toString().padStart(2, '0');
+    	                        return `${year}-${month}-${day}`;
+    	                    }
+    	                    return '';
+    	                }
+    	            }
+    	        ],
+    	        rowHeaders: ['rowNum'],
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                }
+    	    });
+    	    
+    	    planGrid.on('click', function(ev) {
+    	        var rowKey = ev.rowKey;
+    	        var rowData = planGrid.getRow(rowKey);
+    	        
+    	        if (rowData) {
+    	            var planCode = rowData.planCode;
+
+    	            // planCode를 사용하여 상세 데이터 요청
+    	            fetch('/planDetail?planCode=' + planCode)
+    	                .then(response => response.json())
+    	                .then(data => {
+    	                	console.log(data);
+    	                    // 상세 그리드에 데이터 표시
+    	                    // grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
+    					planDGrid.resetData(data);
+    	                })
+    	                .catch(error => {
+    	                    console.error('Error:', error);
+    	                });
+    	        }
+    	    });
+
+    	    
+    	});
+    	</script>
+    	
+    	
+    	<script th:inline="javascript">
+			const planDGrid = new tui.Grid({
+				  el: document.getElementById('planDGrid'), // 그리드 요소 ID가 맞는지 확인하세요
 				  scrollX: false,
 		            scrollY: false,
 				  columns: [
 				    // 데이터 구조에 따라 컬럼을 정의하세요
 				    { name: 'dplanCode', header: '생산계획 코드' },
 				    { name: 'planCode', header: '제품 코드' },
-				    { name: '', header: '시작 일자' },
-				    { name: '', header: '종료 일자' },
+/* 				    { name: 'dplanStartDate', header: '시작 일자' },
+				    { name: 'dplanEndDate', header: '종료 일자' }, */
+				    { name: 'start', header: '시작 일자' ,
+    	                formatter: function({value}) {
+    	                    if (value) {
+    	                        var date = new Date(value);
+    	                        var year = date.getFullYear();
+    	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    	                        var day = date.getDate().toString().padStart(2, '0');
+    	                        return `${year}-${month}-${day}`;
+    	                    }
+    	                    return '';
+    	                }
+				    },
+				    { name: 'end', header: '종료 일자' ,
+    	                formatter: function({value}) {
+    	                    if (value) {
+    	                        var date = new Date(value);
+    	                        var year = date.getFullYear();
+    	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    	                        var day = date.getDate().toString().padStart(2, '0');
+    	                        return `${year}-${month}-${day}`;
+    	                    }
+    	                    return '';
+    	                }
+				    },
 				    { name: 'prodCount', header: '현재 재고' },
 				    { name: 'dplanCount', header: '주문 수량' },
-				    { name: 'planCode', header: '계획량' },
-				    { name: 'formattedDate', header: '납기 일자' },
+				    { name: 'dplanCount', header: '계획량' },
+				    { name: 'dlvyDate', header: '납기 일자' ,
+    	                formatter: function({value}) {
+    	                    if (value) {
+    	                        var date = new Date(value);
+    	                        var year = date.getFullYear();
+    	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    	                        var day = date.getDate().toString().padStart(2, '0');
+    	                        return `${year}-${month}-${day}`;
+    	                    }
+    	                    return '';
+    	                }
+				    },
 				    // 데이터에 따라 다른 컬럼 추가
 				  ],
 				  // 여기에 다른 그리드 옵션을 추가할 수 있습니다
-				  rowHeaders: ['checkbox','rowNum'],
+				  rowHeaders: ['checkbox'],
 	            pageOptions: {
 	                useClient: true,
 	                perPage: 5
 	            }
 				});
 	
-				// 행에 대한 이벤트 리스너
-				document.querySelectorAll('.plan-row').forEach(row => {
-				  row.addEventListener('click', function() {
-				    const planCode = this.getAttribute('data-plan-code');
-	
-				    fetch('/planDetail?planCode=' + planCode)
-				      .then(response => response.json())
-				      .then(data => {
-				        // Toast Grid 형식에 맞게 데이터를 수정할 필요가 있으면 수정하세요
-				        const gridData = data.map(detail => {
-				          // 필요하다면 데이터를 포맷팅하세요
-				          const date = new Date(detail.dlvyDate);
-				          detail.formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
-				          return detail;
-				        });
-	
-				        // Toast Grid 데이터 업데이트
-				        grid.resetData(gridData);
-				      });
-				  });
-			  });
-    	</script> -->
-
+				
+    	</script>  -->
+		
 		<script>
 			let tempOrderDetails = [];
 			 // 초기에 모달 창을 만들 때 테이블 헤더를 미리 추가합니다.
@@ -268,17 +349,21 @@
 							data.forEach(detail => {
 								const tr = document.createElement('tr');
 								const date = new Date(detail.dlvyDate);
+								const sDate = new Date(detail.start);
+								const eDate = new Date(detail.end);
 		                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                        const formattedSDate = sDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                        const formattedEDate = sDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 								console.log(detail);
 								tr.innerHTML = `
 									<td>${detail.dplanCode}</td>
 		                            <td>${detail.planCode}</td>
 		                            <td>${detail.prodCode}</td>
-		                            <td><input type="date"></td>
-		                            <td><input type="date"></td>
+		                            <td><input type="date" value="${formattedSDate}"></td>
+		                            <td><input type="date" value="${formattedEDate}"></td>
 		                            <td>${detail.prodCount}</td>
 		                            <td>${detail.dplanCount}</td>
-		                            <td><input type="number"></td>
+		                            <td><input type="number" value="500"></td>
 		                            <td>${formattedDate}</td>
 								`;
 								detailsTbody.appendChild(tr);
@@ -365,50 +450,42 @@
 		    
 		    
 		    
-		    //insert
+		    //==========================insert===========================================================
 		    document.querySelector('#planInsert').addEventListener('click', function() {
-		        // 'new-row' 클래스를 가진 행들만 선택
-		        var newPlanRows = document.querySelectorAll('#planTable .new-row');
+		        let data = {};
+		    	let planobj = {};
+		    	// 'new-row' 클래스를 가진 행들만 선택
+		        var newPlanRows = document.querySelector('#planTable .new-row');
 
-		        var planData = Array.from(newPlanRows).map(row => {
-		            return {
 		                
-		            	ordCode: row.querySelector('td:nth-child(3)').innerText,
-		                planTitle: row.querySelector('td:nth-child(4) input').value, // input 요소의 value 속성 사용
-		                planPerson: row.querySelector('td:nth-child(5)').innerText,
-		                planDate: row.querySelector('td:nth-child(6) input').value // input 요소의 value 속성 사용
-		            };
-		        });
+		        planobj.ordCode = newPlanRows.querySelector('td:nth-child(3)').innerText,
+		        planobj.planTitle= newPlanRows.querySelector('td:nth-child(4) input').value, // input 요소의 value 속성 사용
+		        planobj.planPerson= newPlanRows.querySelector('td:nth-child(5)').innerText,
+		        planobj.planDate =  newPlanRows.querySelector('td:nth-child(6) input').value // input 요소의 value 속성 사용
+
 		        
 		        var newPlanDetailRows = document.querySelectorAll('#planDetailTable .plan-detail-row');
 				console.log("planDetailTable : ", planDetailTable);
 		        console.log("Total rows found:", newPlanDetailRows.length); // 찾은 행의 수를 로깅
 				console.log("newPlanDetailRows : ",newPlanDetailRows);
 				
-		        var planDetailData = Array.from(newPlanDetailRows).map(row => {
-		            console.log("Current row:", row); // 현재 행 로깅
+		        let planDetailData  = [];
+				for(let i=0; i<newPlanDetailRows.length; i++){
+					let obj = {};
+					let target = $(newPlanDetailRows[i]);
+				    obj.prodCode = target.find('td:eq(1)').text();
+				    obj.dplanStartDate = target.find("input[name='startDate']").val();
+				    obj.dplanEndDate = target.find("input[name='endDate']").val();
+				    obj.dplanCount = target.find("input[name='planCount']").val();
+					
+					planDetailData.push(obj);
+					
+				}
 
-		            // 각 셀의 데이터 추출
-		            var prodCode = row.cells[2].innerText;
-		            console.log("prodCode : ", prodCode);
-		            var dPlanStartDate = row.cells[3].querySelector('input').value;
-		            var dPlanEndDate = row.cells[4].querySelector('input').value;
-		            // ... 나머지 데이터 추출
-
-		            console.log("Extracted data:", { prodCode, dPlanStartDate, dPlanEndDate }); // 추출된 데이터 로깅
-
-		            return { prodCode, dPlanStartDate, dPlanEndDate }; // 데이터 반환
-		        });
-
-		        console.log("Collected detail data:", planDetailData);
+		        data.planVO = planobj;
+		        data.planDVOList = planDetailData;
 		        
-		        console.log(planData);
-		        
-		        
-		        console.log(planDetailData);
-		        
-		        
-		        
+		        console.log(data);
 		        // AJAX 요청으로 서버에 데이터 전송
 		        fetch('/planInsert', {
 		            method: 'POST',
@@ -416,17 +493,18 @@
 		                'Content-Type': 'application/json',
 		                
 		            },
-		            body: JSON.stringify({ planData, planDetailData })
+		            body: JSON.stringify(data)
 		        })
 		        .then(response => {
 		            if (!response.ok) {
 		                throw new Error('Network response was not ok');
 		            }
-		            return response.json();
+		            return response.text();
 		        })
 		        .then(data => {
 		            console.log('Success:', data);
-		            window.location.href = 'planManage'; // 성공적으로 처리된 후 리디렉트
+		            alert(data);
+		            location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
 		        })
 		        .catch(error => {
 		            console.error('Error:', error);

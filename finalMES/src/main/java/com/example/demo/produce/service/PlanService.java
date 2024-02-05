@@ -2,6 +2,7 @@ package com.example.demo.produce.service;
 
 import java.util.List;
 
+import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
@@ -19,5 +20,7 @@ public interface PlanService {
 	public PlanVO insertPlanInfo(PlanVO planVO);
 	public PlanDVO insertPlanDetailInfo(PlanDVO planDVO);
 	
-	 public void insertProductionWithDetails(PlanVO planVO, List<PlanDVO> planDVOList);
+	public void insertProductionWithDetails(PlanCompositeVO planCompositeVO);
+	 
+	public void updatePlanDInfo(PlanCompositeVO planCompositeVO);
 }
