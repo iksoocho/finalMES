@@ -7,49 +7,68 @@
 <title>입고 관리^^</title>
 </head>
 <body>
-		<section layout:fragment="content">
+	<section layout:fragment="content">
 		<h3>입고관리</h3>
 
-		
+
 
 		<div id="grid" class="container"></div>
 
-		<script>
-			const grid = new tui.Grid({
-				el : document.getElementById('grid'),
-				data : {
-					api : {
-						readData : {
-							url : '/api/readData',
-							method : 'GET'
-						}
-					}
-				},
-				scrollX : false,
-				scrollY : false,
-				minBodyHeight : 30,
-				rowHeaders : [ 'rowNum' ],
-				pageOptions : {
-					perPage : 5
-				},
-				columns : [ {
-					header : 'Name',
-					name : 'name'
-				}, {
-					header : 'Artist',
-					name : 'artist'
-				}, {
-					header : 'Type',
-					name : 'type'
-				}, {
-					header : 'Release',
-					name : 'release'
-				}, {
-					header : 'Genre',
-					name : 'genre'
-				} ]
-			});
-		</script>
-	</section>
+	<script th:inline="javascript">
+		let matInputList = [[${matInputList}]]
+		
+		 const grid = new tui.Grid({
+
+           el: document.getElementById('grid'),
+           data: matInputList, // 여기서 emps 데이터를 사용
+           scrollX: false,
+           scrollY: false,
+	      columns: [
+	        {
+	          header: '자재코드',
+	          name: 'matCode'
+	        },
+	        {
+	          header: '자재명',
+	          name: 'matName'
+	        },
+	        {
+	          header: 'LOT코드',
+	          name: 'matLotCode'
+	        },
+	        {
+		      header: '자재 검사코드',
+		      name: 'matInsCode'
+		    },
+	        {
+			  header: '검사량',
+			  name: 'matInsCount'
+			},
+	        {
+			  header: '입고량',
+			  name: 'matInsGoodCount'
+			},
+	        {
+			  header: '입고일',
+			  name: 'matInputDate',
+  		      formatter : function dateFormatter(params) {
+  		    	  const date = new Date(params.value);
+  		    	  const isoDate = date.toISOString().split('T')[0];
+  		    	  return isoDate;
+  		    	}
+			},
+	        {
+			  header: '담당자',
+			  name: 'matManager'
+			},
+	      ],
+	      rowHeaders: ['rowNum'],
+           pageOptions: {
+               useClient: true,
+               perPage: 5
+           }
+	    });
+	</script>
+</section>
 </body>
 </html>

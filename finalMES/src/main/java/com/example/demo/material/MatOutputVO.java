@@ -15,6 +15,7 @@ public class MatOutputVO {
 	private Date matOutDate;	//출고 날짜
 	private int matOutCount;	// 출고 수량
 	
+	private String businessCode;
 	private String matName;		// 자재명
 	private String matManger;	// 담당자
 	private int matCount;		// 재고량

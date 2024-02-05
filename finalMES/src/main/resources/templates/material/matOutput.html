@@ -15,54 +15,59 @@
 		<div id="grid" class="container"></div>
 
 		<script th:inline="javascript">
-// 		let outList = [[${outList}]]
+		let matOutList = [[${matOutList}]]
 		
-// 		 const grid = new tui.Grid({
+		 const grid = new tui.Grid({
 
-//             el: document.getElementById('grid'),
-//             data: outList, // 여기서 emps 데이터를 사용
-//             scrollX: false,
-//             scrollY: false,
-// 	      columns: [
-// 	        {
-// 	          header: '출고코드',
-// 	          name: 'matOutCode'
-// 	        },
-// 	        {
-// 	          header: '거래처',
-// 	          name: 'businessName'
-// 	        },
-// 	        {
-// 	          header: '담당자',
-// 	          name: 'matManger'
-// 	        },
-// 	        {
-// 		      header: '제품명',
-// 		      name: 'matName'
-// 		    },
-// 	        {
-// 			  header: 'LOT코드',
-// 			  name: 'matLotCode'
-// 			},
-// 	        {
-// 			  header: '재고량',
-// 			  name: 'matCount'
-// 			},
-// 	        {
-// 			  header: '출고량',
-// 			  name: 'matOutCount'
-// 			},
-// 			{
-// 			  header: '출고일',
-// 			  name: 'matOutDate'
-// 			},
-// 	      ],
-// 	      rowHeaders: ['rowNum'],
-//             pageOptions: {
-//                 useClient: true,
-//                 perPage: 5
-//             }
-// 	    });
+            el: document.getElementById('grid'),
+            data: matOutList, // 여기서 emps 데이터를 사용
+            scrollX: false,
+            scrollY: false,
+	      columns: [
+	        {
+	          header: '출고코드',
+	          name: 'matOutCode'
+	        },
+	        {
+	          header: '거래처',
+	          name: 'businessName'
+	        },
+	        {
+	          header: '담당자',
+	          name: 'matManger'
+	        },
+	        {
+		      header: '제품명',
+		      name: 'matName'
+		    },
+	        {
+			  header: 'LOT코드',
+			  name: 'matLotCode'
+			},
+	        {
+			  header: '재고량',
+			  name: 'matCount'
+			},
+	        {
+			  header: '출고량',
+			  name: 'matOutCount'
+			},
+			{
+			  header: '출고일',
+			  name: 'matOutDate',
+  		      formatter : function dateFormatter(params) {
+  		    	  const date = new Date(params.value);
+  		    	  const isoDate = date.toISOString().split('T')[0];
+  		    	  return isoDate;
+  		    	}
+			},
+	      ],
+	      rowHeaders: ['rowNum'],
+            pageOptions: {
+                useClient: true,
+                perPage: 5
+            }
+	    });
 		</script>
 	</section>
 
