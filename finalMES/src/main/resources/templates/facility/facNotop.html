@@ -48,7 +48,7 @@ button {
 <body>
 
 	<section layout:fragment="content">
-
+		<h1>설비비가동관리</h1>
 
 		<div id="layoutSidenav_content" class="container text-center">
 
@@ -118,9 +118,9 @@ button {
 								<tr th:each="fac: ${list}">
 									<td th:text="${facStat.count}"></td>
 									<td th:text="${fac.facName}" th:data-facName="${fac.facName}"
-										th:data-facNotPerson="${fac.facNotPerson}"
+									    th:data-facNotPerson="${fac.facNotPerson}"
 										onclick="updateInputFields(this)" data-bs-dismiss="modal"></td>
-									<td th:text="${fac.facNotPerson}"></td>
+									<td th:text="${fac.facNotPerson}" ></td>
 								</tr>
 							</tbody>
 						</table>
@@ -147,19 +147,21 @@ button {
 	
 	document.getElementById('saveBtn').addEventListener("click", function() {
 	    	
-		  /* var facNotCode = document.getElementsByName("facNotCode")[0].value; */
-		  /* var notopCode = document.getElementsByName("notopCode")[0].value; */
+
 		  var facName = document.getElementsByName("facName")[0].value;
 		  var facNotPerson = document.getElementsByName("facNotPerson")[0].value;
 		  var facNotReason = document.getElementsByName("facNotReason")[0].value;
 		  var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
 		  var facNotSdate = document.getElementsByName("facNotSdate")[0].value;
 		  var facNotLdate = document.getElementsByName("facNotLdate")[0].value;
-		
+			
+		  if (!facName) {
+		        alert("설비명을 입력해주세요.");
+		        return;
+		    }
+		  
 		  
 	            var data = {
-	            	/* facNotCode: facNotCode,
-	            	notopCode: notopCode, */
 	            	facName: facName,
 	            	facNotPerson: facNotPerson,
 	            	facNotReason: facNotReason,
@@ -204,19 +206,36 @@ button {
 		{
 			header : '설비코드',
 			name : 'facCode'
-		}, 
+		},
+		{
+			header : '설비비가동코드',
+			name : 'facNotCode'
+		},
 		{
 			header : '설비명',
 			name : 'facName'
 		}, 
+		
 		{
 			header : '담당자',
 			name : 'facNotPerson'
 		}, 
 		{
-			header : '상태',
-			name : 'facNotSituation',
-		}
+			 header: '상태',
+		      name: 'facNotSituation',
+		      formatter: function(value) {
+		    	    switch (value) {
+		    	        case 0:
+		    	            return '대기';
+		    	        case 1:
+		    	            return '가동중';
+		    	        case 2:
+		    	            return '비가동';
+		    	        default:
+		    	            return '알 수 없는 상태';
+		    	    }
+		    	}
+		    }
 		],
 		 rowHeaders: ['rowNum'],
          pageOptions: {

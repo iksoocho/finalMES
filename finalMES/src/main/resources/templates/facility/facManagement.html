@@ -48,10 +48,9 @@ button {
 <body>
 
 	<section layout:fragment="content">
-
-
+		<h2>설비관리</h2>
+		<br>
 		<div id="layoutSidenav_content" class="container text-center">
-
 			<table class="table">
 				<tbody>
 					<tr>
@@ -106,10 +105,11 @@ button {
 						<td colspan="2"><input type="file" name="facImage"></td>
 					</tr>
 				</tbody>
-
+				
 			</table>
 			<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 			<div id="grid" class="container"></div>
+			
 		</div>
 
 		<!-- 하단의 설비 리스트 -->
@@ -323,7 +323,33 @@ button {
 		  var facImage = document.getElementsByName("facImage")[0].value;
 		  var facPerson = document.getElementsByName("facPerson")[0].value;
 		  
-	    
+		    // 등록 시 유효성검사
+		    if (!facName) {
+		        alert("설비명을 입력해주세요.");
+		        return;
+		    }
+		    
+		    if (!procName) {
+		        alert("공정명을 입력해주세요.");
+		        return;
+		    }
+
+		    if (!procCode) {
+		        alert("공정코드를 입력해주세요.");
+		        return;
+		    }
+		    
+		    if (!facPerson) {
+		        alert("담당자를 입력해주세요.");
+		        return;
+		    }
+
+		    if (!businessCode) {
+		        alert("거래처를 입력해주세요.");
+		        return;
+		    }
+
+		    
 	    
 	            var data = {
 	            	procCode: procCode,
@@ -335,6 +361,8 @@ button {
 	                facInscycle: facInscycle,
 	                facImage: facImage,
 	                facPerson: facPerson
+	                
+	            
 	            };
 	            
 	            fetch("/facManagement", {

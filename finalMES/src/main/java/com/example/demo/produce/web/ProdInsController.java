@@ -53,6 +53,7 @@ public class ProdInsController {
 	public String workRegist(@RequestParam String dInsCode, @RequestParam String prodCode, Model model) {
 		ProdInsDetailVO vo = prodInsService.getCheckDetailList(dInsCode);
 		List<WorkLoadVO> load = prodInsService.getWorkPageLoadData(prodCode);
+		System.out.println(vo);
 		System.out.println(load);
 		model.addAttribute("vo", vo);
 		model.addAttribute("load", load);
