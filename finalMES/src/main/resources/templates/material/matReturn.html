@@ -17,15 +17,23 @@
 
 		<script th:inline="javascript">
 		
-		let returnList = [[${returnList}]]
+		let matReList = [[${matReList}]]
 		
 		 const grid = new tui.Grid({
 
              el: document.getElementById('grid'),
-             data: returnList, // 여기서 emps 데이터를 사용
+             data: matReList, // 여기서 emps 데이터를 사용
              scrollX: false,
              scrollY: false,
  	      columns: [
+ 	        {
+ 	          header: '반품코드',
+ 	          name: 'matReCode'
+ 	        },
+ 	        {
+ 	          header: '거래처',
+ 	          name: 'businessName'
+ 	        },
  	        {
  	          header: '자재코드',
  	          name: 'matCode'
@@ -35,13 +43,38 @@
  	          name: 'matName'
  	        },
  	        {
- 	          header: '총재고량',
- 	          name: 'matCount'
- 	        },
+ 	 	      header: 'LOT코드',
+ 	 	      name: 'matLotCode'
+ 	 	    },
  	        {
- 	          header: '안전재고',
- 	          name: 'matSafeStock'
- 	        },
+ 	 	      header: '재고량',
+ 	 	      name: 'matCount'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품수량',
+ 	 	      name: 'matReCount'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품내용',
+ 	 	      name: 'matReContent'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품일자',
+ 	 	      name: 'matReStartDate',
+  		      formatter : function dateFormatter(params) {
+  		    	  const date = new Date(params.value);
+  		    	  const isoDate = date.toISOString().split('T')[0];
+  		    	  return isoDate;
+  		    	}
+ 	 	    },
+ 	        {
+ 	 	      header: '담당자',
+ 	 	      name: 'MatReManager'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품여부',
+ 	 	      name: 'matReState'
+ 	 	    },
  	      ],
  	      rowHeaders: ['rowNum'],
              pageOptions: {
