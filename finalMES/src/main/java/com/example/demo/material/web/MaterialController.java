@@ -70,6 +70,7 @@ public class MaterialController {
 	@GetMapping("matReturn")
 	public String getReturnList(Model model) {
 		List<MatReturnVO> matReList = materialService.getReturnList();
+		System.out.println(matReList);
 		model.addAttribute("matReList",matReList);
 		return "material/matReturn";
 	}

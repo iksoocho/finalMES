@@ -7,9 +7,11 @@
 <title>발주 관리 ^^</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <style>
 input {
 	padding-left: 10px;
@@ -159,26 +161,18 @@ button {
 			<table class="table">
 				<thead>
 					<tr>
-						<th>발주 명</th>
+						<th>자재명</th>
 						<td><input type="text" /></td>
+					</tr>
+					<tr>
 						<th>거래처</th>
 						<td><input type="text" id="selectedBusinessCode" readonly /></td>
-						<td></td>
 					</tr>
 					<tr>
-						<th>자재 코드</th>
-						<td><input type="text" /></td>
-
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<th>수량</th>
-						<td><input type="number" /></td>
-						<th>담당자 *</th>
-						<td><input type="text" name="facName" required
-							data-toggle="modal" data-target="#myModal3" /></td>
-						<td></td>
+						<th>발주일자</th>
+						<td><input type="date" /></td>
+						<td><input type="date" /></td>
+						
 					</tr>
 				</thead>
 			</table>
@@ -189,10 +183,26 @@ button {
 			<button type="button" class="btn btn-primary">저장</button>
 			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 				data-bs-target="#staticBackdrop">조회</button>
+			<br>
 
-			<h2>현재 자재 재고</h2>
-			<div id="grid2"></div>
-		</div>
+			<!--  ================== 그리드 ================  -->
+			<div class="row">
+				<div class="col-8">
+					<div id="grid2" class="container">
+						<h2>현재 자재 재고</h2>
+					</div>
+				</div>
+
+				<div class="col-4">
+					<div id="grid3" class="container">
+						<h2>거래처 목록</h2>
+					</div>
+
+				</div>
+			</div>
+
+</div>
+		
 
 		<button class="btn btn-primary">등록</button>
 
@@ -457,7 +467,7 @@ button {
               	        },
               	        {
               	          header: '거래처명',
-              	          name: 'busineesName'
+              	          name: 'businessName'
               	        },
               	        {
               	          header: '수량',
@@ -509,7 +519,7 @@ button {
               	        },
               	        {
               	          header: '거래처명',
-              	          name: 'busineesName'
+              	          name: 'businessName'
               	        },
               	        {
               	          header: '수량',
@@ -544,6 +554,58 @@ button {
                               perPage: 5
                           }
               	    });
+              	 
+              	const grid3 = new tui.Grid({
+                    el: document.getElementById('grid3'),
+                    data: order, // 여기서 emps 데이터를 사용
+                    scrollX: true,
+                    scrollY: true,
+        	      columns: [
+        	        {
+        	          header: '발주명',
+        	          name: 'matOrName'
+        	        },
+        	        {
+        	          header: '자재코드',
+        	          name: 'matCode'
+        	        },
+        	        {
+        	          header: '거래처명',
+        	          name: 'businessName'
+        	        },
+        	        {
+        	          header: '수량',
+        	          name: 'matOrCount'
+        	        },
+        	        {
+        		      header: '발주일',
+        		      name: 'matOrDate',
+        		      formatter : function dateFormatter(params) {
+        		    	  const date = new Date(params.value);
+        		    	  const isoDate = date.toISOString().split('T')[0];
+        		    	  return isoDate;
+        		    	}
+        		    },
+        		    {
+        		      header: '납기일',
+        		      name: 'matOrDueDate',
+        		      formatter : function dateFormatter(params) {
+        		    	  const date = new Date(params.value);
+        		    	  const isoDate = date.toISOString().split('T')[0];
+        		    	  return isoDate;
+        		    	}
+        		    },
+        		    {
+        		      header: '담당자',
+        		      name: 'matOrManager'
+        		    }
+        	      ],
+        	      rowHeaders: ['rowNum'],
+                    pageOptions: {
+                        useClient: true,
+                        perPage: 5
+                    }
+        	    });
       </script>
 	</section>
 </body>
