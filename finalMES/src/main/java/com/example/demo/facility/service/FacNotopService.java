@@ -10,4 +10,6 @@ public interface FacNotopService {
 	public List<FacNotopVO> FacList(FacNotopVO facNotopVO);
 	// 등록
 	public int insertFacNot(FacNotopVO facNotopVO);
+	// 수정
+	
 }
