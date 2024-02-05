@@ -10,4 +10,5 @@ public interface FacManageMapper {
 	public List<FacManageVO> getfacList(FacManageVO facManageVO);
 	public int insertFac(FacManageVO facManageVO);
 	public int deleteFac(String facCode);
+	
 }

@@ -109,7 +109,7 @@
 
 				<div class="mt-4">
 					<button class="btn btn-secondary"
-						style="float: right; margin: 8px 5px;">저장</button>
+						style="float: right; margin: 8px 5px;" id="planDUpdate">저장</button>
 					<table class="table table-hover" id="planDetailTable">
 						<thead>
 							<tr>
@@ -125,16 +125,16 @@
 							</tr>
 						</thead>
 						<tbody id="planDetails">
-							<th:block th:each="planD : ${dList}">
+							<th:block th:each="planD : ${dddddList}">
 								<tr>
 									<td>1</td>
 									<td th:text="${planD.planCode}"></td>
 									<td th:text="${planD.prodCode}"></td>
-									<td><input type="date" ></td>
-									<td><input type="date" ></td>
+									<td><input type="date" name="startDate"></td>
+									<td><input type="date" name="endDate"></td>
 									<td th:text="${planD.prodCount}"></td>
-									<td th:text="${planD.dplanCount}"></td>
-									<td><input type="number" ></td>
+									<td th:text="${planD.ordCount}"></td>
+									<td><input type="number" name="planCount"></td>
 									<td th:text="${#dates.format(planD.dlvyDate, 'yyyy-MM-dd')}"></td>
 								</tr>
 							</th:block>
@@ -353,17 +353,17 @@
 								const eDate = new Date(detail.end);
 		                        const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 		                        const formattedSDate = sDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
-		                        const formattedEDate = sDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+		                        const formattedEDate = eDate.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 								console.log(detail);
 								tr.innerHTML = `
 									<td>${detail.dplanCode}</td>
 		                            <td>${detail.planCode}</td>
 		                            <td>${detail.prodCode}</td>
-		                            <td><input type="date" value="${formattedSDate}"></td>
-		                            <td><input type="date" value="${formattedEDate}"></td>
+		                            <td><input type="date" value="${formattedSDate}" name="startDate"></td>
+		                            <td><input type="date" value="${formattedEDate}" name="endDate"></td>
 		                            <td>${detail.prodCount}</td>
-		                            <td>${detail.dplanCount}</td>
-		                            <td><input type="number" value="500"></td>
+		                            <td>${detail.ordCount}</td>
+		                            <td><input type="number" value="${detail.dplanCount}" name="planCount"></td>
 		                            <td>${formattedDate}</td>
 								`;
 								detailsTbody.appendChild(tr);
@@ -436,7 +436,7 @@
 		                        <td><input type="date" name="startDate" ></td>
 		                        <td><input type="date" name="endDate" ></td>
 		                        <td>${detail.ordCount}</td>
-		                        <td><input type="number" name="planCount" value="${detail.planCount || ''}"></td>
+		                        <td><input type="number" name="planCount" ></td>
 		                        <td>${formattedDate}</td>
 		                    `;
 		                });
@@ -512,6 +512,54 @@
 		        
 		        
 		        
+		    });
+		    
+		    
+		    //plan detail update
+		    document.querySelector('#planDUpdate').addEventListener('click', function() {
+		    	let data = {};
+		    	
+		    	
+		    	var planDetailRows = document.querySelectorAll('#planDetailTable tbody tr');
+		    	console.log("planDetailRows : ",planDetailRows);
+		    	let planDetailData  = [];
+					for(let i=0; i<planDetailRows.length; i++){
+						let obj = {};
+						let target = $(planDetailRows[i]);
+					    obj.dplanCode = target.find('td:eq(0)').text();
+					    obj.dplanStartDate = target.find("input[name='startDate']").val();
+				   		obj.dplanEndDate = target.find("input[name='endDate']").val();
+				   		obj.dplanCount = target.find("input[name='planCount']").val();
+						
+				   		planDetailData.push(obj);
+						
+				}
+				 data.planDVOList = planDetailData;	
+				 console.log(data);
+			        // AJAX 요청으로 서버에 데이터 전송
+			        fetch('/planDUpdate', {
+			            method: 'put',
+			            headers: {
+			                'Content-Type': 'application/json',
+			                
+			            },
+			            body: JSON.stringify(data)
+			        })
+			        .then(response => {
+			            if (!response.ok) {
+			                throw new Error('Network response was not ok');
+			            }
+			            return response.text();
+			        })
+			        .then(data => {
+			            console.log('Success:', data);
+			            alert(data);
+			            location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+			        })
+			        .catch(error => {
+			            console.error('Error:', error);
+			        });
+
 		    });
 		   
 		</script>

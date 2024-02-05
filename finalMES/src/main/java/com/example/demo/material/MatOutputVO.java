@@ -17,7 +17,7 @@ public class MatOutputVO {
 	
 	private String businessCode;
 	private String matName;		// 자재명
-	private String matManger;	// 담당자
+	private String matManager;	// 담당자
 	private int matCount;		// 재고량
 	private String businessName;	// 거래처명
 }

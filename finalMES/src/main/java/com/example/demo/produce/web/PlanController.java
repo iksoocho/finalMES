@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -101,6 +102,16 @@ public class PlanController {
             return msg;
      
     }
+	
+	@PutMapping("/planDUpdate")
+	@ResponseBody
+	public String updatePlanDetail(@RequestBody PlanCompositeVO planCompositeVO) {
+		String msg;
+		planService.updatePlanDInfo(planCompositeVO);
+		msg = "상세 계획이 수정 되었습니다.";
+		return msg;
+				
+	}
 	
 
 	

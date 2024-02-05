@@ -33,4 +33,17 @@
 		(#{facNotCode}, #{facCode}, #{notopCode}, #{facNotSdate}, #{facNotLdate}, #{facNotPerson},
 		 #{facNotSituation}, #{facNotReason})
 	</insert>
+	
+	<update id="updateFac" parameterType="FacNotopVO">
+		 UPDATE your_facility_table
+        SET
+            fac_name = #{facName},
+            fac_not_person = #{facNotPerson},
+            fac_not_ reason = #{facNotReason},
+            fac_not_situation = #{facNotSituation},
+            fac_not_sdate = #{facNotSdate},
+            fac_not_ldate = #{facNotLdate}
+        WHERE
+            fac_not_code = #{facNotCode}
+	</update>
 </mapper>	
