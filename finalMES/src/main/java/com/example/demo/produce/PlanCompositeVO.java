@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class PlanCompositeVO {
 	 private PlanVO planVO;
-	   private List<PlanDVO> planDVOList;
+	 private List<PlanDVO> planDVOList;
 }
