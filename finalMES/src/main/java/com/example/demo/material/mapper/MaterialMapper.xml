@@ -4,10 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.example.demo.material.mapper.MaterialMapper">
+	<!-- 발주 -->
 	<select id="getMatOrderList" resultType="MatOrderVO">
 		SELECT mo.mat_or_code,
 		       mo.mat_or_name, 
-		       mo.mat_code, 
+		       mo.mat_code,
+		       b.business_code,
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
@@ -18,6 +20,7 @@
 		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
 	</select>
 	
+	<!-- 발주상세 -->
 	<select id="getMaterialOrdInfoList" resultType="MatOrderInfoVO">
 		SELECT mo.mat_or_code,
 		       mo.mat_or_name, 
@@ -32,11 +35,118 @@
 		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
 	</select>
 	
+	<!-- 발주 자재 관리 -->
 	<select id="getOriginMaterialList" resultType="OriginMaterialVO">
-		SELECT mat_code, mat_name, mat_unit, mat_standard, mat_safe_stock
-		FROM material
+		SELECT m.mat_code, 
+			   m.mat_name, 
+			   m.mat_unit, 
+			   m.mat_standard, 
+			   m.mat_safe_stock, 
+			   ml.mat_count,
+               b.business_name,
+               b.business_code
+		FROM material     m 
+		JOIN mat_lot      ml ON m.mat_code = ml.mat_code
+        JOIN mat_output   mo  ON ml.mat_lot_code = mo.mat_lot_code
+        JOIN business 	  b ON mo.business_code = b.business_code
 	</select>
-
+	
+	<!-- 발주 거래처 관리 -->
+	<select id="getMatBusiness" resultType="OriginMaterialVO">
+		SELECT
+			  m.mat_code,
+			  m.mat_name,
+			  m.mat_unit,
+			  m.mat_standard,
+			  m.mat_safe_stock,
+			  ml.mat_count,
+			  b.business_name,
+			  b.business_code,
+			  COUNT(mo.mat_lot_code) AS transaction_count
+		FROM material    m
+		JOIN mat_lot ml  ON m.mat_code = ml.mat_code
+		JOIN mat_output  mo ON ml.mat_lot_code = mo.mat_lot_code
+		JOIN business b  ON mo.business_code = b.business_code
+		GROUP BY
+			  m.mat_code,
+			  m.mat_name,
+			  m.mat_unit,
+			  m.mat_standard,
+			  m.mat_safe_stock,
+			  ml.mat_count,
+			  b.business_name,
+			  b.business_code
+	</select>
+	
+	
+	<!-- 자재관리  -->
+	<select id="getOriginMaterialList1" resultType="OriginMaterialVO">
+		SELECT m.mat_code,
+			   m.mat_name,
+			   m.mat_safe_stock,
+			   ml.mat_count
+		FROM material 	m
+		JOIN mat_lot 	ml 	ON m.mat_code = ml.mat_code
+	</select>
+	
+	<!-- 출고 관리 -->
+	<select id="getOutputList" resultType="MatOutputVO">
+		SELECT
+    			MO.mat_out_code,
+    			MO.business_code,
+    			B.business_name,
+    			ML.mat_manager,
+    			M.mat_name,
+    			ML.mat_lot_code,
+    			ML.mat_count,
+    			MO.mat_out_count,
+    			MO.mat_out_date
+			FROM
+				mat_output MO
+			JOIN	
+				mat_lot 	ML ON MO.mat_lot_code=ML.mat_lot_code
+			JOIN
+    			business    B ON MO.business_code = B.business_code
+			JOIN
+				material    M ON ML.mat_code=M.mat_code
+	</select>
+	
+	<!-- 입고 관리 -->
+	<select id="getInputList" resultType="MatInputVO">
+		SELECT l.mat_code, 
+       		   m.mat_name, 
+       		   l.mat_lot_code, 
+               l.mat_ins_code,
+               i.mat_ins_count,
+               i.mat_ins_good AS mat_ins_good_count, 
+               l.mat_input_date, 
+               l.mat_manager
+		FROM mat_lot          l
+		JOIN mat_inspection   i ON l.mat_ins_code = i.mat_ins_code
+		JOIN material m ON    l.mat_code = m.mat_code
+		
+	</select>
+	
+	<!-- 반품 관리 -->
+	<select id="getReturnList" resultType="MatReturnVO">
+		SELECT  MR.mat_re_code,
+    			B.business_name,
+    			M.mat_code,
+    			M.mat_name,
+    			ML.mat_lot_code,
+    			ML.mat_count,
+    			MR.mat_re_count,
+    			MR.mat_re_content,
+    			MR.mat_re_start_date,
+    			MR.mat_re_manager,
+    			MR.mat_re_state
+		FROM mat_return MR
+		JOIN business   B ON MR.business_code = B.business_code
+		JOIN mat_lot    ML ON MR.mat_lot_code = ML.mat_lot_code
+		JOIN material   M ON ML.mat_code = M.mat_code
+	</select>
+	
+	<!-- 발주 등록 -->
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
 	INSERT INTO mat_order 
           (

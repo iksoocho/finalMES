@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
@@ -77,17 +78,25 @@ public class PlanServiceImpl implements PlanService{
 	}
 
 	@Override
-    @Transactional
-    public void insertProductionWithDetails(PlanVO planVO, List<PlanDVO> planDVOList) {
-    	planMapper.insertPlanInfo(planVO); // prod_plan에 데이터 삽입
+    public void insertProductionWithDetails(PlanCompositeVO planCompositeVO) {
+		System.out.println("impl");
+    	planMapper.insertPlanInfo(planCompositeVO.getPlanVO()); // prod_plan에 데이터 삽입
+    	System.out.println("입력완");
 
-        String generatedPlanCode = planVO.getPlanCode(); // 생성된 planCode 가져오기
-
-        for (PlanDVO planDVO : planDVOList) {
-            planDVO.setPlanCode(generatedPlanCode); // prod_d_plan의 각 항목에 planCode 설정
-            planMapper.insertPlanDInfo(planDVO); // prod_d_plan에 데이터 삽입
+        for (int i =0; i<planCompositeVO.getPlanDVOList().size(); i++) {
+        	planCompositeVO.getPlanDVOList().get(i).setPlanCode(planCompositeVO.getPlanVO().getPlanCode()); // prod_d_plan의 각 항목에 planCode 설정
+            planMapper.insertPlanDInfo(planCompositeVO.getPlanDVOList().get(i)); // prod_d_plan에 데이터 삽입
+            System.out.println("등록성공");
         }
     }
+
+	@Override
+	public void updatePlanDInfo(PlanCompositeVO planCompositeVO) {
+		for(int i = 0; i < planCompositeVO.getPlanDVOList().size(); i++) {
+			 planMapper.updatePlanInfo(planCompositeVO.getPlanDVOList().get(i));
+		}
+		
+	}
 
 	
 

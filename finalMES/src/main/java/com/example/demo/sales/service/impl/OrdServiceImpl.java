@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.sales.mapper.OrdMapper;
 import com.example.demo.sales.service.OrdService;
@@ -29,18 +30,31 @@ public class OrdServiceImpl implements OrdService {
 	}
 
 	@Override
-	public void insertOrder(OrderVO orderVO) {
-		ordMapper.insertOrder(orderVO);
+	@Transactional
+	public void saveOrder(OrderVO orderVO) {
+		// 주문서 저장
+		ordMapper.saveOrder(orderVO);
+
+		// 저장된 주문서의 주문번호 얻기
+		String ordCode = orderVO.getOrdCode();
+
+		// 상세주문 저장
+		if (orderVO.getOrderDetails() != null) {
+			for (OrderDetailVO orderDetail : orderVO.getOrderDetails()) {
+				orderDetail.setOrdCode(ordCode);
+				ordMapper.saveOrderDetail(orderDetail);
+			}
+		}
 	}
 
 	@Override
-	public void insertOrderDetail(OrderDetailVO orderDetailVO) {
-		ordMapper.insertOrderDetail(orderDetailVO);
+	public void saveOrderDetail(OrderDetailVO orderDetailVO) {
+		ordMapper.saveOrderDetail(orderDetailVO);
 	}
 
 	@Override
-	public List<OrderVO> getOrderList(OrderVO orderVO) {
-		return ordMapper.getOrderList(orderVO);
+	public List<OrderVO> getOrderList() {
+		return ordMapper.getOrderList();
 	}
 
 	@Override
@@ -65,6 +79,24 @@ public class OrdServiceImpl implements OrdService {
 		// TODO Auto-generated method stub
 		return ordMapper.getProductList();
 	}
-	
 
+	public void saveOrderWithDetails(OrderVO order) {
+		// TODO Auto-generated method stub
+		// 주문서 저장
+		saveOrder(order);
+
+		// 상세 주문서 저장
+		List<OrderDetailVO> orderDetails = order.getOrderDetails();
+		if (orderDetails != null) {
+			for (OrderDetailVO orderDetail : orderDetails) {
+				saveOrderDetail(orderDetail);
+			}
+		}
+	}
+
+	@Override
+	public List<OrderVO> getOrderWithDetails(OrderVO orderVO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

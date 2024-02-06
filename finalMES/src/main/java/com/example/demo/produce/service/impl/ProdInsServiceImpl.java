@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.produce.FacCateVO;
+import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
 import com.example.demo.produce.WorkLoadVO;
@@ -39,6 +41,16 @@ public class ProdInsServiceImpl implements ProdInsService{
 	@Override
 	public List<WorkLoadVO> getWorkPageLoadData(String prodCode) {
 		return workMapper.getLoadData(prodCode);
+	}
+
+	@Override
+	public List<ProcessVO> getProcData() {
+		return workMapper.getProcData();
+	}
+
+	@Override
+	public List<FacCateVO> getFacSelect(String procCode) {
+		return workMapper.getFacSelect(procCode);
 	}
 
 }

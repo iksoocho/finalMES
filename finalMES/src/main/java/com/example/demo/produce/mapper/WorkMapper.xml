@@ -22,6 +22,26 @@
 		ORDER BY 
 			f.proc_seq
 	</select>
+	
+	
+	<select id="getFacSelect" parameterType="String" resultType="FacCateVO">
+		SELECT 
+			f.fac_code
+			, f.fac_name
+			, f.proc_code
+			, p.proc_name
+			, n.fac_not_situation fac_state
+		FROM fac_manage f 
+		JOIN process p ON f.proc_code=p.proc_code
+		JOIN fac_notop n ON f.fac_code=n.fac_code
+		WHERE f.proc_code=#{procCode}
+	</select>
+
+	<select id="getProcData" resultType="ProcessVO">
+		SELECT proc_code, proc_name
+		FROM process
+	</select>
+
 
 
 </mapper>

@@ -2,6 +2,7 @@ package com.example.demo.produce.mapper;
 
 import java.util.List;
 
+
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
@@ -19,4 +20,10 @@ public interface PlanMapper {
 	
 	public int insertPlanDInfo(PlanDVO planDVO);
 	
+	public int updatePlanInfo(PlanDVO planDVO);
+	
+
+	
+
+
 }

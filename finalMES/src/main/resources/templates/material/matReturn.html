@@ -15,41 +15,73 @@
 
 		<div id="grid" class="container"></div>
 
-		<script>
-			const grid = new tui.Grid({
-				el : document.getElementById('grid'),
-				data : {
-					api : {
-						readData : {
-							url : '/api/readData',
-							method : 'GET'
-						}
-					}
-				},
-				scrollX : false,
-				scrollY : false,
-				minBodyHeight : 30,
-				rowHeaders : [ 'rowNum' ],
-				pageOptions : {
-					perPage : 5
-				},
-				columns : [ {
-					header : 'Name',
-					name : 'name'
-				}, {
-					header : 'Artist',
-					name : 'artist'
-				}, {
-					header : 'Type',
-					name : 'type'
-				}, {
-					header : 'Release',
-					name : 'release'
-				}, {
-					header : 'Genre',
-					name : 'genre'
-				} ]
-			});
+		<script th:inline="javascript">
+		
+		let matReList = [[${matReList}]]
+		
+		 const grid = new tui.Grid({
+
+             el: document.getElementById('grid'),
+             data: matReList, // 여기서 emps 데이터를 사용
+             scrollX: false,
+             scrollY: false,
+ 	      columns: [
+ 	        {
+ 	          header: '반품코드',
+ 	          name: 'matReCode'
+ 	        },
+ 	        {
+ 	          header: '거래처',
+ 	          name: 'businessName'
+ 	        },
+ 	        {
+ 	          header: '자재코드',
+ 	          name: 'matCode'
+ 	        },
+ 	        {
+ 	          header: '자재명',
+ 	          name: 'matName'
+ 	        },
+ 	        {
+ 	 	      header: 'LOT코드',
+ 	 	      name: 'matLotCode'
+ 	 	    },
+ 	        {
+ 	 	      header: '재고량',
+ 	 	      name: 'matCount'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품수량',
+ 	 	      name: 'matReCount'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품내용',
+ 	 	      name: 'matReContent'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품일자',
+ 	 	      name: 'matReStartDate',
+  		      formatter : function dateFormatter(params) {
+  		    	  const date = new Date(params.value);
+  		    	  const isoDate = date.toISOString().split('T')[0];
+  		    	  return isoDate;
+  		    	}
+ 	 	    },
+ 	        {
+ 	 	      header: '담당자',
+ 	 	      name: 'matReManager'
+ 	 	    },
+ 	        {
+ 	 	      header: '반품여부',
+ 	 	      name: 'matReState'
+ 	 	    },
+ 	      ],
+ 	      rowHeaders: ['rowNum'],
+             pageOptions: {
+                 useClient: true,
+                 perPage: 5
+             }
+ 	    });
 		</script>
 	</section>
 </body>

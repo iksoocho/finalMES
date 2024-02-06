@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,6 +43,7 @@ public class PlanController {
 		List<PlanOrdVO> ordList = planService.getOrdList();
 		model.addAttribute("list", list);
 		model.addAttribute("dList", dList);
+		System.out.println("dList : "+ dList);
 		model.addAttribute("ordList", ordList);
 		
 		return "produce/planManage";
@@ -92,14 +94,24 @@ public class PlanController {
 //	  }
 	
 	@PostMapping("/planInsert")
-    public ResponseEntity<?> insertProduction(@RequestBody PlanCompositeVO planCompositeVO) {
-        try {
-        	planService.insertProductionWithDetails(planCompositeVO.getPlanVO(), planCompositeVO.getPlanDVOList());
-            return ResponseEntity.ok().body("생산 계획 및 상세 정보가 성공적으로 삽입되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생: " + e.getMessage());
-        }
+	@ResponseBody
+    public String insertProduction(@RequestBody PlanCompositeVO planCompositeVO) {
+			String msg;
+        	planService.insertProductionWithDetails(planCompositeVO);
+        	msg = "생산 계획 및 상세 정보가 성공적으로 삽입되었습니다.";
+            return msg;
+     
     }
+	
+	@PutMapping("/planDUpdate")
+	@ResponseBody
+	public String updatePlanDetail(@RequestBody PlanCompositeVO planCompositeVO) {
+		String msg;
+		planService.updatePlanDInfo(planCompositeVO);
+		msg = "상세 계획이 수정 되었습니다.";
+		return msg;
+				
+	}
 	
 
 	

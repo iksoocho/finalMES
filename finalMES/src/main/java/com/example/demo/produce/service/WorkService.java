@@ -1,5 +1,11 @@
 package com.example.demo.produce.service;
 
-public interface WorkService {
+import java.util.List;
 
+
+import com.example.demo.produce.FacCateVO;
+
+
+public interface WorkService {
+	public List<FacCateVO> getFacSelect(String procCode);
 }

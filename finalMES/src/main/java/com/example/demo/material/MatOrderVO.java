@@ -22,6 +22,7 @@ public class MatOrderVO {
 	private String matOrName;
 	private String matOrState;
 	
+	
 	//발주상세
 	private String matOrInfoCode;
 	private int matOrICount;

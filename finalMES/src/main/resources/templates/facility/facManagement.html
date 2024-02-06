@@ -6,8 +6,10 @@
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <title>설비등록</title>
 <style>
 #layoutSidenav_content {
@@ -46,21 +48,19 @@ button {
 <body>
 
 	<section layout:fragment="content">
-		<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+		<h2>설비관리</h2>
+		<br>
 		<div id="layoutSidenav_content" class="container text-center">
-
 			<table class="table">
 				<tbody>
-					<tr>					
+					<tr>
 						<th>설비명 *</th>
 						<td colspan="2"><input type="text" id="facName"
 							name="facName" required data-toggle="modal"
 							data-target="#myModal1"></td>
 						<th>최고온도</th>
-						<td colspan="2"><input type="text" id="facHig"
-							name="facHig" required></td>
-						
-						
+						<td colspan="2"><input type="text" id="facHig" name="facHig"
+							required></td>
 					</tr>
 					<tr>
 						<th>공정명 *</th>
@@ -68,16 +68,16 @@ button {
 							name="procName" required data-toggle="modal"
 							data-target="#myModal2"></td>
 						<th>최저온도</th>
-						<td colspan="2"><input type="text" id="facLow"
-							name="facLow" required></td>
-						
-						
+						<td colspan="2"><input type="text" id="facLow" name="facLow"
+							required></td>
+
+
 					</tr>
 					<tr>
 						<th>공정코드 *</th>
 						<td colspan="2"><input type="text" id="procCode"
 							name="procCode" required></td>
-						
+
 						<th>거래처 *</th>
 						<td colspan="2"><input type="text" id="businessCode"
 							name="businessCode" required data-toggle="modal"
@@ -88,48 +88,46 @@ button {
 						<td colspan="2"><input type="text" id="facPerson"
 							name="facPerson" required data-toggle="modal"
 							data-target="#myModal3"></td>
-						<th>점검주기 선택</th>
-						<td><select id="facInscycle" name="facInscycle">
-								<option value="daily">선택</option>
-								<option value="daily">매일</option>
-								<option value="weekly">매주</option>
-								<option value="monthly">매월(30일)</option>
-						</select></td>
-					</tr>
-					<tr>
 						<th>입고일</th>
 						<td colspan="2"><input type="date" id="facDate"
 							name="facDate" required></td>
+						
+					</tr>
+					<tr>
+						<th>점검주기 선택</th>
+						<td><select id="facInscycle" name="facInscycle">
+								<option value="선택">선택</option>
+								<option value="매일">매일</option>
+								<option value="매주">매주</option>
+								<option value="매월">매월(30일)</option>
+						</select></td>
 
-						<th>이미지</th>
-						<td colspan="2"><input type="file" name="facImage"></td>
+						<!-- <th>이미지</th>
+						<td colspan="2"><input type="file" name="facImage"></td> -->
 					</tr>
 				</tbody>
+				
+			</table>
+			<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+			<div id="grid" class="container"></div>
+			
+		</div>
 
-				<!-- 하단의 설비 리스트 -->
-				<tr>
-					<th>No.</th>
-					<th>설비코드</th>
-					<th>설비명</th>
-					<th>담당자</th>
-					<th>입고일</th>
-					<th>점검주기</th>
-				</tr>
-				<tbody>
+		<!-- 하단의 설비 리스트 -->
+
+		<!-- <table>
 					<tr th:each="fac: ${list}">
 						<td th:text="${facStat.count}"></td>
 						<td th:text="${fac.facCode}"></td>
 						<td th:text="${fac.facName}"></td>
 						<td th:text="${fac.facPerson}"></td>
-						<!-- 날짜변환  -->
+						날짜변환 
 						<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
 						<td th:text="${fac.facInscycle}"></td>
 					</tr>
-				</tbody>
-				<tr>
-				</tr>
-			</table>
-		</div>
+				</table> -->
+
+
 
 
 
@@ -158,7 +156,7 @@ button {
 									<td th:text="${fac.facName}" th:data-facName="${fac.facName}"
 										th:id="${fac.facName}" th:data-facPerson="${fac.facPerson}"
 										onclick="updateInputFields(this)" data-bs-dismiss="modal"></td>
-									<td th:text="${fac.businessCode}" th:id="${fac.businessCode}" ></td>
+									<td th:text="${fac.businessCode}" th:id="${fac.businessCode}"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -170,8 +168,8 @@ button {
 				</div>
 			</div>
 		</div>
-		
-		
+
+
 
 		<!-- 공정명모달 -->
 		<div class="modal" id="myModal2">
@@ -248,7 +246,7 @@ button {
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- 거래처모달 -->
 		<div class="modal" id="myModal4">
 			<div class="modal-dialog">
@@ -282,7 +280,7 @@ button {
 				</div>
 			</div>
 		</div>
-		<script>
+		<script th:inline="javascript">
 	// 모달창 내부에 있는 데이터 input 에 담는 함수
 	function updateInputFields(Element) {
 		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
@@ -315,20 +313,46 @@ button {
 	}
 
 	document.getElementById('saveBtn').addEventListener("click", function() {
-	    	
-		  var procCode = document.getElementsByName("procCode").value;
-		  var businessCode = document.getElementsByName("businessCode").value;
-		  var facName = document.getElementsByName("facName").value;
-		  var facHig = document.getElementsByName("facHig").value;
-		  var facLow = document.getElementsByName("facLow").value;
-		  var facDate = document.getElementsByName("facDate").value;
-		  var facInscycle = document.getElementsByName("facInscycle").value;
-		  var facImage = document.getElementsByName("facImage").value;
-		  var facPerson = document.getElementsByName("facPerson").value;
+	      let data = {};	
+		  var procCode = document.getElementsByName("procCode")[0].value;
+		  var businessCode = document.getElementsByName("businessCode")[0].value;
+		  var facName = document.getElementsByName("facName")[0].value;
+		  var facHig = document.getElementsByName("facHig")[0].value;
+		  var facLow = document.getElementsByName("facLow")[0].value;
+		  var facDate = document.getElementsByName("facDate")[0].value;
+		  var facInscycle = document.getElementsByName("facInscycle")[0].value;
+		  /* var facImage = document.getElementsByName("facImage")[0].value; */
+		  var facPerson = document.getElementsByName("facPerson")[0].value;
 		  
+		    // 등록 시 유효성검사
+		    if (!facName) {
+		        alert("설비명을 입력해주세요.");
+		        return;
+		    }
+		    
+		    if (!procName) {
+		        alert("공정명을 입력해주세요.");
+		        return;
+		    }
+
+		    if (!procCode) {
+		        alert("공정코드를 입력해주세요.");
+		        return;
+		    }
+		    
+		    if (!facPerson) {
+		        alert("담당자를 입력해주세요.");
+		        return;
+		    }
+
+		    if (!businessCode) {
+		        alert("거래처를 입력해주세요.");
+		        return;
+		    }
+
+		    
 	    
-	    
-	            var data = {
+	            var facData = {
 	            	procCode: procCode,
 	            	businessCode: businessCode,
 	                facName: facName,
@@ -336,11 +360,17 @@ button {
 	                facLow: facLow,
 	                facDate: facDate,
 	                facInscycle: facInscycle,
-	                facImage: facImage,
+	                /* facImage: facImage, */
 	                facPerson: facPerson
-	            };
+	                
 	            
-	            fetch("/facManagement", {
+	            };
+	            var notData = {};
+	            data.facManageVO = facData;
+	            data.facNotopVO = notData;
+	            
+	            
+	            fetch("/insrtFacAndNot", {
 			        method: "POST",
 			        body: JSON.stringify(data),
 			        headers: {
@@ -348,19 +378,71 @@ button {
 			        }
 			    })
 			    .then(response => {
-			        if (response.ok) {
-			            console.log(response);
-			            alert("정상처리");
-			        } else {
-			            console.log(response);
-			            alert("실패");
+			        if(!response.ok){
+			        	throw new Error("반응 없음")
 			        }
+			        return response.text();
+			    })
+			    .then(data => {
+			    	alert(data);
+			    	location.href = "/facManagement"
 			    })
 			    .catch(error => {
 			        console.log(error);
 			        alert(오류);
 			    });
 			});
+	
+	
+	// 그리드 페이징
+	let facList = [[${list}]];
+	console.log(facList);
+	const grid = new tui.Grid({
+		 
+		el : document.getElementById('grid'),
+		data : facList,
+		scrollX : false,
+		scrollY : false,
+		columns : [ 
+		{
+			header : '설비코드',
+			name : 'facCode',
+			align: 'center'
+			
+		}, 
+		{
+			header : '설비명',
+			name : 'facName',
+			align: 'center'
+		}, 
+		{
+			header : '담당자',
+			name : 'facPerson',
+			align: 'center'
+		}, 
+		{
+			header : '입고일',
+			name : 'facDate',
+		      formatter : function dateFormatter(params) {
+  		    	  const date = new Date(params.value);
+  		    	  const isoDate = date.toISOString().split('T')[0];
+  		    	  return isoDate;
+  		    	},
+  		    align: 'center'
+			
+		},
+		{
+			header : '점검주기',
+			name : 'facInscycle',
+			align: 'center'
+		} 
+		],
+		 rowHeaders: ['rowNum'],
+         pageOptions: {
+             useClient: true,
+             perPage: 5
+         }
+	});
 </script>
 	</section>
 </body>

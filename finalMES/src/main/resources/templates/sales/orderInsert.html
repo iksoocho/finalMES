@@ -92,7 +92,7 @@ button {
 	border: solid 1px #fff;
 }
 
-.number {
+.numberOne, .numberTwo, .numberThree {
 	text-align: right;
 	padding-right: 10px;
 }
@@ -154,13 +154,19 @@ button {
 .modal-body hr {
 	margin: 0;
 }
-.ttlPrice{
+
+.ttlPrice {
 	border: none;
-    background-color: transparent;
-    margin-left:50px;
-    padding: 0;
-    width: auto;
-    text-align: right;
+	background-color: transparent;
+	margin-left: 55px;
+	padding: 0;
+	width: auto;
+	text-align: right;
+}
+
+.unitPrice {
+	text-align: right;
+	padding-right: 32px;
 }
 </style>
 <script>
@@ -191,6 +197,8 @@ button {
 		// 입력 필드에 현재 날짜 설정
 		document.getElementById('registrationDate').value = currentDate;
 
+		// 초기 총합 계산
+		updateTotalSum();
 	});
 
 	// 현재 날짜를 반환하는 함수
@@ -232,20 +240,33 @@ button {
 		cellUnitPrice.innerHTML = unitPrice;
 
 		ttlPrice = ttlPrice || 0;
-		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice "id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>';
+		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice "id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>원';
 		// 초기에 빈 행의 가시성을 전환
 		toggleEmptyRowsVisibility();
 
 		// 새로 추가된 행에 클래스 설정
 		newRow.classList.remove('initially-hidden');
 
-		var hiddenInput = document.createElement('input');
-		hiddenInput.type = 'hidden';
-		hiddenInput.name = 'prodCode';
-		hiddenInput.id = 'prodCode' + rowCount;
-		cellNumber.appendChild(hiddenInput);
+		updateTotalSum();
 
-		hiddenInput.id = 'prodCode' + rowCount;
+		
+		
+		
+	  // 히든 필드에 prod_code 저장
+    var prodCodeHiddenInput = newRow.querySelector('input[name="prodCode"]');
+    if (prodCodeHiddenInput) {
+        prodCodeHiddenInput.value = prodCode;
+    } else {
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'prodCode';
+        hiddenInput.value = prodCode;
+        newRow.appendChild(hiddenInput);
+    }
+    console.log('New Row HTML:', newRow.innerHTML);
+
+
+		updateTotalCount();
 	}
 
 	// 초기에 빈 행의 가시성을 전환하는 함수
@@ -260,6 +281,8 @@ button {
 
 	function displaySelectedProduct(element) {
 		var prodCode = element.getAttribute('data-prodCode');
+		console.log('element:', element);
+	    console.log('prodCode:', prodCode);
 		var prodName = element.getAttribute('data-prodName');
 		var prodUnit = element.getAttribute('data-prodUnit');
 		var prodPrice = element.getAttribute('data-prodPrice');
@@ -272,7 +295,9 @@ button {
 		console.log('사용자가 입력한 납기일자:', dlvyDate);
 
 		// 선택한 품목을 테이블에 추가
-		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice);
+		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice, prodCode);
+
+		updateTotalCount();
 	}
 
 	function updateTotalPrice(rowNumber) {
@@ -293,7 +318,173 @@ button {
 		}
 
 		// 총금액 입력 필드를 업데이트
-		ttlPriceInput.value = totalPrice ;
+		ttlPriceInput.value = totalPrice;
+
+		updateTotalSum();
+	}
+
+	function updateTotalSum() {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+		var totalQuantity = 0;
+		var totalUnitPrice = 0; // 총 단가를 저장할 변수 추가
+		var totalAmount = 0; // 추가: 총금액의 총합을 저장할 변수
+
+		// 각 행의 수량을 가져와서 총합 계산
+		for (var i = 0; i < rows.length; i++) {
+			var quantityInput = rows[i].querySelector('input[name="ordCount"]');
+			var unitPriceCell = rows[i].cells[6]; // 단가 열에 해당하는 셀
+			var amountCell = rows[i].cells[7];
+
+			if (quantityInput) {
+				totalQuantity += parseFloat(quantityInput.value) || 0;
+			}
+
+			if (unitPriceCell) {
+				totalUnitPrice += parseFloat(unitPriceCell.innerText) || 0;
+			}
+
+			if (amountCell && amountCell.querySelector('input')) {
+				totalAmount += parseFloat(amountCell.querySelector('input').value) || 0;
+			}
+		}
+
+		var totalQuantityCell = document.querySelector('.total .numberOne');
+		var totalUnitPriceCell = document.querySelector('.total .numberTwo'); // 수정된 부분
+		var totalAmountCell = document.querySelector('.total .numberThree');
+
+		totalQuantityCell.innerText = totalQuantity + ' EA';
+		totalUnitPriceCell.innerText = totalUnitPrice + ' 원';
+		totalAmountCell.innerText = totalAmount + ' 원';
+		updateTotalCount();
+
+	}
+
+	function updateTotalCount() {
+		var tbody = document.getElementById('productTableBody');
+		var rows = tbody.getElementsByTagName('tr');
+		var totalCount = 0;
+
+		// 숨겨진 행을 제외하고 실제 데이터 행만 계산
+		for (var i = 0; i < rows.length; i++) {
+			if (!rows[i].classList.contains('initially-hidden')) {
+				totalCount++;
+			}
+		}
+
+		var totalCountCell = document.querySelector('.ttlCount');
+		totalCountCell.innerText = '총건수: ' + totalCount;
+	}
+	function saveOrder() {
+	    // 주문서 정보를 수집
+	    var orderData = {
+	        ordCode: document.getElementById('ordCode').value,
+	        ordDate: document.getElementById('registrationDate').value,
+	        businessCode: document.getElementById('selectedBusinessCode').value,
+	        ordState: document.getElementById('ordState').value,
+	        ordManager: document.getElementById('ordManager').value,
+	        // 나머지 필드들도 수집
+	        // 주문 상세 리스트 정보 수집
+	        orderDetails: []
+	    };
+
+	   // 테이블의 행을 가져옴
+	    var tbody = document.getElementById('productTableBody');
+	    var rows = tbody.getElementsByTagName('tr');
+
+	    for (var i = 0; i < rows.length; i++) {
+	    	if (!rows[i].classList.contains('initially-hidden')) {
+	            // 각 행의 히든 필드에서 prod_code 읽어오기
+	            var hiddenInput = rows[i].querySelector('input[name="prodCode"]');
+	            var prodCode = hiddenInput ? hiddenInput.value : '';
+	            var dlvyDateInput = rows[i].querySelector('input[name="dlvyDate"]');
+	            var dlvyDate = dlvyDateInput ? dlvyDateInput.value : '';
+	            var ordCountInput = rows[i].querySelector('input[name="ordCount"]');
+	            var ordCount = ordCountInput ? ordCountInput.value : '';
+	            var ttlPriceInput = rows[i].querySelector('input[name="ttlCount"]');
+	            var ttlPrice = ttlPriceInput ? ttlPriceInput.value : '';
+
+	            // 주문 상세 리스트에 해당 상품 정보 추가 
+	            orderData.orderDetails.push({
+	                prodCode: prodCode,
+	                dlvyDate: dlvyDate,
+	                ordCount: ordCount,
+	                ttlPrice: ttlPrice
+	                // 다른 필요한 필드들 추가
+	            });
+	        }
+	    }
+
+	    // 서버에 주문서 정보 전송
+	    fetch('/saveOrder', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json',
+	        },
+	        body: JSON.stringify(orderData),
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        // 서버로부터 받은 응답에 대한 처리
+	        console.log('Success:', data);
+	        // TODO: 성공 시 필요한 로직 추가
+	    })
+	    .catch((error) => {
+	        // 오류 처리
+	        console.error('Error:', error);
+	        // TODO: 실패 시 필요한 로직 추가
+	    });
+	}
+	
+	function resetForm() {
+	    // 주문서번호를 제외한 입력 필드 초기화
+	    document.getElementById('registrationDate').value = getCurrentDate();
+	    document.getElementById('ordManager').value = '';
+	    document.getElementById('dlvyDate').value = '';
+	    document.getElementById('ordNote').value = '';
+	    document.getElementById('selectedBusinessCode').value = '';
+	    document.getElementById('selectedBusinessName').value = '';
+	    document.getElementById('selectedBusinessManager').value = '';
+	    document.getElementById('selectedBusinessManagerPhone').value = '';
+	    
+	    
+
+	    // 추가된 행 모두 제거
+	    var tbody = document.getElementById('productTableBody');
+	    tbody.innerHTML = '';
+
+	    // 초기화된 행 추가
+	    rowCount = 1; // rowCount 초기화
+	    for (var i = 0; i < 6; i++) {
+	        addEmptyProductRow();
+	    }
+
+	    // 총합 및 건수 초기화
+	    updateTotalSum();
+	    updateTotalCount();
+	}
+
+	function addEmptyProductRow() {
+	    var tbody = document.getElementById('productTableBody');
+	    var newRow = tbody.insertRow(-1);
+
+	    // 행에 클래스 추가
+	    newRow.classList.add('initially-hidden');
+
+	    for (var j = 0; j < 9; j++) {
+	        var cell = newRow.insertCell(j);
+
+	        if (j === 1) {
+	            // 두 번째 셀에는 체크박스 추가
+	            cell.innerHTML = '<input type="checkbox">';
+	        } else if (j === 6) {
+	            // 여섯 번째 셀에는 단가 입력 필드 추가
+	            cell.classList.add('unitPrice');
+	        } else {
+	            // 나머지 셀에는 빈 공백 추가
+	            cell.innerHTML = '&nbsp;';
+	        }
+	    }
 	}
 </script>
 </head>
@@ -303,17 +494,17 @@ button {
 			<h4>주문 관리</h4>
 			<div class="containerTwo">
 				<h5>주문서정보</h5>
-				<button class="btn btn-primary">초기화</button>
-				<button class="btn btn-primary">등록</button>
+				<button class="btn btn-primary" onclick="resetForm()">초기화</button>
+				<button class="btn btn-primary" onclick="saveOrder()">등록</button>
 				<table class="orderInfoOne">
 					<tr>
 						<th>주문서번호</th>
-						<td><input type="text" id="ordCode" name="ordCode" readonly></td>
+						<td><input class="readInput" type="text" id="ordCode" name="ordCode" placeholder="시스템 자동발번" readonly></td>
 						<th>등록일</th>
 						<td><input type="date" id="registrationDate" name="ordDate"
 							readonly></td>
 						<th>주문서상태</th>
-						<td><select name="ordState">
+						<td><select id="ordState" name="ordState">
 								<option value="0" selected>등록전
 								<option value="1" disabled>등록완료
 								<option value="2" disabled>진행중
@@ -323,7 +514,7 @@ button {
 					<tr>
 						<th class="red">담당자</th>
 						<td class="serch"><input type="text" readonly> <input
-							type="text" readonly>
+							type="text" id="ordManager" name="ordManager">
 
 							<button type="button" class="btn btn-primary">
 								<p>검색</p>
@@ -353,7 +544,7 @@ button {
 						<th>납기일자</th>
 						<td><input type="date" id="dlvyDate"></td>
 						<th>비고</th>
-						<td><input type="text" name="ordNote"></td>
+						<td><input type="text" name="ordNote" id="ordNote"></td>
 					</tr>
 				</table>
 			</div>
@@ -393,18 +584,7 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -415,18 +595,7 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -437,7 +606,7 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -448,7 +617,29 @@ button {
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -457,13 +648,13 @@ button {
 						<tr class="total">
 							<td></td>
 							<td colspan="4">합계</td>
-							<td class="number"></td>
-							<td class="number"></td>
-							<td class="number"></td>
+							<td class="numberOne"></td>
+							<td class="numberTwo"></td>
+							<td class="numberThree"></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td colspan="9" class="ttlCount">총건수: 2</td>
+							<td colspan="9" class="ttlCount">총건수: 0</td>
 						</tr>
 					</tfoot>
 				</table>

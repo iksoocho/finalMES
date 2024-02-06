@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.material.MatInputVO;
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
+import com.example.demo.material.MatOutputVO;
+import com.example.demo.material.MatReturnVO;
 import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.material.mapper.MaterialMapper;
 import com.example.demo.material.service.MaterialService;
@@ -43,18 +46,63 @@ public class MaterialServiceImpl implements MaterialService {
 //		result = materialMapper.insertMatOrder2(matOrderVO);
 
 		if (result == 1) {
-			return matOrderVO.getMatOrCount();
+			return 1;
 		} else {
 			return -1;
 		}
 	}
-
+	// 발주 자재 관리
 	@Override
 	public List<OriginMaterialVO> getOriginMaterialList() {
 		// TODO Auto-generated method stub
 		return materialMapper.getOriginMaterialList();
 	}
+	
+	
+	
+	
+	// 자재 관리 페이지
+	@Override
+	public List<OriginMaterialVO> getOriginMaterialList1() {
+		// TODO Auto-generated method stub
+		return materialMapper.getOriginMaterialList1();
+	}
+	
+	
+	// 자재 출고 페이지
+	@Override
+	public List<MatOutputVO> getOutputList() {
+		// TODO Auto-generated method stub
+		return materialMapper.getOutputList();
+	}
+	
+	// 입고 관리 조회
+	@Override
+	public List<MatInputVO> getInputList() {
+		// TODO Auto-generated method stub
+		return materialMapper.getInputList();
+	}
+	
+	// 반품 관리 조회
+	@Override
+	public List<MatReturnVO> getReturnList() {
+		// TODO Auto-generated method stub
+		return materialMapper.getReturnList();
+	}
 
+	@Override
+	public List<OriginMaterialVO> getMatBusiness() {
+		// TODO Auto-generated method stub
+		return materialMapper.getMatBusiness();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 //	@Override
 //	public int insertMaterialOrder1(MatOrderVO matOrderVO) {
 //		int result = materialMapper.insertMatOrder1(matOrderVO);
@@ -71,7 +119,7 @@ public class MaterialServiceImpl implements MaterialService {
 //		int result = materialMapper.insertMatOrder2(matOrderVO);
 //
 //		if (result == 1) {
-//			return matOrderVO.getMatOrCount();
+//			return 1;
 //		} else {
 //			return -1;
 //		}

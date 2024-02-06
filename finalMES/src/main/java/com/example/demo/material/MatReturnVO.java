@@ -17,4 +17,11 @@ public class MatReturnVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date matReStartDate;
 	private char matReState;
+	
+	
+	// join
+	private String businessName;
+	private String matCode;
+	private String matName;
+	private int matCount;
 }

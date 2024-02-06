@@ -3,15 +3,121 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout}">
 <head>
+<style>
+.tui-grid-row-header-checkbox {
+	padding-top: 10px;
+}
+</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
 	<section layout:fragment="content">
-		<div>
-		<h1>주문 조회 페이지입니다.</h1>
-		<span th:text='${order}'></span>
-		</div>
+		<h4>주문 조회</h4>
+		<div id="grid"></div>
+		<script th:inline="javascript">
+		let orderList = [[${orderList}]]
+		var grid = tui.Grid;
+		grid.applyTheme('clean', {
+			  row: {
+			    hover: {
+			      background: '#d4e9f2'
+			    }
+			  }
+			});
+		
+		 var grid = new tui.Grid({
+             el: document.getElementById('grid'),
+             data: orderList, 
+             scrollX: false,
+             scrollY: false,
+ 	      columns: [
+ 	        {
+ 	          header: '주문서번호',
+ 	          name: 'ordCode',
+ 	          sortable: true,
+ 	          sortingType: 'desc',
+ 	          align: "center",
+ 	        },
+ 	        {
+ 	          header: '상태',
+ 	          name: 'ordState',
+ 	          sortable: true,
+	          sortingType: 'desc',
+	          align: "center",
+ 	          formatter: getOrdStatus
+ 	        },
+ 	        {
+ 	          header: '거래처',
+ 	          name: 'businessCode',
+ 	          sortable: true,
+ 	 	      sortingType: 'desc',
+ 	 	      align: "center",
+ 	        },
+ 	        {
+ 	          header: '등록일',
+ 	          name: 'ordDate',
+ 	          sortable: true,
+	          sortingType: 'desc',
+	          align: "center",
+ 	        	 formatter: ordDateFormatter
+ 	        },
+ 	       {
+ 	 	      header: '담당자',
+ 	 	      name: 'ordManager',
+ 	 	      sortable: true,
+ 	 	      sortingType: 'desc',
+ 	 	      align: "center",
+ 	 	    },
+ 	 	  {
+ 	 	 	  header: '총금액',
+ 	 	 	  name: 'totalTtlPrice',
+ 	 	 	  sortable: true,
+	          sortingType: 'desc',
+	          align: 'right',
+ 	 	 	  formatter: formatTotalTtlPrice
+ 	 	 	},
+ 	      ],
+ 	      rowHeaders: ['rowNum','checkbox'],
+             pageOptions: {
+                 useClient: true,
+                 perPage: 5
+             }
+ 	    });
+		
+		
+		// 주문 상태 포매터
+		function getOrdStatus(value, row) {
+    		console.log(value); // 값 확인용 로그
+
+   		// 주문 상태에 따라 원하는 문자열 반환
+    		if (value.value === 1) {
+        		return '등록완료';
+    		} else {
+        		return '알 수 없는 상태';
+    		}
+		}
+		
+		// 총금액 포맷터 함수
+		function formatTotalTtlPrice({ value }) {
+		    if (value) {
+		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		    }
+		    return '';
+		}
+		
+		function ordDateFormatter({value}) {
+            if (value) {
+                var date = new Date(value);
+                var year = date.getFullYear();
+                var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                var day = date.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            return '';
+        }
+		
+		</script>
 	</section>
 </body>
 </html>

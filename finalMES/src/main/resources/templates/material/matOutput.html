@@ -7,48 +7,67 @@
 <title>출고 관리^^</title>
 </head>
 <body>
-		<section layout:fragment="content">
+	<section layout:fragment="content">
 		<h3>출고관리</h3>
 
 
 
 		<div id="grid" class="container"></div>
 
-		<script>
-			const grid = new tui.Grid({
-				el : document.getElementById('grid'),
-				data : {
-					api : {
-						readData : {
-							url : '/api/readData',
-							method : 'GET'
-						}
-					}
-				},
-				scrollX : false,
-				scrollY : false,
-				minBodyHeight : 30,
-				rowHeaders : [ 'rowNum' ],
-				pageOptions : {
-					perPage : 5
-				},
-				columns : [ {
-					header : 'Name',
-					name : 'name'
-				}, {
-					header : 'Artist',
-					name : 'artist'
-				}, {
-					header : 'Type',
-					name : 'type'
-				}, {
-					header : 'Release',
-					name : 'release'
-				}, {
-					header : 'Genre',
-					name : 'genre'
-				} ]
-			});
+		<script th:inline="javascript">
+		let matOutList = [[${matOutList}]]
+		
+		 const grid = new tui.Grid({
+
+            el: document.getElementById('grid'),
+            data: matOutList, // 여기서 emps 데이터를 사용
+            scrollX: false,
+            scrollY: false,
+	      columns: [
+	        {
+	          header: '출고코드',
+	          name: 'matOutCode'
+	        },
+	        {
+	          header: '거래처',
+	          name: 'businessName'
+	        },
+	        {
+	          header: '담당자',
+	          name: 'matManager'
+	        },
+	        {
+		      header: '제품명',
+		      name: 'matName'
+		    },
+	        {
+			  header: 'LOT코드',
+			  name: 'matLotCode'
+			},
+	        {
+			  header: '재고량',
+			  name: 'matCount'
+			},
+	        {
+			  header: '출고량',
+			  name: 'matOutCount'
+			},
+			{
+			  header: '출고일',
+			  name: 'matOutDate',
+  		      formatter : function dateFormatter(params) {
+  		    	  const date = new Date(params.value);
+  		    	  const isoDate = date.toISOString().split('T')[0];
+  		    	  return isoDate;
+  		    	}
+			},
+	      ],
+	      rowHeaders: ['rowNum'],
+            pageOptions: {
+                useClient: true,
+                perPage: 5
+            }
+	    });
 		</script>
 	</section>
 

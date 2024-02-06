@@ -7,7 +7,8 @@
 	<!-- plan list -->
 	<select id="selectPlanList" resultType="PlanVO">
 		SELECT *
-		FROM prod_plan
+		FROM PROD_PLAN
+		ORDER BY PLAN_CODE DESC
 	</select>
 	
 	<!-- plan by ordCode -->
@@ -19,19 +20,36 @@
 	
 	<!-- plan detail list -->
 	<select id="selectPlanDList" resultType="PlanDVO">
-		
-		
-		SELECT pdp.d_plan_code, pdp.plan_code, pdp.prod_code, pdp.d_plan_count, pdp.d_plan_start_date, 
-		       pdp.d_plan_end_date, pdp.d_plan_priority, pdp.d_plan_note, 
-		       MAX(oddl.dlvy_date) AS dlvy_date, MAX(pl.prod_count) AS prod_count
-		FROM prod_d_plan pdp
-		LEFT JOIN prod_plan pp ON pdp.plan_code = pp.plan_code
-		LEFT JOIN ord_list ol ON pp.ord_code = ol.ord_code
-		LEFT JOIN ord_d_list oddl ON ol.ord_code = oddl.ord_code
-		LEFT JOIN prod_lot pl ON pdp.prod_code = pl.prod_code
-		where pdp.plan_code = #{planCode}
-		GROUP BY pdp.d_plan_code, pdp.plan_code, pdp.prod_code, pdp.d_plan_count, pdp.d_plan_start_date, 
-        pdp.d_plan_end_date, pdp.d_plan_priority, pdp.d_plan_note
+		SELECT 
+		    PDP.D_PLAN_CODE, 
+		    PDP.PLAN_CODE, 
+		    PDP.PROD_CODE, 
+		    PDP.D_PLAN_COUNT, 
+		    PDP.D_PLAN_START_DATE AS "START", 
+		    PDP.D_PLAN_END_DATE as "END", 
+		    PDP.D_PLAN_PRIORITY, 
+		    PDP.D_PLAN_NOTE, 
+		    MAX(ODDL.DLVY_DATE) AS DLVY_DATE, 
+		    MAX(PL.PROD_COUNT) AS PROD_COUNT,
+		    MAX(ODDL.ORD_COUNT) AS ORD_COUNT
+		FROM 
+		    PROD_D_PLAN PDP
+		    LEFT JOIN PROD_PLAN PP ON PDP.PLAN_CODE = PP.PLAN_CODE
+		    LEFT JOIN ORD_LIST OL ON PP.ORD_CODE = OL.ORD_CODE
+		    LEFT JOIN ORD_D_LIST ODDL ON OL.ORD_CODE = ODDL.ORD_CODE
+		    LEFT JOIN PROD_LOT PL ON PDP.PROD_CODE = PL.PROD_CODE
+		WHERE 
+		    PDP.PLAN_CODE = #{planCode}
+		GROUP BY 
+		    PDP.D_PLAN_CODE, 
+		    PDP.PLAN_CODE, 
+		    PDP.PROD_CODE, 
+		    PDP.D_PLAN_COUNT, 
+		    PDP.D_PLAN_START_DATE, 
+		    PDP.D_PLAN_END_DATE, 
+		    PDP.D_PLAN_PRIORITY, 
+		    PDP.D_PLAN_NOTE
+		 ORDER BY PDP.D_PLAN_CODE 
  
 	</select>
 	
@@ -49,19 +67,33 @@
 		WHERE ord_code = #{ordCode}  
 	</select>
 	
-	<insert id="insertPlanInfo" parameterType="PlanVO" useGeneratedKeys="true" keyProperty="planCode">
+	<insert id="insertPlanInfo" parameterType="PlanVO">
+		<selectKey keyProperty="planCode" resultType="string" order="BEFORE">
+			SELECT
+			'PLAN'||LPAD(PLAN_CODE_SEQ.NEXTVAL,3,0) FROM DUAL
+		</selectKey>
 		INSERT INTO
-		prod_plan(ord_code, plan_title, plan_person, plan_date)
-		VALUES(#{ordCode},#{planTitle},#{planPerson},#{planDate})
+		PROD_PLAN(PLAN_CODE,ORD_CODE, PLAN_TITLE, PLAN_PERSON, PLAN_DATE)
+		VALUES(#{planCode},#{ordCode},#{planTitle},#{planPerson},#{planDate})
 	</insert>
 	
 	<insert id="insertPlanDInfo" parameterType="PlanDVO" >
 		INSERT INTO
-		prod_d_plan(plan_code, prod_code, d_plan_count, d_plan_start_date, d_plan_end_date, d_plan_priority, d_plan_note)
-		VALUES(#{planCode},#{prodCode},#{dplanCount},#{dPlanStartDate},#{dPlanEndDate},#{dPlanPriority},#{dPlanNote})
-		
+		PROD_D_PLAN(PLAN_CODE, PROD_CODE, D_PLAN_COUNT, D_PLAN_START_DATE, D_PLAN_END_DATE)
+		VALUES(#{planCode},#{prodCode},#{dplanCount},#{dPlanStartDate},#{dPlanEndDate})
 	</insert>
 	
+
+	<update id="updatePlanInfo" parameterType="PlanDVO">
+		UPDATE PROD_D_PLAN
+		SET D_PLAN_START_DATE = #{dPlanStartDate},
+			D_PLAN_END_DATE = #{dPlanEndDate},
+			D_PLAN_COUNT = #{dplanCount}
+		WHERE D_PLAN_CODE = #{dplanCode}
+	
+	</update>
+	
+
 	
 	
 </mapper>
