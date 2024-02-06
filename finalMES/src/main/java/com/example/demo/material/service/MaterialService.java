@@ -18,7 +18,7 @@ public interface MaterialService {
 	public List<OriginMaterialVO> getOriginMaterialList();
 	// 발주 전체 겸 상세
 	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode);
-	//발주 거래처 관리
+	// 발주 거래처 관리
 	public List<OriginMaterialVO> getMatBusiness();
 	
 	// 자재 입고

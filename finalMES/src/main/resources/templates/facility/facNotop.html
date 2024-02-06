@@ -61,12 +61,12 @@ button {
 							<td colspan="2"><input type="text" id="facName"
 								name="facName" required></td>
 							<th>담당자</th>
-							<td colspan="2"><input type="text" id="facPerson"
-								name="facPerson" required></td>
+							<td colspan="2"><input type="text" id="facNotPerson"
+								name="facNotPerson" required></td>
 						<tr>
 							<th>사유</th>
 							<td colspan="2"><input type="text" id="facNotReason"
-								name="facNotReason" required></td>
+								name="facNotReason" th:data-notopCode="${notopCode}" required></td>
 							<th>설비상태</th>
 							<td><select id="facNotSituation" name="facNotSituation">
 									<option value="0">대기</option>
@@ -98,7 +98,7 @@ button {
 	    var notopCode = document.getElementsByName("notopCode")[0].value;
         var facName = document.getElementsByName("facName")[0].value;
         var facPerson = document.getElementsByName("facPerson")[0].value;
-        var facNotReason = document.getElementsByName("facNotReason")[0].value;
+        var facNotReason = document.getElementsByName("facNotPerson")[0].value;
         var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
         var facNotSdate = document.getElementsByName("facNotSdate")[0].value;
         var facNotLdate = document.getElementsByName("facNotLdate")[0].value;
@@ -113,15 +113,15 @@ button {
             	  notopContent: notopContent,
             	  notopCode: notopCode,
                   facName: facName,
-                  facNotPerson: facPerson,
+                  facNotPerson: facNotPerson,
                   facNotReason: facNotReason,
                   facNotSituation: facNotSituation,
                   facNotSdate: facNotSdate,
                   facNotLdate: facNotLdate
                };
                
-               fetch("/insrtFacAndNot", {
-                 method: "POST",
+               fetch("/updateFacNot", {
+                 method: "PUT",
                  body: JSON.stringify(data),
                  headers: {
                      "Content-Type": "application/json"
@@ -145,11 +145,11 @@ button {
    
    
    	 // 그리드 페이징
-   	    let facList = [[${list}]];
-   	    console.log(facList);
+   	    let facNotList = [[${nlist}]];
+   	 	console.log(facNotList);
    	    const grid = new tui.Grid({
    	      el: document.getElementById('grid'),
-   	      data: facList,
+   	      data: facNotList,
    	      scrollX: false,
    	      scrollY: false,
    	      columns: [
@@ -160,7 +160,7 @@ button {
    	        },
    	        {
    	          header: '비가동등록사유',
-   	          name: 'notopContent',
+   	          name: 'facNotReason',
    	          align: 'center'
    	        },
    	        {
@@ -170,7 +170,7 @@ button {
    	        },
    	        {
    	          header: '담당자',
-   	          name: 'facPerson',
+   	          name: 'facNotPerson',
    	          align: 'center'
    	        },
    	        {
@@ -206,9 +206,9 @@ button {
 
    	      // 설비명과 담당자 값을 가져와서 input 박스에 넣기
    	   const facName = rowData.facName;
-   	   const facPerson = rowData.facPerson;
+   	   const facNotPerson = rowData.facNotPerson;
    	   document.getElementById('facName').value = facName;
-   	   document.getElementById('facPerson').value = facPerson;
+   	   document.getElementById('facNotPerson').value = facNotPerson;
    	    }
 
    	    // grid 생성 코드 아래에 설비코드 클릭 이벤트 리스너 등록

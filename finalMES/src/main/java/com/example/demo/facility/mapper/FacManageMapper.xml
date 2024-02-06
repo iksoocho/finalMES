@@ -14,6 +14,15 @@
 		LEFT JOIN not_operator no ON n.notop_code = no.notop_code
 	</select>
 
+	<select id="getfacNotList" resultType="FacNotopVO">
+		SELECT fm.fac_name, fn.*
+		FROM fac_manage fm
+		JOIN fac_notop fn ON fm.fac_code = fn.fac_code
+
+
+
+	</select>
+
 	<delete id="deleteFac" parameterType="String">
 		DELETE fm, p
 		FROM fac_manage
@@ -43,23 +52,21 @@
 		INSERT INTO fac_notop
 		(fac_code, notop_code)
 		VALUES
-		(#{facCode}, 'notop_03')
+		(#{facCode}, 'NOTOP001')
 	</insert>
 
 	<update id="updateFacNot" parameterType="FacNotopVO">
 		UPDATE fac_notop
 		SET
-		fac_not_sdate = #{facNotSdate},
-		fac_not_ldate = #{facNotLdate},
-		fac_not_situation = #{facNotSituation}
+		fac_code = ${facCode},
+		fac_not_sdate = ${facNotSdate},
+		fac_not_ldate =
+		${facNotopLdate},
+		fac_not_person = ${facNotopPerson},
+		fac_not_situation
+		= ${facNotopSituation}
+		fac_not_ reason = ${facNotopReason}
 		WHERE
-		fac_code = #{facCode}
-		AND fac_not_code IN (
-		SELECT fac_not_code
-		FROM not_operator
-		WHERE notop_code = #{notopCode}
-		);
+		fac_not_code = ${facNotopCode}
 	</update>
-
-
 </mapper>

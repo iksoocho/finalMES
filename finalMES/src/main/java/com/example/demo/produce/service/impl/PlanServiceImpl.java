@@ -92,6 +92,7 @@ public class PlanServiceImpl implements PlanService{
 
 	@Override
 	public void updatePlanDInfo(PlanCompositeVO planCompositeVO) {
+		System.out.println(planCompositeVO);
 		for(int i = 0; i < planCompositeVO.getPlanDVOList().size(); i++) {
 			 planMapper.updatePlanInfo(planCompositeVO.getPlanDVOList().get(i));
 		}

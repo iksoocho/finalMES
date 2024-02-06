@@ -50,11 +50,7 @@ public class FacManageServiceImpl implements FacManageService {
 		return facManageMapper.getfacNotList();
 	}
 
-	@Override
-	public int insertFacNot(FacNotopVO facNotopVO) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 	
 	
@@ -68,6 +64,19 @@ public class FacManageServiceImpl implements FacManageService {
 		
 		facCompositeVO.getFacNotopVO().setFacCode(facCompositeVO.getFacManageVO().getFacCode());
 		facManageMapper.insertFacNot(facCompositeVO.getFacNotopVO());
+	}
+
+	@Override
+	public void updateFacNot(FacNotopVO facNotopVO) {
+		facManageMapper.updateFacNot(facNotopVO);
+		
+		
+	}
+
+	@Override
+	public int insertFacNot(FacNotopVO facNotopVO) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 

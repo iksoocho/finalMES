@@ -23,9 +23,12 @@ public interface FacManageService {
 	public List<FacNotopVO> FacNotopList();
 	// 등록
 	public int insertFacNot(FacNotopVO facNotopVO);
-	// 수정
 	
 	
-	//설비 + 비가동 동시 insert
+	
+	// 설비 + 비가동 동시 insert
 	public void insertFacWithNotop(FacCompositeVO facCompositeVO);
+	// 수정
+	public void updateFacNot(FacNotopVO facNotopVO);
+	
 }

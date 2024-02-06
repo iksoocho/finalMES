@@ -21,7 +21,7 @@ tr:has(input[name="facSelect"]:checked) {
 		<div class="container w-75">
 			<!-- ============================모달============================ -->
 			<div class="modal fade" id="facSelect" tabindex="-1"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			aria-labelledby="facSelect" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -34,7 +34,7 @@ tr:has(input[name="facSelect"]:checked) {
 							<div class="container-fluid">
 								<div class="row row-cols-2">
 									<div class="col-6 col-md-4">
-										<table class="table text-center">
+										<table class="table table-hover text-center">
 											<thead>
 												<tr>
 													<th>공정</th>
@@ -106,7 +106,7 @@ tr:has(input[name="facSelect"]:checked) {
 					<label for="Worker" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업자</label>
 					<div class="col-3">
 						<input type="text" class="form-control form-control-lg text-center" placeholder="작업자"
-							aria-label="Worker" id="Worker">
+							aria-label="Worker" id="Worker" value="김준성" readonly>
 					</div>
 				</div>
 				<div class="row mt-4">
@@ -132,14 +132,12 @@ tr:has(input[name="facSelect"]:checked) {
 			              <thead>
 			                <tr>
 			                  <th>공정명</th>
-			                  <th>설비코드</th>
 			                  <th>상태</th>
 			                </tr>
 			              </thead>
 			              <tbody>
 			                <tr th:block th:each="list : ${load}">
 			                  <td th:text="${list.procName}"></td>
-			                  <td >설비코드</td>
 			                  <td>ㅇㅁㅇ</td>
 			                </tr>
 			              </tbody>
