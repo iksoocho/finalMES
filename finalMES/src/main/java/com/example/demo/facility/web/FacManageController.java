@@ -7,10 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.facility.FacCompositeVO;
+import com.example.demo.facility.FacNotopVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
 
@@ -33,7 +35,7 @@ public class FacManageController {
 	
 	@GetMapping("/facNotop")
 	public String Notoplist(Model model) {
-		model.addAttribute("list", facManageMapper.getfacList(null));
+		model.addAttribute("nlist", facManageService.FacNotopList());
 		return "facility/facNotop";
 
 	}
@@ -58,5 +60,15 @@ public class FacManageController {
     	facManageService.insertFacWithNotop(facCompositeVO);
     	msg = "등록 성공";
     	return msg;
+    }
+    
+    @PutMapping("/updateFacNot")
+    @ResponseBody
+    public String updateFacNot(@RequestBody FacNotopVO facNotopVO) {
+    	String msg;
+    	facManageService.updateFacNot(facNotopVO);
+    	msg = "수정완료";
+		return msg;
+    	
     }
  }

@@ -13,6 +13,7 @@ public class FacNotopVO {
 	private String facPerson;
 	private String notopCode;
 	private String businessCode;
+	private String notopContent;
 	private String facName;
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date facNotSdate;
