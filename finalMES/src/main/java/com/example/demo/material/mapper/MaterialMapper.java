@@ -13,11 +13,11 @@ public interface MaterialMapper {
 	// 단건 
 	public MatOrderVO getMat(String matCode);
 	
-	//발주 전체
-	public List<MatOrderVO> getMatOrderList();
-	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode);
+	// 발주 전체
+	public List<MatOrderVO> getMaterialOrderList();
 	public List<OriginMaterialVO> getOriginMaterialList();
-	//발주 거래처 관리
+	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode);
+	// 발주 거래처 관리
 	public List<OriginMaterialVO> getMatBusiness();
 	
 	// 자재 입고

@@ -29,7 +29,7 @@ public class MaterialServiceImpl implements MaterialService {
 	// 발주 리스트 정보
 	@Override
 	public List<MatOrderVO> getMaterialOrderList() {
-		return materialMapper.getMatOrderList();
+		return materialMapper.getMaterialOrderList();
 	}
 
 	@Override
