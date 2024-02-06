@@ -435,6 +435,57 @@ button {
 	        // TODO: 실패 시 필요한 로직 추가
 	    });
 	}
+	
+	function resetForm() {
+	    // 주문서번호를 제외한 입력 필드 초기화
+	    document.getElementById('registrationDate').value = getCurrentDate();
+	    document.getElementById('ordManager').value = '';
+	    document.getElementById('dlvyDate').value = '';
+	    document.getElementById('ordNote').value = '';
+	    document.getElementById('selectedBusinessCode').value = '';
+	    document.getElementById('selectedBusinessName').value = '';
+	    document.getElementById('selectedBusinessManager').value = '';
+	    document.getElementById('selectedBusinessManagerPhone').value = '';
+	    
+	    
+
+	    // 추가된 행 모두 제거
+	    var tbody = document.getElementById('productTableBody');
+	    tbody.innerHTML = '';
+
+	    // 초기화된 행 추가
+	    rowCount = 1; // rowCount 초기화
+	    for (var i = 0; i < 6; i++) {
+	        addEmptyProductRow();
+	    }
+
+	    // 총합 및 건수 초기화
+	    updateTotalSum();
+	    updateTotalCount();
+	}
+
+	function addEmptyProductRow() {
+	    var tbody = document.getElementById('productTableBody');
+	    var newRow = tbody.insertRow(-1);
+
+	    // 행에 클래스 추가
+	    newRow.classList.add('initially-hidden');
+
+	    for (var j = 0; j < 9; j++) {
+	        var cell = newRow.insertCell(j);
+
+	        if (j === 1) {
+	            // 두 번째 셀에는 체크박스 추가
+	            cell.innerHTML = '<input type="checkbox">';
+	        } else if (j === 6) {
+	            // 여섯 번째 셀에는 단가 입력 필드 추가
+	            cell.classList.add('unitPrice');
+	        } else {
+	            // 나머지 셀에는 빈 공백 추가
+	            cell.innerHTML = '&nbsp;';
+	        }
+	    }
+	}
 </script>
 </head>
 <body>
@@ -443,12 +494,12 @@ button {
 			<h4>주문 관리</h4>
 			<div class="containerTwo">
 				<h5>주문서정보</h5>
-				<button class="btn btn-primary">초기화</button>
+				<button class="btn btn-primary" onclick="resetForm()">초기화</button>
 				<button class="btn btn-primary" onclick="saveOrder()">등록</button>
 				<table class="orderInfoOne">
 					<tr>
 						<th>주문서번호</th>
-						<td><input type="text" id="ordCode" name="ordCode"></td>
+						<td><input class="readInput" type="text" id="ordCode" name="ordCode" placeholder="시스템 자동발번" readonly></td>
 						<th>등록일</th>
 						<td><input type="date" id="registrationDate" name="ordDate"
 							readonly></td>
@@ -493,7 +544,7 @@ button {
 						<th>납기일자</th>
 						<td><input type="date" id="dlvyDate"></td>
 						<th>비고</th>
-						<td><input type="text" name="ordNote"></td>
+						<td><input type="text" name="ordNote" id="ordNote"></td>
 					</tr>
 				</table>
 			</div>

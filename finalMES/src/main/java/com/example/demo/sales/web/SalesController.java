@@ -49,5 +49,13 @@ public class SalesController {
 		// 등록 후에 주문서 목록 페이지로 리다이렉션
 		return "redirect:/orderList"; // "/orderList"로 리다이렉션하도록 설정
 	}
+	
+	@GetMapping("/orderList")
+	public String getOrderList(Model model) {
+		List<OrderVO> orderList = ordService.getOrderList();
+		model.addAttribute("orderList", orderList);
+		return "sales/orderList";
+	}
+		
 
 }
