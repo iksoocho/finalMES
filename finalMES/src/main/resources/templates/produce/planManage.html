@@ -8,6 +8,16 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"
 	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
 	crossorigin="anonymous"></script>
+<style>
+.tui-grid-row-odd .plan  {
+    background-color: #e0f7fa; /* 예시로 빨간색을 지정했습니다. */
+}
+.tui-grid-row-odd .detail  {
+    background-color: #e0f7fa; /* 예시로 빨간색을 지정했습니다. */
+}.tui-grid-row-even .detail  {
+    background-color: #e0f7fa; /* 예시로 빨간색을 지정했습니다. */
+}
+</style>
 </head>
 <body>
 	<section layout:fragment="content">
@@ -158,6 +168,29 @@
 		<script th:inline="javascript">
     	let plan = [[${list}]]
     	let planGrid, planDGrid;
+    	class NumberEditor {
+      	  constructor(props) {
+      	    const el = document.createElement('input');
+      	    el.type = 'number';
+      	    el.value = String(props.value);
+      	    el.min = props.columnInfo.editor.options.min;
+      	    el.step = props.columnInfo.editor.options.step;
+
+      	    this.el = el;
+      	  }
+
+      	  getElement() {
+      	    return this.el;
+      	  }
+
+      	  getValue() {
+      	    return this.el.value;
+      	  }
+
+      	  mounted() {
+      	    this.el.select();
+      	  }
+      	};
     	document.addEventListener('DOMContentLoaded', function() {
     	    	planGrid = new tui.Grid({
     	        el: document.getElementById('planGrid'),
@@ -170,7 +203,8 @@
     	            {
     	                header: '계획명', 
     	                name: 'planTitle',
-    	                editor: 'text' // 이 부분을 추가하여 텍스트 입력을 가능하게 함
+    	                editor: 'text', // 이 부분을 추가하여 텍스트 입력을 가능하게 함
+    	                background: '#014386'
     	            },
     	            { header: '담당자', name: 'planPerson' },
     	            {
@@ -220,27 +254,18 @@
     	        	}
     	    	 }
     	    });
+    	    
     	    	planDGrid = new tui.Grid({
 				  el: document.getElementById('planDGrid'), // 그리드 요소 ID가 맞는지 확인하세요
 				  scrollX: false,
-		            scrollY: false,
+		          scrollY: false,
+		          
 				  columns: [
 				    // 데이터 구조에 따라 컬럼을 정의하세요
 				    { name: 'dplanCode', header: '생산계획 코드' },
-				    { name: 'planCode', header: '제품 코드' },
+				    
+				    { name: 'prodCode', header: '제품 코드' },
 				    { name: 'start', header: '시작 일자' ,
-  	                formatter: function({value}) {
-  	                    if (value) {
-  	                        var date = new Date(value);
-  	                        var year = date.getFullYear();
-  	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-  	                        var day = date.getDate().toString().padStart(2, '0');
-  	                        return `${year}-${month}-${day}`;
-  	                    }
-  	                    return '';
-  	                }, 
-				    },
-				    { name: 'end', header: '종료 일자' ,
 	  	                formatter: function({value}) {
 	  	                    if (value) {
 	  	                        var date = new Date(value);
@@ -250,12 +275,43 @@
 	  	                        return `${year}-${month}-${day}`;
 	  	                    }
 	  	                    return '';
+	  	                }, 
+		  	              editor: {
+					            type: 'datePicker',
+					            options: {
+					              format: 'yyyy-MM-dd'
+					            }
+					          }
+				    },
+				    { name: 'end', header: '종료 일자' ,
+				    	formatter: function({value}) {
+	  	                    if (value) {
+	  	                        var date = new Date(value);
+	  	                        var year = date.getFullYear();
+	  	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+	  	                        var day = date.getDate().toString().padStart(2, '0');
+	  	                        return `${year}-${month}-${day}`;
+	  	                    }
+	  	                    return '';
 	  	                },
-		  	             
+				    	editor: {
+				            type: 'datePicker',
+				            options: {
+				              format: 'yyyy-MM-dd'
+				            }
+				          }			
 				    },
 				    { name: 'prodCount', header: '현재 재고' },
 				    { name: 'ordCount', header: '주문 수량' },
-				    { name: 'dplanCount', header: '계획량' },
+				    { name: 'dplanCount', header: '계획량' ,
+				    	editor: {
+				    	    type: NumberEditor,
+				    	    options: {
+				    	      min: 'ordCount', // 최소값 설정
+				    	      step: 10  // 증가량 설정
+				    	    }
+				    	  }
+				    },
 				    { name: 'dlvyDate', header: '납기 일자' ,
   	                formatter: function({value}) {
   	                    if (value) {
@@ -289,6 +345,7 @@
 			
 			 //모달 추가 버튼
 			   document.getElementById('addPlanBtn').addEventListener('click', function() {
+				   planDGrid.resetData([]);
 				    var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
 				    if (!selectedRadio) {
 				        alert('주문을 선택해주세요.');
@@ -301,38 +358,66 @@
 				    var newRowData = {
 				        planCode: '', // 새 계획 코드
 				        ordCode: ordCode,
+				        
 				        planTitle: '', // 사용자 입력에 따라 설정
 				        planPerson: '조익수', // 예시, 실제 데이터에 맞게 변경
-				        planDate: new Date().toISOString().substring(0, 10) // 오늘 날짜
+				        planDate: new Date().toISOString().substring(0, 10), // 오늘 날짜
+				        _attributes: {
+			                
+			                className: {
+			                  // Add class name on a row
+			                  row: ['plan']
+			                }
+			              }
+				        
 				    };
 					
 				    
-				    planGrid.prependRow(newRowData);
+				    planGrid.appendRow(newRowData, { at: 0 });
+				    
 				
+				    
+				    
+				    
 				    // 상세 계획 테이블에 행 추가
 				    tempOrderDetails.forEach(detail => {
 				        var detailRowData = {
 				            dplanCode: '', // 새 상세 계획 코드
-				            planCode: ordCode, // 상위 계획 코드
+				            ordCode: ordCode, // 상위 계획 코드
 				            prodCode: detail.prodCode,
 				            start: '', // 시작 일자, 사용자 입력에 따라 설정
 				            end: '', // 종료 일자, 사용자 입력에 따라 설정
 				            prodCount: detail.prodCount, // 현재 재고
 				            ordCount: detail.ordCount, // 주문 수량
 				            dplanCount: '', // 계획량, 사용자 입력에 따라 설정
-				            dlvyDate: detail.dlvyDate // 납기 일자
+				            dlvyDate: detail.dlvyDate, // 납기 일자
+				            _attributes: {
+				                
+				                className: {
+				                  // Add class name on a row
+				                  row: ['detail']
+				                }
+				              }
+				            
 				        };
 				
 				        planDGrid.appendRow(detailRowData);
 				    });
-				
+				    
+				    
+				    
+						
+					  
+					   
 				    // 모달 닫기
 				    var exampleModal = document.getElementById('exampleModal');
 				    var modal = bootstrap.Modal.getInstance(exampleModal);
 				    modal.hide();
+				    
+				    
 				});
-	
 				
+			   
     	</script>
 
 
@@ -408,6 +493,7 @@
 							// 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
 							data.forEach(detail => {
 								const tr = document.createElement('tr');
+								
 								const date = new Date(detail.dlvyDate);
 								const sDate = new Date(detail.start);
 								const eDate = new Date(detail.end);
@@ -448,13 +534,17 @@
 		        var newPlanRows = document.querySelector('#planTable .new-row');
 
 		                
-		        planobj.ordCode = newPlanRows.querySelector('td:nth-child(3)').innerText,
+		        /* planobj.ordCode = newPlanRows.querySelector('td:nth-child(3)').innerText,
 		        planobj.planTitle= newPlanRows.querySelector('td:nth-child(4) input').value, // input 요소의 value 속성 사용
 		        planobj.planPerson= newPlanRows.querySelector('td:nth-child(5)').innerText,
-		        planobj.planDate =  newPlanRows.querySelector('td:nth-child(6) input').value // input 요소의 value 속성 사용
-
+		        planobj.planDate =  newPlanRows.querySelector('td:nth-child(6) input').value // input 요소의 value 속성 사용 */
 		        
-		        var newPlanDetailRows = document.querySelectorAll('#planDetailTable .plan-detail-row');
+		        planobj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
+		        planobj.planTitle = document.querySelector('td[data-column-name="planTitle"] div').innerHTML;
+		        planobj.planPerson = document.querySelector('td[data-column-name="planPerson"] div').innerHTML;
+		        planobj.planDate =  document.querySelector('td[data-column-name="planDate"] div').innerHTML;
+		        	
+		        /* var newPlanDetailRows = document.querySelectorAll('#planDetailTable .plan-detail-row');
 				console.log("planDetailTable : ", planDetailTable);
 		        console.log("Total rows found:", newPlanDetailRows.length); // 찾은 행의 수를 로깅
 				console.log("newPlanDetailRows : ",newPlanDetailRows);
@@ -470,6 +560,21 @@
 					
 					planDetailData.push(obj);
 					
+				} */
+				
+				var rows = document.querySelectorAll('#planDGrid tbody tr');
+
+				let planDetailData  = [];
+				// 인덱스 4부터 시작하여 끝까지 반복합니다.
+				for (var i = 4; i < rows.length; i++) {
+				    // 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
+				    let obj = {};
+				    obj.prodCode = rows[i].querySelector('td[data-column-name="prodCode"] div').innerHTML;
+				    obj.dplanStartDate = rows[i].querySelector('td[data-column-name="start"] div').innerHTML;
+				    obj.dplanEndDate = rows[i].querySelector('td[data-column-name="end"] div').innerHTML;
+				    obj.dplanCount = rows[i].querySelector('td[data-column-name="planCount"] div').innerHTML;
+				    
+				    planDetailData.push(obj);
 				}
 
 		        data.planVO = planobj;
