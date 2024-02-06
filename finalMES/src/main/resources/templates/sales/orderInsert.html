@@ -251,7 +251,7 @@ button {
 
 		
 		
-		// 히든 필드에 prod_code 저장
+		
 	  // 히든 필드에 prod_code 저장
     var prodCodeHiddenInput = newRow.querySelector('input[name="prodCode"]');
     if (prodCodeHiddenInput) {
@@ -393,29 +393,26 @@ button {
 	    var rows = tbody.getElementsByTagName('tr');
 
 	    for (var i = 0; i < rows.length; i++) {
-	    	// 각 행의 히든 필드에서 prod_code 읽어오기
-	        var hiddenInput = rows[i].querySelector('input[name="prodCode"]');
-			console.log('hiddenInput:', hiddenInput);
-			var prodCode = hiddenInput ? hiddenInput.value : '';
-			console.log('prodCode:', prodCode);
-	        var dlvyDateInput = rows[i].querySelector('input[name="dlvyDate"]');
-    		var dlvyDate = dlvyDateInput ? dlvyDateInput.value : '';
-	        	console.log(dlvyDate);
-	        var ordCountInput = rows[i].querySelector('input[name="ordCount"]');
-	        var ordCount = ordCountInput ? ordCountInput.value : '';
-	        	console.log(ordCount);
-	        var ttlPriceInput = rows[i].querySelector('input[name="ttlCount"]');
-	        var ttlPrice = ttlPriceInput ? ttlPriceInput.value : '';
-	        	console.log(ttlPrice);
+	    	if (!rows[i].classList.contains('initially-hidden')) {
+	            // 각 행의 히든 필드에서 prod_code 읽어오기
+	            var hiddenInput = rows[i].querySelector('input[name="prodCode"]');
+	            var prodCode = hiddenInput ? hiddenInput.value : '';
+	            var dlvyDateInput = rows[i].querySelector('input[name="dlvyDate"]');
+	            var dlvyDate = dlvyDateInput ? dlvyDateInput.value : '';
+	            var ordCountInput = rows[i].querySelector('input[name="ordCount"]');
+	            var ordCount = ordCountInput ? ordCountInput.value : '';
+	            var ttlPriceInput = rows[i].querySelector('input[name="ttlCount"]');
+	            var ttlPrice = ttlPriceInput ? ttlPriceInput.value : '';
 
-	        // 주문 상세 리스트에 해당 상품 정보 추가 
-	        orderData.orderDetails.push({
-	            prodCode: prodCode,
-	            dlvyDate: dlvyDate,
-	            ordCount: ordCount,
-	            ttlPrice: ttlPrice
-	            // 다른 필요한 필드들 추가
-	        });
+	            // 주문 상세 리스트에 해당 상품 정보 추가 
+	            orderData.orderDetails.push({
+	                prodCode: prodCode,
+	                dlvyDate: dlvyDate,
+	                ordCount: ordCount,
+	                ttlPrice: ttlPrice
+	                // 다른 필요한 필드들 추가
+	            });
+	        }
 	    }
 
 	    // 서버에 주문서 정보 전송

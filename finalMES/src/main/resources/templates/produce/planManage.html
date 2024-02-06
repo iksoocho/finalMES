@@ -5,7 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>생산계획관리</title>
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"
+	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+	crossorigin="anonymous"></script>
 </head>
 <body>
 	<section layout:fragment="content">
@@ -69,13 +71,13 @@
 			<h2>생산계획관리</h2>
 			<div>
 				<button class="btn btn-secondary"
-						style="float: right; margin: 8px 5px;" id="planInsert">저장</button>
-					<button class="btn btn-secondary" data-bs-toggle="modal"
-						data-bs-target="#exampleModal" style="float: right; margin: 8px 5px;">주문서
-						조회</button>
-						<div>
-					
-					<table class="table table-hover" id="planTable">
+					style="float: right; margin: 8px 5px;" id="planInsert">저장</button>
+				<button class="btn btn-secondary" data-bs-toggle="modal"
+					data-bs-target="#exampleModal"
+					style="float: right; margin: 8px 5px;">주문서 조회</button>
+				<div>
+					<div id="planGrid"></div>
+					<!-- <table class="table table-hover" id="planTable">
 						<thead>
 							<tr>
 								<th>No</th>
@@ -102,15 +104,16 @@
 							</tr>
 
 						</tbody>
-					</table>
+					</table> -->
 				</div>
-				
+
 				<!-- ============================생산상세계획============================ -->
 
 				<div class="mt-4">
 					<button class="btn btn-secondary"
 						style="float: right; margin: 8px 5px;" id="planDUpdate">저장</button>
-					<table class="table table-hover" id="planDetailTable">
+					<div id="planDGrid"></div>
+					<!-- <table class="table table-hover" id="planDetailTable">
 						<thead>
 							<tr>
 								<th>상세계획코드</th>
@@ -139,7 +142,7 @@
 								</tr>
 							</th:block>
 						</tbody>
-					</table>
+					</table> -->
 				</div>
 				<!-- <br>
 				<br>
@@ -151,19 +154,24 @@
 			</div>
 		</div>
 
-		
-    <!-- 	<script th:inline="javascript">
+
+		<script th:inline="javascript">
     	let plan = [[${list}]]
+    	let planGrid, planDGrid;
     	document.addEventListener('DOMContentLoaded', function() {
-    	    var planGrid = new tui.Grid({
+    	    	planGrid = new tui.Grid({
     	        el: document.getElementById('planGrid'),
     	        data:plan,
     	        // 그리드 컬럼 설정
     	        columns: [
     	            
-    	            { header: '생산계획코드', name: 'planCode' },
+    	            { header: '생산계획코드', name: 'planCode' , className: 'plan-code'},
     	            { header: '주문코드', name: 'ordCode' },
-    	            { header: '계획명', name: 'planTitle' },
+    	            {
+    	                header: '계획명', 
+    	                name: 'planTitle',
+    	                editor: 'text' // 이 부분을 추가하여 텍스트 입력을 가능하게 함
+    	            },
     	            { header: '담당자', name: 'planPerson' },
     	            {
     	                header: '생산계획일자', 
@@ -188,6 +196,9 @@
     	    });
     	    
     	    planGrid.on('click', function(ev) {
+				console.log(ev.columnName);
+				 var columnName = ev.columnName;
+    	    	 if (columnName === 'planCode') {
     	        var rowKey = ev.rowKey;
     	        var rowData = planGrid.getRow(rowKey);
     	        
@@ -206,16 +217,10 @@
     	                .catch(error => {
     	                    console.error('Error:', error);
     	                });
-    	        }
+    	        	}
+    	    	 }
     	    });
-
-    	    
-    	});
-    	</script>
-    	
-    	
-    	<script th:inline="javascript">
-			const planDGrid = new tui.Grid({
+    	    	planDGrid = new tui.Grid({
 				  el: document.getElementById('planDGrid'), // 그리드 요소 ID가 맞는지 확인하세요
 				  scrollX: false,
 		            scrollY: false,
@@ -223,46 +228,45 @@
 				    // 데이터 구조에 따라 컬럼을 정의하세요
 				    { name: 'dplanCode', header: '생산계획 코드' },
 				    { name: 'planCode', header: '제품 코드' },
-/* 				    { name: 'dplanStartDate', header: '시작 일자' },
-				    { name: 'dplanEndDate', header: '종료 일자' }, */
 				    { name: 'start', header: '시작 일자' ,
-    	                formatter: function({value}) {
-    	                    if (value) {
-    	                        var date = new Date(value);
-    	                        var year = date.getFullYear();
-    	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-    	                        var day = date.getDate().toString().padStart(2, '0');
-    	                        return `${year}-${month}-${day}`;
-    	                    }
-    	                    return '';
-    	                }
+  	                formatter: function({value}) {
+  	                    if (value) {
+  	                        var date = new Date(value);
+  	                        var year = date.getFullYear();
+  	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+  	                        var day = date.getDate().toString().padStart(2, '0');
+  	                        return `${year}-${month}-${day}`;
+  	                    }
+  	                    return '';
+  	                }, 
 				    },
 				    { name: 'end', header: '종료 일자' ,
-    	                formatter: function({value}) {
-    	                    if (value) {
-    	                        var date = new Date(value);
-    	                        var year = date.getFullYear();
-    	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-    	                        var day = date.getDate().toString().padStart(2, '0');
-    	                        return `${year}-${month}-${day}`;
-    	                    }
-    	                    return '';
-    	                }
+	  	                formatter: function({value}) {
+	  	                    if (value) {
+	  	                        var date = new Date(value);
+	  	                        var year = date.getFullYear();
+	  	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+	  	                        var day = date.getDate().toString().padStart(2, '0');
+	  	                        return `${year}-${month}-${day}`;
+	  	                    }
+	  	                    return '';
+	  	                },
+		  	             
 				    },
 				    { name: 'prodCount', header: '현재 재고' },
-				    { name: 'dplanCount', header: '주문 수량' },
+				    { name: 'ordCount', header: '주문 수량' },
 				    { name: 'dplanCount', header: '계획량' },
 				    { name: 'dlvyDate', header: '납기 일자' ,
-    	                formatter: function({value}) {
-    	                    if (value) {
-    	                        var date = new Date(value);
-    	                        var year = date.getFullYear();
-    	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-    	                        var day = date.getDate().toString().padStart(2, '0');
-    	                        return `${year}-${month}-${day}`;
-    	                    }
-    	                    return '';
-    	                }
+  	                formatter: function({value}) {
+  	                    if (value) {
+  	                        var date = new Date(value);
+  	                        var year = date.getFullYear();
+  	                        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+  	                        var day = date.getDate().toString().padStart(2, '0');
+  	                        return `${year}-${month}-${day}`;
+  	                    }
+  	                    return '';
+  	                }
 				    },
 				    // 데이터에 따라 다른 컬럼 추가
 				  ],
@@ -273,10 +277,66 @@
 	                perPage: 5
 	            }
 				});
+    	    	
+		    console.log("planGrid" ,planGrid)
+
+    	});
+    	
+			
+			
+			
+			
+			
+			 //모달 추가 버튼
+			   document.getElementById('addPlanBtn').addEventListener('click', function() {
+				    var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
+				    if (!selectedRadio) {
+				        alert('주문을 선택해주세요.');
+				        return;
+				    }
+				
+				    var ordCode = selectedRadio.id;
+				
+				    // 주요 계획 테이블에 행 추가
+				    var newRowData = {
+				        planCode: '', // 새 계획 코드
+				        ordCode: ordCode,
+				        planTitle: '', // 사용자 입력에 따라 설정
+				        planPerson: '조익수', // 예시, 실제 데이터에 맞게 변경
+				        planDate: new Date().toISOString().substring(0, 10) // 오늘 날짜
+				    };
+					
+				    
+				    planGrid.prependRow(newRowData);
+				
+				    // 상세 계획 테이블에 행 추가
+				    tempOrderDetails.forEach(detail => {
+				        var detailRowData = {
+				            dplanCode: '', // 새 상세 계획 코드
+				            planCode: ordCode, // 상위 계획 코드
+				            prodCode: detail.prodCode,
+				            start: '', // 시작 일자, 사용자 입력에 따라 설정
+				            end: '', // 종료 일자, 사용자 입력에 따라 설정
+				            prodCount: detail.prodCount, // 현재 재고
+				            ordCount: detail.ordCount, // 주문 수량
+				            dplanCount: '', // 계획량, 사용자 입력에 따라 설정
+				            dlvyDate: detail.dlvyDate // 납기 일자
+				        };
+				
+				        planDGrid.appendRow(detailRowData);
+				    });
+				
+				    // 모달 닫기
+				    var exampleModal = document.getElementById('exampleModal');
+				    var modal = bootstrap.Modal.getInstance(exampleModal);
+				    modal.hide();
+				});
 	
 				
-    	</script>  -->
-		
+    	</script>
+
+
+
 		<script>
 			let tempOrderDetails = [];
 			 // 초기에 모달 창을 만들 때 테이블 헤더를 미리 추가합니다.
@@ -374,79 +434,9 @@
 		    
 		    
 		    
-		    //모달 추가 버튼
-		    document.getElementById('addPlanBtn').addEventListener('click', function() {
-		        var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
-		        if (!selectedRadio) {
-		            alert('주문을 선택해주세요.');
-		            return;
-		        }
+		   
 
-		        var ordCode = selectedRadio.id;
-		        
-		                // 서버로부터 받은 데이터를 사용하여 테이블에 행 추가
-		                var planTable = document.getElementById('planTable');
-		                var newRow = planTable.insertRow(-1);
-		                newRow.className = "plan-row new-row";
-		                
-		                var newNo = planTable.rows.length;
-
-		                var cell1 = newRow.insertCell(0);
-		                var cell2 = newRow.insertCell(1);
-		                var cell3 = newRow.insertCell(2);
-		                var cell4 = newRow.insertCell(3);
-		                var cell5 = newRow.insertCell(4);
-		                var cell6 = newRow.insertCell(5);
-		                
-		                var planTitleInput = document.createElement('input');
-		                planTitleInput.type = 'text'
-		                
-		                var dateInput = document.createElement('input');
-		                dateInput.type = 'date'
-		                var today = new Date();
-		                var dd = String(today.getDate()).padStart(2, '0');
-		                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-		                var yyyy = today.getFullYear();
-
-		                today = yyyy + '-' + mm + '-' + dd;
-		                dateInput.value = today;
-		                // ... 추가 셀 생성 및 데이터 설정
-
-		                cell1.innerHTML = newNo - 1; // 서버로부터 받은 데이터 사용
-		                cell2.innerHTML = '';
-		                cell3.innerHTML = ordCode;
-		                cell4.appendChild(planTitleInput);
-		                cell5.innerHTML = '조익수';
-		                cell6.appendChild(dateInput);
-		                
-		                
-		                
-		                
-		                var planDetailTable = document.getElementById('planDetailTable');
-		                tempOrderDetails.forEach((detail, index) => {
-		                    const date = new Date(detail.dlvyDate);
-		                    const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
-		                    var newRow = planDetailTable.insertRow();
-		                    newRow.className = "plan-detail-row"; // 행에 클래스 추가
-
-		                    // 각 셀에 데이터 삽입
-		                    newRow.innerHTML = `
-		                        <td></td>
-		                        <td>${detail.prodCode}</td>
-		                        <td><input type="date" name="startDate" ></td>
-		                        <td><input type="date" name="endDate" ></td>
-		                        <td>${detail.ordCount}</td>
-		                        <td><input type="number" name="planCount" ></td>
-		                        <td>${formattedDate}</td>
-		                    `;
-		                });
-		                
-		                // 모달 닫기
-		                var exampleModal = document.getElementById('exampleModal');
-		                var modal = bootstrap.Modal.getInstance(exampleModal);
-		                modal.hide();
-		           
-		    });
+		    
 		    
 		    
 		    
