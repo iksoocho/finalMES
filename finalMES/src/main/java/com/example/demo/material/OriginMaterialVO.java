@@ -15,7 +15,9 @@ public class OriginMaterialVO {
 	private int matSafeStock;
 	private Date matStartDate;
 	
-	
+	private String businessCode;
+	private String businessName;
+	private int transactionCount;
 	// LOT 테이블 꺼 
 	private String matCount;
 }
