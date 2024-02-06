@@ -3,6 +3,7 @@ package com.example.demo.sales.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
@@ -15,9 +16,9 @@ public interface OrdMapper {
 
 	public OrderDetailVO getOrderDetail(String ordDCode);
 
-	public void insertOrder(OrderVO orderVO);
+	public void saveOrder(OrderVO orderVO);
 
-	public void insertOrderDetail(OrderDetailVO orderDetailVO);
+	public void saveOrderDetail(OrderDetailVO orderDetailVO);
 
 	public List<OrderVO> getOrderList(OrderVO orderVO);
 
@@ -28,4 +29,7 @@ public interface OrdMapper {
 	public List<BusinessListVO> getBusinessList(); // 거래처 목록 조회
 
 	public List<ProductListVO> getProductList(); // 품목리스트 조회
+
+	
+
 }

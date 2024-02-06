@@ -1,6 +1,8 @@
 package com.example.demo.sales.vo.order;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,4 +17,13 @@ public class OrderVO {
 	private String ordManager;
 	private int ordState;
 	private String ordNote;
+	
+	private List<OrderDetailVO> orderDetails;
+	
+	public void addOrderDetail(OrderDetailVO orderDetail) {
+        if (orderDetails == null) {
+            orderDetails = new ArrayList<>();
+        }
+        orderDetails.add(orderDetail);
+    }
 }
