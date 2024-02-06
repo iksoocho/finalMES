@@ -2,28 +2,64 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.facility.mapper.FacManageMapper">
+<mapper
+	namespace="com.example.demo.facility.mapper.FacManageMapper">
 	<select id="getfacList" resultType="FacManageVO">
-	SELECT fm.*, p.*
-	FROM fac_manage fm
-	JOIN process p ON fm.proc_code = p.proc_code
+		SELECT fm.*, p.*,
+		n.notop_code, no.notop_content
+		FROM fac_manage fm
+		JOIN process p ON
+		fm.proc_code = p.proc_code
+		JOIN fac_notop n ON fm.fac_code = n.fac_code
+		LEFT JOIN not_operator no ON n.notop_code = no.notop_code
 	</select>
-	
+
 	<delete id="deleteFac" parameterType="String">
-	DELETE fm, p
-	FROM fac_manage fm
-	INNER JOIN process p ON fm.proc_code = p.proc_code
-	WHERE fm.fac_code = #{facCode}
+		DELETE fm, p
+		FROM fac_manage
+		fm
+		INNER JOIN process p ON fm.proc_code = p.proc_code
+		WHERE fm.fac_code
+		= #{facCode}
 	</delete>
-	
+
 	<insert id="insertFac" parameterType="FacManageVO">
+		<selectKey keyProperty="facCode" resultType="String"
+			order="BEFORE">
+			select
+			'FAC'||LPAD(FAC_CODE_SEQ.NEXTVAL,3,0) FROM DUAL
+		</selectKey>
 		INSERT INTO fac_manage
-		(proc_code, business_code, fac_name, fac_hig,
-		 fac_low, fac_date, fac_inscycle, fac_image, fac_person)
+		(fac_code, proc_code, business_code, fac_name,
+		fac_hig,
+		fac_low, fac_date, fac_inscycle, fac_image, fac_person)
 		VALUES
-		(#{procCode}, #{businessCode}, #{facName}, #{facHig},
-		 #{facLow}, #{facDate}, #{facInscycle}, #{facImage}, #{facPerson})
+		(#{facCode},
+		#{procCode}, #{businessCode}, #{facName}, #{facHig},
+		#{facLow}, #{facDate}, #{facInscycle}, #{facImage}, #{facPerson})
 	</insert>
-		
-	
+
+	<insert id="insertFacNot" parameterType="FacNotopVO">
+		INSERT INTO fac_notop
+		(fac_code, notop_code)
+		VALUES
+		(#{facCode}, 'notop_03')
+	</insert>
+
+	<update id="updateFacNot" parameterType="FacNotopVO">
+		UPDATE fac_notop
+		SET
+		fac_not_sdate = #{facNotSdate},
+		fac_not_ldate = #{facNotLdate},
+		fac_not_situation = #{facNotSituation}
+		WHERE
+		fac_code = #{facCode}
+		AND fac_not_code IN (
+		SELECT fac_not_code
+		FROM not_operator
+		WHERE notop_code = #{notopCode}
+		);
+	</update>
+
+
 </mapper>

@@ -20,15 +20,17 @@ public interface OrdMapper {
 
 	public void saveOrderDetail(OrderDetailVO orderDetailVO);
 
-	public List<OrderVO> getOrderList(OrderVO orderVO);
+	public List<OrderVO> getOrderList(); // 주문서 전체 조회
+
+	public List<OrderDetailVO> getOrderDetailList(OrderDetailVO orderDetailVO); // 주문서 상세 조회
 
 	OrderVO getOrderCode(String businessCode); // 거래처에 대한 제일 최근 주문번호 조회
-
-	public List<OrderDetailVO> getOrderDetailList(OrderDetailVO orderDetailVO);
 
 	public List<BusinessListVO> getBusinessList(); // 거래처 목록 조회
 
 	public List<ProductListVO> getProductList(); // 품목리스트 조회
+	
+	public List<OrderVO> getOrderWithDetails(OrderVO orderVO);
 
 	
 

@@ -8,7 +8,8 @@
 	<select id="getMatOrderList" resultType="MatOrderVO">
 		SELECT mo.mat_or_code,
 		       mo.mat_or_name, 
-		       mo.mat_code, 
+		       mo.mat_code,
+		       b.business_code,
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
@@ -36,9 +37,47 @@
 	
 	<!-- 발주 자재 관리 -->
 	<select id="getOriginMaterialList" resultType="OriginMaterialVO">
-		SELECT mat_code, mat_name, mat_unit, mat_standard, mat_safe_stock
-		FROM material
+		SELECT m.mat_code, 
+			   m.mat_name, 
+			   m.mat_unit, 
+			   m.mat_standard, 
+			   m.mat_safe_stock, 
+			   ml.mat_count,
+               b.business_name,
+               b.business_code
+		FROM material     m 
+		JOIN mat_lot      ml ON m.mat_code = ml.mat_code
+        JOIN mat_output   mo  ON ml.mat_lot_code = mo.mat_lot_code
+        JOIN business 	  b ON mo.business_code = b.business_code
 	</select>
+	
+	<!-- 발주 거래처 관리 -->
+	<select id="getMatBusiness" resultType="OriginMaterialVO">
+		SELECT
+			  m.mat_code,
+			  m.mat_name,
+			  m.mat_unit,
+			  m.mat_standard,
+			  m.mat_safe_stock,
+			  ml.mat_count,
+			  b.business_name,
+			  b.business_code,
+			  COUNT(mo.mat_lot_code) AS transaction_count
+		FROM material    m
+		JOIN mat_lot ml  ON m.mat_code = ml.mat_code
+		JOIN mat_output  mo ON ml.mat_lot_code = mo.mat_lot_code
+		JOIN business b  ON mo.business_code = b.business_code
+		GROUP BY
+			  m.mat_code,
+			  m.mat_name,
+			  m.mat_unit,
+			  m.mat_standard,
+			  m.mat_safe_stock,
+			  ml.mat_count,
+			  b.business_name,
+			  b.business_code
+	</select>
+	
 	
 	<!-- 자재관리  -->
 	<select id="getOriginMaterialList1" resultType="OriginMaterialVO">
@@ -72,6 +111,7 @@
 				material    M ON ML.mat_code=M.mat_code
 	</select>
 	
+	<!-- 입고 관리 -->
 	<select id="getInputList" resultType="MatInputVO">
 		SELECT l.mat_code, 
        		   m.mat_name, 
@@ -87,6 +127,7 @@
 		
 	</select>
 	
+	<!-- 반품 관리 -->
 	<select id="getReturnList" resultType="MatReturnVO">
 		SELECT  MR.mat_re_code,
     			B.business_name,
@@ -104,6 +145,7 @@
 		JOIN mat_lot    ML ON MR.mat_lot_code = ML.mat_lot_code
 		JOIN material   M ON ML.mat_code = M.mat_code
 	</select>
+	
 	<!-- 발주 등록 -->
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
 	INSERT INTO mat_order 

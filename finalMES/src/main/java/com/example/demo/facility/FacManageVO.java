@@ -12,6 +12,10 @@ public class FacManageVO {
 	private String procCode;
 	private String businessCode;
 	private String facName;
+	private String notopCode;
+	private String notopContent;
+	private int facNotSituation;
+	private String facNotCode;
 	private int facHig;
 	private int facLow;
 	@DateTimeFormat(pattern = "yyyy/MM/dd")

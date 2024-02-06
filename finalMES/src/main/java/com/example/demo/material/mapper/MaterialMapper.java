@@ -17,6 +17,8 @@ public interface MaterialMapper {
 	public List<MatOrderVO> getMatOrderList();
 	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode);
 	public List<OriginMaterialVO> getOriginMaterialList();
+	//발주 거래처 관리
+	public List<OriginMaterialVO> getMatBusiness();
 	
 	// 자재 입고
 	public List<MatInputVO> getInputList();
