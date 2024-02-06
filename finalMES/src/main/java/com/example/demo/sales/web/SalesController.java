@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.vo.business.BusinessListVO;
+import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
 
@@ -44,18 +47,28 @@ public class SalesController {
 		// 주문서 등록 로직 수행
 		ordService.saveOrder(order);
 
-		
-
 		// 등록 후에 주문서 목록 페이지로 리다이렉션
-		return "redirect:/orderList"; // "/orderList"로 리다이렉션하도록 설정
+		return "redirect:sales/orderList"; // "/orderList"로 리다이렉션하도록 설정
 	}
-	
+
 	@GetMapping("/orderList")
 	public String getOrderList(Model model) {
 		List<OrderVO> orderList = ordService.getOrderList();
 		model.addAttribute("orderList", orderList);
 		return "sales/orderList";
 	}
-		
+
+	@GetMapping("/orderDetailList/{ordCode}")
+
+	public String getOrderDetailList(@PathVariable String ordCode, Model model) {
+		List<OrderDetailVO> orderDetailList = ordService.getOrderDetailList(ordCode);
+
+		// 이후 필요한 로직 수행
+
+		model.addAttribute("orderDetailList", orderDetailList);
+
+		// 해당 JSP 페이지로 이동 (JSP 페이지의 이름에 맞게 변경)
+		return "sales/orderList";
+	}
 
 }

@@ -58,8 +58,8 @@ public class OrdServiceImpl implements OrdService {
 	}
 
 	@Override
-	public List<OrderDetailVO> getOrderDetailList(OrderDetailVO orderDetailVO) {
-		return ordMapper.getOrderDetailList(orderDetailVO);
+	public List<OrderDetailVO> getOrderDetailList(String ordCode) {
+		return ordMapper.getOrderDetailList(ordCode);
 	}
 
 	@Override

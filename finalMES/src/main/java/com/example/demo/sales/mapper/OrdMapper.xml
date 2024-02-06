@@ -70,19 +70,22 @@
 		ord.ord_manager,
 		SUM(ord_d.ttl_price) AS total_ttl_price
 		FROM
-		ord_list ord
+		ord_list
+		ord
 		LEFT JOIN ord_d_list ord_d ON ord.ord_code = ord_d.ord_code
-		LEFT JOIN business business ON ord.business_code = business.business_code
+		LEFT
+		JOIN business business ON ord.business_code = business.business_code
 		GROUP BY
-		ord.ord_code, ord.ord_state, business.business_name, ord.ord_date, ord.ord_manager
+		ord.ord_code, ord.ord_state, business.business_name,
+		ord.ord_date, ord.ord_manager
 		ORDER BY
-		ord.ord_date DESC, ord.ord_code DESC
+		ord.ord_date DESC, ord.ord_code
+		DESC
 	</select>
 
 	<select id="getOrderDetailList" resultType="OrderDetailVO">
-		SELECT * FROM
-		ord_d_list
-		WHERE ord_d_code = #{ordDCode}
+		SELECT * FROM ord_d_list
+		WHERE ord_code = #{ordCode}
 	</select>
 
 	<select id="getBusinessList" resultType="BusinessListVO"> <!-- 거래처 목록조회 -->
