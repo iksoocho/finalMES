@@ -44,7 +44,10 @@ public class SalesController {
 		// 주문서 등록 로직 수행
 		ordService.saveOrder(order);
 
+		
+
 		// 등록 후에 주문서 목록 페이지로 리다이렉션
 		return "redirect:/orderList"; // "/orderList"로 리다이렉션하도록 설정
 	}
+
 }
