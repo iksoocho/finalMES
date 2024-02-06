@@ -249,13 +249,22 @@ button {
 
 		updateTotalSum();
 
-		var hiddenInput = document.createElement('input');
-		hiddenInput.type = 'hidden';
-		hiddenInput.name = 'prodCode';
-		hiddenInput.id = 'prodCode' + rowCount;
-		cellNumber.appendChild(hiddenInput);
+		
+		
+		// 히든 필드에 prod_code 저장
+	  // 히든 필드에 prod_code 저장
+    var prodCodeHiddenInput = newRow.querySelector('input[name="prodCode"]');
+    if (prodCodeHiddenInput) {
+        prodCodeHiddenInput.value = prodCode;
+    } else {
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'prodCode';
+        hiddenInput.value = prodCode;
+        newRow.appendChild(hiddenInput);
+    }
+    console.log('New Row HTML:', newRow.innerHTML);
 
-		hiddenInput.id = 'prodCode' + rowCount;
 
 		updateTotalCount();
 	}
@@ -272,6 +281,8 @@ button {
 
 	function displaySelectedProduct(element) {
 		var prodCode = element.getAttribute('data-prodCode');
+		console.log('element:', element);
+	    console.log('prodCode:', prodCode);
 		var prodName = element.getAttribute('data-prodName');
 		var prodUnit = element.getAttribute('data-prodUnit');
 		var prodPrice = element.getAttribute('data-prodPrice');
@@ -284,7 +295,7 @@ button {
 		console.log('사용자가 입력한 납기일자:', dlvyDate);
 
 		// 선택한 품목을 테이블에 추가
-		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice);
+		addProductRow(prodName, prodUnit, dlvyDate, 0, prodPrice, prodCode);
 
 		updateTotalCount();
 	}
@@ -364,6 +375,69 @@ button {
 		var totalCountCell = document.querySelector('.ttlCount');
 		totalCountCell.innerText = '총건수: ' + totalCount;
 	}
+	function saveOrder() {
+	    // 주문서 정보를 수집
+	    var orderData = {
+	        ordCode: document.getElementById('ordCode').value,
+	        ordDate: document.getElementById('registrationDate').value,
+	        businessCode: document.getElementById('selectedBusinessCode').value,
+	        ordState: document.getElementById('ordState').value,
+	        ordManager: document.getElementById('ordManager').value,
+	        // 나머지 필드들도 수집
+	        // 주문 상세 리스트 정보 수집
+	        orderDetails: []
+	    };
+
+	   // 테이블의 행을 가져옴
+	    var tbody = document.getElementById('productTableBody');
+	    var rows = tbody.getElementsByTagName('tr');
+
+	    for (var i = 0; i < rows.length; i++) {
+	    	// 각 행의 히든 필드에서 prod_code 읽어오기
+	        var hiddenInput = rows[i].querySelector('input[name="prodCode"]');
+			console.log('hiddenInput:', hiddenInput);
+			var prodCode = hiddenInput ? hiddenInput.value : '';
+			console.log('prodCode:', prodCode);
+	        var dlvyDateInput = rows[i].querySelector('input[name="dlvyDate"]');
+    		var dlvyDate = dlvyDateInput ? dlvyDateInput.value : '';
+	        	console.log(dlvyDate);
+	        var ordCountInput = rows[i].querySelector('input[name="ordCount"]');
+	        var ordCount = ordCountInput ? ordCountInput.value : '';
+	        	console.log(ordCount);
+	        var ttlPriceInput = rows[i].querySelector('input[name="ttlCount"]');
+	        var ttlPrice = ttlPriceInput ? ttlPriceInput.value : '';
+	        	console.log(ttlPrice);
+
+	        // 주문 상세 리스트에 해당 상품 정보 추가 
+	        orderData.orderDetails.push({
+	            prodCode: prodCode,
+	            dlvyDate: dlvyDate,
+	            ordCount: ordCount,
+	            ttlPrice: ttlPrice
+	            // 다른 필요한 필드들 추가
+	        });
+	    }
+
+	    // 서버에 주문서 정보 전송
+	    fetch('/saveOrder', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json',
+	        },
+	        body: JSON.stringify(orderData),
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        // 서버로부터 받은 응답에 대한 처리
+	        console.log('Success:', data);
+	        // TODO: 성공 시 필요한 로직 추가
+	    })
+	    .catch((error) => {
+	        // 오류 처리
+	        console.error('Error:', error);
+	        // TODO: 실패 시 필요한 로직 추가
+	    });
+	}
 </script>
 </head>
 <body>
@@ -373,16 +447,16 @@ button {
 			<div class="containerTwo">
 				<h5>주문서정보</h5>
 				<button class="btn btn-primary">초기화</button>
-				<button class="btn btn-primary">등록</button>
+				<button class="btn btn-primary" onclick="saveOrder()">등록</button>
 				<table class="orderInfoOne">
 					<tr>
 						<th>주문서번호</th>
-						<td><input type="text" id="ordCode" name="ordCode" readonly></td>
+						<td><input type="text" id="ordCode" name="ordCode"></td>
 						<th>등록일</th>
 						<td><input type="date" id="registrationDate" name="ordDate"
 							readonly></td>
 						<th>주문서상태</th>
-						<td><select name="ordState">
+						<td><select id="ordState" name="ordState">
 								<option value="0" selected>등록전
 								<option value="1" disabled>등록완료
 								<option value="2" disabled>진행중
@@ -392,7 +466,7 @@ button {
 					<tr>
 						<th class="red">담당자</th>
 						<td class="serch"><input type="text" readonly> <input
-							type="text" name="ordManager">
+							type="text" id="ordManager" name="ordManager">
 
 							<button type="button" class="btn btn-primary">
 								<p>검색</p>
