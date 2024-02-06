@@ -88,21 +88,22 @@ button {
 						<td colspan="2"><input type="text" id="facPerson"
 							name="facPerson" required data-toggle="modal"
 							data-target="#myModal3"></td>
-						<th>점검주기 선택</th>
-						<td><select id="facInscycle" name="facInscycle">
-								<option value="select">선택</option>
-								<option value="daily">매일</option>
-								<option value="weekly">매주</option>
-								<option value="monthly">매월(30일)</option>
-						</select></td>
-					</tr>
-					<tr>
 						<th>입고일</th>
 						<td colspan="2"><input type="date" id="facDate"
 							name="facDate" required></td>
+						
+					</tr>
+					<tr>
+						<th>점검주기 선택</th>
+						<td><select id="facInscycle" name="facInscycle">
+								<option value="선택">선택</option>
+								<option value="매일">매일</option>
+								<option value="매주">매주</option>
+								<option value="매월">매월(30일)</option>
+						</select></td>
 
-						<th>이미지</th>
-						<td colspan="2"><input type="file" name="facImage"></td>
+						<!-- <th>이미지</th>
+						<td colspan="2"><input type="file" name="facImage"></td> -->
 					</tr>
 				</tbody>
 				
@@ -312,7 +313,7 @@ button {
 	}
 
 	document.getElementById('saveBtn').addEventListener("click", function() {
-	    	
+	      let data = {};	
 		  var procCode = document.getElementsByName("procCode")[0].value;
 		  var businessCode = document.getElementsByName("businessCode")[0].value;
 		  var facName = document.getElementsByName("facName")[0].value;
@@ -320,7 +321,7 @@ button {
 		  var facLow = document.getElementsByName("facLow")[0].value;
 		  var facDate = document.getElementsByName("facDate")[0].value;
 		  var facInscycle = document.getElementsByName("facInscycle")[0].value;
-		  var facImage = document.getElementsByName("facImage")[0].value;
+		  /* var facImage = document.getElementsByName("facImage")[0].value; */
 		  var facPerson = document.getElementsByName("facPerson")[0].value;
 		  
 		    // 등록 시 유효성검사
@@ -351,7 +352,7 @@ button {
 
 		    
 	    
-	            var data = {
+	            var facData = {
 	            	procCode: procCode,
 	            	businessCode: businessCode,
 	                facName: facName,
@@ -359,13 +360,17 @@ button {
 	                facLow: facLow,
 	                facDate: facDate,
 	                facInscycle: facInscycle,
-	                facImage: facImage,
+	                /* facImage: facImage, */
 	                facPerson: facPerson
 	                
 	            
 	            };
+	            var notData = {};
+	            data.facManageVO = facData;
+	            data.facNotopVO = notData;
 	            
-	            fetch("/facManagement", {
+	            
+	            fetch("/insrtFacAndNot", {
 			        method: "POST",
 			        body: JSON.stringify(data),
 			        headers: {
@@ -373,13 +378,14 @@ button {
 			        }
 			    })
 			    .then(response => {
-			        if (response.ok) {
-			            console.log(response);
-			            alert("정상처리");
-			        } else {
-			            console.log(response);
-			            alert("실패");
+			        if(!response.ok){
+			        	throw new Error("반응 없음")
 			        }
+			        return response.text();
+			    })
+			    .then(data => {
+			    	alert(data);
+			    	location.href = "/facManagement"
 			    })
 			    .catch(error => {
 			        console.log(error);
@@ -389,9 +395,10 @@ button {
 	
 	
 	// 그리드 페이징
-	let facList = [[${list}]]
+	let facList = [[${list}]];
+	console.log(facList);
 	const grid = new tui.Grid({
-		
+		 
 		el : document.getElementById('grid'),
 		data : facList,
 		scrollX : false,
@@ -399,15 +406,19 @@ button {
 		columns : [ 
 		{
 			header : '설비코드',
-			name : 'facCode'
+			name : 'facCode',
+			align: 'center'
+			
 		}, 
 		{
 			header : '설비명',
-			name : 'facName'
+			name : 'facName',
+			align: 'center'
 		}, 
 		{
 			header : '담당자',
-			name : 'facPerson'
+			name : 'facPerson',
+			align: 'center'
 		}, 
 		{
 			header : '입고일',
@@ -416,11 +427,14 @@ button {
   		    	  const date = new Date(params.value);
   		    	  const isoDate = date.toISOString().split('T')[0];
   		    	  return isoDate;
-  		    	}
+  		    	},
+  		    align: 'center'
+			
 		},
 		{
 			header : '점검주기',
-			name : 'facInscycle'
+			name : 'facInscycle',
+			align: 'center'
 		} 
 		],
 		 rowHeaders: ['rowNum'],
