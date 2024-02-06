@@ -53,8 +53,8 @@ public class OrdServiceImpl implements OrdService {
 	}
 
 	@Override
-	public List<OrderVO> getOrderList(OrderVO orderVO) {
-		return ordMapper.getOrderList(orderVO);
+	public List<OrderVO> getOrderList() {
+		return ordMapper.getOrderList();
 	}
 
 	@Override
@@ -92,5 +92,11 @@ public class OrdServiceImpl implements OrdService {
 				saveOrderDetail(orderDetail);
 			}
 		}
+	}
+
+	@Override
+	public List<OrderVO> getOrderWithDetails(OrderVO orderVO) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

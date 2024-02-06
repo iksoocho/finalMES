@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.produce.FacCateVO;
+import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
 import com.example.demo.produce.WorkLoadVO;
@@ -53,10 +55,14 @@ public class ProdInsController {
 	public String workRegist(@RequestParam String dInsCode, @RequestParam String prodCode, Model model) {
 		ProdInsDetailVO vo = prodInsService.getCheckDetailList(dInsCode);
 		List<WorkLoadVO> load = prodInsService.getWorkPageLoadData(prodCode);
+		List<ProcessVO> proc = prodInsService.getProcData();
+		List<FacCateVO> fac = prodInsService.getFacSelect("proc01");
 		System.out.println(vo);
 		System.out.println(load);
 		model.addAttribute("vo", vo);
 		model.addAttribute("load", load);
+		model.addAttribute("proc", proc);
+		model.addAttribute("fac", fac);
 		
 		return "produce/workRegist";
 	}

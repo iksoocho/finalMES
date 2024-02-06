@@ -89,6 +89,12 @@ public class MaterialServiceImpl implements MaterialService {
 		// TODO Auto-generated method stub
 		return materialMapper.getReturnList();
 	}
+
+	@Override
+	public List<OriginMaterialVO> getMatBusiness() {
+		// TODO Auto-generated method stub
+		return materialMapper.getMatBusiness();
+	}
 	
 	
 	
