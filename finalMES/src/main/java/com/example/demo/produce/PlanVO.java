@@ -6,6 +6,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
+
+
+
+
+
+
 @Data
 public class PlanVO {
 	private String planCode;
@@ -17,6 +23,5 @@ public class PlanVO {
 	private Date planDate;
 	private String planNote;
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date dlvyDate;
+	
 }

@@ -166,7 +166,7 @@
 
 
 		<script th:inline="javascript">
-    	let plan = [[${list}]]
+    	let plan = [[${list}]];
     	let planGrid, planDGrid;
     	class NumberEditor {
       	  constructor(props) {
@@ -562,19 +562,30 @@
 					
 				} */
 				
-				var rows = document.querySelectorAll('#planDGrid tbody tr');
+				var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
 				let planDetailData  = [];
-				// 인덱스 4부터 시작하여 끝까지 반복합니다.
-				for (var i = 4; i < rows.length; i++) {
+				
+				for (var i = 4; i < newPlanDetailRows.length; i++) {
 				    // 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 				    let obj = {};
-				    obj.prodCode = rows[i].querySelector('td[data-column-name="prodCode"] div').innerHTML;
-				    obj.dplanStartDate = rows[i].querySelector('td[data-column-name="start"] div').innerHTML;
-				    obj.dplanEndDate = rows[i].querySelector('td[data-column-name="end"] div').innerHTML;
-				    obj.dplanCount = rows[i].querySelector('td[data-column-name="planCount"] div').innerHTML;
+				    let target = $(newPlanDetailRows[i]);
+				   
+				    obj.prodCode = target.find('td:eq(1)').text();
+				    console.log("prodCode : "+obj.prodCode);
+				    
+ 					obj.dplanStartDate = target.find('td:eq(2)').text();	
+ 					console.log("dplanStartDate : "+obj.dplanStartDate);			   
+ 					obj.dplanEndDate = target.find('td:eq(3)').text();
+				    obj.dplanCount = target.find('td:eq(6)').text();
+				    
+				     //obj.prodCode = rows[i].querySelector('td[data-column-name="prodCode"] div').innerHTML;
+					//obj.dplanStartDate = rows[i].querySelector('td[data-column-name="start"] div').innerHTML;
+					//obj.dplanEndDate = rows[i].querySelector('td[data-column-name="end"] div').innerHTML;
+					//obj.dplanCount = rows[i].querySelector('td[data-column-name="planCount"] div').innerHTML;
 				    
 				    planDetailData.push(obj);
+						
 				}
 
 		        data.planVO = planobj;
@@ -614,19 +625,24 @@
 		    document.querySelector('#planDUpdate').addEventListener('click', function() {
 		    	let data = {};
 		    	
-		    	
-		    	var planDetailRows = document.querySelectorAll('#planDetailTable tbody tr');
-		    	console.log("planDetailRows : ",planDetailRows);
+		    	var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
+
 		    	let planDetailData  = [];
-					for(let i=0; i<planDetailRows.length; i++){
-						let obj = {};
-						let target = $(planDetailRows[i]);
-					    obj.dplanCode = target.find('td:eq(0)').text();
-					    obj.dplanStartDate = target.find("input[name='startDate']").val();
-				   		obj.dplanEndDate = target.find("input[name='endDate']").val();
-				   		obj.dplanCount = target.find("input[name='planCount']").val();
-						
-				   		planDetailData.push(obj);
+				// 인덱스 4부터 시작하여 끝까지 반복합니다.
+				for (var i = 4; i < newPlanDetailRows.length; i++) {
+				    // 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
+				    let obj = {};
+				    let target = $(newPlanDetailRows[i]);
+				    obj.dplanCode = target.find('td:eq(0)').text();
+				    obj.prodCode = target.find('td:eq(1)').text();
+				    console.log("prodCode : "+obj.prodCode);
+				    
+ 					obj.dplanStartDate = target.find('td:eq(2)').text();	
+ 					console.log("dplanStartDate : "+obj.dplanStartDate);			   
+ 					obj.dplanEndDate = target.find('td:eq(3)').text();
+				    obj.dplanCount = target.find('td:eq(6)').text();
+				    
+				    planDetailData.push(obj);
 						
 				}
 				 data.planDVOList = planDetailData;	

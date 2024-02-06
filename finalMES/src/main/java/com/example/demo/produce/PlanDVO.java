@@ -25,7 +25,7 @@ public class PlanDVO {
 	
 	private int prodCount;
 	
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dplanStartDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dplanEndDate;
