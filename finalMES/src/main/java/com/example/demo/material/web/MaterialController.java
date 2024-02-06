@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.material.MatInputVO;
 import com.example.demo.material.MatOrderInfoVO;
@@ -34,10 +36,18 @@ public class MaterialController {
 			}
 		List<MatOrderInfoVO> mList = materialService.getMaterialOrdInfoList(code);
 		List<OriginMaterialVO> oList = materialService.getOriginMaterialList();
+		List<OriginMaterialVO> buisList = materialService.getMatBusiness();
 		model.addAttribute("list", list);
 		model.addAttribute("mList", mList);
 		model.addAttribute("oList", oList);
+		model.addAttribute("buisList", buisList);
 		return "material/matOrder";
+	}
+	
+	@GetMapping("matDetail")
+	@ResponseBody
+	public List<MatOrderInfoVO> getMaterialOrdInfoList(@RequestParam String matordCode){
+		return materialService.getMaterialOrdInfoList(matordCode);
 	}
 	
 	
