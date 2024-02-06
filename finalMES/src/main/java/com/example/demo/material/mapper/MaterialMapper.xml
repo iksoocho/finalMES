@@ -72,6 +72,7 @@
 				material    M ON ML.mat_code=M.mat_code
 	</select>
 	
+	<!-- 입고 관리 -->
 	<select id="getInputList" resultType="MatInputVO">
 		SELECT l.mat_code, 
        		   m.mat_name, 
@@ -87,6 +88,7 @@
 		
 	</select>
 	
+	<!-- 반품 관리 -->
 	<select id="getReturnList" resultType="MatReturnVO">
 		SELECT  MR.mat_re_code,
     			B.business_name,
@@ -104,6 +106,7 @@
 		JOIN mat_lot    ML ON MR.mat_lot_code = ML.mat_lot_code
 		JOIN material   M ON ML.mat_code = M.mat_code
 	</select>
+	
 	<!-- 발주 등록 -->
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
 	INSERT INTO mat_order 
