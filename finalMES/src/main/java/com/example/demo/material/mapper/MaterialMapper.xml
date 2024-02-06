@@ -5,7 +5,7 @@
 <mapper
 	namespace="com.example.demo.material.mapper.MaterialMapper">
 	<!-- 발주 -->
-	<select id="getMatOrderList" resultType="MatOrderVO">
+	<select id="getMaterialOrderList" resultType="MatOrderVO">
 		SELECT mo.mat_or_code,
 		       mo.mat_or_name, 
 		       mo.mat_code,
