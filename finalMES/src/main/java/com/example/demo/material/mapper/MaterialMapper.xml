@@ -25,11 +25,13 @@
 		SELECT mo.mat_or_code,
 		       mo.mat_or_name, 
 		       mo.mat_code, 
+		       b.business_code,
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
 		       moi.mat_or_due_date,
-		       mo.mat_or_manager
+		       mo.mat_or_manager,
+		       mo.mat_or_state
 		 FROM  mat_order      mo
 		 JOIN  business       b     ON mo.business_code = b.business_code
 		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
@@ -37,18 +39,19 @@
 	
 	<!-- 발주 자재 관리 -->
 	<select id="getOriginMaterialList" resultType="OriginMaterialVO">
-		SELECT m.mat_code, 
-			   m.mat_name, 
-			   m.mat_unit, 
-			   m.mat_standard, 
-			   m.mat_safe_stock, 
-			   ml.mat_count,
-               b.business_name,
-               b.business_code
-		FROM material     m 
-		JOIN mat_lot      ml ON m.mat_code = ml.mat_code
-        JOIN mat_output   mo  ON ml.mat_lot_code = mo.mat_lot_code
-        JOIN business 	  b ON mo.business_code = b.business_code
+		SELECT  m.mat_code,
+		        m.mat_name,
+		        m.mat_unit,
+		        m.mat_standard,
+		        m.mat_safe_stock,
+		        m.mat_start_date,
+		        ml.mat_count,
+		        b.business_code,
+		        b.business_name
+		FROM material   m
+		JOIN mat_lot    ml ON m.mat_code = ml.mat_code
+		JOIN mat_return mr ON ml.mat_lot_code = mr.mat_lot_code
+		JOIN business   b  ON mr.business_code = b.business_code
 	</select>
 	
 	<!-- 발주 거래처 관리 -->
@@ -62,11 +65,11 @@
 			  ml.mat_count,
 			  b.business_name,
 			  b.business_code,
-			  COUNT(mo.mat_lot_code) AS transaction_count
+			  COUNT(mr.mat_lot_code) AS deal
 		FROM material    m
 		JOIN mat_lot ml  ON m.mat_code = ml.mat_code
-		JOIN mat_output  mo ON ml.mat_lot_code = mo.mat_lot_code
-		JOIN business b  ON mo.business_code = b.business_code
+		JOIN mat_return  mr ON ml.mat_lot_code = mr.mat_lot_code
+		JOIN business b  ON mr.business_code = b.business_code
 		GROUP BY
 			  m.mat_code,
 			  m.mat_name,
