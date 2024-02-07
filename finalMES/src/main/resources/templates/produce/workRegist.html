@@ -192,12 +192,13 @@ tr:has(input[name="facSelect"]:checked) {
 					<div class="col-6">
 						<div class="row">
 							<div class="col d-grid gap-2">
-								<button class="btn btn-secondary text-center fw-bolder fs-5" type="button" id="workSave">작업등록</button>
+								<button class="btn btn-secondary text-center fw-bolder fs-5" type="button" id="workSave"
+								onclick = "workSave()">작업등록</button>
 							</div>
 							<div class="col d-grid gap-2">
 								<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workCancel">등록취소</button>
 							</div>
-							
+							<input type="hidden" id="hiddenProcCode" value="proc01"/>
 						</div>
 					</div>
 					
@@ -220,22 +221,24 @@ tr:has(input[name="facSelect"]:checked) {
 	    	
 	    	// 작업시작 버튼 클릭 시
 	    	document.querySelector('button[id="workStart"]').addEventListener("click", function() {
-	    	  var currentTime = new Date();
-	    	  var hours = currentTime.getHours();
-	    	  var minutes = currentTime.getMinutes();
-	    	  
+	    	  let currentTime = new Date();
+	    	  let hours = currentTime.getHours();
+	    	  let minutes = currentTime.getMinutes();
+	    	  let startTime = document.querySelector('input[id="workStart"]');
 	    	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
-	    	  document.querySelector('input[id="workStart"]').value = formatTime(hours, minutes);
+	    	  startTime.value = formatTime(hours, minutes);
+	    	  startTime.name = formatFullTime(currentTime);
 	    	});
 
 	    	// 작업종료 버튼 클릭 시
 	    	document.querySelector('button[id="workEnd"]').addEventListener("click", function() {
-	    	  var currentTime = new Date();
-	    	  var hours = currentTime.getHours();
-	    	  var minutes = currentTime.getMinutes();
-	    	  
+	    	  let currentTime = new Date();
+	    	  let hours = currentTime.getHours();
+	    	  let minutes = currentTime.getMinutes();
+	    	  let endTime = document.querySelector('input[id="workEnd"]');
 	    	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
-	    	  document.querySelector('input[id="workEnd"]').value = formatTime(hours, minutes);
+	    	  endTime.value = formatTime(hours, minutes);
+	    	  endTime.name = formatFullTime(currentTime);
 	    	});
 
 	    	// 시간을 HH:MM 형식으로 변환하는 함수
@@ -243,6 +246,21 @@ tr:has(input[name="facSelect"]:checked) {
 	    	  hours = padZero(hours);
 	    	  minutes = padZero(minutes);
 	    	  return hours + ":" + minutes;
+	    	}
+	    	
+	    	// 시간을 yy/MM/dd HH:MM 형식으로 변환하는 함수
+	    	function formatFullTime(currentTime){
+	    		let year = currentTime.getFullYear();
+	    		let month = currentTime.getMonth() + 1;
+	    		let day = currentTime.getDate();
+	    		let hours = currentTime.getHours();
+	    		let minutes = currentTime.getMinutes();
+
+	    		let formattedTime = `${year.toString().slice(-2)}/${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+	    		console.log(formattedTime);
+	    		return formattedTime;
+
 	    	}
 
 	    	// 한 자리 숫자의 경우 앞에 0을 붙이는 함수
@@ -270,6 +288,7 @@ tr:has(input[name="facSelect"]:checked) {
 	    		}
 	    		
 	    		document.getElementById('selectedFacCode').value = selectFac.id;
+	    		document.getElementById('selectedFacCode').name = selectFac.name;
 	    		
 	    		let facSelectModal = document.getElementById('facSelect');
                 let modal = bootstrap.Modal.getInstance(facSelectModal);
@@ -282,6 +301,7 @@ tr:has(input[name="facSelect"]:checked) {
 	          row.addEventListener("click", function () {
 	            const procCode = this.getAttribute("data-proc-code");
 	            console.log("procCode : ", procCode);
+	            document.querySelector('input[id="hiddenProcCode"]').value = procCode;
 	            fetch("facList?procCode=" + procCode)
 	              .then((response) => response.json())
 	              .then((data) => {
@@ -301,6 +321,7 @@ tr:has(input[name="facSelect"]:checked) {
 				                			type="radio"
 				                			name="facSelect"
 				                			id="${fac.facCode}"
+				                			
 				                		/>
 				                	</div>
 								</td>
@@ -313,6 +334,59 @@ tr:has(input[name="facSelect"]:checked) {
 	              });
 	          });
 	        });
+			
+			function workSave(){
+				let dinscode = '[[${vo.dInsCode}]]';
+				let proccode = document.querySelector('input[id="hiddenProcCode"]').value;
+				let proginscount = [[${vo.dInsCount}]];
+				let progbadcount = document.querySelector('input[id="badCount"]').value;
+				let progpasscount = document.querySelector('input[id="workCount"]').value;
+				let starttime = document.querySelector('input[id="workStart"]').name;
+				let endtime = document.querySelector('input[id="workEnd"]').name;
+				console.log("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode);
+				fetch("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode)
+				.then((response) => response.json())
+				.then((data) => {
+					console.log('조회결과 : ', data);
+				});
+				
+				let data={
+						dinsCode : dinscode,
+						procCode : proccode,
+						progInsCount : proginscount,
+						progBadCount : progbadcount,
+						progPassCount : progpasscount,
+						startTime : starttime,
+						endTime : endtime
+				};
+
+				console.log('data : ', data);
+				
+				fetch('/workMidInsert', {
+					method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		            },
+		            body: JSON.stringify(data)
+				})
+				.then(response => {
+					if (!response.ok) {
+		                throw new Error('Network response was not ok');
+		            }
+		            return response.text();
+				})
+				.then(data => {
+					console.log('Success:', data);
+		            alert(data);
+				})
+				.catch(error => {
+		            console.error('Error:', error);
+		        });
+			
+			}
+			
+				
+		
     	
 			
 	    	
