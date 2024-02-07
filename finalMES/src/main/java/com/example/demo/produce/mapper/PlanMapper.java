@@ -22,6 +22,13 @@ public interface PlanMapper {
 	
 	public int updatePlanInfo(PlanDVO planDVO);
 	
+	
+	//주문서 상태 수정
+	public void updateOrderStateZero(String ordCode);
+	public void updateOrderStateOne(String ordCode);
+	
+	public void deltePlanInfo(String planCode);
+	
 
 	
 

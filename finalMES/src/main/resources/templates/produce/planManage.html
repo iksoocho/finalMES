@@ -18,7 +18,7 @@
     background-color: #e0f7fa; /* 예시로 빨간색을 지정했습니다. */
 }
 </style>
-</head>
+</head>.0
 <body>
 	<section layout:fragment="content">
 		<div class="container">
@@ -191,6 +191,63 @@
       	    this.el.select();
       	  }
       	};
+      	
+      	class DeleteButtonRenderer {
+      	    constructor(props) {
+      	        const el = document.createElement('button');
+      	        el.textContent = '삭제';
+      	        el.addEventListener('click', () => {
+      	            
+      	            const rowData = props.grid.getRow(props.rowKey);
+				    const planCode = rowData.planCode;
+				    const ordCode = rowData.ordCode;
+				    console.log("planCode : " + planCode)
+      	            console.log("ordCode : " + ordCode)
+      	            let data = {};
+				    let planObj = {};
+				    let ordObj = {};
+				    
+				    planObj.planCode = planCode;
+				    ordObj.ordCode = ordCode;
+				    
+				    data.planVO = planObj;
+				    data.planOrdVO = ordObj;
+      	            
+      	            console.log("data : " + data);
+      	            
+      	          fetch('/planDelete', {
+  		            method: 'DELETE',
+  		            headers: {
+  		                'Content-Type': 'application/json',
+  		                
+  		            },
+  		            body: JSON.stringify(data)
+	  		        })
+	  		        .then(response => {
+	  		            if (!response.ok) {
+	  		                throw new Error('Network response was not ok');
+	  		            }
+	  		            return response.text();
+	  		        })
+	  		        .then(data => {
+	  		            console.log('Success:', data);
+	  		            alert(data);
+	  		            location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+	  		        })
+	  		        .catch(error => {
+	  		            console.error('Error:', error);
+	  		        });
+  		        
+      	        });
+
+      	        this.el = el;
+      	    }
+
+      	    getElement() {
+      	        return this.el;
+      	    }
+      	}
+      	
     	document.addEventListener('DOMContentLoaded', function() {
     	    	planGrid = new tui.Grid({
     	        el: document.getElementById('planGrid'),
@@ -198,7 +255,7 @@
     	        // 그리드 컬럼 설정
     	        columns: [
     	            
-    	            { header: '생산계획코드', name: 'planCode' , className: 'plan-code'},
+    	            { header: '생산계획코드', name: 'planCode' , className: 'plan-code' ,align: "center",},
     	            { header: '주문코드', name: 'ordCode' },
     	            {
     	                header: '계획명', 
@@ -220,8 +277,17 @@
     	                    }
     	                    return '';
     	                }
+    	            },
+    	            {
+    	                header: '삭제',
+    	                name: 'deleteButton',
+    	                align: "center",
+    	                renderer: {
+    	                    type: DeleteButtonRenderer
+    	                }
     	            }
     	        ],
+    	        
     	        rowHeaders: ['rowNum'],
                 pageOptions: {
                     useClient: true,
@@ -301,9 +367,9 @@
 				            }
 				          }			
 				    },
-				    { name: 'prodCount', header: '현재 재고' },
-				    { name: 'ordCount', header: '주문 수량' },
-				    { name: 'dplanCount', header: '계획량' ,
+				    { name: 'prodCount', header: '현재 재고' ,align: "center",},
+				    { name: 'ordCount', header: '주문 수량' ,align: "center",},
+				    { name: 'dplanCount', header: '계획량' ,align: "center",
 				    	editor: {
 				    	    type: NumberEditor,
 				    	    options: {
@@ -327,7 +393,7 @@
 				    // 데이터에 따라 다른 컬럼 추가
 				  ],
 				  // 여기에 다른 그리드 옵션을 추가할 수 있습니다
-				  rowHeaders: ['checkbox'],
+				  rowHeaders: [],
 	            pageOptions: {
 	                useClient: true,
 	                perPage: 5
@@ -403,12 +469,7 @@
 				
 				        planDGrid.appendRow(detailRowData);
 				    });
-				    
-				    
-				    
-						
-					  
-					   
+
 				    // 모달 닫기
 				    var exampleModal = document.getElementById('exampleModal');
 				    var modal = bootstrap.Modal.getInstance(exampleModal);
@@ -418,11 +479,7 @@
 				});
 				
 			   
-    	</script>
-
-
-
-		<script>
+    	
 			let tempOrderDetails = [];
 			 // 초기에 모달 창을 만들 때 테이블 헤더를 미리 추가합니다.
 		    const detailsContainer = document.getElementById('orderDetails');
@@ -528,39 +585,24 @@
 		    
 		    //==========================insert===========================================================
 		    document.querySelector('#planInsert').addEventListener('click', function() {
+		    	const newPlan = document.querySelectorAll('.plan');
+		    	if(newPlan.length === 0){
+		    		alert("저장 할 내용이 없습니다.")
+		    		return;
+		    	}
+		    	
 		        let data = {};
 		    	let planobj = {};
+		    	let ordState = {};
 		    	// 'new-row' 클래스를 가진 행들만 선택
-		        var newPlanRows = document.querySelector('#planTable .new-row');
-
-		                
-		        /* planobj.ordCode = newPlanRows.querySelector('td:nth-child(3)').innerText,
-		        planobj.planTitle= newPlanRows.querySelector('td:nth-child(4) input').value, // input 요소의 value 속성 사용
-		        planobj.planPerson= newPlanRows.querySelector('td:nth-child(5)').innerText,
-		        planobj.planDate =  newPlanRows.querySelector('td:nth-child(6) input').value // input 요소의 value 속성 사용 */
 		        
+   
 		        planobj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
 		        planobj.planTitle = document.querySelector('td[data-column-name="planTitle"] div').innerHTML;
 		        planobj.planPerson = document.querySelector('td[data-column-name="planPerson"] div').innerHTML;
 		        planobj.planDate =  document.querySelector('td[data-column-name="planDate"] div').innerHTML;
 		        	
-		        /* var newPlanDetailRows = document.querySelectorAll('#planDetailTable .plan-detail-row');
-				console.log("planDetailTable : ", planDetailTable);
-		        console.log("Total rows found:", newPlanDetailRows.length); // 찾은 행의 수를 로깅
-				console.log("newPlanDetailRows : ",newPlanDetailRows);
-				
-		        let planDetailData  = [];
-				for(let i=0; i<newPlanDetailRows.length; i++){
-					let obj = {};
-					let target = $(newPlanDetailRows[i]);
-				    obj.prodCode = target.find('td:eq(1)').text();
-				    obj.dplanStartDate = target.find("input[name='startDate']").val();
-				    obj.dplanEndDate = target.find("input[name='endDate']").val();
-				    obj.dplanCount = target.find("input[name='planCount']").val();
-					
-					planDetailData.push(obj);
-					
-				} */
+		        ordState.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
 				
 				var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
@@ -578,18 +620,15 @@
  					console.log("dplanStartDate : "+obj.dplanStartDate);			   
  					obj.dplanEndDate = target.find('td:eq(3)').text();
 				    obj.dplanCount = target.find('td:eq(6)').text();
-				    
-				     //obj.prodCode = rows[i].querySelector('td[data-column-name="prodCode"] div').innerHTML;
-					//obj.dplanStartDate = rows[i].querySelector('td[data-column-name="start"] div').innerHTML;
-					//obj.dplanEndDate = rows[i].querySelector('td[data-column-name="end"] div').innerHTML;
-					//obj.dplanCount = rows[i].querySelector('td[data-column-name="planCount"] div').innerHTML;
-				    
+				  
 				    planDetailData.push(obj);
 						
 				}
 
 		        data.planVO = planobj;
 		        data.planDVOList = planDetailData;
+		        data.planOrdVO = ordState;
+		        
 		        
 		        console.log(data);
 		        // AJAX 요청으로 서버에 데이터 전송
@@ -623,6 +662,12 @@
 		    
 		    //plan detail update
 		    document.querySelector('#planDUpdate').addEventListener('click', function() {
+		    	 const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
+		    	if(newDetail === null){
+		    		alert("저장 할 내용이 없습니다.")
+		    		return;
+		    	} 
+		    	
 		    	let data = {};
 		    	
 		    	var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');

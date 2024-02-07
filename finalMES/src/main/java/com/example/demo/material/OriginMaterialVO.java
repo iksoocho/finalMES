@@ -17,7 +17,8 @@ public class OriginMaterialVO {
 	
 	private String businessCode;
 	private String businessName;
-	private int transactionCount;
+	private int deal;
+	
 	// LOT 테이블 꺼 
 	private String matCount;
 }

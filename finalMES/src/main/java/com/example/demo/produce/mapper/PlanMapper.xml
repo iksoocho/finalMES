@@ -57,7 +57,7 @@
 	<select id="selectOrdList" resultType="PlanOrdVO">
 		SELECT *
 		FROM ord_list
-		  
+		where ord_state = 1  
 	</select>
 	
 	<!-- order detail list -->
@@ -92,6 +92,23 @@
 		WHERE D_PLAN_CODE = #{dplanCode}
 	
 	</update>
+	
+	<update id="updateOrderStateZero" parameterType="String">
+		UPDATE ORD_LIST
+		SET ORD_STATE = 2
+		WHERE ORD_CODE = #{ordCode}
+	</update>
+	
+	<update id="updateOrderStateOne" parameterType="String">
+		UPDATE ORD_LIST
+		SET ORD_STATE = 1
+		WHERE ORD_CODE = #{ordCode}
+	</update>
+	
+	<delete id="deltePlanInfo" parameterType="String">
+		DELETE FROM prod_plan
+		WHERE plan_code = #{planCode}
+	</delete>
 	
 
 	

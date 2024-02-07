@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <title>Spring Security Example</title>
-    </head>
-    <body>
-        <h1>Welcome!</h1>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+</head>
 
-        <p>Click <a th:href="@{/empList}">here</a> to see a greeting.</p>
-    </body>
+<body>
+	<section layout:fragment="content">
+		<h1>Welcome!</h1>
+		<h2>첫페이지 입니다.</h2>
+
+	</section>
+</body>
+
 </html>
