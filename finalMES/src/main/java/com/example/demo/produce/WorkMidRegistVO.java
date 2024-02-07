@@ -12,4 +12,6 @@ public class WorkMidRegistVO {
 	private Integer progBadCount;
 	private Integer progPassCount;
 	private int progState;
+	private String startTime;
+	private String endTime;
 }	

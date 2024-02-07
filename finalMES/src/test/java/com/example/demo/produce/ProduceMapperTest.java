@@ -24,23 +24,37 @@ public class ProduceMapperTest {
 	@Autowired
 	WorkMapper workMapper;
 	
-	//공정, 설비목록 조회 테스트
+	//등록 테스트
 	@Test
-	public void facList() {
+	public void check() {
+		String dinsCode = "DINS001";
+		String procCode = "proc02";
 		
-		List<ProcessVO> proc = workMapper.getProcData();
-		String code = "proc01";
-	    
-		List<FacCateVO> list = workMapper.getFacSelect(code);
-		System.out.println("================================");
-		System.out.println(proc);
-		System.out.println("================================");
-		System.out.println(list);
-		System.out.println("================================");
+		List<WorkMidRegistVO> vo = workMapper.checkWorkMidRegist(dinsCode, procCode);
+		System.out.println(vo);
 		
 		
-		assertThat(list.isEmpty()).isEqualTo(false);
+		
 	}
+	
+	
+//	//공정, 설비목록 조회 테스트
+//	@Test
+//	public void facList() {
+//		
+//		List<ProcessVO> proc = workMapper.getProcData();
+//		String code = "proc01";
+//	    
+//		List<FacCateVO> list = workMapper.getFacSelect(code);
+//		System.out.println("================================");
+//		System.out.println(proc);
+//		System.out.println("================================");
+//		System.out.println(list);
+//		System.out.println("================================");
+//		
+//		
+//		assertThat(list.isEmpty()).isEqualTo(false);
+//	}
 	
 	//생산계획 + 상세계획 여러건 입력 테스트
 //	@Test

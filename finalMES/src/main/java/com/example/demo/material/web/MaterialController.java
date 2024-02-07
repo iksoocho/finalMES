@@ -40,14 +40,17 @@ public class MaterialController {
 		model.addAttribute("list", list);
 		model.addAttribute("mList", mList);
 		model.addAttribute("oList", oList);
+		System.out.println("oList"+oList);
 		model.addAttribute("buisList", buisList);
 		return "material/matOrder";
 	}
 	
+	
+	// 발주 디테일
 	@GetMapping("matDetail")
 	@ResponseBody
-	public List<MatOrderInfoVO> getMaterialOrdInfoList(@RequestParam String matordCode){
-		return materialService.getMaterialOrdInfoList(matordCode);
+	public List<MatOrderInfoVO> getMaterialOrdInfoList(@RequestParam String matCode){
+		return materialService.getMaterialOrdInfoList(matCode);
 	}
 	
 	

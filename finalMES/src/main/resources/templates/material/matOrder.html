@@ -22,8 +22,29 @@ button {
 </head>
 <body>
 	<section layout:fragment="content">
+
+
 		<div class="container">
-			<h3>발주 관리</h3>
+			<!--  ================== 그리드 ================  -->
+			<div class="row">
+				<div class="col-8">
+					<div id="matGrid" class="container">
+						<h2>현재 자재 재고</h2>
+					</div>
+				</div>
+
+				<div class="col-4">
+					<div id="busiGrid" class="container">
+						<h2>거래처 목록</h2>
+					</div>
+
+				</div>
+			</div>
+			
+			
+			
+			
+		
 			<!-- ============================모달창============================ -->
 			<div class="modal fade modal-xl" id="exampleModal" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -83,7 +104,7 @@ button {
 			<button type="button" class="btn btn-primary">저장</button>
 			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 				data-bs-target="#exampleModal">조회</button>
-			<div id="orderGrid"></div>
+			
 
 
 
@@ -92,256 +113,117 @@ button {
 		<!-- 		<button class="btn btn-primary">등록</button> -->
 
 		<!--  ============	모달창 ============-->
-		<div class="modal fade modal-xl" id="staticBackdrop"
-			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">발주 등록</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<!-- 	모달 내용 -->
-						<table>
-							<thead>
-								<tr>
-									<th>발주코드</th>
-									<th>거래처명</th>
-									<th>자재코드</th>
-									<th>자재명</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="mat : ${oList}" th:data-matCode="${mat.matCode}"
-									th:data-matName="${mat.matName}"
-									th:data-matUnit="${mat.matUnit}"
-									th:data-matStandard="${mat.matStandard}"
-									data-bs-dismiss="modal"
-									th:onclick="'displaySelectedMaterial(this)'">
-									<td th:text="${mat.matCode}"></td>
-									<td th:text="${mat.matName}"></td>
-									<td th:text="${mat.matUnit}"></td>
-									<td th:text="${mat.matStandard}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">닫기</button>
-						<button type="button" class="btn btn-primary" id="orderInsert">
-							작성완료</button>
-					</div>
-				</div>
-			</div>
-		</div>
+<!-- 		<div class="modal fade modal-xl" id="staticBackdrop" -->
+<!-- 			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" -->
+<!-- 			aria-labelledby="staticBackdropLabel" aria-hidden="true"> -->
+<!-- 			<div class="modal-dialog"> -->
+<!-- 				<div class="modal-content"> -->
+<!-- 					<div class="modal-header"> -->
+<!-- 						<h1 class="modal-title fs-5" id="staticBackdropLabel">발주 등록</h1> -->
+<!-- 						<button type="button" class="btn-close" data-bs-dismiss="modal" -->
+<!-- 							aria-label="Close"></button> -->
+<!-- 					</div> -->
+<!-- 					<div class="modal-body"> -->
+<!-- 							모달 내용 -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<th>발주코드</th> -->
+<!-- 									<th>거래처명</th> -->
+<!-- 									<th>자재코드</th> -->
+<!-- 									<th>자재명</th> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 							<tbody> -->
+<!-- 								<tr th:each="mat : ${oList}" th:data-matCode="${mat.matCode}" -->
+<!-- 									th:data-matName="${mat.matName}" -->
+<!-- 									th:data-matUnit="${mat.matUnit}" -->
+<!-- 									th:data-matStandard="${mat.matStandard}" -->
+<!-- 									data-bs-dismiss="modal" -->
+<!-- 									th:onclick="'displaySelectedMaterial(this)'"> -->
+<!-- 									<td th:text="${mat.matCode}"></td> -->
+<!-- 									<td th:text="${mat.matName}"></td> -->
+<!-- 									<td th:text="${mat.matUnit}"></td> -->
+<!-- 									<td th:text="${mat.matStandard}"></td> -->
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+<!-- 						</table> -->
+<!-- 					</div> -->
+<!-- 					<div class="modal-footer"> -->
+<!-- 						<button type="button" class="btn btn-secondary" -->
+<!-- 							data-bs-dismiss="modal">닫기</button> -->
+<!-- 						<button type="button" class="btn btn-primary" id="orderInsert"> -->
+<!-- 							작성완료</button> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 
 		<div class="container">
 			<h2>발주목록</h2>
 
-						<div id="matList"></div>
+			<div id="ordGrid"></div>
 		</div>
-		<div class="content">Hello world!!</div>
+
+
+
+
 		<script th:inline="javascript">
-		$(function(){
-		$('.content').click(function(){
-			$('.content').hide();
-		});
-	});
-		
-		
-                      document.getElementById("orderInsert").addEventListener("click", function() {
-                      	  // 발주 등록 정보 수집
-                      	  var matOrCode = document.getElementsByName("matOrCode")[0].value;
-                      	  var matOrName = document.getElementsByName("matOrName")[0].value;
-                      	  var matCode = document.getElementsByName("matCode")[0].value;
-                      	  var busineesName = document.getElementsByName("busineesName")[0].value;
-                      	  var matOrDueDate = document.getElementsByName("matOrDueDate")[0].value;
-                      	  var matOrCount = document.getElementsByName("matOrCount")[0].value;
-                      	  var matOrManager = document.getElementsByName("matOrManager")[0].value;
 
-                      	  // 수집한 정보를 이용하여 발주 등록 처리
-                      	  // 여기서는 예시로 콘솔에 수집한 정보를 출력하는 것으로 대체하였습니다.
-                      	  console.log("발주 코드: " + matOrCode);
-                      	  console.log("발주 명: " + matOrName);
-                      	  console.log("자재 코드: " + matCode);
-                      	  console.log("거래처 명: " + busineesName);
-                      	  console.log("납기일: " + matOrDueDate);
-                      	  console.log("수량: " + matOrCount);
-                      	  console.log("담당자: " + matOrManager);
-
-                      	  // 추가적인 발주 등록 처리 로직을 구현해야 합니다.
-                          var data = {
-                              matOrCode: matOrCode,
-                              matOrName: matOrName,
-                              matCode: matCode,
-                              busineesName: busineesName,
-                              matOrDueDate: matOrDueDate,
-                              matOrCount: matOrCount,
-                              matOrManager: matOrManager
-                          };
-                      	    fetch("/matOrderInsert", {
-                      	        method: "POST",
-                      	        headers: {
-                      	            "Content-Type": "application/json"
-                      	        },
-                      	        body: JSON.stringify(data)
-                      	    })
-                      	    .then(response => {
-                      	        if (response.ok) {
-                      	            console.log(response);
-                      	            alert("요청이 성공적으로 처리되었습니다.");
-                      	        } else {
-                      	            console.log(response);
-                      	            alert("요청 처리 중 오류가 발생했습니다.");
-                      	        }
-                      	    })
-                      	    .catch(error => {
-                      	        console.log(error);
-                      	        alert(error.message);
-                      	    });
-                      	});
-
-                      function updateInputMaterial(liElement){
-                      	var matOrCode = liElement.getAttribute('data-matOrCode');
-                      	var matOrName = liElement.getAttribute('data-matOrName');
-                      	var matCode = liElement.getAttribute('data-matCode');
-                      	var busineesName = liElement.getAttribute('data-busineesName');
-                      	var matOrDueDate = liElement.getAttribute('data-matOrDueDate');
-                      	var matOrCount = liElement.getAttribute('data-matOrCount');
-                      	var matOrManager = liElement.getAttribute('data-matOrManager');
-
-                      	document.getElementById('selectedmatOrCode').value = matOrCode;
-                      	document.getElementById('selectedmatOrCode').value = matOrCode;
-
-                      }
-
-
-
-                      function selectBusiness(liElement) {
-                      	// 거래처 코드를 가져오기
-                      	var businessCode = liElement.getAttribute('data-businessCode');
-
-                      	// 주문서 번호 생성
-                      	var orderNumber = generateOrdCode(businessCode); // generateOrdCode 함수로 수정
-
-                      	// 생성된 주문서 번호를 input 창에 표시
-                      	document.getElementById('ordCode').value = orderNumber;
-                      }
-
-                      function displaySelectedMaterial(element){
-                      	var matCode = element.getAttribute('data-matCode');
-                      	var matName = element.getAttribute('data-matName');
-                      	var matUnit = element.getAttribute('data-matUnit');
-                      	var matStandard = element.getAttribute('data-matStandard');
-                      }
-
-
-                    // 상세 계획 테이블에 행 추가
-//                     tempOrderDetails.forEach(detail => {
-//                     	var detailRowData = {
-//                     		matOrInfoCode: '',
-//                     		matOrCode: matCode,
-//                     		matLotCode: detail.matLotCode,
-//                     		matOrName: '',
-//                     		businessName: '',
-//                     		matCount: detail.matCount,
-//                     		matOrDate: '',
-//                     		matOrDueDate: '',
-//                     		matOrManager: '',
-//                     		_attributes: {
-                    			
-//                     			className: {
-//                     				row:['detail']
-//                     			}
-//                     		}
-//                     	};
-
-//                     	orderGrid.appendRow(detailRowData);
-//                     });
-
-//                     // 모달 닫기
-//                     var exampleModal = document.getElementById('exampleModal');
-//                     var modal = bootstrap.Modal.getInstance(exampleModal);
-//         		    modal.hide();
-//         		});
 
 
                     // 그리드 행 추가 연습
-                     	 let order = [[${list}]]
-                    	 let orderGrid
-                    	 document.addEventListener('DOMContentLoaded', function(){
-                      			  orderGrid = new tui.Grid({
-                                  el: document.getElementById('orderGrid'),
-                                  data: order, // 여기서 emps 데이터를 사용
-                              // 그리드 컬럼설정
-                      	      columns: [
-                      	        {
-                      	          header: '발주코드',
-                      	          name: 'matOrCode'
-                      	        },
-                      	        {
-                      	          header: '자재코드',
-                      	          name: 'matCode'
-                      	        },
-                      	        {
-                      	          header: '발주명',
-                      	          name: 'matOrName',
-                      	          editor: 'text'
-                      	        },
-                      	        {
-                      		      header: '발주일',
-                      		      name: 'matOrDate',
-                      		      formatter : function dateFormatter(params) {
-                      		    	  const date = new Date(params.value);
-                      		    	  const isoDate = date.toISOString().split('T')[0];
-                      		    	  return isoDate;
-                      		    	}
-                      		    },
-                      		    {
-                      		      header: '담당자',
-                      		      name: 'matOrManager'
-                      		    },
-                      	      ],
-                      	      rowHeaders: ['rowNum'],
-                                  pageOptions: {
-                                      useClient: true,
-                                      perPage: 5,
-                                  }
-                      	    });
+//                       let order = [[${list}]]  // 쓸때 <div id="orderGrid"></div> 이거 정의해주세요 
+//                     	 let orderGrid
+//                     	 document.addEventListener('DOMContentLoaded', function(){
+//                       			  orderGrid = new tui.Grid({
+//                                   el: document.getElementById('orderGrid'),
+//                                   data: order, // 여기서 emps 데이터를 사용
+//                               // 그리드 컬럼설정
+//                       	      columns: [
+//                       	        {
+//                       	          header: '발주코드',
+//                       	          name: 'matOrCode'
+//                       	        },
+//                       	        {
+//                       	          header: '자재코드',
+//                       	          name: 'matCode'
+//                       	        },
+//                       	        {
+//                       	          header: '발주명',
+//                       	          name: 'matOrName',
+//                       	          editor: 'text'
+//                       	        },
+//                       	        {
+//                       		      header: '발주일',
+//                       		      name: 'matOrDate',
+//                       		      formatter : function dateFormatter(params) {
+//                       		    	  const date = new Date(params.value);
+//                       		    	  const isoDate = date.toISOString().split('T')[0];
+//                       		    	  return isoDate;
+//                       		    	}
+//                       		    },
+//                       		    {
+//                       		      header: '담당자',
+//                       		      name: 'matOrManager'
+//                       		    },
+//                       	      ],
+//                       	      rowHeaders: ['rowNum'],
+//                                   pageOptions: {
+//                                       useClient: true,
+//                                       perPage: 5,
+//                                   }
+//                       	    });
 
-                      		orderGrid.on('click', function(ev) {
-                				console.log(ev.columnName);
-               				 var columnName = ev.columnName;
-                   	    	 if (columnName === 'matOrCode') {
-                   	         var rowKey = ev.rowKey;
-                   	         var rowData = orderGrid.getRow(rowKey);
 
-                   	         if (rowData) {
-                   	             var matOrCode = rowData.matOrCode;
-
-                    	            // planCode를 사용하여 상세 데이터 요청
-                    	            fetch('/matDetail?matOrCode=' + matOrCode)
-                    	                .then(response => response.json())
-                    	                .then(data => {
-                    	                	console.log(data);
-                    	                    // 상세 그리드에 데이터 표시
-                    	                    // grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
-                    					matList.resetData(data);
-                    	                })
-                    	                .catch(error => {
-                    	                    console.error('Error:', error);
-                    	                });
-                    	        	}
-                    	    	 }
-                      		});
-
-        					matList = new tui.Grid({
-        						el: document.getElementById('matList'),
-        						scrollX: false,
-        				        scrollY: false,
+							
+                      		
+                      		let ordList = [[${list}]];
+                      		ordGrid = new tui.Grid({
+        						el: document.getElementById('ordGrid'),
+        				        data : ordList,
+        				        scrollX: false,
+                                scrollY: false,
         				        columns: [
         						    // 데이터 구조에 따라 컬럼을 정의하세요
         						    { name: 'matOrCode', header: '발주코드' },
@@ -350,7 +232,18 @@ button {
         						    { name: 'businessName', header: '거래처명' },
 
         						    { name: 'matOrCount', header: '발주량' },
-        						    { name: 'matOrDate', header: '발주일' },
+        						    { name: 'matOrDate', header: '발주일' ,
+            		  	            formatter: function({value}) {
+            		  	                if (value) {
+            		  	                    var date = new Date(value);
+            		  	                    var year = date.getFullYear();
+            		  	                    var month = (date.getMonth() + 1).toString().padStart(2, '0');
+            		  	                    var day = date.getDate().toString().padStart(2, '0');
+            		  	                    return `${year}-${month}-${day}`;
+            		  	                }
+            		  	                return '';
+            		  	              }		
+        						    },
         						    { name: 'matOrDueDate', header: '납기요청일' ,
         		  	                formatter: function({value}) {
         		  	                    if (value) {
@@ -366,73 +259,117 @@ button {
         						    {name: 'matOrManager', header: '담당자'},
                           		    {
                               		  header: '발주상태',
-                              		  name: 'matOrManager'
+                              		  name: 'matOrState'
                               		}
         						    // 데이터에 따라 다른 컬럼 추가
         						  ],
         						  // 여기에 다른 그리드 옵션을 추가할 수 있습니다
         						  rowHeaders: ['rowNum','checkbox'],
-        			            pageOptions: {
+        			            	pageOptions: {
         			                useClient: true,
         			                perPage: 5
-        			            }
-        						});
-
-        				    console.log("matList" ,matList)
-
-        		    	});
-
-
-
+        			            	}
+        						  });
 
 
 
         					  // 현재 자재 재고
-        					  let mList = [[${oList}]]
+        					let mat = [[${oList}]];
+							let matGrid, busiGrid;
+							class NumberEditor{
+								constructor(props){
+									const el = document.createElement('input');
+									el.type = 'number';
+							      	el.value = String(props.value);
+							      	el.min = props.columnInfo.editor.options.min;
+							      	el.step = props.columnInfo.editor.options.step;
+									
+									this.el = el;
+								}
+								
+								getElement(){
+									return this.el;
+								}
+								
+								getValue(){
+									return this.el.value;
+								}
+								
+								mounted(){
+									this.el.select();
+								}
+							};
+							document.addEventListener('DOMContentLoaded', function() {
+							 	 matGrid = new tui.Grid({
+                                 el: document.getElementById('matGrid'),
+                                 data: mat, // 여기서 emps 데이터를 사용
+                      	      	columns: [
+	                      	        {
+	                      	          header: '자재코드',
+	                      	          name: 'matCode'
+	                      	        },
+	                      	        {
+                      	          	  header: '자재명',
+                      	          	  name: 'matName'
+                      	        	},
+                      	        	{
+                      	          	  header: '단위',
+                      	          	  name: 'matUnit'
+                      	        	},
+                      	        	{
+                      	          	  header: '규격',
+                      	          	  name: 'matStandard'
+                      	        	},
+                      	        	{
+                      	          	  header: '현재고',
+                      	          	  name: 'matCount'
+                      	        	},
+                      	        	{
+                      		      	  header: '안전재고',
+                      		      	  name: 'matSafeStock'
+                      		    	},
+        	//               		{
+            //               		  header: '소모예정량',
+        	//              	      name: ''
+        	//               		},
+                      	      	],
+                      	      	rowHeaders: ['rowNum'],
+								pageOptions: {
+                                    useClient: true,
+                                    perPage: 5
+                                }
+                      	});
+							 	 
+        					  
+        					  
+        				matGrid.on('click', function(ev) {
+              				console.log(ev.columnName);
+             				  var columnName = ev.columnName;
+                 	    	  if (columnName === 'matCode') {
+                 	          var rowKey = ev.rowKey;
+                 	          var rowData = matGrid.getRow(rowKey);
+ 							  
+                 	          if (rowData) {
+                 	              var matCode = rowData.matCode;
+								console.log("맷코드 입니다 :", matCode);
+                   	             // planCode를 사용하여 상세 데이터 요청
+                  	             fetch('/matDetail?matCode=' + matCode)
+                  	                 .then(response => response.json())
+                  	                 .then(data => {
+                  	                	 console.log(data);
+                  	                     // 상세 그리드에 데이터 표시
+                  	                     // grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
+                  					 busiGrid.resetData(data);
+                  	                 })
+                  	                 .catch(error => {
+                  	                     console.error('Error:', error);
+                  	                 });
+                  	        	 }
+                  	    	  }
+                    	});
 
-                      	 	  matList = new tui.Grid({
-                                  el: document.getElementById('mList'),
-                                  data: mList, // 여기서 emps 데이터를 사용
-                                  scrollX: false,
-                                  scrollY: false,
-                      	      columns: [
-                      	        {
-                      	          header: '자재명',
-                      	          name: 'matName'
-                      	        },
-                      	        {
-                      	          header: '단위',
-                      	          name: 'matUnit'
-                      	        },
-                      	        {
-                      	          header: '규격',
-                      	          name: 'matStandard'
-                      	        },
-                      	        {
-                      	          header: '현재고',
-                      	          name: 'matCount'
-                      	        },
-                      	        {
-                      		      header: '안전재고',
-                      		      name: 'matSafeStock'
-                      		    },
-        //               		    {
-        //               		      header: '소모예정량',
-        //               		      name: ''
-        //               		    },
-                      	      ],
-                      	      rowHeaders: ['rowNum'],
-
-                                  pageOptions: {
-                                      useClient: true,
-                                      perPage: 5
-                                  }
-                      	    });
-
-        				let business =	[[${buisList}]]
-                      	const busigrid = new tui.Grid({
-                            el: document.getElementById('busigrid'),
-                            data: business, // 여기서 emps 데이터를 사용
+                      	  busiGrid = new tui.Grid({
+                            el: document.getElementById('busiGrid'),
                             scrollX: false,
                             scrollY: false,
                 	      columns: [
@@ -444,10 +381,10 @@ button {
                 	          header: '거래처명',
                 	          name: 'businessName'
                 	        },
-        //         	        {
-        //         	          header: '거래횟수',
-        //         	          name: 'transaction_count'
-        //         	        }
+                	        {
+                	          header: '거래횟수',
+                	          name: 'deal'
+                	        }
                 	      ],
                 	      rowHeaders: ['rowNum'],
                             pageOptions: {
@@ -455,115 +392,49 @@ button {
                                 perPage: 5
                             }
                 	    });
+                      	  
+                     console.log("matGrid", matGrid);
+                     
+			});
+							
+
+// 			// 이거 내 발주목록 그리드 클릭이벤트
+// 			busiGrid.on('click', function(ev) {
+// 				console.log("ev클릭이벤트 : " , ev.columnName);
+// 				let columnName = ev.columnName;
+// 				if(columnName === '내컬럼'){
+// 					let rowKey = ev.rowKey;
+// 					let rowData = 내컬럼.getRow(rowKey);
+
+// 					if(rowData){
+// 						let 내컬럼 = rowData.내컬럼;
+// 						console.log("내컬럼", 내컬럼);
+
+// 						fetch('/내 컨트롤 경로' + 내컬럼)
+// 							.then(response => response.json())
+// 							.then(data => {
+// 								console.log(data);
+
+// 								하나더만들그리드.resetData(data);
+// 							})
+// 							.catch(err => {
+// 								console.log('Error:', error);
+// 							});
+// 					}
+// 				}
+// 			});
+
+// 			하나더만들그리드 = new tui.Grid({
+// 				el: document.getElementById('하나더만들그리드'),
+// 				scrollX:false
+// 			})
+
+
+			
       </script>
 
-		<script>
-        let tempOrderDetails = [];
-        // 초기에 모달 창을 만들 때 테이블 헤더를 미리 추가합니다.
-        const detailsContainer = document.getElementById("orderDetails");
-        const table = document.createElement("table");
-        table.className = "table";
 
-        const thead = document.createElement("thead");
-        thead.innerHTML = `
-	        <tr>
-	            <th>자제 코드</th>
-	            <th>발주 수량</th>
-	            <th>납기일자</th>
-	        </tr>
-	    `;
-        table.appendChild(thead);
 
-        detailsContainer.appendChild(table);
-
-        document.querySelectorAll(".ord-row").forEach((row) => {
-          row.addEventListener("click", function () {
-            const ordCode = this.getAttribute("data-ord-code");
-            fetch("/matDetail?matordCode=" + matordCode)
-              .then((response) => response.json())
-              .then((data) => {
-                tempOrderDetails = data;
-                // 테이블 본문을 업데이트합니다.
-                const tbody = document.createElement("tbody");
-
-                data.forEach((detail) => {
-                  const tr = document.createElement("tr");
-
-                  const date = new Date(detail.matOrDueDate);
-                  const formattedDate = date.toLocaleDateString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  });
-
-                  tr.innerHTML = `
-	                            <td>${detail.matCode}</td>
-	                            <td>${detail.matOrCount}</td>
-	                            <td>${formattedDate}</td>
-	                            
-	                        `;
-                  tbody.appendChild(tr);
-                });
-
-                // 기존 테이블 본문을 제거하고 새로운 테이블 본문으로 교체합니다.
-                const existingTbody = table.querySelector("tbody");
-                if (existingTbody) {
-                  table.removeChild(existingTbody);
-                }
-                table.appendChild(tbody);
-              });
-          });
-        });
-
-        document.querySelectorAll(".plan-row").forEach((row) => {
-          row.addEventListener("click", function () {
-            const planCode = this.getAttribute("data-plan-code");
-
-            fetch("/orderDetail?ordCode=" + planCode)
-              .then((response) => response.json())
-              .then((data) => {
-                const detailsTbody = document.getElementById("orderDetail");
-                detailsTbody.innerHTML = ""; // 기존 내용 초기화
-
-                // 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-                data.forEach((detail) => {
-                  const tr = document.createElement("tr");
-                  const date = new Date(detail.dlvyDate);
-                  const sDate = new Date(detail.start);
-                  const eDate = new Date(detail.end);
-                  const formattedDate = date.toLocaleDateString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  });
-                  const formattedSDate = sDate.toLocaleDateString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  });
-                  const formattedEDate = eDate.toLocaleDateString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  });
-                  console.log(detail);
-                  tr.innerHTML = `
-								<td>${detail.dplanCode}</td>
-	                            <td>${detail.planCode}</td>
-	                            <td>${detail.prodCode}</td>
-	                            <td><input type="date" value="${formattedSDate}" name="startDate"></td>
-	                            <td><input type="date" value="${formattedEDate}" name="endDate"></td>
-	                            <td>${detail.prodCount}</td>
-	                            <td>${detail.ordCount}</td>
-	                            <td><input type="number" value="${detail.dplanCount}" name="planCount"></td>
-	                            <td>${formattedDate}</td>
-							`;
-                  detailsTbody.appendChild(tr);
-                });
-              });
-          });
-        });
-      </script>
 	</section>
 </body>
 </html>

@@ -41,7 +41,39 @@
 		SELECT proc_code, proc_name
 		FROM process
 	</select>
-
+	
+	
+	<!-- 작업중간등록 -->
+	<insert id="insertWorkMidRegist" parameterType="WorkMidRegistVO">
+		INSERT INTO prod_progress(
+		    d_ins_code
+		    , proc_code
+		    , prog_ins_count
+		    , prog_bad_count
+		    , prog_pass_count
+		    , prog_state
+		    , start_time
+		    , end_time
+		)
+		VALUES(
+		    #{dInsCode}
+		    , #{procCode}
+		    , #{progInsCount}
+		    , #{progBadCount}
+		    , #{progPassCount}
+		    , 0
+		    , TO_TIMESTAMP(#{startTime}, 'YY-MM-DD HH24:MI')
+		    , TO_TIMESTAMP(#{endTime}, 'YY-MM-DD HH24:MI')
+		)
+	</insert>
+	
+	
+	<select id="checkWorkMidRegist" parameterType="String" resultType="WorkMidRegistVO">
+		SELECT * 
+		FROM prod_progress 
+		WHERE d_ins_code = #{dinsCode} 
+		AND proc_code = #{procCode}
+	</select>
 
 
 </mapper>

@@ -19,7 +19,13 @@ public class MatOrderInfoVO {
 	private String matOrName;
 	private String matOrManager;
 	private int matOrCount;
+	private String businessCode;
 	private String businessName;
+	private int deal;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date matOrDate;
+	private String matOrState;
 	
 	
 }
