@@ -18,9 +18,7 @@ public class OrderDVO {
 	private int ordState;
 	private String ordNote;
 	private int totalTtlPrice;
-
 	private List<OrderDetailVO> orderDetails;
-
 	public void addOrderDetail(OrderDetailVO orderDetail) {
 		if (orderDetails == null) {
 			orderDetails = new ArrayList<>();

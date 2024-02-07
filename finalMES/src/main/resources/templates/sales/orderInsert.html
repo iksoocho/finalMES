@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
 <meta charset="UTF-8">
@@ -240,8 +238,7 @@ button {
 		cellUnitPrice.innerHTML = unitPrice;
 
 		ttlPrice = ttlPrice || 0;
-		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice "id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>원';
-		// 초기에 빈 행의 가시성을 전환
+		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice" id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>원';
 		toggleEmptyRowsVisibility();
 
 		// 새로 추가된 행에 클래스 설정
@@ -383,6 +380,7 @@ button {
 	        businessCode: document.getElementById('selectedBusinessCode').value,
 	        ordState: document.getElementById('ordState').value,
 	        ordManager: document.getElementById('ordManager').value,
+	        ordNote: document.getElementById('ordNote').value,
 	        // 나머지 필드들도 수집
 	        // 주문 상세 리스트 정보 수집
 	        orderDetails: []
@@ -501,8 +499,7 @@ button {
 						<th>주문서번호</th>
 						<td><input class="readInput" type="text" id="ordCode" name="ordCode" placeholder="시스템 자동발번" readonly></td>
 						<th>등록일</th>
-						<td><input type="date" id="registrationDate" name="ordDate"
-							readonly></td>
+						<td><input type="date" id="registrationDate" name="ordDate" readonly></td>
 						<th>주문서상태</th>
 						<td><select id="ordState" name="ordState">
 								<option value="0" selected>등록전
@@ -513,8 +510,7 @@ button {
 					</tr>
 					<tr>
 						<th class="red">담당자</th>
-						<td class="serch"><input type="text" readonly> <input
-							type="text" id="ordManager" name="ordManager">
+						<td class="serch"><input type="text" readonly> <input type="text" id="ordManager" name="ordManager">
 
 							<button type="button" class="btn btn-primary">
 								<p>검색</p>
@@ -526,19 +522,16 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text"
-							id="selectedBusinessCode" name="businessCode" readonly> <input
-							type="text" id="selectedBusinessName" readonly>
-							<button class="btn btn-primary" data-bs-toggle="modal"
-								data-bs-target="#staticBackdrop">
+						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text"
+							id="selectedBusinessName" readonly
+						>
+							<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 								<p>검색</p>
 							</button></td>
 						<th>거래처 담당자</th>
-						<td><input class="readInput" type="text"
-							id="selectedBusinessManager" readonly></td>
+						<td><input class="readInput" type="text" id="selectedBusinessManager" readonly></td>
 						<th>거래처 연락처</th>
-						<td><input class="readInput" type="text"
-							id="selectedBusinessManagerPhone" readonly></td>
+						<td><input class="readInput" type="text" id="selectedBusinessManagerPhone" readonly></td>
 					</tr>
 					<tr>
 						<th>납기일자</th>
@@ -552,8 +545,7 @@ button {
 				<h5>상세정보</h5>
 				<div id="selectedProduct"></div>
 				<button class="btn btn-primary">삭제</button>
-				<button class="btn btn-primary" data-bs-toggle="modal"
-					data-bs-target="#staticBackdropOne">추가</button>
+				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropOne">추가</button>
 
 				<table class="moreInfo" id="productTable">
 					<thead>
@@ -664,16 +656,14 @@ button {
 
 		<!-- Modal -->
 		<!-- ManagerListModal -->
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
-			data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel"
-							style="font-weight: bold">거래처 목록</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">거래처 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 
 					<div class="modal-body">
@@ -686,12 +676,10 @@ button {
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="business : ${businessList}"
-									th:data-businessCode="${business.businessCode}"
-									th:data-businessName="${business.businessName}"
-									th:data-businessManager="${business.businessManager}"
-									th:data-businessManagerPhone="${business.businessManagerPhone}"
-									data-bs-dismiss="modal" onclick="updateInputFields(this)">
+								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}"
+									th:data-businessManager="${business.businessManager}" th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal"
+									onclick="updateInputFields(this)"
+								>
 									<td th:text="${business.businessCode}"></td>
 									<td th:text="${business.businessName}"></td>
 								</tr>
@@ -699,8 +687,7 @@ button {
 						</table>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">닫기</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 
 					</div>
 				</div>
@@ -709,16 +696,14 @@ button {
 
 		<!-- Modal -->
 		<!-- ProductListModal -->
-		<div class="modal fade modal-xl" id="staticBackdropOne"
-			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade modal-xl" id="staticBackdropOne" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel"
-							style="font-weight: bold">품목 목록</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">품목 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 
 					<div class="modal-body">
@@ -732,12 +717,9 @@ button {
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="prod : ${productList}"
-									th:data-prodCode="${prod.prodCode}"
-									th:data-prodName="${prod.prodName}"
-									th:data-prodUnit="${prod.prodUnit}"
-									th:data-prodPrice="${prod.prodPrice}" data-bs-dismiss="modal"
-									th:onclick="'displaySelectedProduct(this)'">
+								<tr th:each="prod : ${productList}" th:data-prodCode="${prod.prodCode}" th:data-prodName="${prod.prodName}"
+									th:data-prodUnit="${prod.prodUnit}" th:data-prodPrice="${prod.prodPrice}" data-bs-dismiss="modal" th:onclick="'displaySelectedProduct(this)'"
+								>
 									<td th:text="${prod.prodCode}"></td>
 									<td th:text="${prod.prodName}"></td>
 									<td th:text="${prod.prodUnit}"></td>
@@ -748,8 +730,7 @@ button {
 
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">닫기</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 
 					</div>
 				</div>

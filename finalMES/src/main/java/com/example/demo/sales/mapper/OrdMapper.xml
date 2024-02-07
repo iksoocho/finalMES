@@ -68,7 +68,8 @@
 		business.business_name AS business_code,
 		ord.ord_date,
 		ord.ord_manager,
-		SUM(ord_d.ttl_price) AS total_ttl_price
+		SUM(ord_d.ttl_price) AS total_ttl_price,
+		ord.ord_note
 		FROM
 		ord_list
 		ord
@@ -77,15 +78,18 @@
 		JOIN business business ON ord.business_code = business.business_code
 		GROUP BY
 		ord.ord_code, ord.ord_state, business.business_name,
-		ord.ord_date, ord.ord_manager
+		ord.ord_date, ord.ord_manager, ord.ord_note
 		ORDER BY
 		ord.ord_date DESC, ord.ord_code
 		DESC
 	</select>
 
-	<select id="getOrderDetailList" resultType="OrderDetailVO">
-		SELECT * FROM ord_d_list
-		WHERE ord_code = #{ordCode}
+	<select id="getOrderDetailList" resultType="OrderDetailDVO">
+		SELECT od.*,
+		p.prod_name, p.prod_unit, p.prod_price
+		FROM ord_d_list od
+		JOIN product p ON od.prod_code = p.prod_code
+		WHERE od.ord_code = #{ordCode}
 	</select>
 
 	<select id="getBusinessList" resultType="BusinessListVO"> <!-- 거래처 목록조회 -->

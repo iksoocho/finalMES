@@ -1,25 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
 <style>
 .tui-grid-row-header-checkbox {
 	padding-top: 10px;
 }
+
+.titleOne {
+	display: inline-block;
+}
+
+.ttlContainer {
+	display: inline-block;
+	float: right;
+}
+
+.totalOrdCount {
+	text-align: right;
+	margin: 0px;
+}
 </style>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>주문 조회</title>
 </head>
 <body>
 	<section layout:fragment="content">
 		<h4>주문 조회</h4>
-		<h5>목록</h5>
+		<h5 class="titleOne">목록</h5>
+		<div class="ttlContainer">
+			<small class="totalOrdCount"> 총 주문 수: <span th:text="${orderList.size()}"></span>
+			</small>
+		</div>
 		<div id="grid"></div>
-
 		<h5>상세</h5>
-		<div id="datailGrid"></div>
-
+		<div></div>
+		<div id="detailGrid"></div>
 		<script th:inline="javascript">
 		let orderList = [[${orderList}]]
 		let grid = tui.Grid;
@@ -37,6 +52,7 @@
              scrollX: false,
              scrollY: false,
              
+              
  	      columns: [
  	        {
  	          header: '주문서번호',
@@ -48,10 +64,13 @@
  	        {
  	          header: '상태',
  	          name: 'ordState',
- 	          sortable: true,
-	          sortingType: 'desc',
 	          align: "center",
- 	          formatter: getOrdStatus
+ 	          formatter: getOrdStatus,
+ 	          filter: {
+ 	            type: 'text',
+ 	            showApplyBtn: true,
+ 	            showClearBtn: true
+ 	          }
  	        },
  	        {
  	          header: '거래처',
@@ -66,7 +85,7 @@
  	          sortable: true,
 	          sortingType: 'desc',
 	          align: "center",
- 	        	 formatter: ordDateFormatter
+ 	          formatter: ordDateFormatter
  	        },
  	       {
  	 	      header: '담당자',
@@ -83,44 +102,82 @@
 	          align: 'right',
  	 	 	  formatter: formatTotalTtlPrice
  	 	 	},
+ 	 	 	{	header: '비고',
+ 	 	 		name:'ordNote',
+ 	 	 		align: 'center'
+ 	 	 	},
  	      ],
  	      rowHeaders: ['rowNum','checkbox'],
              pageOptions: {
                  useClient: true,
                  perPage: 5
              },
-		 	
+             
  	    });
 		 
 		 // 행 클릭이벤트
 		 grid.on('click', (ev) => {
-			 console.log('클릭한 행의 정보:', ev)
-		        // ev.rowKey에 클릭한 행의 키가 포함되어 있음
-		    const clickedRowKey = ev.rowKey;
-		        // 여기서 클릭한 행에 대한 추가 로직 수행
-		    console.log('주문 목록 행 클릭:', clickedRowKey);
+			 console.log(ev.columnName);
+		     let columnName = ev.columnName;
+		     if (columnName === 'ordCode'){
+		    	 let rowKey = ev.rowKey;
+		    	 console.log(rowKey);
+		    	 let rowData = grid.getRow(rowKey);
+		    	 console.log(rowData);
+		   	 
+		     if (rowData) {
+		    	 let ordCode = rowData.ordCode;
+		         
+		     
 		        
 		 // 서버에 해당 주문에 대한 상세 목록을 요청
-	        fetch('/orderDetailList/' + clickedRowKey)
-	            .then(response => response.json())
-	            .then(orderDetailList => {
-	                // 주문 상세 목록 그리드 갱신
-	                detailGrids.resetData(orderDetailList);
-	            })
-	            .catch(error => console.error('상세 목록을 불러오는 도중 에러 발생:', error));    
-		});
-		
+		    	 fetch('/orderDetailList/' + ordCode)
+		    	    .then(response => {
+		    	        if (!response.ok) {
+		    	            throw new Error('Network response was not ok');
+		    	        }
+		    	        return response.json();
+		    	    })
+		    	    .then(orderDetailList => {
+		    	        console.log(orderDetailList);
+		    	        // 주문 상세 목록 그리드 갱신
+		    	        detailGrid.resetData(orderDetailList);
+		    	    })
+		    	    .catch(error => console.error('상세 목록을 불러오는 도중 에러 발생:', error));    
+		};
+		 };
+		 });
+		 
+		 
 		// 주문 상태 포매터
-		function getOrdStatus(value, row) {
-    		console.log(value); // 값 확인용 로그
+		 function getOrdStatus(value, row) {
+		     console.log(value); // 값 확인용 로그
+		     let statusText, bgColor;
 
-   		// 주문 상태에 따라 원하는 문자열 반환
-    		if (value.value === 1) {
-        		return '등록완료';
-    		} else {
-        		return '알 수 없는 상태';
-    		}
-		}
+		     // 주문 상태에 따라 원하는 문자열과 배경색 설정
+		     switch (value.value) {
+		         case 1:
+		             statusText = '등록완료';
+		             bgColor = 'green'; // 등록완료에 대한 배경색 설정
+		             break;
+		         case 2:
+		             statusText = '계획 진행중';
+		             bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
+		             break;
+		         case 3:
+		        	 statusText = '계획완료';
+		        	 bgColor = 'blue' 
+		         default:
+		             statusText = '알 수 없는 주문 건';
+		             bgColor = 'gray'; // 알 수 없는 주문 건에 대한 배경색 설정
+		             break;
+		     }
+
+		     // 배경색을 포함한 HTML 반환
+		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+		 }
+		
+		
 		
 		// 총금액 포맷터 함수
 		function formatTotalTtlPrice({ value }) {
@@ -152,11 +209,12 @@
 			    }
 			  }
 			});
-		detailGrids = new tui.Grid({
-            el: document.getElementById('datailGrid'),
+		detailGrid = new tui.Grid({
+            el: document.getElementById('detailGrid'),
             data: orderDetailList, 
             scrollX: false,
             scrollY: false,
+	      	rowHeaders: ['rowNum','checkbox'],
 	      columns: [
 	        {
 	          header: '품목코드',
@@ -167,37 +225,37 @@
 	        },
 	        {
 	          header: '품목명',
-	          name: '',
+	          name: 'prodName',
 	          sortable: true,
 	          sortingType: 'desc',
 	          align: "center",
-	          formatter: getOrdStatus
 	        },
 	        {
 	          header: '단위',
-	          name: '',
+	          name: 'prodUnit',
 	          sortable: true,
 	 	      sortingType: 'desc',
 	 	      align: "center",
 	        },
 	        {
 	          header: '납기일',
-	          name: '',
+	          name: 'dlvyDate',
 	          sortable: true,
 	          sortingType: 'desc',
 	          align: "center",
+	          formatter: ordDateFormatter
 	        	
 	        },
 	       {
 	 	      header: '수량',
-	 	      name: '',
+	 	      name: 'ordCount',
 	 	      sortable: true,
 	 	      sortingType: 'desc',
-	 	      align: "center",
+	 	      align: "right",
 	 	    },
 	 	  {
 	 	 	  header: '단가',
-	 	 	  name: '',
+	 	 	  name: 'prodPrice',
 	 	 	  sortable: true,
 	          sortingType: 'desc',
 	          align: 'right',
@@ -205,26 +263,17 @@
 	 	 	},
 	 	  {
 		 	  header: '총금액',
-		 	  name: '',
+		 	  name: 'ttlPrice',
 		 	  sortable: true,
 		      sortingType: 'desc',
 		      align: 'right',
+		      formatter: formatTotalTtlPrice
 		 	  
 		 	},
-		  {
-			  header: '비고',
-			  name: '',
-		 	  sortable: true,
-			  sortingType: 'desc',
-			  align: 'right',
-			 	  
-			},
+		  
 	      ],
-	      rowHeaders: ['rowNum','checkbox'],
-            pageOptions: {
-                useClient: true,
-                perPage: 5
-            }
+	      
+           
 	    });
 		</script>
 	</section>

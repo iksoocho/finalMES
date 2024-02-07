@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.sales.vo.business.BusinessListVO;
+import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
@@ -22,7 +23,7 @@ public interface OrdMapper {
 
 	public List<OrderVO> getOrderList(); // 주문서 전체 조회
 
-	public List<OrderDetailVO> getOrderDetailList(String ordCode); // 주문서 상세 조회
+	public List<OrderDetailDVO> getOrderDetailList(String ordCode); // 주문서 상세 조회
 
 	OrderVO getOrderCode(String businessCode); // 거래처에 대한 제일 최근 주문번호 조회
 

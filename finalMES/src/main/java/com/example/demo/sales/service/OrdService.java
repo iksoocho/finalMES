@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.sales.vo.business.BusinessListVO;
+import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
@@ -22,7 +23,7 @@ public interface OrdService {
 
 	List<OrderVO> getOrderList();
 
-	List<OrderDetailVO> getOrderDetailList(String ordCode);
+	List<OrderDetailDVO> getOrderDetailList(String ordCode);
 
 	List<BusinessListVO> getBusinessList(); // 거래처 목록
 
