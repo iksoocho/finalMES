@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -111,6 +112,15 @@ public class PlanController {
 		msg = "상세 계획이 수정 되었습니다.";
 		return msg;
 				
+	}
+	
+	@DeleteMapping("/planDelete")
+	@ResponseBody
+	public String deletePlan(@RequestBody PlanCompositeVO planCompositeVO) {
+		String msg;
+		planService.deleteplanInfo(planCompositeVO);
+		msg = "계획이 삭제 되었습니다.";
+		return msg;
 	}
 	
 

@@ -23,4 +23,6 @@ public interface PlanService {
 	public void insertProductionWithDetails(PlanCompositeVO planCompositeVO);
 	 
 	public void updatePlanDInfo(PlanCompositeVO planCompositeVO);
+	
+	public void deleteplanInfo(PlanCompositeVO planCompositeVO);
 }

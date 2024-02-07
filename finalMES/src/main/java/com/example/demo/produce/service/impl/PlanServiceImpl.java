@@ -79,10 +79,14 @@ public class PlanServiceImpl implements PlanService{
 
 	@Override
     public void insertProductionWithDetails(PlanCompositeVO planCompositeVO) {
-		System.out.println("impl");
-    	planMapper.insertPlanInfo(planCompositeVO.getPlanVO()); // prod_plan에 데이터 삽입
-    	System.out.println("입력완");
-
+		//주문서 상태 업데이트
+		planMapper.updateOrderStateZero(planCompositeVO.getPlanOrdVO().getOrdCode());
+		
+		// prod_plan에 데이터 삽입
+    	planMapper.insertPlanInfo(planCompositeVO.getPlanVO()); 
+    	
+    	
+    	//루프 돌면서 상세 insert
         for (int i =0; i<planCompositeVO.getPlanDVOList().size(); i++) {
         	planCompositeVO.getPlanDVOList().get(i).setPlanCode(planCompositeVO.getPlanVO().getPlanCode()); // prod_d_plan의 각 항목에 planCode 설정
             planMapper.insertPlanDInfo(planCompositeVO.getPlanDVOList().get(i)); // prod_d_plan에 데이터 삽입
@@ -96,6 +100,15 @@ public class PlanServiceImpl implements PlanService{
 		for(int i = 0; i < planCompositeVO.getPlanDVOList().size(); i++) {
 			 planMapper.updatePlanInfo(planCompositeVO.getPlanDVOList().get(i));
 		}
+		
+	}
+
+	@Override
+	public void deleteplanInfo(PlanCompositeVO planCompositeVO) {
+		//주문서 상태 다시 1로 변경
+		planMapper.updateOrderStateOne(planCompositeVO.getPlanOrdVO().getOrdCode());
+		//plan 삭제
+		planMapper.deltePlanInfo(planCompositeVO.getPlanVO().getPlanCode());
 		
 	}
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.member.mapper.MemberMapper">
+	<select id="getMember" resultType="MemberVO">
+		SELECT user_code,
+			   dept_code,
+			   user_password,
+			   user_name,
+			   user_email,
+			   user_phone,
+			   'ROLE_' || upper(user_authority) user_authority,
+			   user_state
+		FROM employee
+		WHERE user_code = #{userCode}
+	</select>
+</mapper>
