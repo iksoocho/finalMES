@@ -8,20 +8,20 @@ import lombok.Data;
 
 @Data
 public class FacNotopVO {
-	private String facNotCode;
-	private String facCode;
-	private String facPerson;
-	private String notopCode;
-	private String businessCode;
-	private String notopContent;
-	private String facName;
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private Date facNotSdate;
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private Date facNotLdate;
-	private String facNotPerson;
-	private int facNotSituation;
-	private String facNotReason;
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private Date facDate;
+    private String facNotCode;
+    private String facCode;
+    //private String facPerson;
+    //private String notopCode;
+    //private String businessCode;
+    //private String notopContent;
+    private String facName;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date facNotSdate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date facNotLdate;
+    private String facNotPerson;
+    private int facNotSituation;
+    private String facNotReason;
+    //@DateTimeFormat(pattern = "yyyy-MM-dd")
+    //private Date facDate;
 }

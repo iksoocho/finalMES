@@ -17,10 +17,13 @@ public interface MaterialMapper {
 	public List<MatOrderVO> getMaterialOrderList();
 	public List<OriginMaterialVO> getOriginMaterialList();
 	// 발주 전체 겸 상세 디테일
-	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matOrCode);
+	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matCode);
+	// 발주 거래처 관리
+	public List<OriginMaterialVO> getMatBusiness1(String businessCode);
 	// 발주 거래처 관리
 	public List<OriginMaterialVO> getMatBusiness();
 	// 발주 목록에 추가하기
+	public List<MatOrderVO> getMatOrderList();
 	
 	
 	

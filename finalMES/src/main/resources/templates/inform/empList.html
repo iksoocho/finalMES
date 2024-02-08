@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>empList.html</title>
+
+</head>
+
+<body>
+	<section layout:fragment="content">
+		<h2>사원 관리</h2>
+		<div>
+			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="empInsert">저장</button>
+			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
+		</div>
+		<div id="grid"></div>
+
+		<script th:inline="javascript">
+			function addRow() {
+				grid.appendRow({isNew: true});
+
+				// 마지막 행의 데이터를 콘솔에 출력
+				const lastRowId = grid.getRowCount() - 1;
+				const lastRowData = grid.getRow(lastRowId);
+				console.log('새로 추가된 행 데이터:', lastRowData);
+			}
+
+			// 편집 제한 로직
+			function onBeforeChange(ev) {
+				const {rowKey, columnName} = ev;
+				const row = grid.getRow(rowKey);
+
+				// 현재 행의 데이터를 콘솔에 출력
+				console.log('편집 시도 행 데이터:', row);
+
+				// 새로 추가된 행이 아닐 경우 편집 취소
+				if (!row.isNew) {
+					ev.stop(); // 이 메소드는 편집을 취소합니다.
+				}
+			}
+
+			function onAfterChange(ev) {
+				console.log('편집 완료 이벤트:', ev);
+				// 필요한 경우, 여기에서 데이터 업데이트 로직을 구현할 수 있습니다.
+			}
+
+
+
+
+			let emps = [[${list}]]
+			console.log(emps);
+
+			// TOAST UI Grid 초기화
+			const grid = new tui.Grid({
+
+				el: document.getElementById('grid'),
+				data: emps, // 여기서 emps 데이터를 사용
+				scrollX: false,
+				scrollY: false,
+				columns: [
+					{header: '사원 번호', name: 'userCode'},
+					{
+						header: '이름', name: 'userName',
+						editor: 'text'
+
+					},
+					{
+						header: '부서명', name: 'deptName',
+						formatter: function ({value}) {
+							if (value == 'prod') {
+								return '생산';
+							}
+							if (value == 'fac') {
+								return '설비';
+							}
+							return value;
+						}
+					},
+					{header: '이메일', name: 'userEmail'},
+					{header: '연락처', name: 'userPhone'},
+					{
+						header: '직급', name: 'userAuthority',
+						formatter: function ({value}) {
+							if (value == 'admin') {
+								return '관리자';
+							}
+							if (value == 'user') {
+								return '일반사원';
+							}
+							return value;
+						}
+					},
+
+				],
+				rowHeaders: ['rowNum'],
+				pageOptions: {
+					useClient: true,
+					perPage: 5
+				}
+			});
+			//grid.on('beforeChange', onBeforeChange);
+			grid.on('afterChange', onAfterChange);
+
+
+
+
+		</script>
+
+	</section>
+
+</body>
+
+</html>

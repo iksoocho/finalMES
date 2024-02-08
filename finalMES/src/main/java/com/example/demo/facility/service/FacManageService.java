@@ -3,6 +3,7 @@ package com.example.demo.facility.service;
 import java.util.List;
 
 import com.example.demo.facility.FacCompositeVO;
+import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacManageVO;
 import com.example.demo.facility.FacNotopVO;
 
@@ -30,5 +31,12 @@ public interface FacManageService {
 	public void insertFacWithNotop(FacCompositeVO facCompositeVO);
 	// 수정
 	public void updateFacNot(FacNotopVO facNotopVO);
+	// 삭제
+
+	
+	
+	// 점검관리
+	// 리스트
+	public List<FacInsVO> FacInsList();
 	
 }

@@ -31,11 +31,32 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MatOrderVO> getMaterialOrderList() {
 		return materialMapper.getMaterialOrderList();
 	}
-
+	// 발주 전체 겸 상세 디테일 거래처에 리스트 띄우는거
 	@Override
-	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matordCode) {
+	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matCode) {
 		// TODO Auto-generated method stub
-		return materialMapper.getMaterialOrdInfoList(matordCode);
+		return materialMapper.getMaterialOrdInfoList(matCode);
+	}
+	
+	
+	// 발주 거래처 관리에서 발주 목록으로 리스트 띄우는거
+	@Override
+	public List<OriginMaterialVO> getMatBusiness1(String businessCode) {
+		// TODO Auto-generated method stub
+		return materialMapper.getMatBusiness1(businessCode);
+	}
+	
+	@Override
+	public List<OriginMaterialVO> getMatBusiness() {
+		// TODO Auto-generated method stub
+		return materialMapper.getMatBusiness();
+	}
+	
+	// 발주 목록에 추가하기
+	@Override
+	public List<MatOrderVO> getMatOrderList() {
+		// TODO Auto-generated method stub
+		return materialMapper.getMatOrderList();
 	}
 
 	// 발주 등록
@@ -90,11 +111,8 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.getReturnList();
 	}
 
-	@Override
-	public List<OriginMaterialVO> getMatBusiness() {
-		// TODO Auto-generated method stub
-		return materialMapper.getMatBusiness();
-	}
+
+
 	
 	
 	
