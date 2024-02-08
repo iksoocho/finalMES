@@ -504,7 +504,7 @@ button {
 						<td><select id="ordState" name="ordState">
 								<option value="0" selected>등록전
 								<option value="1" disabled>등록완료
-								<option value="2" disabled>진행중
+								<option value="2" disabled>처리중
 								<option value="3" disabled>종결
 						</select></td>
 					</tr>
@@ -522,9 +522,7 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text"
-							id="selectedBusinessName" readonly
-						>
+						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text" id="selectedBusinessName" readonly>
 							<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 								<p>검색</p>
 							</button></td>
@@ -542,7 +540,7 @@ button {
 				</table>
 			</div>
 			<div class="containerThree">
-				<h5>상세정보</h5>
+				<h5 class="subTitle">상세정보</h5>
 				<div id="selectedProduct"></div>
 				<button class="btn btn-primary">삭제</button>
 				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropOne">추가</button>
@@ -656,12 +654,10 @@ button {
 
 		<!-- Modal -->
 		<!-- ManagerListModal -->
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-			aria-hidden="true"
-		>
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header" style="background-color: #0d6efd;">
 						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">거래처 목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
@@ -669,24 +665,22 @@ button {
 					<div class="modal-body">
 
 						<table>
-							<thead>
+							<thead style="text-align: center;">
 								<tr>
 									<th>거래처코드</th>
 									<th>거래처명</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}"
-									th:data-businessManager="${business.businessManager}" th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal"
-									onclick="updateInputFields(this)"
-								>
+							<tbody style="text-align: center;">
+								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}" th:data-businessManager="${business.businessManager}"
+									th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal" onclick="updateInputFields(this)">
 									<td th:text="${business.businessCode}"></td>
 									<td th:text="${business.businessName}"></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					<div class="modal-footer">
+					<div class="modal-footer" style="background-color: #0d6efd;">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 
 					</div>
@@ -696,19 +690,17 @@ button {
 
 		<!-- Modal -->
 		<!-- ProductListModal -->
-		<div class="modal fade modal-xl" id="staticBackdropOne" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true"
-		>
+		<div class="modal fade modal-xl" id="staticBackdropOne" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header" style="background-color: #0d6efd;">
 						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">품목 목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 
 					<div class="modal-body">
 						<table>
-							<thead>
+							<thead style="text-align: center;">
 								<tr>
 									<th>상품 코드</th>
 									<th>상품 이름</th>
@@ -716,10 +708,9 @@ button {
 									<th>상품 가격</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="prod : ${productList}" th:data-prodCode="${prod.prodCode}" th:data-prodName="${prod.prodName}"
-									th:data-prodUnit="${prod.prodUnit}" th:data-prodPrice="${prod.prodPrice}" data-bs-dismiss="modal" th:onclick="'displaySelectedProduct(this)'"
-								>
+							<tbody style="text-align: center;">
+								<tr th:each="prod : ${productList}" th:data-prodCode="${prod.prodCode}" th:data-prodName="${prod.prodName}" th:data-prodUnit="${prod.prodUnit}" th:data-prodPrice="${prod.prodPrice}"
+									data-bs-dismiss="modal" th:onclick="'displaySelectedProduct(this)'">
 									<td th:text="${prod.prodCode}"></td>
 									<td th:text="${prod.prodName}"></td>
 									<td th:text="${prod.prodUnit}"></td>
@@ -729,7 +720,7 @@ button {
 						</table>
 
 					</div>
-					<div class="modal-footer">
+					<div class="modal-footer" style="background-color: #0d6efd;">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 
 					</div>

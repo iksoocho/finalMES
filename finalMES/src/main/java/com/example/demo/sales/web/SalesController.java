@@ -67,4 +67,14 @@ public class SalesController {
 		return orderDetailList;
 	}
 
+	// inOutManage 페이지로 거래처, 주문서 뿌려주는 컨트롤러
+	@GetMapping("/inOutManage")
+	public String getInOutList(Model model) {
+		List<BusinessListVO> businessList = ordService.getBusinessList();
+		List<OrderVO> orderList = ordService.getOrderList();
+		model.addAttribute("businessList", businessList);
+		model.addAttribute("orderList", orderList);
+		return "sales/inOutManage";
+	}
+
 }
