@@ -1,4 +1,4 @@
-package com.example.demo.emp;
+package com.example.demo.inform;
 
 
 
@@ -19,17 +19,9 @@ public class EmpVO {
 	String userEmail;
 	String userPhone;
 	String userAuthority;
+	String userState;
 	
-	private String employeeId;
-	String firstName;
-	String lastName;
-	String email;
+	String deptName;
 	
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private Date hireDate;
-	 
-	int salary;
-	String jobId;
-	String departmentId;
-	String managerId;
+	
 }

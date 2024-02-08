@@ -50,8 +50,8 @@ public class WebSecurityConfig {
 		http.csrf().disable();
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.antMatchers("/**").permitAll()
-				//.antMatchers("/planManage").hasAnyRole("USER")
+				//.antMatchers("/**").permitAll()
+				.antMatchers("/planManage").hasAnyRole("USER")
 				.anyRequest().authenticated()
 				
 			)
