@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.facility.FacCompositeVO;
+import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacManageVO;
 import com.example.demo.facility.FacNotopVO;
 import com.example.demo.facility.mapper.FacManageMapper;
@@ -72,12 +73,23 @@ public class FacManageServiceImpl implements FacManageService {
 		
 		
 	}
-
+	
 	@Override
 	public int insertFacNot(FacNotopVO facNotopVO) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	
+	// 점검관리
+	@Override
+	public List<FacInsVO> FacInsList() {
+		return facManageMapper.getfacInsList();
+	}
+
+	
+	
+	
 
 
 }

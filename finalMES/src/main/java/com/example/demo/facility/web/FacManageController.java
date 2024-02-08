@@ -5,6 +5,7 @@ package com.example.demo.facility.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,6 +41,15 @@ public class FacManageController {
 
 	}
 	
+    // 리스트
+    @GetMapping("/facInsList")
+    public String Inslist(Model model) {
+    	model.addAttribute("ilist", facManageService.FacInsList());
+    	System.out.println(model);
+    	return "facility/facInsList";
+    }
+    
+	
 
     // 등록
 //    @PostMapping("/facManagement")
@@ -65,10 +75,14 @@ public class FacManageController {
     @PutMapping("/updateFacNot")
     @ResponseBody
     public String updateFacNot(@RequestBody FacNotopVO facNotopVO) {
-    	String msg;
-    	facManageService.updateFacNot(facNotopVO);
-    	msg = "수정완료";
-		return msg;
-    	
+        String msg;
+        facManageService.updateFacNot(facNotopVO);
+        System.out.println(facNotopVO);
+        msg = "수정완료";
+        return msg;
     }
+
+    
+    // 점검관리
+
  }

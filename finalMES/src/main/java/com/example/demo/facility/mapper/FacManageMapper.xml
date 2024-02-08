@@ -18,19 +18,26 @@
 		SELECT fm.fac_name, fn.*
 		FROM fac_manage fm
 		JOIN fac_notop fn ON fm.fac_code = fn.fac_code
-
+		order
+		by fn.fac_not_code desc
 
 
 	</select>
 
-	<delete id="deleteFac" parameterType="String">
-		DELETE fm, p
-		FROM fac_manage
-		fm
-		INNER JOIN process p ON fm.proc_code = p.proc_code
-		WHERE fm.fac_code
-		= #{facCode}
-	</delete>
+	<select id="getfacInsList" resultType="FacInsVO">
+		  SELECT fi.fac_ins_code,
+           fi.fac_not_code,
+           fn.fac_code,
+           fi.fac_ins_check,
+           fi.fac_ins_person,
+           fi.fac_ins_jud,
+           fi.fac_ins_date,
+           fi.fac_ins_sel,
+           fi.fac_ins_nexd
+    FROM fac_ins fi
+    INNER JOIN fac_notop fn ON fi.fac_not_code = fn.fac_not_code
+    INNER JOIN fac_manage fm ON fi.fac_code = fm.fac_code
+	</select>
 
 	<insert id="insertFac" parameterType="FacManageVO">
 		<selectKey keyProperty="facCode" resultType="String"
@@ -58,15 +65,20 @@
 	<update id="updateFacNot" parameterType="FacNotopVO">
 		UPDATE fac_notop
 		SET
-		fac_code = ${facCode},
-		fac_not_sdate = ${facNotSdate},
+		fac_code = #{facCode},
+		fac_not_sdate = #{facNotSdate},
 		fac_not_ldate =
-		${facNotopLdate},
-		fac_not_person = ${facNotopPerson},
-		fac_not_situation
-		= ${facNotopSituation}
-		fac_not_ reason = ${facNotopReason}
+		#{facNotLdate},
+		fac_not_person = #{facNotPerson},
+		fac_not_situation =
+		#{facNotSituation},
+		fac_not_reason = #{facNotReason}
 		WHERE
-		fac_not_code = ${facNotopCode}
+		fac_not_code =
+		#{facNotCode}
 	</update>
+
+
+
+
 </mapper>

@@ -21,10 +21,9 @@ public class MvcConfig implements WebMvcConfigurer {
 		
 		// 설비파트
 		registry.addViewController("/facManagement").setViewName("facility/facManagement");
-		registry.addViewController("/facList").setViewName("facility/facList");
 		registry.addViewController("/facNotop").setViewName("facility/facNotop");
-		registry.addViewController("/facRepair").setViewName("facility/facRepair");
-		registry.addViewController("/facRepList").setViewName("facility/facRepList");
+		registry.addViewController("/facIns").setViewName("facility/facIns");
+		registry.addViewController("/facRep").setViewName("facility/facRep");
 
 		// asdasdsadfgadfgasdfg
 		
