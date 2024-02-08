@@ -2,6 +2,8 @@ package com.example.demo.material;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -21,4 +23,12 @@ public class OriginMaterialVO {
 	
 	// LOT 테이블 꺼 
 	private String matCount;
+	
+	private int matOrCount;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date matOrDate;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date matOrDueDate;
+	private String matOrManager;
+	private String matOrState;
 }

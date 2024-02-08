@@ -37,11 +37,13 @@ public class MaterialController {
 		List<MatOrderInfoVO> mList = materialService.getMaterialOrdInfoList(code);
 		List<OriginMaterialVO> oList = materialService.getOriginMaterialList();
 		List<OriginMaterialVO> buisList = materialService.getMatBusiness();
+		List<OriginMaterialVO> buisList1 = materialService.getMatBusiness1(code);
 		model.addAttribute("list", list);
 		model.addAttribute("mList", mList);
 		model.addAttribute("oList", oList);
 		System.out.println("oList"+oList);
 		model.addAttribute("buisList", buisList);
+		model.addAttribute("buisList", buisList1);
 		return "material/matOrder";
 	}
 	
@@ -51,6 +53,13 @@ public class MaterialController {
 	@ResponseBody
 	public List<MatOrderInfoVO> getMaterialOrdInfoList(@RequestParam String matCode){
 		return materialService.getMaterialOrdInfoList(matCode);
+	}
+	
+	//발주목록 옮기기
+	@GetMapping("matListDetail")
+	@ResponseBody
+	public List<OriginMaterialVO> getMatBusiness1(@RequestParam String businessCode){
+		return materialService.getMatBusiness1(businessCode);
 	}
 	
 	
