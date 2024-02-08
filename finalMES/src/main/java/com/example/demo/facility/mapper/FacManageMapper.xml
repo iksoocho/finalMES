@@ -20,23 +20,26 @@
 		JOIN fac_notop fn ON fm.fac_code = fn.fac_code
 		order
 		by fn.fac_not_code desc
-
-
 	</select>
 
 	<select id="getfacInsList" resultType="FacInsVO">
-		  SELECT fi.fac_ins_code,
-           fi.fac_not_code,
-           fn.fac_code,
-           fi.fac_ins_check,
-           fi.fac_ins_person,
-           fi.fac_ins_jud,
-           fi.fac_ins_date,
-           fi.fac_ins_sel,
-           fi.fac_ins_nexd
-    FROM fac_ins fi
-    INNER JOIN fac_notop fn ON fi.fac_not_code = fn.fac_not_code
-    INNER JOIN fac_manage fm ON fi.fac_code = fm.fac_code
+		SELECT
+		fi.fac_ins_code,
+		fi.fac_not_code,
+		fi.fac_code,
+		fi.fac_ins_check,
+		fi.fac_ins_person,
+		fi.fac_ins_jud,
+		fi.fac_ins_date,
+		fi.fac_ins_sel,
+		fi.fac_ins_nexd,
+		fm.fac_name
+		FROM
+		fac_ins fi
+		INNER JOIN
+		fac_notop fn ON fi.fac_not_code = fn.fac_not_code
+		INNER JOIN
+		fac_manage fm ON fi.fac_code = fm.fac_code;
 	</select>
 
 	<insert id="insertFac" parameterType="FacManageVO">
@@ -57,9 +60,9 @@
 
 	<insert id="insertFacNot" parameterType="FacNotopVO">
 		INSERT INTO fac_notop
-		(fac_code, notop_code)
+		(fac_code, notop_code, fac_not_reason)
 		VALUES
-		(#{facCode}, 'NOTOP001')
+		(#{facCode}, 'NOTOP001', '설비등록으로 인한 비가동')
 	</insert>
 
 	<update id="updateFacNot" parameterType="FacNotopVO">

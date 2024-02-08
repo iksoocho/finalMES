@@ -45,8 +45,7 @@ public class FacManageController {
     @GetMapping("/facInsList")
     public String Inslist(Model model) {
     	model.addAttribute("ilist", facManageService.FacInsList());
-    	System.out.println(model);
-    	return "facility/facInsList";
+    	return "facility/facIns";
     }
     
 	

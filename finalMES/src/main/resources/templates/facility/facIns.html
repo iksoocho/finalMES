@@ -13,87 +13,89 @@
 <title>설비비점검관리</title>
 <style>
 #layoutSidenav_content {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-bottom: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
 input[type="text"], input[type="date"] {
-	width: 200px;
-	box-sizing: border-box;
+    width: 200px;
+    box-sizing: border-box;
 }
 
 label {
-	display: block;
-	margin-bottom: 5px;
+    display: block;
+    margin-bottom: 5px;
 }
 
 input[type="checkbox"] {
-	margin-right: 5px;
+    margin-right: 5px;
 }
 
 button {
-	margin-right: 5px;
+    margin-right: 5px;
 }
 
 #myModal3 {
-	text-align: center;
+    text-align: center;
 }
 </style>
 </head>
 <body>
 
-	<section layout:fragment="content">
-		<h1>설비점검관리</h1>
+    <section layout:fragment="content">
+        <h1>설비점검관리</h1>
 
-		<div id="layoutSidenav_content" class="container text-center">
+        <div id="layoutSidenav_content" class="container text-center">
 
-			<div class="col">
-				<br> <br>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>점검코드</th>
-							<td colspan="2"><input type="text" id="facInsCode"
-								name="facInsCode" required readonly></td>
-							<th>설비명</th>
-							<td colspan="2"><input type="text" id="facName"
-								name="facName" th:data-facCode="${facCode}" required></td>
-							<th>담당자</th>
-							<td colspan="2"><input type="text" id="facInsPerson"
-								name="facInsPerson" required></td>
-						<tr>
-							<th>점검사항</th>
-							<td colspan="2"><input type="text" id="facInsCheck"
-								name="facInsCheck"></td>
-							<th>판정</th>
-							<td colspan="2"><input type="text" id="facInsJud"
-								name="facInsJud"></td>
-							<th>설비코드</th>
-							<td colspan="2"><input type="text" id="facCode" name="facCode" required></td>
-						<tr>
-							<th>점검일</th>
-							<td colspan="2"><input type="date" id="facInsDate"
-								name="facInsDate" required></td>
-							<th>차기점검일</th>
-							<td colspan="2"><input type="date" id="facInsNexd"
-								name="facInsNexd" required></td>
-						</tr>
-						<tr>
-					</thead>
-				</table>
-				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-				<br> <br> <br>
-				<div id="grid" class="container"></div>
-			</div>
-		</div>
+            <div class="col">
+                <br> <br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>점검코드</th>
+                            <th colspan="2"><input type="text" id="facInsCode"
+                                name="facInsCode" required readonly></th>
+                            <th>설비명</th>
+                            <th colspan="2"><input type="text" id="facName"
+                                name="facName" th:data-facCode="${facCode}" required></th>
+                            <th>담당자</th>
+                            <th colspan="2"><input type="text" id="facInsPerson"
+                                name="facInsPerson" required></th>
+                        </tr>
+                        <tr>
+                            <th>점검사항</th>
+                            <th colspan="2"><input type="text" id="facInsCheck"
+                                name="facInsCheck"></th>
+                            <th>판정</th>
+                            <th colspan="2"><input type="text" id="facInsJud"
+                                name="facInsJud"></th>
+                            <th>설비코드</th>
+                            <th colspan="2"><input type="text" id="facCode" name="facCode" required></th>
+                        </tr>
+                        <tr>
+                            <th>점검일</th>
+                            <th colspan="2"><input type="date" id="facInsDate"
+                                name="facInsDate" required></th>
+                            <th>차기점검일</th>
+                            <th colspan="2"><input type="date" id="facInsNexd"
+                                name="facInsNexd" required></th>
+                        </tr>
+                    </thead>
+                </table>
+                <button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+                <br> <br> <br>
+                <div id="grid" class="container"></div>
+            </div>
+        </div>
 
-			<script th:inline="javascript">
-   		document.getElementById('saveBtn').addEventListener("click", function() {
+            <script th:inline="javascript">
+           
+         document.getElementById('saveBtn').addEventListener("click", function() {
             var facInsCode = document.getElementsByName("facInsCode")[0].value;
             var facCode = document.getElementsByName("facCode")[0].value;
             var facName = document.getElementsByName("facName")[0].value;
@@ -138,14 +140,14 @@ button {
                 alert("데이터 불러오기 실패!");
             });
 
-    });
+    }); 
 
         // 그리드 페이징
-        let FacInsList = [[${ilist}]];
-        console.log(FacInsList);
+        let facInsList = [[${list}]];
+        console.log(facInsList);
         const grid = new tui.Grid({
             el: document.getElementById('grid'),
-            data: FacInsList,
+            data: facInsList,
             scrollX: false,
             scrollY: false,
             columns: [
@@ -173,6 +175,11 @@ button {
                     header: '판정',
                     name: 'facInsJud',
                     align: 'center'
+                },
+                {
+                    header: '차기점검일',
+                    name: 'facInsJud',
+                    align: 'facInsNexd'
                 }
 
             ],
@@ -183,8 +190,8 @@ button {
             }
         });
 
-	</script>
+    </script>
 
-	</section>
+    </section>
 </body>
 </html>

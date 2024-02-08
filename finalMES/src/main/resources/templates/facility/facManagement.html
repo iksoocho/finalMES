@@ -285,9 +285,11 @@ button {
 	function updateInputFields(Element) {
 		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
 		var facName = Element.getAttribute('data-facName');
+		
 
 		// 입력 필드의 값 설정
 		document.getElementById('facName').value = facName;
+		
 
 	}
 
@@ -415,6 +417,11 @@ button {
 		{
 			header : '설비명',
 			name : 'facName',
+			align: 'center'
+		}, 
+		{
+			header : '공정라인',
+			name : 'procName',
 			align: 'center'
 		}, 
 		{
