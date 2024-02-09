@@ -24,18 +24,38 @@ public class ProduceMapperTest {
 	@Autowired
 	WorkMapper workMapper;
 	
-	//등록 테스트
+	
+	
+	//업데이트 테스트
 	@Test
-	public void check() {
-		String dinsCode = "DINS001";
-		String procCode = "proc02";
+	public void update() {
+		WorkMidRegistVO vo = new WorkMidRegistVO();
+		vo.setProgBadCount(2);
+		vo.setProgPassCount(20);
+		vo.setEndTime("24-02-09 19:33");
+		vo.setProgCode("PROG009");
 		
-		List<WorkMidRegistVO> vo = workMapper.checkWorkMidRegist(dinsCode, procCode);
-		System.out.println(vo);
+		int result = workMapper.updateWorkMidRegist(vo);
+		System.out.println(result);
 		
 		
 		
 	}
+	
+	
+	
+//	//등록 테스트
+//	@Test
+//	public void check() {
+//		String dinsCode = "DINS001";
+//		String procCode = "proc02";
+//		
+//		List<WorkMidRegistVO> vo = workMapper.checkWorkMidRegist(dinsCode, procCode);
+//		System.out.println(vo);
+//		
+//		
+//		
+//	}
 	
 	
 //	//공정, 설비목록 조회 테스트

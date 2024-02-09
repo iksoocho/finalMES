@@ -1,398 +1,559 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layout}">
-<head>
-<meta charset="UTF-8">
-<title>작업등록</title>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>작업등록</title>
 
-<style scoped>
-tr:has(input[name="facSelect"]:checked) {
-  background-color: lightblue; 
-  
-.proc-row:active {
-  background-color: lightblue; 
-}  
-</style>
+    <style scoped>
+      tr:has(input[name="facSelect"]:checked) {
+        background-color: lightblue;
 
-</head>
-<body>
-	<section layout:fragment="content">
-		<div class="container w-75">
-			<!-- ============================모달============================ -->
-			<div class="modal fade" id="facSelect" tabindex="-1"
-			aria-labelledby="facSelect" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<!-- ============================모달 내용============================ -->
-						<div class="modal-body">
-							<div class="container-fluid">
-								<div class="row row-cols-2">
-									<div class="col-6 col-md-4">
-										<table class="table table-hover text-center">
-											<thead>
-												<tr>
-													<th>공정</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr 
-													th:each="proc : ${proc}" class="proc-row"
-													th:data-proc-code="${proc.procCode}"
-												>
-													<td th:text="${proc.procName}"></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-									<div class="col-6 col-md-8">
-										<table class="table">
-											<thead>
-												<tr>
-													<th></th>
-													<th>설비코드</th>
-													<th>설비명</th>
-													<th>설비상태</th>
-												</tr>
-											</thead>
-											<tbody id="changeFac">
-												<tr th:block th:each="fac : ${fac}">
-													<td>
-														<div class="form-check">
-									                      <input
-									                        class="form-check-input"
-									                        type="radio"
-									                        name="facSelect"
-									                        th:id="${fac.facCode}"
-									                      />
-								                        </div>
-													</td>
-													<td th:text="${fac.facCode}" ></td>
-													<td th:text="${fac.facName}" ></td>
-													<td th:text="${fac.facState}" ></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								
-								</div>
-							</div>
-							
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">닫기</button>
-							<button type="button" class="btn btn-primary" onclick="facSelect()">선택</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			
-			
-			<h1>작업등록</h1>
-			<div>
-				<div class="row">
-					<label for="WorkDate" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업일자</label>
-					<div class="col-3">
-						<input type="text" class="form-control form-control-lg text-center" placeholder="작업일자"
-							aria-label="WorkDate" id="WorkDate" readonly>
-					</div>
-					<label for="Worker" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">작업자</label>
-					<div class="col-3">
-						<input type="text" class="form-control form-control-lg text-center" placeholder="작업자"
-							aria-label="Worker" id="Worker" value="김준성" readonly>
-					</div>
-				</div>
-				<div class="row mt-4">
-					<label for="selectedFacCode" class="col-3 col-form-label col-form-label-lg text-center fw-bolder"
-					data-bs-toggle="modal" data-bs-target="#facSelect">설비</label>
-					<div class="col-3">
-						<input type="text" class="form-control form-control-lg text-center" placeholder="공정흐름?설비?"
-							aria-label="selectedFacCode" id="selectedFacCode" readonly>
-					</div>
-					<label for="OrderCount" class="col-3 col-form-label col-form-label-lg text-center fw-bolder">계획량</label>
-					<div class="col-3">
-						<input type="text" class="form-control form-control-lg text-center" 
-							th:value="${vo.dInsCount}" aria-label="OrderCount" id="OrderCount" readonly>
-					</div>
-				</div>
-				<p th:text="${vo}"></p>
-				<div class="row mt-4">
-					<div class="col-6">
-						
-						<p th:text="${load[0].prodName}"></p>
-						
-						<table class="table ">
-			              <thead>
-			                <tr>
-			                  <th>공정명</th>
-			                  <th>상태</th>
-			                </tr>
-			              </thead>
-			              <tbody>
-			                <tr th:block th:each="list : ${load}">
-			                  <td th:text="${list.procName}"></td>
-			                  <td>ㅇㅁㅇ</td>
-			                </tr>
-			              </tbody>
-			            </table>
-						
-					</div>
-					<div class="col-6">
-						<div class="row">
-								<label for="workCount" class="col-6 col-form-label col-form-label-lg text-center fw-bolder">작업량</label>
-							<div class="col-6">
-								<input type="number" class="form-control form-control-lg text-center" value="0"
-									aria-label="workCount" id="workCount" th:max="${vo.dInsCount}">
-							</div>
-						</div>
-						<div class="row mt-4">
-							<div class="col d-grid gap-2">
-								<button class="btn btn-success text-center fw-bolder fs-5" type="button" id="workStart">작업시작</button>
-							</div>								
-							<div class="col">
-								<input type="text" class="form-control form-control-lg text-center" placeholder=" -- : -- "
-									aria-label="workStart" id="workStart" readonly>
-							</div>
-						</div>
-						<div class="row mt-4">
-							<div class="col d-grid gap-2">
-								<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workEnd">작업종료</button>
-							</div>								
-							<div class="col">
-								<input type="text" class="form-control form-control-lg text-center" placeholder=" -- : -- "
-									aria-label="workEnd" id="workEnd" readonly>
-							</div>
-						</div>
-						<div class="row mt-4">
-							<label for="badCount" class="col col-form-label col-form-label-lg text-center fw-bolder">불량수량</label>
-							<div class="col">
-								<div class="row">
-									<div class="col-9">
-										<input type="number" class="form-control form-control-lg text-center"
-											aria-label="badCount" id="badCount" value="0" readonly >
-									</div>
-									<div class="col-3 d-grid gap-2">
-										<button class="btn btn-danger text-center fw-bolder fs-5" 
-										type="button" id="badCount" onclick="increaseCount()">+</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row mt-4">
-					<div class="col-6"></div>
-					<div class="col-6">
-						<div class="row">
-							<div class="col d-grid gap-2">
-								<button class="btn btn-secondary text-center fw-bolder fs-5" type="button" id="workSave"
-								onclick = "workSave()">작업등록</button>
-							</div>
-							<div class="col d-grid gap-2">
-								<button class="btn btn-danger text-center fw-bolder fs-5" type="button" id="workCancel">등록취소</button>
-							</div>
-							<input type="hidden" id="hiddenProcCode" value="proc01"/>
-						</div>
-					</div>
-					
-				</div>
-				
-			</div>
-		</div>
-		
-		<script>
-	    	document.addEventListener('DOMContentLoaded', (event) => {
-		        var today = new Date();
-		        var dd = String(today.getDate()).padStart(2, '0');
-		        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-		        var yy = today.getFullYear().toString().substr(-2);
-		        
-		        today = yy + '-' + mm + '-' + dd;
-		
-		        document.getElementById('WorkDate').value = today;
-		    });
-	    	
-	    	// 작업시작 버튼 클릭 시
-	    	document.querySelector('button[id="workStart"]').addEventListener("click", function() {
-	    	  let currentTime = new Date();
-	    	  let hours = currentTime.getHours();
-	    	  let minutes = currentTime.getMinutes();
-	    	  let startTime = document.querySelector('input[id="workStart"]');
-	    	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
-	    	  startTime.value = formatTime(hours, minutes);
-	    	  startTime.name = formatFullTime(currentTime);
-	    	});
+      .proc-row:active {
+        background-color: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <section layout:fragment="content">
+      <div class="container w-75">
+        <!-- ============================모달============================ -->
+        <div
+          class="modal fade"
+          id="facSelect"
+          tabindex="-1"
+          aria-labelledby="facSelect"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">title</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <!-- ============================모달 내용============================ -->
+              <div class="modal-body">
+                <div class="container-fluid">
+                  <div class="row row-cols-2">
+                    <div class="col-6 col-md-4">
+                      <table class="table table-hover text-center">
+                        <thead>
+                          <tr>
+                            <th>공정</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            th:each="proc : ${proc}"
+                            class="proc-row"
+                            th:data-proc-code="${proc.procCode}"
+                          >
+                            <td th:text="${proc.procName}"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-6 col-md-8">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>설비코드</th>
+                            <th>설비명</th>
+                            <th>설비상태</th>
+                          </tr>
+                        </thead>
+                        <tbody id="changeFac">
+                          <tr th:block th:each="fac : ${fac}">
+                            <td>
+                              <div class="form-check">
+                                <input
+                                  class="form-check-input"
+                                  type="radio"
+                                  name="facSelect"
+                                  th:id="${fac.facCode}"
+                                />
+                              </div>
+                            </td>
+                            <td th:text="${fac.facCode}"></td>
+                            <td th:text="${fac.facName}"></td>
+                            <td th:text="${fac.facState}"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  닫기
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onclick="facSelect()"
+                >
+                  선택
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-	    	// 작업종료 버튼 클릭 시
-	    	document.querySelector('button[id="workEnd"]').addEventListener("click", function() {
-	    	  let currentTime = new Date();
-	    	  let hours = currentTime.getHours();
-	    	  let minutes = currentTime.getMinutes();
-	    	  let endTime = document.querySelector('input[id="workEnd"]');
-	    	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
-	    	  endTime.value = formatTime(hours, minutes);
-	    	  endTime.name = formatFullTime(currentTime);
-	    	});
+        <h1>작업등록</h1>
+        <div>
+          <div class="row">
+            <label
+              for="WorkDate"
+              class="col-3 col-form-label col-form-label-lg text-center fw-bolder"
+              >작업일자</label
+            >
+            <div class="col-3">
+              <input
+                type="text"
+                class="form-control form-control-lg text-center"
+                placeholder="작업일자"
+                aria-label="WorkDate"
+                id="WorkDate"
+                readonly
+              />
+            </div>
+            <label
+              for="Worker"
+              class="col-3 col-form-label col-form-label-lg text-center fw-bolder"
+              >작업자</label
+            >
+            <div class="col-3">
+              <input
+                type="text"
+                class="form-control form-control-lg text-center"
+                placeholder="작업자"
+                aria-label="Worker"
+                id="Worker"
+                value="김준성"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="row mt-4">
+            <label
+              for="selectedFacCode"
+              class="col-3 col-form-label col-form-label-lg text-center fw-bolder"
+              data-bs-toggle="modal"
+              data-bs-target="#facSelect"
+              >설비</label
+            >
+            <div class="col-3">
+              <input
+                type="text"
+                class="form-control form-control-lg text-center"
+                placeholder="공정흐름?설비?"
+                aria-label="selectedFacCode"
+                id="selectedFacCode"
+                readonly
+              />
+            </div>
+            <label
+              for="OrderCount"
+              class="col-3 col-form-label col-form-label-lg text-center fw-bolder"
+              >계획량</label
+            >
+            <div class="col-3">
+              <input
+                type="text"
+                class="form-control form-control-lg text-center"
+                th:value="${vo.dInsCount}"
+                aria-label="OrderCount"
+                id="OrderCount"
+                readonly
+              />
+            </div>
+          </div>
+          <p th:text="${vo}"></p>
+          <div class="row mt-4">
+            <div class="col-6">
+              <p th:text="${load[0].prodName}"></p>
 
-	    	// 시간을 HH:MM 형식으로 변환하는 함수
-	    	function formatTime(hours, minutes) {
-	    	  hours = padZero(hours);
-	    	  minutes = padZero(minutes);
-	    	  return hours + ":" + minutes;
-	    	}
-	    	
-	    	// 시간을 yy/MM/dd HH:MM 형식으로 변환하는 함수
-	    	function formatFullTime(currentTime){
-	    		let year = currentTime.getFullYear();
-	    		let month = currentTime.getMonth() + 1;
-	    		let day = currentTime.getDate();
-	    		let hours = currentTime.getHours();
-	    		let minutes = currentTime.getMinutes();
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>공정명</th>
+                    <th>상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:block th:each="list : ${load}">
+                    <td th:text="${list.procName}"></td>
+                    <td>ㅇㅁㅇ</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <label
+                  for="workCount"
+                  class="col-6 col-form-label col-form-label-lg text-center fw-bolder"
+                  >작업량</label
+                >
+                <div class="col-6">
+                  <input
+                    type="number"
+                    class="form-control form-control-lg text-center"
+                    value="0"
+                    aria-label="workCount"
+                    id="workCount"
+                    th:max="${vo.dInsCount}"
+                  />
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col d-grid gap-2">
+                  <button
+                    class="btn btn-success text-center fw-bolder fs-5"
+                    type="button"
+                    id="workStart"
+                  >
+                    작업시작
+                  </button>
+                </div>
+                <div class="col">
+                  <input
+                    type="text"
+                    class="form-control form-control-lg text-center"
+                    placeholder=" -- : -- "
+                    aria-label="workStart"
+                    id="workStart"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col d-grid gap-2">
+                  <button
+                    class="btn btn-danger text-center fw-bolder fs-5"
+                    type="button"
+                    id="workEnd"
+                  >
+                    작업종료
+                  </button>
+                </div>
+                <div class="col">
+                  <input
+                    type="text"
+                    class="form-control form-control-lg text-center"
+                    placeholder=" -- : -- "
+                    aria-label="workEnd"
+                    id="workEnd"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row mt-4">
+                <label
+                  for="badCount"
+                  class="col col-form-label col-form-label-lg text-center fw-bolder"
+                  >불량수량</label
+                >
+                <div class="col">
+                  <div class="row">
+                    <div class="col-3 d-grid gap-2">
+                      <button
+                        class="btn btn-danger text-center fw-bolder fs-5"
+                        type="button"
+                        id="badCountMinus"
+                        onclick="decreaseCount()"
+                      >
+                        -
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <input
+                        type="number"
+                        class="form-control form-control-lg text-center"
+                        aria-label="badCount"
+                        id="badCount"
+                        value="0"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-3 d-grid gap-2">
+                      <button
+                        class="btn btn-danger text-center fw-bolder fs-5"
+                        type="button"
+                        id="badCountPlus"
+                        onclick="increaseCount()"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-6"></div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col d-grid gap-2">
+                  <button
+                    class="btn btn-secondary text-center fw-bolder fs-5"
+                    type="button"
+                    id="workSave"
+                    onclick="workSave()"
+                  >
+                    작업등록
+                  </button>
+                </div>
+                <div class="col d-grid gap-2">
+                  <button
+                    class="btn btn-danger text-center fw-bolder fs-5"
+                    type="button"
+                    id="workCancel"
+                  >
+                    등록취소
+                  </button>
+                </div>
+                <input type="hidden" id="hiddenProcCode" value="proc01" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-	    		let formattedTime = `${year.toString().slice(-2)}/${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      <script>
+          	document.addEventListener('DOMContentLoaded', (event) => {
+               var today = new Date();
+               var dd = String(today.getDate()).padStart(2, '0');
+               var mm = String(today.getMonth() + 1).padStart(2, '0');
+               var yy = today.getFullYear().toString().substr(-2);
 
-	    		console.log(formattedTime);
-	    		return formattedTime;
+               today = yy + '-' + mm + '-' + dd;
 
-	    	}
+               document.getElementById('WorkDate').value = today;
+           });
 
-	    	// 한 자리 숫자의 경우 앞에 0을 붙이는 함수
-	    	function padZero(number) {
-	    	  return number < 10 ? "0" + number : number;
-	    	}
-	    	
-	    	//+버튼을 누르면 불량수량 1씩 추가
-	    	function increaseCount() {
-	    	    var badValue = document.querySelector('input[id="badCount"]');
-	    	    var maxValue = [[${vo.dInsCount}]];
-	    	    var count = parseInt(badValue.value);
-	    	    if(count < maxValue){
-		    	    count += 1;
-		    	    badValue.value = count;
-	    	    }
-	    	}
-	    	
-	    	//설비추가
-			function facSelect(){
-	    		const selectFac = document.querySelector('input[name="facSelect"]:checked');
-	    		if(!selectFac){
-	    			alert('설비를 선택해주세요');
-	    			return;
-	    		}
-	    		
-	    		document.getElementById('selectedFacCode').value = selectFac.id;
-	    		document.getElementById('selectedFacCode').name = selectFac.name;
-	    		
-	    		let facSelectModal = document.getElementById('facSelect');
-                let modal = bootstrap.Modal.getInstance(facSelectModal);
-                modal.hide();
-	    	}
-	    	
-	    	
-	    	
-			document.querySelectorAll(".proc-row").forEach((row) => {
-	          row.addEventListener("click", function () {
-	            const procCode = this.getAttribute("data-proc-code");
-	            console.log("procCode : ", procCode);
-	            document.querySelector('input[id="hiddenProcCode"]').value = procCode;
-	            fetch("facList?procCode=" + procCode)
-	              .then((response) => response.json())
-	              .then((data) => {
-	                console.log('data', data);
-	            	  const facTbody = document.getElementById("changeFac");
-	                facTbody.innerHTML = ""; // 기존 내용 초기화
+          	// 작업시작 버튼 클릭 시
+          	document.querySelector('button[id="workStart"]').addEventListener("click", function() {
+          	  let currentTime = new Date();
+          	  let hours = currentTime.getHours();
+          	  let minutes = currentTime.getMinutes();
+          	  let startTime = document.querySelector('input[id="workStart"]');
+          	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
+          	  startTime.value = formatTime(hours, minutes);
+          	  startTime.name = formatFullTime(currentTime);
+          	});
 
-	                // 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-	                data.forEach((fac) => {
-	                  const tr = document.createElement("tr");
-	                  console.log(fac);
-	                  tr.innerHTML = `
-								<td>
-			                	  <div class="form-check">
-				                		<input
-				                			class="form-check-input"
-				                			type="radio"
-				                			name="facSelect"
-				                			id="${fac.facCode}"
-				                			
-				                		/>
-				                	</div>
-								</td>
-								<td>${fac.facCode}</td>
-								<td>${fac.facName}</td>
-								<td>${fac.facState}</td>
-							`;
-	                  facTbody.appendChild(tr);
-	                });
-	              });
-	          });
-	        });
-			
-			function workSave(){
-				let dinscode = '[[${vo.dInsCode}]]';
-				let proccode = document.querySelector('input[id="hiddenProcCode"]').value;
-				let proginscount = [[${vo.dInsCount}]];
-				let progbadcount = document.querySelector('input[id="badCount"]').value;
-				let progpasscount = document.querySelector('input[id="workCount"]').value;
-				let starttime = document.querySelector('input[id="workStart"]').name;
-				let endtime = document.querySelector('input[id="workEnd"]').name;
-				console.log("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode);
-				fetch("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode)
-				.then((response) => response.json())
-				.then((data) => {
-					console.log('조회결과 : ', data);
-				});
-				
-				let data={
-						dinsCode : dinscode,
-						procCode : proccode,
-						progInsCount : proginscount,
-						progBadCount : progbadcount,
-						progPassCount : progpasscount,
-						startTime : starttime,
-						endTime : endtime
-				};
+          	// 작업종료 버튼 클릭 시
+          	document.querySelector('button[id="workEnd"]').addEventListener("click", function() {
+          	  let currentTime = new Date();
+          	  let hours = currentTime.getHours();
+          	  let minutes = currentTime.getMinutes();
+          	  let endTime = document.querySelector('input[id="workEnd"]');
+          	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
+          	  endTime.value = formatTime(hours, minutes);
+          	  endTime.name = formatFullTime(currentTime);
+          	});
 
-				console.log('data : ', data);
-				
-				fetch('/workMidInsert', {
-					method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/json',
-		            },
-		            body: JSON.stringify(data)
-				})
-				.then(response => {
-					if (!response.ok) {
-		                throw new Error('Network response was not ok');
-		            }
-		            return response.text();
-				})
-				.then(data => {
-					console.log('Success:', data);
-		            alert(data);
-				})
-				.catch(error => {
-		            console.error('Error:', error);
-		        });
-			
-			}
-			
-				
-		
-    	
-			
-	    	
-	    	
-	    	
-		</script>
-	</section>
-</body>
+          	// 시간을 HH:MM 형식으로 변환하는 함수
+          	function formatTime(hours, minutes) {
+          	  hours = padZero(hours);
+          	  minutes = padZero(minutes);
+          	  return hours + ":" + minutes;
+          	}
+
+          	// 시간을 yy/MM/dd HH:MM 형식으로 변환하는 함수
+          	function formatFullTime(currentTime){
+          		let year = currentTime.getFullYear();
+          		let month = currentTime.getMonth() + 1;
+          		let day = currentTime.getDate();
+          		let hours = currentTime.getHours();
+          		let minutes = currentTime.getMinutes();
+
+          		let formattedTime = `${year.toString().slice(-2)}/${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+          		console.log(formattedTime);
+          		return formattedTime;
+
+          	}
+
+          	// 한 자리 숫자의 경우 앞에 0을 붙이는 함수
+          	function padZero(number) {
+          	  return number < 10 ? "0" + number : number;
+          	}
+
+          	//-버튼을 누르면 불량수량 1씩 감소
+          	function decreaseCount() {
+          	    let badValue = document.querySelector('input[id="badCount"]');
+          	    let count = parseInt(badValue.value);
+          	    if(count > 0){
+           	    count -= 1;
+           	    badValue.value = count;
+          	    }
+          	}
+
+          	//+버튼을 누르면 불량수량 1씩 추가
+          	function increaseCount() {
+          	    let badValue = document.querySelector('input[id="badCount"]');
+          	    let maxValue = [[${vo.dInsCount}]];
+          	    let count = parseInt(badValue.value);
+          	    if(count < maxValue){
+           	    count += 1;
+           	    badValue.value = count;
+          	    }
+          	}
+
+          	//설비추가
+        function facSelect(){
+          		const selectFac = document.querySelector('input[name="facSelect"]:checked');
+          		if(!selectFac){
+          			alert('설비를 선택해주세요');
+          			return;
+          		}
+
+          		document.getElementById('selectedFacCode').value = selectFac.id;
+          		document.getElementById('selectedFacCode').name = selectFac.name;
+
+          		let facSelectModal = document.getElementById('facSelect');
+                     let modal = bootstrap.Modal.getInstance(facSelectModal);
+                     modal.hide();
+          	}
+
+
+
+        document.querySelectorAll(".proc-row").forEach((row) => {
+                row.addEventListener("click", function () {
+                  const procCode = this.getAttribute("data-proc-code");
+                  console.log("procCode : ", procCode);
+                  document.querySelector('input[id="hiddenProcCode"]').value = procCode;
+                  fetch("facList?procCode=" + procCode)
+                    .then((response) => response.json())
+                    .then((data) => {
+                      console.log('data', data);
+                  	  const facTbody = document.getElementById("changeFac");
+                      facTbody.innerHTML = ""; // 기존 내용 초기화
+
+                      // 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
+                      data.forEach((fac) => {
+                        const tr = document.createElement("tr");
+                        console.log(fac);
+                        tr.innerHTML = `
+        					<td>
+                        	  <div class="form-check">
+        	                		<input
+        	                			class="form-check-input"
+        	                			type="radio"
+        	                			name="facSelect"
+        	                			id="${fac.facCode}"
+
+        	                		/>
+        	                	</div>
+        					</td>
+        					<td>${fac.facCode}</td>
+        					<td>${fac.facName}</td>
+        					<td>${fac.facState}</td>
+        				`;
+                        facTbody.appendChild(tr);
+                      });
+                    });
+                });
+              });
+
+        function workSave(){
+        	let dinscode = '[[${vo.dInsCode}]]';
+        	let proccode = document.querySelector('input[id="hiddenProcCode"]').value;
+        	let proginscount = [[${vo.dInsCount}]];
+        	let progbadcount = document.querySelector('input[id="badCount"]').value;
+        	let progpasscount = document.querySelector('input[id="workCount"]').value;
+        	let starttime = document.querySelector('input[id="workStart"]').name;
+        	let endtime = document.querySelector('input[id="workEnd"]').name;
+        	console.log("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode);
+
+        	let vo={
+        			dinsCode : dinscode,
+        			procCode : proccode,
+        			progInsCount : proginscount,
+        			progBadCount : progbadcount,
+        			progPassCount : progpasscount,
+        			startTime : starttime,
+        			endTime : endtime
+        	};
+
+        	fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
+        	.then((response) => response.json())
+        	.then((data) => {
+        		console.log('조회결과 : ', data);
+
+
+        		console.log('vo : ', vo);
+
+        		if(data){
+        			alert("이미 데이터가 존재");
+        			fetch('/workMidUpdate', {
+        				method : 'put',
+        				headers : {
+        					'Content-Type' : 'application/json',
+        				},
+        				body : JSON.stringify(vo)
+        			})
+        			.then(response => {
+        				if(!response.ok) {
+        					throw new Error('Network response was not ok');
+        				}
+        				return response.text();
+        			})
+        			.then(data => {
+        				console.log('Success : ', data);
+        				alert(data);
+        				location.href = '/planOrderList';
+        			})
+        			.catch(error => {
+        				console.log('Error : ', error);
+        			});
+
+        		}else{
+
+        			fetch('/workMidInsert', {
+        				method: 'POST',
+        	            headers: {
+        	                'Content-Type': 'application/json',
+        	            },
+        	            body: JSON.stringify(vo)
+        			})
+        			.then(response => {
+        				if (!response.ok) {
+        	                throw new Error('Network response was not ok');
+        	            }
+        	            return response.text();
+        			})
+        			.then(data => {
+        				console.log('Success:', data);
+        	            alert(data);
+        			})
+        			.catch(error => {
+        	            console.error('Error:', error);
+        	        });
+        		}
+
+        	});
+
+
+        }
+      </script>
+    </section>
+  </body>
 </html>

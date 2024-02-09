@@ -15,4 +15,6 @@ public interface WorkMapper {
 	public List<ProcessVO> getProcData();
 	public int insertWorkMidRegist(WorkMidRegistVO workMidRegistVO);
 	public List<WorkMidRegistVO> checkWorkMidRegist(@Param("dinsCode") String dinsCode, @Param("procCode") String procCode);
+	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO);
+	
 }

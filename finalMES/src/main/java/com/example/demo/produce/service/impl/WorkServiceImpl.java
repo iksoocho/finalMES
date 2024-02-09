@@ -36,4 +36,14 @@ public class WorkServiceImpl implements WorkService {
 		return workMapper.checkWorkMidRegist(dinsCode, procCode);
 	}
 
+	@Override
+	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO) {
+		int result = workMapper.updateWorkMidRegist(workMidRegistVO);
+		if(result == 1) {
+			return 1;
+		}else {
+			return -1;
+		}
+	}
+
 }
