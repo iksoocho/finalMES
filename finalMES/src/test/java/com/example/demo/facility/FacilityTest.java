@@ -16,9 +16,16 @@ public class FacilityTest {
 	@Autowired
 	FacManageMapper facManageMapper;
 	
-//	@Test
-	public void 전체조회() {
-		List<FacManageVO> list = facManageMapper.getfacList(null);
+////	@Test
+//	public void 전체조회() {
+//		List<FacManageVO> list = facManageMapper.getfacList(null);
+//		System.out.println(list);
+//		assertThat(list.isEmpty()).isEqualTo(false);
+//	}
+	
+	@Test
+	public void 조회() {
+		List<FacInsVO> list = facManageMapper.getfacInsList();
 		System.out.println(list);
 		assertThat(list.isEmpty()).isEqualTo(false);
 	}

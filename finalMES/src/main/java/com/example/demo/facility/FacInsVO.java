@@ -20,4 +20,5 @@ public class FacInsVO {
 	private String facInsSel;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date facInsNexd;
+	private int facNotSituation;
 }

@@ -33,13 +33,16 @@
 		fi.fac_ins_date,
 		fi.fac_ins_sel,
 		fi.fac_ins_nexd,
+		fn.fac_not_situation,
 		fm.fac_name
 		FROM
 		fac_ins fi
 		INNER JOIN
 		fac_notop fn ON fi.fac_not_code = fn.fac_not_code
 		INNER JOIN
-		fac_manage fm ON fi.fac_code = fm.fac_code;
+		fac_manage fm ON fi.fac_code = fm.fac_code
+		WHERE
+		fn.fac_not_situation = 2
 	</select>
 
 	<insert id="insertFac" parameterType="FacManageVO">
@@ -62,7 +65,8 @@
 		INSERT INTO fac_notop
 		(fac_code, notop_code, fac_not_reason)
 		VALUES
-		(#{facCode}, 'NOTOP001', '설비등록으로 인한 비가동')
+		(#{facCode}, 'NOTOP001',
+		'설비등록으로 인한 비가동')
 	</insert>
 
 	<update id="updateFacNot" parameterType="FacNotopVO">

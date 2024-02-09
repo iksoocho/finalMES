@@ -2,10 +2,11 @@ package com.example.demo.facility.web;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.facility.FacCompositeVO;
+import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacNotopVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
@@ -42,14 +44,23 @@ public class FacManageController {
 	}
 	
     // 리스트
+	/*
+	 * @GetMapping("/facInsList") public String Inslist(Model model) {
+	 * List<FacInsVO> list = facManageService.FacInsList();
+	 * model.addAttribute("ilist", list); System.out.println(list); return
+	 * "facility/facIns"; }
+	 */
+    
+    // 리스트
     @GetMapping("/facInsList")
     public String Inslist(Model model) {
     	model.addAttribute("ilist", facManageService.FacInsList());
+    	System.out.println(facManageService.FacInsList());
     	return "facility/facIns";
     }
     
 	
-
+    
     // 등록
 //    @PostMapping("/facManagement")
 //    public String insertFacProcess(@RequestBody FacManageVO facManageVO) {
@@ -70,6 +81,8 @@ public class FacManageController {
     	msg = "등록 성공";
     	return msg;
     }
+    
+    
     
     @PutMapping("/updateFacNot")
     @ResponseBody

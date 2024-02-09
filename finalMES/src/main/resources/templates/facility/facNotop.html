@@ -63,34 +63,36 @@ button {
 							<th>설비명</th>
 							<td colspan="2"><input type="text" id="facName"
 								name="facName" required></td>
-							<th>담당자</th>
-							<td colspan="2"><input type="text" id="facNotPerson"
-								name="facNotPerson" required></td>
-						<tr>
 							<th>사유</th>
 							<td colspan="2"><input type="text" id="facNotReason"
 								name="facNotReason" th:data-notopCode="${notopCode}" required></td>
-							<th>설비상태</th>
-							<td><select id="facNotSituation" name="facNotSituation">
-									<option value="0">대기</option>
-									<option value="1">가동</option>
-									<option value="2">비가동</option>
-							</select></td>
 						<tr>
+							
+							<th>담당자</th>
+							<td colspan="2"><input type="text" id="facNotPerson"
+								name="facNotPerson" required></td>
 							<th>시작일</th>
 							<td colspan="2"><input type="date" id="facNotSdate"
 								name="facNotSdate" required></td>
 							<th>종료일</th>
 							<td colspan="2"><input type="date" id="facNotLdate"
 								name="facNotLdate" required></td>
-								
+						<tr>
 							<td colspan="2"><input type="text" id="facCode"
 								name="facCode" required style="display: none;"></td>
+							<th>설비상태</th>
+							<td><select id="facNotSituation" name="facNotSituation">
+									<option value="0">대기</option>
+									<option value="1">가동</option>
+									<option value="2">비가동</option>
+							</select></td>
 						</tr>
 						<tr>
 					</thead>
 				</table>
 				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+				<button type="button" class="btn btn-outline-primary" onclick="downloadCSV()">엑셀 다운로드</button>
+				
 				<br> <br> <br>
 				<div id="grid" class="container"></div>
 			</div>
@@ -149,6 +151,22 @@ button {
                  alert(오류);
              });
          });
+   		
+   		// 엑셀다운로드
+   		function downloadCSV() {
+        const gridData = grid.getData(); // 그리드에서 데이터 가져오기
+        const header = Object.keys(gridData[0]).join(','); // 헤더 생성
+        const csv = gridData.map(row => Object.values(row).join(',')).join('\n'); // 데이터 생성
+
+        const csvContent = `data:text/csv;charset=utf-8,${header}\n${csv}`; // CSV 내용 생성
+        const encodedUri = encodeURI(csvContent); // URI 인코딩
+
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'data.csv');
+        document.body.appendChild(link);
+        link.click();
+    }
    		
    		
    
