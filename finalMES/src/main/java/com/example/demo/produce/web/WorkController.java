@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,6 +37,21 @@ public class WorkController {
 			msg = "작업등록이 완료되었습니다.";
 		}else {
 			msg = "작업등록이 실패했습니다.";
+		}
+		
+		return msg;
+	}
+	
+	@PutMapping("/workMidUpdate")
+	@ResponseBody
+	public String updateWorkMid(@RequestBody WorkMidRegistVO workMidVO) {
+		System.out.println(workMidVO);
+		int result = workService.updateWorkMidRegist(workMidVO);
+		String msg;
+		if(result == 1) {
+			msg = "작업추가등록이 완료되었습니다.";
+		}else {
+			msg = "작업추가등록이 실패했습니다.";
 		}
 		
 		return msg;

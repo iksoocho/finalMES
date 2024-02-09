@@ -74,6 +74,17 @@
 		WHERE d_ins_code = #{dinsCode} 
 		AND proc_code = #{procCode}
 	</select>
+	
+	
+	
+	<update id="updateWorkMidRegist" parameterType="WorkMidRegistVO">
+		UPDATE prod_progress 
+		SET 
+			prog_bad_count = (#{progBadCount} + prog_bad_count)
+			, prog_pass_count = (#{progPassCount} + prog_pass_count)
+			, end_time = TO_TIMESTAMP(#{endTime}, 'YY-MM-DD HH24:MI')
+		WHERE prog_code= #{progCode}
+	</update>
 
 
 </mapper>
