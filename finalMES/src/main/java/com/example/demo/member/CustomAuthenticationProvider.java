@@ -6,15 +6,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomAuthenticationProvider extends DaoAuthenticationProvider{
 	public CustomAuthenticationProvider(UserDetailsService userDetailsService) {
         setUserDetailsService(userDetailsService);
-        //setPasswordEncoder(new BCryptPasswordEncoder());
-        setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        setPasswordEncoder(new BCryptPasswordEncoder());
+        //setPasswordEncoder(NoOpPasswordEncoder.getInstance());
         
     }
 
