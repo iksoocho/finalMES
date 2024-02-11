@@ -20,4 +20,10 @@ public class InformServiceImpl implements InformService {
 		return informMapper.selectEmpList();
 	}
 
+	@Override
+	public EmpVO insertEmpInfo(EmpVO empVO) {
+		informMapper.insertEmpInfo(empVO);
+		return empVO;
+	}
+
 }

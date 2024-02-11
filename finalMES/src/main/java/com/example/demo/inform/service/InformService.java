@@ -6,4 +6,5 @@ import com.example.demo.inform.EmpVO;
 
 public interface InformService {
 	public List<EmpVO> getEmpList();
+	public EmpVO insertEmpInfo(EmpVO empVO);
 }
