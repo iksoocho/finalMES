@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
 input {
 	padding-left: 10px;
@@ -376,6 +377,49 @@ button {
 				document.getElementById('selectedBusinessManager').value = businessManager;
 				document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
 
+			}
+			
+			function displaySelectedProduct(element) {
+			    // 선택된 주문서의 정보를 가져옴
+			    var ordCode = element.getAttribute('data-ordCode');
+				console.log(ordCode)
+			    // 서버로부터 주문 상세 정보를 가져오는 AJAX 요청
+			    fetch('/orderDetailList/' + ordCode)
+			        .then(response => response.json())
+			        .then(data => {
+			            // 서버로부터 받은 JSON 데이터를 사용하여 주문 상세 목록을 구성하고 출력
+			            // 예시: 상세 목록을 모달 body에 출력하는 코드
+			            var modalBody = $('#staticBackdropOrd .modal-body');
+			            modalBody.empty();  // 기존 내용을 비우고 새로운 내용으로 채움
+
+			            // data에는 주문 상세 정보가 포함되어 있다고 가정
+			            var orderDetails = data.orderDetails;
+
+			            // 예시: 주문 상세 목록을 테이블 형태로 구성
+			            var table = $('<table>').addClass('table');
+			            var thead = $('<thead>').append('<tr><th>상품명</th><th>수량</th><th>단가</th><th>총금액</th></tr>');
+			            var tbody = $('<tbody>');
+
+			            // orderDetails를 반복하면서 각 상품에 대한 정보를 테이블에 추가
+			            orderDetails.forEach(function (detail) {
+			                var row = $('<tr>').append(
+			                    '<td>' + detail.productName + '</td>',
+			                    '<td>' + detail.quantity + '</td>',
+			                    '<td>' + detail.unitPrice + '</td>',
+			                    '<td>' + detail.totalAmount + '</td>'
+			                );
+			                tbody.append(row);
+			            });
+
+			            table.append(thead, tbody);
+			            modalBody.append(table);
+
+			            // 모달을 열고 출력된 주문 상세 목록을 보여줌
+			            $('#staticBackdropOrd').modal('show');
+			        })
+			        .catch(error => {
+			            console.error('Failed to fetch order details:', error);
+			        });
 			}
 		</script>
 	</section>
