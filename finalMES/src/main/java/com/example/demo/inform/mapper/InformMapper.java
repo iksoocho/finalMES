@@ -6,4 +6,5 @@ import com.example.demo.inform.EmpVO;
 
 public interface InformMapper {
 	public List<EmpVO> selectEmpList();
+	public int insertEmpInfo(EmpVO empVO);
 }

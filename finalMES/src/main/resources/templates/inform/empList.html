@@ -26,16 +26,17 @@
 				console.log('새로 추가된 행 데이터:', lastRowData);
 			}
 
-			// 편집 제한 로직
 			function onBeforeChange(ev) {
-				const {rowKey, columnName} = ev;
+				const {rowKey} = ev.changes[0];
+
+				// TOAST UI Grid의 getRow 메소드를 사용하여 현재 행의 데이터를 가져옵니다.
 				const row = grid.getRow(rowKey);
 
 				// 현재 행의 데이터를 콘솔에 출력
 				console.log('편집 시도 행 데이터:', row);
 
-				// 새로 추가된 행이 아닐 경우 편집 취소
-				if (!row.isNew) {
+				// isNew 속성이 true가 아니면 편집을 중단합니다.
+				if (!row || row.isNew !== true) {
 					ev.stop(); // 이 메소드는 편집을 취소합니다.
 				}
 			}
@@ -48,11 +49,20 @@
 
 
 
+
+
 			let emps = [[${list}]]
 			console.log(emps);
+			const authorityOptions = [
+				{text: '관리자', value: 'admin'},
+				{text: '일반사원', value: 'user'},
+				// 추가적인 옵션...
+			];
 
 			// TOAST UI Grid 초기화
 			const grid = new tui.Grid({
+
+
 
 				el: document.getElementById('grid'),
 				data: emps, // 여기서 emps 데이터를 사용
@@ -67,6 +77,18 @@
 					},
 					{
 						header: '부서명', name: 'deptName',
+						editor: {
+							type: 'select',
+							options: {
+								listItems: [
+									{text: '생산', value: 'prod'},
+									{text: '설비', value: 'fac'},
+									{text: '영업', value: 'sal'},
+									{text: '자재', value: 'mat'},
+
+								]
+							}
+						},
 						formatter: function ({value}) {
 							if (value == 'prod') {
 								return '생산';
@@ -74,13 +96,29 @@
 							if (value == 'fac') {
 								return '설비';
 							}
+							if (value == 'sal') {
+								return '영업';
+							}
+							if (value == 'mat') {
+								return '자재';
+							}
 							return value;
 						}
 					},
-					{header: '이메일', name: 'userEmail'},
-					{header: '연락처', name: 'userPhone'},
+					{header: '이메일', name: 'userEmail', editor: 'text'},
+					{header: '연락처', name: 'userPhone', editor: 'text'},
 					{
 						header: '직급', name: 'userAuthority',
+						editor: {
+							type: 'select',
+							options: {
+								listItems: [
+									{text: '관리자', value: 'admin'},
+									{text: '일반사원', value: 'user'},
+									// 추가적인 옵션...
+								] // 위에서 정의한 옵션 목록 사용
+							}
+						},
 						formatter: function ({value}) {
 							if (value == 'admin') {
 								return '관리자';
@@ -99,11 +137,78 @@
 					perPage: 5
 				}
 			});
-			//grid.on('beforeChange', onBeforeChange);
-			grid.on('afterChange', onAfterChange);
+			grid.on('beforeChange', onBeforeChange);
+			//grid.on('afterChange', onAfterChange);
 
 
 
+
+		</script>
+		<script>
+			function convertDeptNameToCode(deptName) {
+				const deptNameToCodeMapping = {
+					'fac': 'dept001',
+					'prod': 'dept002',
+					'sal': 'dept003',
+					'mat': 'dept004'
+					// 여기에 더 많은 매핑을 추가할 수 있습니다.
+				};
+
+				return deptNameToCodeMapping[deptName] || deptName; // 매핑된 코드가 없다면 원래의 deptName을 반환
+			}
+
+			function saveNewRows() {
+				// 새로 추가된 행만 필터링하여 가져옵니다.
+				const newData = grid.getData().filter(row => row.isNew);
+
+				// 콘솔에 출력하거나 서버로 보낼 수 있습니다.
+				console.log('추가된 행의 데이터:', newData);
+
+				// 서버에 데이터를 전송하는 코드를 여기에 추가합니다.
+				// 예: AJAX 요청을 사용하여 서버에 'newData'를 전송합니다.
+				console.log("부서이름 : ", newData[0].deptName);
+
+				newData.forEach(row => {
+					row.deptCode = convertDeptNameToCode(row.deptName);
+				});
+				
+				console.log("부서 code : ", newData[0].deptCode);
+				
+				let data = {};
+				data.userName = newData[0].userName;
+				data.userEmail = newData[0].userEmail;
+				data.deptCode = newData[0].deptCode;
+				data.userPhone = newData[0].userPhone;
+				data.userAuthority = newData[0].userAuthority;
+				
+				console.log('data : ', data);
+				
+				fetch('/empInsert', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+
+					},
+					body: JSON.stringify(data)
+				})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+						return response.text();
+					})
+					.then(data => {
+						console.log('Success:', data);
+						alert(data);
+						location.href = '/empList'; // 성공적으로 처리된 후 리디렉트
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+
+			// "저장" 버튼에 이벤트 리스너를 등록합니다.
+			document.getElementById('empInsert').addEventListener('click', saveNewRows);
 
 		</script>
 

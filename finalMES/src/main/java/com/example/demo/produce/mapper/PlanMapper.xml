@@ -72,7 +72,8 @@
 		</selectKey>
 		INSERT INTO PROD_PLAN(PLAN_CODE,ORD_CODE, PLAN_TITLE, PLAN_PERSON,
 		PLAN_DATE)
-		VALUES(#{planCode},#{ordCode},#{planTitle},#{planPerson},#{planDate}) </insert>
+		VALUES(#{planCode},#{ordCode},#{planTitle},#{planPerson},#{planDate}) 
+	</insert>
 
 	<insert id="insertPlanDInfo" parameterType="PlanDVO">
 		INSERT INTO

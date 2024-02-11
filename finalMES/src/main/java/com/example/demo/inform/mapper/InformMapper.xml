@@ -6,6 +6,12 @@
 		FROM employee e
 		INNER JOIN department d ON e.dept_code = d.dept_code
 	</select>
-
+	
+	<insert id="insertEmpInfo" parameterType="EmpVO">
+		INSERT INTO 
+		EMPLOYEE(user_name, user_email, user_phone, dept_code, user_authority)
+		VALUES(#{userName},#{userEmail},#{userPhone},#{deptCode},#{userAuthority})
+		
+	</insert>
 
 </mapper>
