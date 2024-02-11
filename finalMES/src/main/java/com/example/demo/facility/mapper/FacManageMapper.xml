@@ -37,12 +37,15 @@
 		fm.fac_name
 		FROM
 		fac_ins fi
+		INNER
+		JOIN
+		fac_notop fn
+		ON
+		fi.fac_not_code = fn.fac_not_code
 		INNER JOIN
-		fac_notop fn ON fi.fac_not_code = fn.fac_not_code
-		INNER JOIN
-		fac_manage fm ON fi.fac_code = fm.fac_code
-		WHERE
-		fn.fac_not_situation = 2
+		fac_manage fm ON
+		fi.fac_code = fm.fac_code
+		WHERE fn.fac_not_situation = 2
 	</select>
 
 	<insert id="insertFac" parameterType="FacManageVO">
@@ -84,8 +87,44 @@
 		fac_not_code =
 		#{facNotCode}
 	</update>
+	
+	<insert id="insertFacIns" parameterType="FacInsDVO">
+		 <selectKey keyProperty="facInsCode" resultType="String" order="BEFORE">
+        SELECT 'FAC_INS'||LPAD(FAC_INS_CODE_SEQ.NEXTVAL, 3, 0) FROM DUAL
+    </selectKey>
+    INSERT INTO fac_ins (
+    	fac_code,
+        fac_ins_code, 
+        fac_not_code, 
+        fac_ins_check, 
+        fac_ins_person, 
+        fac_ins_jud, 
+        fac_ins_date, 
+        fac_ins_sel, 
+        fac_ins_nexd
+    )
+    VALUES (
+    	#{facCode},
+        #{facInsCode},
+        #{facNotCode},
+        #{facInsCheck},
+        #{facInsPerson},
+        #{facInsJud},
+        #{facInsDate},
+        #{facInsSel},
+        #{facInsNexd}
+    )
+	</insert>
 
+	<update id="updateFacIns" parameterType="FacInsVO">
 
+		<!-- 점검일정 등록시 자동으로 30일뒤로 차기점검일 등록됨 -->
+		UPDATE fac_ins SET fac_ins_check = #{facInsCheck}, fac_ins_person
+		= #{facInsPerson}, fac_ins_jud = #{facInsJud}, fac_ins_nexd =
+		fac_ins_date
+		+ INTERVAL '30' DAY WHERE fac_ins_code = #{facInsCode}
+
+	</update>
 
 
 </mapper>
