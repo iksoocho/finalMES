@@ -188,26 +188,5 @@
         )
 	</insert>
 	
-<!-- 	<insert id="insertMatOrder1" parameterType="MatOrderVO"> -->
-<!-- 	INSERT INTO business -->
-<!--           ( -->
-<!--              business_name -->
-<!--              ) -->
-<!--         VALUES  -->
-<!--         ( -->
-<!--               #{businessName} -->
-<!--         )	 -->
-<!-- 	</insert> -->
-	
-<!-- 	<insert id="insertMatOrder2" parameterType="MatOrderVO"> -->
-<!-- 	INSERT INTO mat_order_info -->
-<!--           ( -->
-<!--              mat_or_due_date -->
-<!--              ) -->
-<!--         VALUES  -->
-<!--         ( -->
-<!--               #{matOrDueDate} -->
-<!--         )			 -->
-<!-- 	</insert> -->
 
 </mapper>

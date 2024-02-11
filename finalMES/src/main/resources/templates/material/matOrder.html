@@ -362,13 +362,136 @@
 	        let orderobj = {};
 	        let ordState = {};
 	        
+	        
+	        orderobj.matOrcode = document.querySelecttor().innerHTML;
+	        orderobj.matCode = document.querySelecttor().innerHTML;
+	        orderobj.matOrName = document.querySelecttor().innerHTML;
+	        orderobj.matOrCount = document.querySelecttor().innerHTML;
+	        orderobj.matOrDate = document.querySelecttor().innerHTML;
+	        orderobj.matOrDueDate = document.querySelecttor().innerHTML;
+	        orderobj.matOrManage = document.querySelecttor().innerHTML;
+	        
+	        //여기도 내 컬럼으로 바꾸기
 			planobj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
 			planobj.planTitle = document.querySelector('td[data-column-name="planTitle"] div').innerHTML;
 			planobj.planPerson = document.querySelector('td[data-column-name="planPerson"] div').innerHTML;
 			planobj.planDate = document.querySelector('td[data-column-name="planDate"] div').innerHTML;
 
-			
-	        });
+			ordState.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
+
+			let newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
+
+			let planDetailData = [];
+
+			for (let i = 4; i < newPlanDetailRows.length; i++) {
+				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
+				let obj = {};
+				let target = $(newPlanDetailRows[i]);
+
+				obj.prodCode = target.find('td:eq(1)').text();
+				console.log("prodCode : " + obj.prodCode);
+
+				obj.dplanStartDate = target.find('td:eq(2)').text();
+				console.log("dplanStartDate : " + obj.dplanStartDate);
+				obj.dplanEndDate = target.find('td:eq(3)').text();
+				obj.dplanCount = target.find('td:eq(6)').text();
+
+				planDetailData.push(obj);
+
+			}
+
+			data.planVO = planobj;
+			data.planDVOList = planDetailData;
+			data.planOrdVO = ordState;
+
+
+			console.log(data);
+			// AJAX 요청으로 서버에 데이터 전송
+			fetch('/planInsert', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.text();
+				})
+				.then(data => {
+					console.log('Success:', data);
+					alert(data);
+					location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
+
+
+		});
+
+
+		//plan detail update
+		document.querySelector('#planDUpdate').addEventListener('click', function () {
+			const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
+			if (newDetail === null) {
+				alert("저장 할 내용이 없습니다.")
+				return;
+			}
+
+			let data = {};
+
+			let newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
+
+			let planDetailData = [];
+			// 인덱스 4부터 시작하여 끝까지 반복합니다.
+			for (let i = 4; i < newPlanDetailRows.length; i++) {
+				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
+				let obj = {};
+				let target = $(newPlanDetailRows[i]);
+				obj.dplanCode = target.find('td:eq(0)').text();
+				obj.prodCode = target.find('td:eq(1)').text();
+				console.log("prodCode : " + obj.prodCode);
+
+				obj.dplanStartDate = target.find('td:eq(2)').text();
+				console.log("dplanStartDate : " + obj.dplanStartDate);
+				obj.dplanEndDate = target.find('td:eq(3)').text();
+				obj.dplanCount = target.find('td:eq(6)').text();
+
+				planDetailData.push(obj);
+
+			}
+			data.planDVOList = planDetailData;
+			console.log(data);
+			// AJAX 요청으로 서버에 데이터 전송
+			fetch('/planDUpdate', {
+				method: 'put',
+				headers: {
+					'Content-Type': 'application/json',
+
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.text();
+				})
+				.then(data => {
+					console.log('Success:', data);
+					alert(data);
+					location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
+		});
       </script>
     </section>
   </body>

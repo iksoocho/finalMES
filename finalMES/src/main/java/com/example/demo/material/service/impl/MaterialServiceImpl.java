@@ -113,34 +113,6 @@ public class MaterialServiceImpl implements MaterialService {
 
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-//	@Override
-//	public int insertMaterialOrder1(MatOrderVO matOrderVO) {
-//		int result = materialMapper.insertMatOrder1(matOrderVO);
-//
-//		if (result == 1) {
-//			return matOrderVO.getMatOrCount();
-//		} else {
-//			return -1;
-//		}
-//	}
-//
-//	@Override
-//	public int insertMaterialOrder2(MatOrderVO matOrderVO) {
-//		int result = materialMapper.insertMatOrder2(matOrderVO);
-//
-//		if (result == 1) {
-//			return 1;
-//		} else {
-//			return -1;
-//		}
-//	}
+
 
 }
