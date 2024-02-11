@@ -1,13 +1,12 @@
 package com.example.demo.facility.web;
 
-
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +17,7 @@ import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacNotopVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
+
 
 
 @Controller
@@ -31,7 +31,7 @@ public class FacManageController {
 	// 설비 전체조회
 	@GetMapping("/facManagement")
 	public String list(Model model) {
-		model.addAttribute("list", facManageMapper.getfacList(null));
+		model.addAttribute("list", facManageService.FacList(null));
 		return "facility/facManagement";
 
 	}
@@ -43,21 +43,14 @@ public class FacManageController {
 
 	}
 	
-    // 리스트
-	/*
-	 * @GetMapping("/facInsList") public String Inslist(Model model) {
-	 * List<FacInsVO> list = facManageService.FacInsList();
-	 * model.addAttribute("ilist", list); System.out.println(list); return
-	 * "facility/facIns"; }
-	 */
+     // 리스트
+	 @GetMapping("/facInsList")
+	    @ResponseBody
+	    public List<FacInsVO> getFacInsList() {
+	        return facManageService.FacInsList();
+	    }
+	 
     
-    // 리스트
-    @GetMapping("/facInsList")
-    public String Inslist(Model model) {
-    	model.addAttribute("ilist", facManageService.FacInsList());
-    	System.out.println(facManageService.FacInsList());
-    	return "facility/facIns";
-    }
     
 	
     

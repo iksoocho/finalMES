@@ -39,99 +39,101 @@
         </div>
 
         <!-- ============================모달창============================ -->
-        <div
-          class="modal fade modal-xl"
-          id="exampleModal"
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">발주</h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
+<!--         <div -->
+<!--           class="modal fade modal-xl" -->
+<!--           id="exampleModal" -->
+<!--           tabindex="-1" -->
+<!--           aria-labelledby="exampleModalLabel" -->
+<!--           aria-hidden="true" -->
+<!--         > -->
+<!--           <div class="modal-dialog"> -->
+<!--             <div class="modal-content"> -->
+<!--               <div class="modal-header"> -->
+<!--                 <h5 class="modal-title" id="exampleModalLabel">발주</h5> -->
+<!--                 <button -->
+<!--                   type="button" -->
+<!--                   class="btn-close" -->
+<!--                   data-bs-dismiss="modal" -->
+<!--                   aria-label="Close" -->
+<!--                 ></button> -->
+<!--               </div> -->
 
               <!-- ============================모달 내용============================ -->
-              <div class="modal-body">
-                <div>
-                  <h4>주문서</h4>
-                  <!-- <button class="btn btn-secondary" style="float: right; margin: 0 5px;">선택</button> -->
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>거래처코드</th>
-                        <th>거래처명</th>
-                        <th>발주일자</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        th:each="matOrd : ${list}"
-                        th:data-ord-code="${matOrd.matCode}"
-                        class="ord-row"
-                      >
-                        <td>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              th:id="${matOrd.matCode}"
-                            />
-                            <label
-                              class="form-check-label"
-                              th:for="${matOrd.matCode}"
-                            ></label>
-                          </div>
-                        </td>
-                        <td th:text="${matOrd.businessCode}"></td>
-                        <td th:text="${matOrd.businessName}"></td>
-                        <td
-                          th:text="${#dates.format(matOrd.matOrDate, 'yyyy-MM-dd')}"
-                        ></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+<!--               <div class="modal-body"> -->
+<!--                 <div> -->
+<!--                   <h4>주문서</h4> -->
+<!--                   <button class="btn btn-secondary" style="float: right; margin: 0 5px;">선택</button> -->
+<!--                   <table class="table"> -->
+<!--                     <thead> -->
+<!--                       <tr> -->
+<!--                         <th></th> -->
+<!--                         <th>거래처코드</th> -->
+<!--                         <th>거래처명</th> -->
+<!--                         <th>발주일자</th> -->
+<!--                       </tr> -->
+<!--                     </thead> -->
+<!--                     <tbody> -->
+<!--                       <tr -->
+<!--                         th:each="matOrd : ${list}" -->
+<!--                         th:data-ord-code="${matOrd.matCode}" -->
+<!--                         class="ord-row" -->
+<!--                       > -->
+<!--                         <td> -->
+<!--                           <div class="form-check"> -->
+<!--                             <input -->
+<!--                               class="form-check-input" -->
+<!--                               type="radio" -->
+<!--                               name="flexRadioDefault" -->
+<!--                               th:id="${matOrd.matCode}" -->
+<!--                             /> -->
+<!--                             <label -->
+<!--                               class="form-check-label" -->
+<!--                               th:for="${matOrd.matCode}" -->
+<!--                             ></label> -->
+<!--                           </div> -->
+<!--                         </td> -->
+<!--                         <td th:text="${matOrd.businessCode}"></td> -->
+<!--                         <td th:text="${matOrd.businessName}"></td> -->
+<!--                         <td -->
+<!--                           th:text="${#dates.format(matOrd.matOrDate, 'yyyy-MM-dd')}" -->
+<!--                         ></td> -->
+<!--                       </tr> -->
+<!--                     </tbody> -->
+<!--                   </table> -->
+<!--                 </div> -->
 
-                <div id="orderDetails"></div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="button" class="btn btn-primary" id="addPlanBtn">
-                  추가
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+<!--                 <div id="orderDetails"></div> -->
+<!--               </div> -->
+              
+              
+<!--               <div class="modal-footer"> -->
+<!--                 <button -->
+<!--                   type="button" -->
+<!--                   class="btn btn-secondary" -->
+<!--                   data-bs-dismiss="modal" -->
+<!--                 > -->
+<!--                   Close -->
+<!--                 </button> -->
+<!--                 <button type="button" class="btn btn-primary" id="addPlanBtn"> -->
+<!--                   추가 -->
+<!--                 </button> -->
+<!--               </div> -->
+              
+              
+<!--             </div> -->
+<!--           </div> -->
+<!--         </div> -->
 
         <button type="button" class="btn btn-primary" id="orderInsert">
           저장
         </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          조회
-        </button>
-      </div>
+<!-- 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" -->
+<!-- 				data-bs-target="#exampleModal">조회</button> -->
+
+				<button type="button" class="btn btn-primary" id="">
+					저장
+				</button>
+		</div>
 
       <!-- 		<button class="btn btn-primary">등록</button> -->
 
@@ -286,7 +288,13 @@
                  	            { name: 'businessName', header: '거래처명' },
                  	            { name: 'matOrCount', header: '발주량' },
                  	            { name: 'matOrDate', header: '발주일', formatter: formatDate },
-                 	            { name: 'matOrDueDate', header: '납기요청일', formatter: formatDate },
+                 	            { name: 'matOrDueDate', header: '납기요청일', formatter: formatDate,
+                 	           	editor: {
+    								type: 'datePicker',
+    								options: {
+    									format: 'yyyy-MM-dd'
+    								}
+    							}},
                  	            { name: 'matOrManager', header: '담당자' },
                  	            {
                  	                header: '발주상태',
@@ -348,11 +356,19 @@
          		alert("insert 할 내용이 없습니다.")
          		return;
          	}
+		
+	        // 이건 나중에 내가 원하는 걸로 바꾸기
+	        let data = {};
+	        let orderobj = {};
+	        let ordState = {};
+	        
+			planobj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
+			planobj.planTitle = document.querySelector('td[data-column-name="planTitle"] div').innerHTML;
+			planobj.planPerson = document.querySelector('td[data-column-name="planPerson"] div').innerHTML;
+			planobj.planDate = document.querySelector('td[data-column-name="planDate"] div').innerHTML;
 
-        let data = {};
-        let orderobj = {};
-        let ordState = {};
-         })
+			
+	        });
       </script>
     </section>
   </body>
