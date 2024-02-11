@@ -53,11 +53,7 @@
 
 			let emps = [[${list}]]
 			console.log(emps);
-			const authorityOptions = [
-				{text: '관리자', value: 'admin'},
-				{text: '일반사원', value: 'user'},
-				// 추가적인 옵션...
-			];
+			
 
 			// TOAST UI Grid 초기화
 			const grid = new tui.Grid({
@@ -161,6 +157,11 @@
 				// 새로 추가된 행만 필터링하여 가져옵니다.
 				const newData = grid.getData().filter(row => row.isNew);
 
+				if (newData.length === 0) {
+					console.log('추가된 행이 없습니다.');
+					alert("저장 할 데이터가 없습니다.");
+					return;
+				}
 				// 콘솔에 출력하거나 서버로 보낼 수 있습니다.
 				console.log('추가된 행의 데이터:', newData);
 
@@ -171,18 +172,18 @@
 				newData.forEach(row => {
 					row.deptCode = convertDeptNameToCode(row.deptName);
 				});
-				
+
 				console.log("부서 code : ", newData[0].deptCode);
-				
+
 				let data = {};
 				data.userName = newData[0].userName;
 				data.userEmail = newData[0].userEmail;
 				data.deptCode = newData[0].deptCode;
 				data.userPhone = newData[0].userPhone;
 				data.userAuthority = newData[0].userAuthority;
-				
+
 				console.log('data : ', data);
-				
+
 				fetch('/empInsert', {
 					method: 'POST',
 					headers: {

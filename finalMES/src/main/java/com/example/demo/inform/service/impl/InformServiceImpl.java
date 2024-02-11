@@ -2,6 +2,8 @@ package com.example.demo.inform.service.impl;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,12 @@ public class InformServiceImpl implements InformService {
 	public EmpVO insertEmpInfo(EmpVO empVO) {
 		informMapper.insertEmpInfo(empVO);
 		return empVO;
+	}
+
+	@Override
+	public EmpVO getEmpInfo(String userCode) {
+		
+		return informMapper.selectEmpInfo(userCode);
 	}
 
 }

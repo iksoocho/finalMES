@@ -13,5 +13,12 @@
 		VALUES(#{userName},#{userEmail},#{userPhone},#{deptCode},#{userAuthority})
 		
 	</insert>
+	
+	<select id="selectEmpInfo" resultType="EmpVO">
+		SELECT e.*, d.dept_name
+		FROM employee e
+		INNER JOIN department d ON e.dept_code = d.dept_code 
+		where user_code = #{userCode}
+	</select>
 
 </mapper>
