@@ -65,7 +65,7 @@
 		SELECT
 		ord.ord_code,
 		ord.ord_state,
-		business.business_name AS business_code,
+		business.business_name AS business_name,
 		ord.ord_date,
 		ord.ord_manager,
 		SUM(ord_d.ttl_price) AS total_ttl_price,

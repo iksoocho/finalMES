@@ -23,6 +23,6 @@ public interface FacManageMapper {
 	
 	// 점검관리
 	public List<FacInsVO> getfacInsList();
-
-	
+	// 수정
+	public int updateFacIns(FacInsVO facInsVO);	
 }

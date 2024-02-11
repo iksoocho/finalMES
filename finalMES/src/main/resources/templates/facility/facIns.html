@@ -131,23 +131,20 @@ button {
                     facName: item.facName,
                     facInsCheck: item.facInsCheck,
                     facInsPerson: item.facInsPerson,
-                    facInsJud: item.facInsJud
+                    facInsJud: item.facInsJud,
+                    facInsNexd: formatDate(item.facInsNexd)
                 }));
                 console.log('gridData : ', gridData);
                 grid.resetData(gridData); // 그리드에 데이터를 설정
-                alert("데이터 불러오기 완료!"); 
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
                 alert("데이터 불러오기 실패!");
-            });
-         	
-         
-         
+            }); 
+            
 
         // 그리드 페이징
         let facInsList = [[${ilist}]];
-        console.log(facInsList);
         const grid = new tui.Grid({
             el: document.getElementById('grid'),
             data: facInsList,
@@ -181,7 +178,7 @@ button {
                 },
                 {
                     header: '차기점검일',
-                    name: 'facInsJud',
+                    name: 'facInsNexd',
                     align: 'facInsNexd'
                 }
 
@@ -192,6 +189,16 @@ button {
                 perPage: 5
             }
         });
+        
+        
+        //  차기점검을 날짜포맷
+        function formatDate(dateString) {
+            // dateString을 Date 객체로 파싱
+            const date = new Date(dateString);
+            // 날짜 포맷 변경
+            const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+            return formattedDate;
+        }
 
     </script>
 
