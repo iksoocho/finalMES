@@ -99,12 +99,11 @@ public class MaterialController {
 	
 	//발주 등록
 	@PostMapping("/matOrderInsert")
+	@ResponseBody
 	public String insertMatOrder(@RequestBody MatOrderVO matOrderVO) {
-	    System.out.println("통신성공");
-	    
-	    int result = materialService.insertMaterialOrder(matOrderVO);
-	    
-	    System.out.println("result: " + result);
+//	    int result = materialService.insertMaterialOrder(matOrderVO);
+//	    
+//	    System.out.println("result: " + result);
 	    
 //	    if (result > 0) {
 //	        model.addAttribute("message", "주문이 성공적으로 등록되었습니다.");
@@ -112,7 +111,11 @@ public class MaterialController {
 //	        model.addAttribute("message", "주문 등록에 실패하였습니다.");
 //	    }
 	    
-	    return "material/matOrder";
+	    String msg;
+	    materialService.insertMaterialOrder(matOrderVO);
+	    msg = "발주완료";
+	    
+	    return msg;
 	}
 
 

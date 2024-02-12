@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.facility.FacManageVO;
 import com.example.demo.facility.FacNotopVO;
+import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
 
 @Mapper
@@ -24,5 +25,6 @@ public interface FacManageMapper {
 	// 점검관리
 	public List<FacInsVO> getfacInsList();
 	// 수정
-	public int updateFacIns(FacInsVO facInsVO);	
+	public int updateFacIns(FacInsVO facInsVO);
+	public int insertFacIns(FacInsDVO facInsDVO);
 }

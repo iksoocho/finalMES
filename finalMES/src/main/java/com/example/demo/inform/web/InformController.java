@@ -2,6 +2,8 @@ package com.example.demo.inform.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,5 +36,24 @@ public class InformController {
 		informService.insertEmpInfo(empVO);
 		msg = "사원 정보가 등록 되었습니다.";
 		return msg;
+	}
+	
+	@GetMapping("/myPage")
+	public String getEmpInfo(Model model, HttpSession session) {
+	    // 세션에서 userCode 가져오기
+	    String userCode = (String) session.getAttribute("userCode");
+	    System.out.println("userCode : " + userCode);
+
+	    // userCode가 세션에 존재하는 경우에만 사용자 정보를 조회
+	    if (userCode != null) {
+	        EmpVO vo = informService.getEmpInfo(userCode);
+	        model.addAttribute("vo", vo);
+	        System.out.println("vo : " + vo);
+	    } else {
+	        // 세션에 userCode가 없는 경우, 적절한 처리 (예: 로그인 페이지로 리디렉션)
+	        return "redirect:/login";
+	    }
+
+	    return "inform/myPage";
 	}
 }
