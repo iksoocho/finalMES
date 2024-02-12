@@ -9,6 +9,7 @@ import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
+import com.example.demo.sales.vo.product.ProductLotVO;
 
 @Service
 public interface OrdService {
@@ -24,6 +25,8 @@ public interface OrdService {
 	List<OrderVO> getOrderList();
 
 	List<OrderDetailDVO> getOrderDetailList(String ordCode);
+	
+	List<ProductLotVO> getProductLotList(String prodCode);
 
 	List<BusinessListVO> getBusinessList(); // 거래처 목록
 

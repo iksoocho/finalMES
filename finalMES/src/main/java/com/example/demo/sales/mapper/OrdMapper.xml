@@ -66,6 +66,11 @@
 		ord.ord_code,
 		ord.ord_state,
 		business.business_name AS business_name,
+		business.business_code AS business_code,
+		business.business_manager AS
+		business_manager,
+		business.business_manager_phone AS
+		business_manager_phone,
 		ord.ord_date,
 		ord.ord_manager,
 		SUM(ord_d.ttl_price) AS total_ttl_price,
@@ -75,10 +80,15 @@
 		ord
 		LEFT JOIN ord_d_list ord_d ON ord.ord_code = ord_d.ord_code
 		LEFT
-		JOIN business business ON ord.business_code = business.business_code
-		GROUP BY
+		JOIN
+		business business ON ord.business_code = business.business_code
+		GROUP
+		BY
 		ord.ord_code, ord.ord_state, business.business_name,
-		ord.ord_date, ord.ord_manager, ord.ord_note
+		business.business_code, business.business_manager,
+		business.business_manager_phone,
+		ord.ord_date, ord.ord_manager,
+		ord.ord_note
 		ORDER BY
 		ord.ord_date DESC, ord.ord_code
 		DESC
@@ -88,7 +98,8 @@
 		SELECT od.*,
 		p.prod_name, p.prod_unit, p.prod_price
 		FROM ord_d_list od
-		JOIN product p ON od.prod_code = p.prod_code
+		JOIN product p
+		ON od.prod_code = p.prod_code
 		WHERE od.ord_code = #{ordCode}
 	</select>
 
@@ -103,5 +114,13 @@
 	<select id="getProductList" resultType="ProductListVO"> <!-- 상품 목록조회 -->
 		SELECT prod_code, prod_name, prod_unit, prod_price
 		FROM product
+	</select>
+
+	<!-- 제품코드에 따른 완제품 LOT 번호, 총 재고량 -->
+	<select id="getProductLotList" resultType="ProductLotVO">
+		SELECT prod_lot_code,
+		prod_count
+		FROM prod_lot
+		WHERE prod_code = #{prodCode}
 	</select>
 </mapper>
