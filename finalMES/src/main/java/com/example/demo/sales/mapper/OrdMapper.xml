@@ -116,11 +116,16 @@
 		FROM product
 	</select>
 
-	<!-- 제품코드에 따른 완제품 LOT 번호, 총 재고량 -->
-	<select id="getProductLotList" resultType="ProductLotVO">
-		SELECT prod_lot_code,
-		prod_count
-		FROM prod_lot
-		WHERE prod_code = #{prodCode}
+	<!-- 여러 개의 ProductLotVO 객체를 반환하는 SQL 쿼리 -->
+	<select id="getProductLotList" parameterType="String"
+		resultType="ProductLotVO">
+		SELECT pl.prod_lot_code, pl.prod_count,
+		pl.prod_input_count,
+		pl.prod_output_count,
+		pl.prod_code, p.prod_name
+		FROM prod_lot pl LEFT JOIN product p ON
+		pl.prod_code = p.prod_code
+		WHERE pl.prod_code = #{prodCode}
 	</select>
+
 </mapper>

@@ -9,4 +9,5 @@ public class ProductLotVO {
 	private int prodInputCount;
 	private int prodOutputCount;
 	private String prodCode;
+	private String prodName;
 }

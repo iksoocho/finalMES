@@ -35,6 +35,7 @@
 		 FROM  mat_order      mo
 		 JOIN  business       b     ON mo.business_code = b.business_code
 		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
+		 WHERE mo.mat_code = #{matCode}
 	</select>
 	
 	<!-- 발주 자재 관리 -->
@@ -52,6 +53,7 @@
 		JOIN mat_lot    ml ON m.mat_code = ml.mat_code
 		JOIN mat_return mr ON ml.mat_lot_code = mr.mat_lot_code
 		JOIN business   b  ON mr.business_code = b.business_code
+        
 	</select>
 	
 	<!-- 발주 거래처 관리 -->
@@ -96,6 +98,7 @@
 		 FROM  mat_order      mo
 		 JOIN  business       b     ON mo.business_code = b.business_code
 		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
+		 WHERE b.business_code = #{businessCode}
 	</select>
 	
 	
@@ -168,6 +171,11 @@
 	
 	<!-- 발주 등록 -->
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
+		<selectKey keyProperty="matOrCode" resultType="String"
+			order="BEFORE">
+			SELECT #{matOrCode} || '-' ||
+			TO_CHAR(mat_or_code_seq.NEXTVAL, 'FM000')
+		</selectKey>
 	INSERT INTO mat_order 
           (
              mat_code,
@@ -186,6 +194,26 @@
               #{matOrCount},
               #{matOrName} 
         )
+	</insert>
+	
+	<insert id="insertMatOrderInfo" parameterType="MatOrderInfoVO">
+		INSERT INTO mat_order_info
+				(
+				mat_or_info_code,
+				mat_or_code,
+				mat_code,
+				mat_ori_count,
+				mat_or_due_date
+				)
+			VALUES
+			(
+				#{matOrInfoCode},
+				#{matOrCode},
+				#{matCode},
+				#{matOriCount},
+				#{matOrDueDate}			
+			)
+	
 	</insert>
 	
 

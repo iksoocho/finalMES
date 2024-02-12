@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.material.MatInputVO;
+import com.example.demo.material.MatOrderCompositeVO;
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
 import com.example.demo.material.MatOutputVO;
@@ -58,20 +59,8 @@ public class MaterialServiceImpl implements MaterialService {
 		// TODO Auto-generated method stub
 		return materialMapper.getMatOrderList();
 	}
-
-	// 발주 등록
-	@Override
-	public int insertMaterialOrder(MatOrderVO matOrderVO) {
-		int result = materialMapper.insertMatOrder(matOrderVO);
-//		result = materialMapper.insertMatOrder1(matOrderVO);
-//		result = materialMapper.insertMatOrder2(matOrderVO);
-
-		if (result == 1) {
-			return 1;
-		} else {
-			return -1;
-		}
-	}
+	
+	
 	// 발주 자재 관리
 	@Override
 	public List<OriginMaterialVO> getOriginMaterialList() {
@@ -109,6 +98,29 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MatReturnVO> getReturnList() {
 		// TODO Auto-generated method stub
 		return materialMapper.getReturnList();
+	}
+
+	@Override
+	public MatOrderVO insertMatOrder(MatOrderVO matOrderVO) {
+		materialMapper.insertMatOrder(matOrderVO);
+		return matOrderVO;
+	}
+
+	@Override
+	public MatOrderInfoVO insertMatOrderInfo(MatOrderInfoVO matorderInfoVO) {
+		materialMapper.insertMatOrderInfo(matorderInfoVO);
+		return matorderInfoVO;
+	}
+
+	@Override
+	public void insertMaterialOrder(MatOrderCompositeVO matOrderCompositeVO) {
+		
+		materialMapper.insertMatOrder(matOrderCompositeVO.getMatOrderVO());
+		
+		for (int i = 0; i < matOrderCompositeVO.getMatOrderInfoList().size(); i++) {
+			matOrderCompositeVO.getMatOrderInfoList().get(i).setMatOrCode(matOrderCompositeVO.getMatOrderVO().getMatOrCode());
+			System.out.println("등록성공");
+		}
 	}
 
 

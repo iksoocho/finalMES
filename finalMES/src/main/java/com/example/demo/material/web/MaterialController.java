@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.material.MatInputVO;
+import com.example.demo.material.MatOrderCompositeVO;
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
 import com.example.demo.material.MatOutputVO;
@@ -100,9 +101,9 @@ public class MaterialController {
 	//발주 등록
 	@PostMapping("/matOrderInsert")
 	@ResponseBody
-	public String insertMatOrder(@RequestBody MatOrderVO matOrderVO) {
+	public String insertMatOrder(@RequestBody MatOrderCompositeVO matOrderCompositeVO) {
 //	    int result = materialService.insertMaterialOrder(matOrderVO);
-//	    
+
 //	    System.out.println("result: " + result);
 	    
 //	    if (result > 0) {
@@ -112,7 +113,7 @@ public class MaterialController {
 //	    }
 	    
 	    String msg;
-	    materialService.insertMaterialOrder(matOrderVO);
+	    materialService.insertMaterialOrder(matOrderCompositeVO);
 	    msg = "발주완료";
 	    
 	    return msg;

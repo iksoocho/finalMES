@@ -29,9 +29,6 @@ public interface MaterialMapper {
 	
 	
 	
-	
-	
-	
 	// 자재 입고
 	public List<MatInputVO> getInputList();
 	
@@ -46,6 +43,7 @@ public interface MaterialMapper {
 	
 	//등록 join 등록 말고 그냥 
 	public int insertMatOrder(MatOrderVO materialVO);
-//	public int insertMatOrder1(MatOrderVO materialVO);
-//	public int insertMatOrder2(MatOrderVO materialVO);
+	
+	public int insertMatOrderInfo(MatOrderInfoVO matOrderInfoVO);
+
 }

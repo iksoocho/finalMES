@@ -3,6 +3,7 @@ package com.example.demo.material.service;
 import java.util.List;
 
 import com.example.demo.material.MatInputVO;
+import com.example.demo.material.MatOrderCompositeVO;
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
 import com.example.demo.material.MatOutputVO;
@@ -29,9 +30,6 @@ public interface MaterialService {
 	
 	
 	
-	
-	
-	
 	// 자재 입고
 	public List<MatInputVO> getInputList();
 	
@@ -45,6 +43,9 @@ public interface MaterialService {
 	public List<MatReturnVO> getReturnList();
 	
 	// 등록
-	public int insertMaterialOrder(MatOrderVO matOrderVO);
+	public MatOrderVO insertMatOrder(MatOrderVO matOrderVO);
+	public MatOrderInfoVO insertMatOrderInfo(MatOrderInfoVO matorderInfoVO);
+	
+	public void insertMaterialOrder(MatOrderCompositeVO matOrderCompositeVO);
 	
 }
