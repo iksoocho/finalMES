@@ -10,6 +10,7 @@
 }
 
 .table td, .table th {
+	text-align: center;
 	width: 156px; /* 고정된 너비 설정 */
 	white-space: nowrap; /* 텍스트가 너비를 넘어가더라도 줄바꿈 안 함 */
 	overflow: hidden; /* 너비를 넘어가는 부분 감춤 */
@@ -170,7 +171,7 @@ button {
 <body>
 	<section layout:fragment="content">
 		<div class="containerOne">
-			<h4>출고 관리</h4>
+			<h4>완제품출고 관리</h4>
 			<div class="containerTwo">
 				<h5>출고서정보</h5>
 				<button class="btn btn-primary" onclick="resetForm()">초기화</button>
@@ -205,7 +206,9 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text" id="selectedBusinessName" readonly>
+						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text"
+							id="selectedBusinessName" readonly
+						>
 							<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropBusiness">
 								<p>검색</p>
 							</button></td>
@@ -225,15 +228,20 @@ button {
 			<h5>상세정보</h5>
 			<button class="btn btn-primary">취소</button>
 			<button class="btn btn-primary">추가</button>
-			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory">재고현황 불러오기</button>
+			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" onclick="fetchInventory()">재고현황
+				불러오기</button>
 			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd">주문서 불러오기</button>
 		</div>
 		<div id="grid" class="containerOne"></div>
 
+		<div id="outGrid" class="containerTwo"></div>
+
 
 
 		<!-- 거래처 모달 -->
-		<div class="modal fade" id="staticBackdropBusiness" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade" id="staticBackdropBusiness" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #0d6efd;">
@@ -251,8 +259,10 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}" th:data-businessManager="${business.businessManager}"
-									th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal" onclick="updateInputFields(this)">
+								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}"
+									th:data-businessManager="${business.businessManager}" th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal"
+									onclick="updateInputFields(this)"
+								>
 									<td th:text="${business.businessCode}"></td>
 									<td th:text="${business.businessName}"></td>
 								</tr>
@@ -268,7 +278,9 @@ button {
 		</div>
 
 		<!-- 주문서 모달 -->
-		<div class="modal fade modal-xl" id="staticBackdropOrd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade modal-xl" id="staticBackdropOrd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #ffc107;">
@@ -290,9 +302,11 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}" th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}"
-									th:data-businessManager="${ord.businessManager}" th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
-									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'">
+								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}"
+									th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}" th:data-businessManager="${ord.businessManager}"
+									th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
+									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'"
+								>
 									<td th:text="${ord.ordCode}"></td>
 									<td th:text="${ord.ordState == 1 ? '등록완료' : (ord.ordState == 2 ? '처리중' : (ord.ordState == 3 ? '종결' : '기타'))}"></td>
 									<td th:text="${ord.businessName}"></td>
@@ -307,6 +321,7 @@ button {
 						<table id="orderDetailsTable" class="table">
 							<thead>
 								<tr>
+									<th>주문상세코드</th>
 									<th>상품코드</th>
 									<th>품목명</th>
 									<th>단위</th>
@@ -322,15 +337,17 @@ button {
 						</table>
 					</div>
 					<div class="modal-footer" style="background-color: #ffc107;">
-						<button type="button" class="btn btn-secondary" onclick="addToMainGrid()">추가</button>
+						<button type="button" class="btn btn-secondary" onclick="addToMainGridOrd()">추가</button>
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!-- 주문서 모달 -->
-		<div class="modal fade modal-xl" id="staticBackdropInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<!-- 재고현황 모달 -->
+		<div class="modal fade modal-xl" id="staticBackdropInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #198754;">
@@ -340,30 +357,21 @@ button {
 
 					<div class="modal-body">
 						<table>
-							<thead style="text-align: center;">
+							<thead style="text-align: center;" class="table">
 								<tr>
+									<th style="width: 42px;"></th>
 									<th>완제품 LOT 번호</th>
 									<th>품목명</th>
 									<th>재고량</th>
 								</tr>
 							</thead>
-							<tbody style="text-align: center;">
-								<tr th:each="prod : ${productLotList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}" th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}"
-									th:data-businessManager="${ord.businessManager}" th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
-									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'">
-									<td th:text="${ord.ordCode}"></td>
-									<td th:text="${ord.ordState == 1 ? '등록완료' : (ord.ordState == 2 ? '처리중' : (ord.ordState == 3 ? '종결' : '기타'))}"></td>
-									<td th:text="${ord.businessName}"></td>
-									<td th:text="${#dates.format(ord.ordDate, 'yyyy-MM-dd')}"></td>
-									<td th:text="${ord.ordManager}"></td>
-									<td th:text="|${#numbers.formatInteger(ord.totalTtlPrice, 0, 'COMMA')} 원|" style="text-align: right;"></td>
-									<td th:text="${ord.ordNote}" style="text-align: left; padding-left: 30px;"></td>
-								</tr>
+							<tbody style="text-align: center;" id="inventoryTableBody">
+								<!-- 데이터는 여기에 동적으로 추가될 것입니다. -->
 							</tbody>
 						</table>
-
 					</div>
 					<div class="modal-footer" style="background-color: #198754;">
+						<button type="button" class="btn btn-secondary" onclick="addToMainGridInventory()">추가</button>
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 					</div>
 				</div>
@@ -388,6 +396,12 @@ button {
 				scrollY : false,
 				rowHeaders : [ 'rowNum', 'checkbox' ],
 				columns : [ {
+					header : '주문상세번호',
+					name : 'ordDCode',
+					align: 'center',
+				},
+					
+					{
 					header : '품목명',
 					name : 'prodName',
 					align: "center",
@@ -395,12 +409,6 @@ button {
 					header : '단위',
 					name : 'prodUnit',
 					align: "center",
-				}, {
-					header : 'LOT',
-					name : '',
-				}, {
-					header : '현재고',
-					name : '',
 				}, {
 					header : '수량',
 					name : 'ordCount',
@@ -410,15 +418,49 @@ button {
 					header : '단가',
 					name : 'prodPrice',
 					align: "right",
-					formatter: formatTotalTtlPrice,
+					formatter: formatPrice,
 				}, {
 					header : '총금액',
 					name : 'ttlPrice',
 					align: "right",
-					formatter: formatTotalTtlPrice,
+					formatter: formatPrice,
 				}, ],
 
 			});
+			
+			let outGrid = tui.Grid;
+			outGrid.applyTheme('clean', {
+				row : {
+					hover : {
+						background : '#d4e9f2'
+					}
+				}
+			});
+			
+
+			outGrid = new tui.Grid({
+				
+				el : document.getElementById('grid'),
+				scrollX : false,
+				scrollY : false,
+				rowHeaders : [ 'rowNum', 'checkbox' ],
+				columns : [ {
+					header : '완제품 LOT 번호',
+					name : 'prodLotCode',
+					align: "center",
+				}, {
+					header : '현재고량',
+					name : 'prodCount',
+					align: "right",
+				}, {
+					header : '출고수량',
+					name : '',
+					align: "right",
+					
+				},  ],
+
+			});
+
 
 			document
 					.addEventListener(
@@ -484,7 +526,10 @@ button {
 		       	document.getElementById('selectedBusinessCode').value = businessCode;
 		       	document.getElementById('selectedBusinessManager').value = businessManager;
 		       	document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
+		       	
+		       	
 		        // ordCode를 기반으로 주문 세부 정보를 가져오기
+		        
 		        fetch('/orderDetailList/' + ordCode)
 		            .then(response => response.json())
 		            .then(data => {
@@ -495,21 +540,18 @@ button {
 		                data.forEach(function (data) {
 		                	var dlvyDate = formatDate(data.dlvyDate); // 날짜 포맷
 		                    $('<tr>').append(
+		                    	$('<td>').text(data.ordDCode),	
 		                        $('<td>').text(data.prodCode),
 		                        $('<td>').text(data.prodName),
 		                        $('<td>').text(data.prodUnit),
 		                        $('<td>').text(dlvyDate),
 		                        $('<td>').text(data.ordCount),
-		                        $('<td>').text(data.prodPrice),
-		                        $('<td>').text(data.ttlPrice),
+		                        $('<td>').text(formatPrice({ value: data.prodPrice })),
+		                        $('<td>').text(formatPrice({ value: data.ttlPrice })),
 		                    ).appendTo(detailTableBody);
 		                });
 				
-		             // prodCode를 전역 배열에 추가
-		                data.forEach(function(item) {
-		                    currentProdCodes.push(item.prodCode);
-		                });
-		                console.log(currentProdCodes);
+		            
 
 		                
 		            })
@@ -518,39 +560,42 @@ button {
 		            });
 		    }
 			
-			// prodCode를 저장할 전역 배열 변수
-			var currentProdCodes = [];
 			
 			
-			function addToMainGrid() {
+			function addToMainGridOrd() {
+				
 			    var mainGrid = grid; // 이 부분은 tui.Grid를 사용하고 있으므로 기존 코드에 맞게 수정해주세요.
 
 			    var detailTableBody = $('#orderDetailsTable tbody');
 			    var rows = detailTableBody.find('tr');
-
 			    var newData = [];
+				
+			    
+			    
 
 			    rows.each(function (index, row) {
 			        var cells = $(row).find('td');
 			        console.log(cells);
 			        // 주문 상세 정보에서 필요한 값 추출
-			        var prodCode = cells.eq(0).text();
-			        var prodName = cells.eq(1).text();
-			        var prodUnit = cells.eq(2).text();
-			        var dlvyDate = cells.eq(3).text();
-			        var ordCount = cells.eq(4).text();
-			        var prodPrice = cells.eq(5).text();
-			        var ttlPrice = cells.eq(6).text();
+			        var ordDCode = cells.eq(0).text();
+			        var prodCode = cells.eq(1).text();
+			        var prodName = cells.eq(2).text();
+			        var prodUnit = cells.eq(3).text();
+			        var dlvyDate = cells.eq(4).text();
+			        var ordCount = cells.eq(5).text();
+			        var prodPrice = cells.eq(6).text();
+			        var ttlPrice = cells.eq(7).text();
 
 			        // 새로운 데이터 생성
 			        var newDataRow = {
-			            prodCode: prodCode,
-			            prodName: prodName,
-			            prodUnit: prodUnit,
-			            dlvyDate: dlvyDate,
-			            ordCount: ordCount,
-			            prodPrice: prodPrice,
-			            ttlPrice: ttlPrice
+			        		ordDCode: ordDCode,
+			            	prodCode: prodCode,
+			            	prodName: prodName,
+			            	prodUnit: prodUnit,
+			            	dlvyDate: dlvyDate,
+			            	ordCount: ordCount,
+			            	prodPrice: prodPrice,
+			            	ttlPrice: ttlPrice
 			        };
 
 			        newData.push(newDataRow);
@@ -565,15 +610,146 @@ button {
 
 			    // 모달 창 닫기
 			    $('#staticBackdropOrd').modal('hide');
+			    
+			    return newData;
+			    
+			    
 			}
 			
+			// 재고현황 모달에서 선택한 품목을 기존 그리드에 추가
+			function addToMainGridInventory() {
+			    var mainGrid = outGrid;
+			    var inventoryTableBody = $('#inventoryTableBody');
+			    var selectedRows = inventoryTableBody.find('.inventory-checkbox:checked').closest('tr');
+
+			    // 주문 데이터 가져오기
+			    var newOrderData = addToMainGridOrd();
+
+			    selectedRows.each(function (index, row) {
+			        var cells = $(row).find('td');
+			        console.log(cells);
+			        // 재고 정보에서 필요한 값 추출
+			        var prodLotCode = cells.eq(1).text();
+			        var prodCount = cells.eq(3).text();
+
+			        // 이미 그리드에 존재하는지 확인
+			        var existingRow = mainGrid.getData().find(function (dataRow) {
+			            return dataRow.prodLotCode === prodLotCode;
+			        });
+
+			        if (!existingRow) {
+			            // 새로운 데이터 생성
+			            var newDataRow = {
+			                prodLotCode: prodLotCode,
+			                prodCount: prodCount,
+			                // 추가적인 필요한 열이 있다면 여기에 추가하세요.
+			            };
+
+			            // 기존 그리드의 데이터 뒤에 새로운 데이터를 추가
+			            mainGrid.appendRow(newDataRow);
+			        } else {
+			            // 이미 추가된 경우에 대한 처리
+			            alert(prodLotCode + '는 이미 추가된 품목입니다.');
+			        }
+
+			        // 주문 수량 체크
+			        var orderQuantity = parseInt(newOrderData[0].ordCount, 10);
+			        console.log(orderQuantity);
+			        var totalProdCount = mainGrid.getData().reduce(function (sum, dataRow) {
+			            return sum + parseInt(dataRow.prodCount, 10);
+			        }, 0);
+
+			        // 주문 수량이 현재고량보다 클 경우
+			        if (orderQuantity > totalProdCount) {
+			            var remainingQuantity = orderQuantity - totalProdCount;
+			            console.log('주문 수량이 현재고량보다 클 경우, 남은 수량: ' + remainingQuantity);
+			        }
+
+			        if (orderQuantity === totalProdCount) {
+			            // 주문 수량과 재고 합계가 일치하면 어떤 작업을 수행하세요.
+			            console.log('주문 수량과 재고 합계가 일치합니다.');
+			        } else {
+			            console.log('주문 수량과 재고 합계가 일치하지 않습니다.');
+			        }
+			    });
+
+			    // 모달 창 닫기
+			    $('#staticBackdropInventory').modal('hide');
+			}
+
+			
+			
 			// 총금액 포맷터 함수
-			function formatTotalTtlPrice({ value }) {
+			function formatPrice({ value }) {
 			    if (value) {
 			        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 			    }
 			    return '';
 			}
+			
+			
+			
+			
+			// 추가된 함수: 재고 정보 가져오기
+			function fetchInventory() {
+				let selectedRows = grid.getCheckedRows();
+				console.log(selectedRows)
+			    // 배열에 prodCode가 있는지 확인
+			    let prodCodes = selectedRows.map(x => x.prodCode);
+			    console.log(prodCodes)
+			    if (prodCodes.length > 0) {
+			        // 각각의 prodCode에 대해 AJAX 요청을 보냅니다.
+			        var inventoryTableBody = $('#staticBackdropInventory tbody');
+			        inventoryTableBody.empty();
+			    	prodCodes.forEach(function (prodCode) {
+			            $.ajax({
+			                url: '/productLotList/' + prodCode,
+			                method: 'GET',
+			                success: function (inventoryData) {
+			                    // 가져온 재고 데이터를 처리하고 표시합니다.
+			                    console.log('재고 품목 코드 ' + prodCode + ':', inventoryData);
+			                 // 재고 표시를 업데이트하는 로직을 구현합니다.
+			                    updateInventoryModal(inventoryData);
+			                },
+			                error: function (error) {
+			                    console.error('Error fetching inventory for ' + prodCode + ':', error);
+			                }
+			            });
+			        });
+
+			    }
+			}
+			
+			function updateInventoryModal(inventoryData) {
+			    var inventoryTableBody = $('#inventoryTableBody');
+			    inventoryTableBody;
+
+			    // 가져온 데이터를 테이블에 추가
+			    inventoryData.forEach(function (prodLot) {
+			        var row = $('<tr>');
+			        
+			     // 체크박스 추가
+			        var checkbox = $('<input>').attr({
+			            type: 'checkbox',
+			            class: 'inventory-checkbox',
+			            value: prodLot.prodLotCode // 유일한 식별자로 변경
+			        });
+
+			        row.append($('<td>').append(checkbox).css({
+			        	'width':'42px'
+			        }));
+			        row.append($('<td>').text(prodLot.prodLotCode));
+			        row.append($('<td>').text(prodLot.prodName));
+			        row.append($('<td>').text(prodLot.prodCount));
+
+			        // 행을 테이블에 추가
+			        inventoryTableBody.append(row);
+			    });
+
+			    // 모달 열기 (만약 열려있지 않은 경우)
+			    $('#staticBackdropInventory').modal('show');
+			
+}
 		</script>
 	</section>
 </body>
