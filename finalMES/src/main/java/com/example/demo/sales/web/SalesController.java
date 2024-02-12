@@ -18,6 +18,7 @@ import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
+import com.example.demo.sales.vo.product.ProductLotVO;
 
 @Controller
 public class SalesController {
@@ -65,6 +66,13 @@ public class SalesController {
 		List<OrderDetailDVO> orderDetailList = ordService.getOrderDetailList(ordCode);
 		// 추가 로직
 		return orderDetailList;
+	}
+	
+	@GetMapping("/productLotList/{prodCode}")
+	@ResponseBody
+	public List<ProductLotVO> getProductLotList(@PathVariable String prodCode){
+		List<ProductLotVO> productLotList = ordService.getProductLotList(prodCode);
+		return productLotList;
 	}
 
 	// inOutManage 페이지로 거래처, 주문서 뿌려주는 컨트롤러

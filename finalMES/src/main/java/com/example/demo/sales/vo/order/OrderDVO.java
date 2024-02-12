@@ -11,7 +11,10 @@ import lombok.Data;
 @Data
 public class OrderDVO {
 	private String ordCode;
-	private String businessCode; // 거래처 정보를 나타내는 VO
+	private String businessName; // 거래처 정보를 나타내는 VO
+	private String businessCode;
+	private String businessManager;
+	private String businessManagerPhone;
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date ordDate;
 	private String ordManager;

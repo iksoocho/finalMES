@@ -10,6 +10,7 @@ import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
+import com.example.demo.sales.vo.product.ProductLotVO;
 
 @Mapper
 public interface OrdMapper {
@@ -24,6 +25,8 @@ public interface OrdMapper {
 	public List<OrderVO> getOrderList(); // 주문서 전체 조회
 
 	public List<OrderDetailDVO> getOrderDetailList(String ordCode); // 주문서 상세 조회
+	
+	public List<ProductLotVO> getProductLotList(String prodCode);
 
 	OrderVO getOrderCode(String businessCode); // 거래처에 대한 제일 최근 주문번호 조회
 

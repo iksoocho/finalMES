@@ -225,7 +225,7 @@ button {
 			<h5>상세정보</h5>
 			<button class="btn btn-primary">취소</button>
 			<button class="btn btn-primary">추가</button>
-			<button class="btn btn-success">재고현황 불러오기</button>
+			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory">재고현황 불러오기</button>
 			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd">주문서 불러오기</button>
 		</div>
 		<div id="grid" class="containerOne"></div>
@@ -290,11 +290,12 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}" th:data-businessCode="${ord.businessCode}" th:data-ordDate="${ord.ordDate}"
-									th:data-ordManager="${ord.ordManager}" th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'">
+								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}" th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}"
+									th:data-businessManager="${ord.businessManager}" th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
+									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'">
 									<td th:text="${ord.ordCode}"></td>
 									<td th:text="${ord.ordState == 1 ? '등록완료' : (ord.ordState == 2 ? '처리중' : (ord.ordState == 3 ? '종결' : '기타'))}"></td>
-									<td th:text="${ord.businessCode}"></td>
+									<td th:text="${ord.businessName}"></td>
 									<td th:text="${#dates.format(ord.ordDate, 'yyyy-MM-dd')}"></td>
 									<td th:text="${ord.ordManager}"></td>
 									<td th:text="|${#numbers.formatInteger(ord.totalTtlPrice, 0, 'COMMA')} 원|" style="text-align: right;"></td>
@@ -327,6 +328,48 @@ button {
 				</div>
 			</div>
 		</div>
+
+		<!-- 주문서 모달 -->
+		<div class="modal fade modal-xl" id="staticBackdropInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #198754;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">완제품 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>완제품 LOT 번호</th>
+									<th>품목명</th>
+									<th>재고량</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<tr th:each="prod : ${productLotList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}" th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}"
+									th:data-businessManager="${ord.businessManager}" th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
+									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'">
+									<td th:text="${ord.ordCode}"></td>
+									<td th:text="${ord.ordState == 1 ? '등록완료' : (ord.ordState == 2 ? '처리중' : (ord.ordState == 3 ? '종결' : '기타'))}"></td>
+									<td th:text="${ord.businessName}"></td>
+									<td th:text="${#dates.format(ord.ordDate, 'yyyy-MM-dd')}"></td>
+									<td th:text="${ord.ordManager}"></td>
+									<td th:text="|${#numbers.formatInteger(ord.totalTtlPrice, 0, 'COMMA')} 원|" style="text-align: right;"></td>
+									<td th:text="${ord.ordNote}" style="text-align: left; padding-left: 30px;"></td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+					<div class="modal-footer" style="background-color: #198754;">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script th:inline="javascript">
 			/* 토스트 그리드 */
 
@@ -362,6 +405,7 @@ button {
 					header : '수량',
 					name : 'ordCount',
 					align: "right",
+					dataType: 'number',
 				}, {
 					header : '단가',
 					name : 'prodPrice',
@@ -400,6 +444,7 @@ button {
 				// 클릭한 <li> 요소에서 데이터 속성을 가져옴
 				var businessCode = liElement.getAttribute('data-businessCode');
 				var businessName = liElement.getAttribute('data-businessName');
+				
 				var businessManager = liElement
 						.getAttribute('data-businessManager');
 				var businessManagerPhone = liElement
@@ -425,17 +470,25 @@ button {
 			    return formattedDate;
 			}
 			
+			
+			
 			function displaySelectedProduct(element) {
 		        var ordCode = element.getAttribute('data-ordCode');
 		        var businessName = element.getAttribute('data-businessName');
-		       
+		        var businessCode = element.getAttribute('data-businessCode');
+		        var businessManager = element.getAttribute('data-businessManager');
+		        var businessManagerPhone = element.getAttribute('data-businessManagerPhone');
 		        
 		     // 메인 화면 상단에 거래처 코드 설정
 		        document.getElementById('selectedBusinessName').value = businessName;
+		       	document.getElementById('selectedBusinessCode').value = businessCode;
+		       	document.getElementById('selectedBusinessManager').value = businessManager;
+		       	document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
 		        // ordCode를 기반으로 주문 세부 정보를 가져오기
 		        fetch('/orderDetailList/' + ordCode)
 		            .then(response => response.json())
 		            .then(data => {
+		            	
 		                // 상세 정보를 표시
 		                var detailTableBody = $('#orderDetailsTable tbody');
 		                detailTableBody.empty();
@@ -452,6 +505,12 @@ button {
 		                    ).appendTo(detailTableBody);
 		                });
 				
+		             // prodCode를 전역 배열에 추가
+		                data.forEach(function(item) {
+		                    currentProdCodes.push(item.prodCode);
+		                });
+		                console.log(currentProdCodes);
+
 		                
 		            })
 		            .catch(error => {
@@ -459,40 +518,54 @@ button {
 		            });
 		    }
 			
+			// prodCode를 저장할 전역 배열 변수
+			var currentProdCodes = [];
+			
+			
 			function addToMainGrid() {
-		        var mainGrid = grid; // 이 부분은 tui.Grid를 사용하고 있으므로 기존 코드에 맞게 수정해주세요.
+			    var mainGrid = grid; // 이 부분은 tui.Grid를 사용하고 있으므로 기존 코드에 맞게 수정해주세요.
 
-		        var detailTableBody = $('#orderDetailsTable tbody');
-		        var rows = detailTableBody.find('tr');
+			    var detailTableBody = $('#orderDetailsTable tbody');
+			    var rows = detailTableBody.find('tr');
 
-		        rows.each(function (index, row) {
-		            var cells = $(row).find('td');
-					console.log(cells)
-		            // 주문 상세 정보에서 필요한 값 추출
-		            var prodCode = cells.eq(0).text();
-		            var prodName = cells.eq(1).text();
-		            var prodUnit = cells.eq(2).text();
-		            var dlvyDate = cells.eq(3).text();
-		            var ordCount = cells.eq(4).text();
-		            var prodPrice = cells.eq(5).text();
-		            var ttlPrice = cells.eq(6).text();
+			    var newData = [];
 
-		            // 메인 그리드에 행 추가
-		            mainGrid.appendRow({
-		                // 적절한 필드명에 맞게 수정
-		                prodCode: prodCode,
-		                prodName: prodName,
-		                prodUnit: prodUnit,
-		                dlvyDate: dlvyDate,
-		                ordCount: ordCount,
-		                prodPrice: prodPrice,
-		                ttlPrice: ttlPrice
-		            });
-		        });
+			    rows.each(function (index, row) {
+			        var cells = $(row).find('td');
+			        console.log(cells);
+			        // 주문 상세 정보에서 필요한 값 추출
+			        var prodCode = cells.eq(0).text();
+			        var prodName = cells.eq(1).text();
+			        var prodUnit = cells.eq(2).text();
+			        var dlvyDate = cells.eq(3).text();
+			        var ordCount = cells.eq(4).text();
+			        var prodPrice = cells.eq(5).text();
+			        var ttlPrice = cells.eq(6).text();
 
-		        // 모달 창 닫기
-		        $('#staticBackdropOrd').modal('hide');
-		    }
+			        // 새로운 데이터 생성
+			        var newDataRow = {
+			            prodCode: prodCode,
+			            prodName: prodName,
+			            prodUnit: prodUnit,
+			            dlvyDate: dlvyDate,
+			            ordCount: ordCount,
+			            prodPrice: prodPrice,
+			            ttlPrice: ttlPrice
+			        };
+
+			        newData.push(newDataRow);
+			        
+			    });
+
+			    // 그리드의 기존 데이터를 모두 삭제
+			    mainGrid.clear();
+
+			    // 새로운 데이터를 그리드에 추가
+			    mainGrid.resetData(newData);
+
+			    // 모달 창 닫기
+			    $('#staticBackdropOrd').modal('hide');
+			}
 			
 			// 총금액 포맷터 함수
 			function formatTotalTtlPrice({ value }) {

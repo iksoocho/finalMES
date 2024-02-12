@@ -13,6 +13,7 @@ import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
+import com.example.demo.sales.vo.product.ProductLotVO;
 
 @Service
 public class OrdServiceImpl implements OrdService {
@@ -99,5 +100,11 @@ public class OrdServiceImpl implements OrdService {
 	public List<OrderVO> getOrderWithDetails(OrderVO orderVO) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<ProductLotVO> getProductLotList(String prodCode) {
+		// TODO Auto-generated method stub
+		return ordMapper.getProductLotList(prodCode);
 	}
 }
