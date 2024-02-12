@@ -40,13 +40,13 @@
 
 
 
-        <button type="button" class="btn btn-primary" id="orderInsert">
+        <button type="button" class="btn btn-primary">
           저장
         </button>
 <!-- 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" -->
 <!-- 				data-bs-target="#exampleModal">조회</button> -->
 
-				<button type="button" class="btn btn-primary" id="">
+				<button type="button" class="btn btn-primary" id="orderInsert">
 					저장
 				</button>
 		</div>
@@ -193,10 +193,11 @@
                  	}
 
                  	// 발주 상태 형식 지정 함수
-                 	function getMatOrderStatus(value, row) {
+                 function getMatOrderStatus(value, row) {
+                  console.log(value);
                   let statusText, OrColor;
 
-                  switch (value) {
+                  switch (value.value) {
                       case '1':
                           statusText = '발주완료';
                           OrColor = 'gray';
@@ -214,7 +215,46 @@
                  return `<div style="background-color: ${OrColor}; ">${statusText}</div>`;
              }
 
+			
+                 	
+//				
+//      			document.querySelectorAll('.plan-row').forEach(row => {
+//     				row.addEventListener('click', function () {
+//     					const planCode = this.getAttribute('data-plan-code');
 
+//     					fetch('/planDetail?planCode=' + planCode)
+//     						.then(response => response.json())
+//     						.then(data => {
+//     							const detailsTbody = document.getElementById('planDetails');
+//     							detailsTbody.innerHTML = ''; // 기존 내용 초기화
+
+//     							// 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
+//     							data.forEach(detail => {
+//     								const tr = document.createElement('tr');
+
+//     								const date = new Date(detail.dlvyDate);
+//     								const sDate = new Date(detail.start);
+//     								const eDate = new Date(detail.end);
+//     								const formattedDate = date.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+//     								const formattedSDate = sDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+//     								const formattedEDate = eDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+//     								console.log(detail);
+//     								tr.innerHTML = `
+//     									<td>${detail.dplanCode}</td>
+//     		                            <td>${detail.planCode}</td>
+//     		                            <td>${detail.prodCode}</td>
+//     		                            <td><input type="date" value="${formattedSDate}" name="startDate"></td>
+//     		                            <td><input type="date" value="${formattedEDate}" name="endDate"></td>
+//     		                            <td>${detail.prodCount}</td>
+//     		                            <td>${detail.ordCount}</td>
+//     		                            <td><input type="number" value="${detail.dplanCount}" name="planCount"></td>
+//     		                            <td>${formattedDate}</td>
+//     								`;
+//     								detailsTbody.appendChild(tr);
+//     							});
+//     						});
+//     				});
+//     			});
 
 
 
@@ -232,51 +272,53 @@
 	        let ordState = {};
 	        
 	        
-	        orderobj.matOrcode = document.querySelecttor().innerHTML;
-	        orderobj.matCode = document.querySelecttor().innerHTML;
-	        orderobj.matOrName = document.querySelecttor().innerHTML;
-	        orderobj.matOrCount = document.querySelecttor().innerHTML;
-	        orderobj.matOrDate = document.querySelecttor().innerHTML;
-	        orderobj.matOrDueDate = document.querySelecttor().innerHTML;
-	        orderobj.matOrManage = document.querySelecttor().innerHTML;
+	        orderobj.matOrCode = document.querySelector('td[data-column-name="matOrCode"] div').innerHTML;
+	        console.log(orderobj.matOrCode);
+	        orderobj.matCode = document.querySelector('td[data-column-name="matCode"] div').innerHTML;
+	        orderobj.matOrName = document.querySelector('td[data-column-name="matOrName"] div').innerHTML;
+	        orderobj.matOrCount = document.querySelector('td[data-column-name="matOrCount"] div').innerHTML;
+	        orderobj.matOrDate = document.querySelector('td[data-column-name="matOrDate"] div').innerHTML;
+	        orderobj.matOrDueDate = document.querySelector('td[data-column-name="matOrDueDate"] div').innerHTML;
+	        orderobj.matOrManage = document.querySelector('td[data-column-name="matOrManage"] div').innerHTML;
 	        
-	        //여기도 내 컬럼으로 바꾸기
-			planobj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
-			planobj.planTitle = document.querySelector('td[data-column-name="planTitle"] div').innerHTML;
-			planobj.planPerson = document.querySelector('td[data-column-name="planPerson"] div').innerHTML;
-			planobj.planDate = document.querySelector('td[data-column-name="planDate"] div').innerHTML;
+	        ordState.matOrCode = document.querySelector('td[data-column-name="matOrCode"] div').innerHTML;
 
-			ordState.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
+			let newMatORderRows = document.querySelectorAll('#ordGrid tbody tr');
 
-			let newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
+			let matOrderData = [];
 
-			let planDetailData = [];
-
-			for (let i = 4; i < newPlanDetailRows.length; i++) {
+			for (let i = 1; i < newMatORderRows.length; i++) {
 				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 				let obj = {};
-				let target = $(newPlanDetailRows[i]);
+				let target = $(newMatORderRows[i]);
 
-				obj.prodCode = target.find('td:eq(1)').text();
-				console.log("prodCode : " + obj.prodCode);
-
-				obj.dplanStartDate = target.find('td:eq(2)').text();
-				console.log("dplanStartDate : " + obj.dplanStartDate);
-				obj.dplanEndDate = target.find('td:eq(3)').text();
-				obj.dplanCount = target.find('td:eq(6)').text();
-
-				planDetailData.push(obj);
-
+				obj.matOrCode = target.find('td:eq(1)').text();
+				console.log("matOrCode : " + obj.matOrCode);
+				
+				obj.matOrName = target.find('td:eq(2)').text();
+				console.log("matOrName : " + obj.matOrName);
+				
+				obj.matOrCount = target.find('td:eq(5)').text();
+				
+				obj.matOrDate = target.find('td:eq(6)').text();
+				
+				obj.matOrDueDate = target.find('td:eq(7)').text();
+				
+				obj.matOrManage = target.find('td:eq(8)').text();
+				
+				matOrderData.push(obj);
+				
 			}
 
-			data.planVO = planobj;
-			data.planDVOList = planDetailData;
-			data.planOrdVO = ordState;
+			data.matOrderVO = orderobj;
+			data.matOrderInfoVO = matOrderData;
+			
+// 			data.planOrdVO = ordState;
 
 
 			console.log(data);
 			// AJAX 요청으로 서버에 데이터 전송
-			fetch('/planInsert', {
+			fetch('/matOrderInsert', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -293,7 +335,7 @@
 				.then(data => {
 					console.log('Success:', data);
 					alert(data);
-					location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+					location.href = '/matOrder'; // 성공적으로 처리된 후 리디렉트
 				})
 				.catch(error => {
 					console.error('Error:', error);
@@ -305,62 +347,62 @@
 
 
 		//plan detail update
-		document.querySelector('#planDUpdate').addEventListener('click', function () {
-			const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
-			if (newDetail === null) {
-				alert("저장 할 내용이 없습니다.")
-				return;
-			}
+// 		document.querySelector('#planDUpdate').addEventListener('click', function () {
+// 			const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
+// 			if (newDetail === null) {
+// 				alert("저장 할 내용이 없습니다.")
+// 				return;
+// 			}
 
-			let data = {};
+// 			let data = {};
 
-			let newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
+// 			let newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
-			let planDetailData = [];
-			// 인덱스 4부터 시작하여 끝까지 반복합니다.
-			for (let i = 4; i < newPlanDetailRows.length; i++) {
-				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
-				let obj = {};
-				let target = $(newPlanDetailRows[i]);
-				obj.dplanCode = target.find('td:eq(0)').text();
-				obj.prodCode = target.find('td:eq(1)').text();
-				console.log("prodCode : " + obj.prodCode);
+// 			let planDetailData = [];
+// 			// 인덱스 4부터 시작하여 끝까지 반복합니다.
+// 			for (let i = 4; i < newPlanDetailRows.length; i++) {
+// 				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
+// 				let obj = {};
+// 				let target = $(newPlanDetailRows[i]);
+// 				obj.dplanCode = target.find('td:eq(0)').text();
+// 				obj.prodCode = target.find('td:eq(1)').text();
+// 				console.log("prodCode : " + obj.prodCode);
 
-				obj.dplanStartDate = target.find('td:eq(2)').text();
-				console.log("dplanStartDate : " + obj.dplanStartDate);
-				obj.dplanEndDate = target.find('td:eq(3)').text();
-				obj.dplanCount = target.find('td:eq(6)').text();
+// 				obj.dplanStartDate = target.find('td:eq(2)').text();
+// 				console.log("dplanStartDate : " + obj.dplanStartDate);
+// 				obj.dplanEndDate = target.find('td:eq(3)').text();
+// 				obj.dplanCount = target.find('td:eq(6)').text();
 
-				planDetailData.push(obj);
+// 				planDetailData.push(obj);
 
-			}
-			data.planDVOList = planDetailData;
-			console.log(data);
-			// AJAX 요청으로 서버에 데이터 전송
-			fetch('/planDUpdate', {
-				method: 'put',
-				headers: {
-					'Content-Type': 'application/json',
+// 			}
+// 			data.planDVOList = planDetailData;
+// 			console.log(data);
+// 			// AJAX 요청으로 서버에 데이터 전송
+// 			fetch('/planDUpdate', {
+// 				method: 'put',
+// 				headers: {
+// 					'Content-Type': 'application/json',
 
-				},
-				body: JSON.stringify(data)
-			})
-				.then(response => {
-					if (!response.ok) {
-						throw new Error('Network response was not ok');
-					}
-					return response.text();
-				})
-				.then(data => {
-					console.log('Success:', data);
-					alert(data);
-					location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
+// 				},
+// 				body: JSON.stringify(data)
+// 			})
+// 				.then(response => {
+// 					if (!response.ok) {
+// 						throw new Error('Network response was not ok');
+// 					}
+// 					return response.text();
+// 				})
+// 				.then(data => {
+// 					console.log('Success:', data);
+// 					alert(data);
+// 					location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+// 				})
+// 				.catch(error => {
+// 					console.error('Error:', error);
+// 				});
 
-		});
+// 		});
 		
 		
       </script>
