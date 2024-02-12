@@ -58,16 +58,19 @@ public class FacManageServiceImpl implements FacManageService {
 	
 	
 	
-	//동시 insert
+	//설비 등록
 	@Override
 	public void insertFacWithNotop(FacCompositeVO facCompositeVO) {
+		// 설비기본정보 등록
 		facManageMapper.insertFac(facCompositeVO.getFacManageVO());
 		System.out.println("facCode : "+ facCompositeVO.getFacManageVO().getFacCode());
 		
+		// 비가동 등록
 		facCompositeVO.getFacNotopVO().setFacCode(facCompositeVO.getFacManageVO().getFacCode());
 		facManageMapper.insertFacNot(facCompositeVO.getFacNotopVO());
 	}
 
+	// 비가동 업데이트
 	@Override
 	public void updateFacNot(FacNotopVO facNotopVO) {
 		facManageMapper.updateFacNot(facNotopVO);
@@ -89,18 +92,34 @@ public class FacManageServiceImpl implements FacManageService {
 	}
 	
 	public void updateFacIns(FacInsVO facInsVO) {
+		// 판정이 적합일시 비가동상태를 대기로 업데이트
+		
 		facManageMapper.updateFacIns(facInsVO);
 	}
 	
 	// 점검관리등록
 	@Override
 	public int insertFacIns(FacInsDVO facInsDVO) {
+		// 비가동상태 업데이트
+		
+		// 점검등록
 		int result = facManageMapper.insertFacIns(facInsDVO);
 		if(result == 1) {
 			return 1;
 		} else {
 			return -1;
 		}
+	}
+
+	@Override
+	public int insertFacInsNot(FacNotopVO facNotopVO) {
+		int result = facManageMapper.insertFacInsNot(facNotopVO);
+		if(result == 1) {
+			return 1;
+		} else {
+			return -1;
+		}
+		
 	}
 
 	

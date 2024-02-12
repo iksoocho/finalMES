@@ -86,9 +86,12 @@ button {
 							<th>차기점검일</th>
 							<th colspan="2"><input type="date" id="facInsNexd"
 								name="facInsNexd" required></th>
+						
+							
 						</tr>
 					</thead>
 				</table>
+				<input type="hidden" id="facNotCode"	name="facNotCode" required>	
 				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 				<button type="button" id="insertBtn" class="btn btn-outline-success">등록</button>
 				<button type="button" id="selectBtn" class="btn btn-outline-success"
@@ -156,8 +159,9 @@ button {
 
 		<script th:inline="javascript">
            
-         	document.getElementById('saveBtn').addEventListener("click", function() {
+         document.getElementById('saveBtn').addEventListener("click", function() {
             var facInsCode = document.getElementsByName("facInsCode")[0].value;
+            var facNotCode = document.getElementsByName("facNotCode")[0].value;
             var facCode = document.getElementsByName("facCode")[0].value;
             var facName = document.getElementsByName("facName")[0].value;
             var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
@@ -173,6 +177,7 @@ button {
 
             var data = {
                 facInsCode: facInsCode,
+                facNotCode: facNotCode,
                 facCode: facCode,
                 facName: facName,
                 facCode: facCode,
@@ -207,9 +212,12 @@ button {
                 alert(오류);
             });
         });
-         	
-         	document.getElementById('insertBtn').addEventListener("click", function() {
+        
+         
+         // 
+        document.getElementById('insertBtn').addEventListener("click", function() {
          	    var facInsCode = document.getElementsByName("facInsCode")[0].value;
+         	    var facNotCode = document.getElementsByName("facNotCode")[0].value;
          	    var facCode = document.getElementsByName("facCode")[0].value;
          	    var facName = document.getElementsByName("facName")[0].value;
          	    var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
@@ -225,6 +233,7 @@ button {
 
          	    var data = {
          	        facInsCode: facInsCode,
+         	        facNotCode: facNotCode,
          	        facCode: facCode,
          	        facName: facName,
          	        facInsPerson: facInsPerson,
@@ -260,31 +269,13 @@ button {
          	});
 
          	
-         	fetch("/facInsList")
-            .then(response => response.json())
-            .then(data => {
-                const gridData = data.map(item => ({
-                    facInsCode: item.facInsCode,
-                    facName: item.facName,
-                    facCode: item.facCode,
-                    facInsCheck: item.facInsCheck,
-                    facInsPerson: item.facInsPerson,
-                    facInsJud: item.facInsJud,
-                    facInsNexd: formatDate(item.facInsNexd)
-                }));
-                console.log('gridData : ', gridData);
-                grid.resetData(gridData); // 그리드에 데이터를 설정
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                alert("데이터 불러오기 실패!");
-            }); 
+
          	
         // 그리드 페이징
-        let facInsList = [[${ilist}]];
+    
         const grid = new tui.Grid({
             el: document.getElementById('grid'),
-            data: facInsList,
+            data: [],
             scrollX: false,
             scrollY: false,
             columns: [
@@ -319,8 +310,15 @@ button {
                     align: 'center'
                 },
                 {
+                    header: '점검일',
+                    name: 'facInsDate',
+                    formatter :  formatDate,
+                    align: 'facInsDate'
+                },
+                {
                     header: '차기점검일',
                     name: 'facInsNexd',
+                    formatter : formatDate,
                     align: 'facInsNexd'
                 },
                
@@ -332,10 +330,22 @@ button {
             }
         });
         
+        
+     	fetch("/facInsList")
+        .then(response => response.json())
+        .then(data => {
+            grid.resetData(data); // 그리드에 데이터를 설정
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            alert("데이터 불러오기 실패!");
+        }); 
+        
         //  차기점검을 날짜포맷
         function formatDate(dateString) {
+        	console.log(dateString);
             // dateString을 Date 객체로 파싱
-            const date = new Date(dateString);
+            const date = new Date(dateString.value);
             // 날짜 포맷 변경
             const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
             return formattedDate;
@@ -345,14 +355,18 @@ button {
         function handleFacNameClick(event) {
             // 클릭한 행의 데이터 가져오기
             const rowData = grid.getRowAt(event.rowKey);
-
+			
             // 설비명과 담당자 값을 가져와서 input 박스에 넣기
             const facName = rowData.facName;
             const facInsPerson = rowData.facInsPerson;
             const facInsCode = rowData.facInsCode;
             const facCode = rowData.facCode;
+            const facNotCode = rowData.facNotCode;
+            const facInsDate = rowData.facInsDate;
             
             document.getElementById('facInsCode').value = facInsCode;
+            document.getElementById('facInsDate').value = facInsDate;
+            document.getElementById('facNotCode').value = facNotCode;
             document.getElementById('facCode').value = facCode;
             document.getElementById('facName').value = facName;
             document.getElementById('facInsPerson').value = facInsPerson;
@@ -369,6 +383,7 @@ button {
         
     	function displaySelectedFacNotIns(element) {
     		var facCode = element.getAttribute('data-facCode');
+    		var facNotCode = element.getAttribute('data-facNotCode');
     		var facName = element.getAttribute('data-facName');
     		var facNotPerson = element.getAttribute('data-facNotPerson');
     		var facNotReason = element.getAttribute('data-facNotReason');
@@ -376,6 +391,7 @@ button {
     		
     		
     		document.getElementById('facCode').value = facCode;
+    		document.getElementById('facNotCode').value = facNotCode;
     		document.getElementById('facName').value = facName;
     		document.getElementById('facInsPerson').value = facNotPerson;
     		document.getElementById('facNotReason').value = facNotReason;
