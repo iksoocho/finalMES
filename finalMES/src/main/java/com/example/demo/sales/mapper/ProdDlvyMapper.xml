@@ -4,7 +4,7 @@
 <mapper namespace="com.example.demo.sales.mapper.ProdDlvyMapper">
 	<insert id="saveDlvy" parameterType="ProdDlvyVO">
 		INSERT INTO out_list(out_code, ord_code, out_date, out_manager, out_state)
-		VALUES(#{outCode}, #{ordCode}, #{outDate}, #{outManager}, #{outState});
+		VALUES(#{outCode}, #{ordCode}, #{outDate}, #{outManager}, #{outState})
 	</insert>
 </mapper>
  

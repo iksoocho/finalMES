@@ -209,9 +209,7 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text"
-							id="selectedBusinessName" readonly
-						>
+						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text" id="selectedBusinessName" readonly>
 							<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropBusiness">
 								<p>검색</p>
 							</button></td>
@@ -231,8 +229,7 @@ button {
 			<h5>상세정보</h5>
 			<button class="btn btn-primary">취소</button>
 			<button class="btn btn-primary">추가</button>
-			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" onclick="fetchInventory()">재고현황
-				불러오기</button>
+			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" onclick="fetchInventory()">재고현황 불러오기</button>
 			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd">주문서 불러오기</button>
 		</div>
 		<div id="grid" class="containerOne"></div>
@@ -242,9 +239,7 @@ button {
 
 
 		<!-- 거래처 모달 -->
-		<div class="modal fade" id="staticBackdropBusiness" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true"
-		>
+		<div class="modal fade" id="staticBackdropBusiness" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #0d6efd;">
@@ -262,10 +257,8 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}"
-									th:data-businessManager="${business.businessManager}" th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal"
-									onclick="updateInputFields(this)"
-								>
+								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}" th:data-businessManager="${business.businessManager}"
+									th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal" onclick="updateInputFields(this)">
 									<td th:text="${business.businessCode}"></td>
 									<td th:text="${business.businessName}"></td>
 								</tr>
@@ -281,9 +274,7 @@ button {
 		</div>
 
 		<!-- 주문서 모달 -->
-		<div class="modal fade modal-xl" id="staticBackdropOrd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true"
-		>
+		<div class="modal fade modal-xl" id="staticBackdropOrd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #ffc107;">
@@ -305,11 +296,9 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}"
-									th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}" th:data-businessManager="${ord.businessManager}"
-									th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
-									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'"
-								>
+								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}" th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}"
+									th:data-businessManager="${ord.businessManager}" th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
+									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'">
 									<td th:text="${ord.ordCode}"></td>
 									<td th:text="${ord.ordState == 1 ? '등록완료' : (ord.ordState == 2 ? '처리중' : (ord.ordState == 3 ? '종결' : '기타'))}"></td>
 									<td th:text="${ord.businessName}"></td>
@@ -349,9 +338,7 @@ button {
 		</div>
 
 		<!-- 재고현황 모달 -->
-		<div class="modal fade modal-xl" id="staticBackdropInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true"
-		>
+		<div class="modal fade modal-xl" id="staticBackdropInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #198754;">
@@ -758,7 +745,7 @@ button {
 		        		outManager : document.getElementById('outManager').value,
 		        		outState : document.getElementById('outState').value
 				}
-				
+						console.log(prodDlvyData);
 		        		console.log(prodDlvyData.outCode);
 						console.log(prodDlvyData.ordCode);
 						console.log(prodDlvyData.outDate);
@@ -767,28 +754,27 @@ button {
 						
 						// AJAX 요청으로 서버에 데이터 전송
 						fetch('/saveDlvy', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json',
-
-							},
-							body: JSON.stringify(prodDlvyData)
-							
+						    method: 'POST',
+						    headers: {
+						        'Content-Type': 'application/json',
+						    },
+						    body: JSON.stringify(prodDlvyData),
 						})
-							.then(response => {
-								if (!response.ok) {
-									throw new Error('Network response was not ok');
-								}
-								return response.text();
-							})
-							.then(data => {
-								console.log('Success:', prodDlvyData);
-								alert(prodDlvyData);
-								location.href = '/inOutManage'; // 성공적으로 처리된 후 리디렉트
-							})
-							.catch(error => {
-								console.error('Error:', error);
-							});
+						.then(response => {
+						    if (!response.ok) {
+						        throw new Error('Network response was not ok');
+						    }
+						    return response.text();
+						})
+						.then(data => {
+						    console.log('Success:', data);
+						    alert("저장되었습니다.");
+						    location.href= '/inOutManage'; // 페이지 새로고침
+						})
+						.catch(error => {
+						    console.error('Error:', error);
+						    alert("저장에 실패했습니다.");
+						});
 			});
 		</script>
 	</section>

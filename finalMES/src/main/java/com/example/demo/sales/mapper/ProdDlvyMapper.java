@@ -6,5 +6,5 @@ import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 
 @Mapper
 public interface ProdDlvyMapper {
-	public ProdDlvyVO saveDlvy(ProdDlvyVO prodDlvyVO); // 완제품 출고 등록.
+	public int saveDlvy(ProdDlvyVO prodDlvyVO); // 완제품 출고 등록.
 }

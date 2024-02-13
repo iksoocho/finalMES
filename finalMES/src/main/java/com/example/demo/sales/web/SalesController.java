@@ -27,7 +27,11 @@ public class SalesController {
 
 	@Autowired
 	private OrdService ordService;
+
+	@Autowired
 	private ProdDlvyService prodDlvyService;
+	
+	
 
 	@GetMapping("/getOrder/{ordCode}") // 단건조회에 대한 상세목록도 같이 출력하게 SQL문 변경
 	public String getOrder(@PathVariable String ordCode, Model model) {
