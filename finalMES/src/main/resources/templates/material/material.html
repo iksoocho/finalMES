@@ -9,29 +9,44 @@
 </head>
 <body>
 	<section layout:fragment="content">
-		<h3>자재관리</h3>
 
-		<div id="grid" class="container"></div>
-	
+
+		<div id="matGrid" class="container">
+			<h3>자재 전체 재고</h3>
+		</div>
 		
+		<div id="lotGrid" class="container">
+			<h3>LOT 별 자재 재고</h3>
+		</div>
+
+
 
 		<script th:inline="javascript">
 		let matList = [[${matList}]]
 		
-		 const grid = new tui.Grid({
+		 const matGrid = new tui.Grid({
 
-             el: document.getElementById('grid'),
+             el: document.getElementById('matGrid'),
              data: matList, // 여기서 emps 데이터를 사용
              scrollX: false,
              scrollY: false,
  	      columns: [
  	        {
  	          header: '자재코드',
- 	          name: 'matCode'
+ 	          name: 'matCode',
+ 	          align: 'center',
  	        },
  	        {
  	          header: '자재명',
  	          name: 'matName'
+ 	        },
+ 	        {
+ 	          header: '단위',
+ 	          name: 'matUnit'
+ 	        },
+ 	        {
+ 	          header: '규격',
+ 	          name: 'matStandard'
  	        },
  	        {
  	          header: '총재고량',
@@ -39,6 +54,41 @@
  	        },
  	        {
  	          header: '안전재고',
+ 	          name: 'matSafeStock'
+ 	        },
+ 	      ],
+ 	      rowHeaders: ['rowNum'],
+             pageOptions: {
+                 useClient: true,
+                 perPage: 5
+             }
+ 	    });
+		
+		
+		
+		
+		
+		 const lotGrid = new tui.Grid({
+
+             el: document.getElementById('lotGrid'),
+             
+             scrollX: false,
+             scrollY: false,
+ 	      columns: [
+ 	        {
+ 	          header: '자재 LOT',
+ 	          name: 'matCode'
+ 	        },
+ 	        {
+ 	          header: '자재코드',
+ 	          name: 'matName'
+ 	        },
+ 	        {
+ 	          header: '자재명',
+ 	          name: 'matCount'
+ 	        },
+ 	        {
+ 	          header: 'LOT재고',
  	          name: 'matSafeStock'
  	        },
  	      ],

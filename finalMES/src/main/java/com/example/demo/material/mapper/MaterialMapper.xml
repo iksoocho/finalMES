@@ -33,9 +33,27 @@
 		       mo.mat_or_manager,
 		       mo.mat_or_state
 		 FROM  mat_order      mo
+		 LEFT JOIN  business       b     ON mo.business_code = b.business_code
+		 LEFT JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
+
+	</select>
+	
+	<!-- 발주 목록 쪽  -->
+	<select id="getMaterialOrdInfoList1" resultType="MatOrderInfoVO">
+		SELECT mo.mat_or_code,
+		       mo.mat_or_name, 
+		       mo.mat_code, 
+		       b.business_code,
+		       b.business_name,
+		       mo.mat_or_count,
+		       mo.mat_or_date,
+		       moi.mat_or_due_date,
+		       mo.mat_or_manager,
+		       mo.mat_or_state
+		 FROM  mat_order      mo
 		 JOIN  business       b     ON mo.business_code = b.business_code
 		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
-		 WHERE mo.mat_code = #{matCode}
+
 	</select>
 	
 	<!-- 발주 자재 관리 -->
@@ -50,9 +68,9 @@
 		        b.business_code,
 		        b.business_name
 		FROM material   m
-		JOIN mat_lot    ml ON m.mat_code = ml.mat_code
-		JOIN mat_return mr ON ml.mat_lot_code = mr.mat_lot_code
-		JOIN business   b  ON mr.business_code = b.business_code
+		LEFT JOIN mat_lot    ml ON m.mat_code = ml.mat_code
+		LEFT JOIN mat_return mr ON ml.mat_lot_code = mr.mat_lot_code
+		LEFT JOIN business   b  ON mr.business_code = b.business_code
         
 	</select>
 	
@@ -107,6 +125,8 @@
 		SELECT m.mat_code,
 			   m.mat_name,
 			   m.mat_safe_stock,
+			   m.mat_unit,
+			   m.mat_standard,
 			   ml.mat_count
 		FROM material 	m
 		JOIN mat_lot 	ml 	ON m.mat_code = ml.mat_code
@@ -173,8 +193,7 @@
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
 		<selectKey keyProperty="matOrCode" resultType="String"
 			order="BEFORE">
-			SELECT #{matOrCode} || '-' ||
-			TO_CHAR(mat_or_code_seq.NEXTVAL, 'FM000')
+			SELECT 'MATORD' || LPAD(mat_or_code_seq.nextval, 3, 0) FROM DUAL
 		</selectKey>
 	INSERT INTO mat_order 
           (
