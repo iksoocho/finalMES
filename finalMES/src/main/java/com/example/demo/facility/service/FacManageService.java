@@ -7,6 +7,7 @@ import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacManageVO;
 import com.example.demo.facility.FacNotopVO;
+import com.example.demo.facility.FacRepVO;
 
 public interface FacManageService {
 	// 설비관리
@@ -42,5 +43,13 @@ public interface FacManageService {
 	public void updateFacIns(FacInsVO facInsVO);
 	public int insertFacIns(FacInsDVO facInsDVO);
 	public int insertFacInsNot(FacNotopVO facNotopVO);
+	// 점검 판정 업데이트
+	public void updateFacInsSi(String facNotCode);
+	
+	// 수리관리
+	public List<FacRepVO> FacRepList();
+	public int insertFacRep(FacRepVO facRepVO);
+	public int insertFacRepNot(FacNotopVO facNotopVO);
+	public void updateFacRep(FacRepVO facRepVO);
 	
 }

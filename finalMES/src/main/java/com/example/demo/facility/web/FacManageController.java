@@ -15,6 +15,7 @@ import com.example.demo.facility.FacCompositeVO;
 import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacNotopVO;
+import com.example.demo.facility.FacRepVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
 
@@ -65,6 +66,14 @@ public class FacManageController {
 	@ResponseBody
 	public String updateFacIns(@RequestBody FacInsVO facInsVO) {
 		String msg;
+		String facInsJud = facInsVO.getFacInsJud();
+		String facNotCode = facInsVO.getFacNotCode();
+		System.out.println("facInsJud : " + facInsJud);
+		System.out.println("facNotCode : " + facNotCode);
+		if ("적합".equals(facInsJud)) {
+		    System.out.println("적합합니다");
+		    facManageService.updateFacInsSi(facNotCode);
+		}
 		facManageService.updateFacIns(facInsVO);
 		System.out.println(facInsVO);
 		msg = "수정완료";
@@ -106,5 +115,56 @@ public class FacManageController {
 		msg = "등록성공";
 		return msg;
 	}
+	
+	/*
+	 * @GetMapping("/facRep") public String facRepList(Model model) {
+	 * System.out.println("통신완료"); model.addAttribute("rlist",
+	 * facManageService.FacRepList()); return "facility/facRep";
+	 * 
+	 * }
+	 */
+	// 점검관리 전체조회
+	@GetMapping("/FacRepList")
+	@ResponseBody
+	public List<FacRepVO> getFacRepList() {
+		return facManageMapper.getfacRepList();
+		
+	}
+	
+	// 수리관리 모달리스트
+	@GetMapping("/facRep")
+	public String NotopReplist(Model model) {
+		model.addAttribute("Replist", facManageService.FacNotopList());
+		return "facility/facRep";
 
+	}
+	
+	// insert
+	@PostMapping("/insertFacRep")
+	@ResponseBody
+	public String insertFacRep(@RequestBody FacRepVO facRepVO) {
+		String msg;
+		facManageService.insertFacRep(facRepVO);
+		msg = "등록성공";
+		return msg;
+	}
+	
+	@PostMapping("/insertFacRepNot")
+	@ResponseBody
+	public String insertFacRepNot(@RequestBody FacNotopVO facNotopVO) {
+		String msg;
+		facManageService.insertFacRepNot(facNotopVO);
+		msg = "등록성공";
+		return msg;
+	}
+	
+	@PutMapping("/updateFacRep")
+	@ResponseBody
+	public String updateFacRep(@RequestBody FacRepVO facRepVO) {
+		String msg;
+		facManageService.updateFacRep(facRepVO);
+		System.out.println(facRepVO);
+		msg = "수정완료";
+		return msg;
+	}
 }

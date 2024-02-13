@@ -45,7 +45,6 @@
 		INNER JOIN
 		fac_manage fm ON
 		fi.fac_code = fm.fac_code
-		WHERE fn.fac_not_situation = 2
 	</select>
 
 	<insert id="insertFac" parameterType="FacManageVO">
@@ -69,7 +68,8 @@
 		(fac_not_code, fac_name)
 		VALUES
 		(#{facNotCode}, 'NOTOP001',
-		'설비등록으로 인한 비가동')
+		'설비등록으로 인한
+		비가동')
 	</insert>
 
 	<update id="updateFacNot" parameterType="FacNotopVO">
@@ -87,35 +87,37 @@
 		fac_not_code =
 		#{facNotCode}
 	</update>
-	
+
 	<insert id="insertFacIns" parameterType="FacInsDVO">
-		 <selectKey keyProperty="facInsCode" resultType="String" order="BEFORE">
-        SELECT 'FAC_INS'||LPAD(FAC_INS_CODE_SEQ.NEXTVAL, 3, 0) FROM DUAL
-    </selectKey>
-    INSERT INTO fac_ins (
-    	fac_code,
-        fac_ins_code, 
-        fac_not_code, 
-        fac_ins_check, 
-        fac_ins_person, 
-        fac_ins_jud, 
-        fac_ins_date, 
-        <!-- fac_ins_sel,  -->
-        fac_ins_nexd
-    )
-    VALUES (
-    	#{facCode},
-        #{facInsCode},
-        #{facNotCode},
-        #{facInsCheck},
-        #{facInsPerson},
-        #{facInsJud},
-        #{facInsDate},
-        <!-- #{facInsSel}, -->
-        #{facInsNexd}
-        )
+		<selectKey keyProperty="facInsCode" resultType="String"
+			order="BEFORE">
+			SELECT 'FAC_INS'||LPAD(FAC_INS_CODE_SEQ.NEXTVAL, 3, 0) FROM
+			DUAL
+		</selectKey>
+		INSERT INTO fac_ins (
+		fac_code,
+		fac_ins_code,
+		fac_not_code,
+		fac_ins_check,
+		fac_ins_person,
+		fac_ins_jud,
+		fac_ins_date,
+		<!-- fac_ins_sel, -->
+		fac_ins_nexd
+		)
+		VALUES (
+		#{facCode},
+		#{facInsCode},
+		#{facNotCode},
+		#{facInsCheck},
+		#{facInsPerson},
+		#{facInsJud},
+		#{facInsDate},
+		<!-- #{facInsSel}, -->
+		#{facInsNexd}
+		)
 	</insert>
-	
+
 	<insert id="insertFacInsNot" parameterType="FacNotopVO">
 		INSERT INTO fac_notop
 		(fac_not_code, fac_name)
@@ -125,13 +127,79 @@
 
 	<update id="updateFacIns" parameterType="FacInsVO">
 		<!-- 점검일정 등록시 자동으로 30일뒤로 차기점검일 등록됨 -->
-		UPDATE fac_ins SET 
-		fac_ins_check = #{facInsCheck}, 
-		fac_ins_person	= #{facInsPerson}, 
-		fac_ins_jud = #{facInsJud}, 
-		fac_ins_nexd = fac_ins_date	+ INTERVAL '30' DAY WHERE fac_ins_code = #{facInsCode}
+		UPDATE fac_ins SET
+		fac_ins_check = #{facInsCheck},
+		fac_ins_person =
+		#{facInsPerson},
+		fac_ins_jud = #{facInsJud},
 
+		fac_ins_nexd = fac_ins_date
+		+ INTERVAL '30' DAY WHERE fac_ins_code = #{facInsCode}
+	</update>
+
+	<update id="updateFacInsSi" parameterType="String">
+		UPDATE fac_notop
+		SET
+		fac_not_situation = 0
+		WHERE fac_not_code = #{facNotCode}
 	</update>
 
 
+	<!-- 설비관리 -->
+	<select id="getfacRepList" resultType="FacRepVO">
+		SELECT fr.fac_rep_code,
+		fr.fac_code,
+		fm.fac_name,
+		fr.fac_rep_repairs,
+		fr.fac_rep_person,
+		fr.fac_rep_content,
+		fr.fac_rep_date,
+		fn.fac_not_code,
+		fn.fac_not_situation
+		FROM fac_rep fr
+		JOIN fac_manage fm ON fr.fac_code =
+		fm.fac_code
+		JOIN fac_notop fn ON fr.fac_not_code = fn.fac_not_code
+	</select>
+
+	<insert id="insertFacRep" parameterType="FacRepVO">
+		<selectKey keyProperty="facRepCode" resultType="String"
+			order="BEFORE">
+			SELECT 'FAC_REP'||LPAD(FAC_REP_CODE_SEQ.NEXTVAL, 3, 0) FROM
+			DUAL
+		</selectKey>
+		INSERT INTO fac_rep (
+		fac_rep_code,
+		fac_not_code,
+		fac_code,
+		fac_rep_repairs,
+		fac_rep_person,
+		fac_rep_content,
+		fac_rep_date
+		)
+		VALUES (
+		#{facRepCode},
+		#{facNotCode},
+		#{facCode},
+		#{facRepRepairs},
+		#{facRepPerson},
+		#{facRepContent},
+		#{facRepDate}
+		)
+	</insert>
+
+	<insert id="insertFacRepNot" parameterType="FacNotopVO">
+		INSERT INTO fac_notop
+		(fac_not_code)
+		VALUES
+		(#{facNotCode})
+	</insert>
+
+	<update id="updateFacRep" parameterType="FacRepVO">
+		UPDATE fac_rep SET
+		fac_rep_repairs = #{facRepRepairs},
+		fac_rep_content = #{facRepContent},
+		fac_rep_person = #{facRepPerson}
+		WHERE fac_rep_code = #{facRepCode}
+	</update>
 </mapper>

@@ -1,220 +1,395 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org"
-	layout:decorate="~{layout}">
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <title>설비수리관리</title>
- <style>
-        #layoutSidenav_content {
-            margin-top: 20px;
-        }
-		
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px; 
-        }
+<style>
+#layoutSidenav_content {
+	margin-top: 20px;
+}
 
-        input[type="text"],
-        input[type="date"] {
-            width: 200px;
-            box-sizing: border-box; 
-        }
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
 
-        label {
-            display: block; 
-            margin-bottom: 5px; 
-        }
+input[type="text"], input[type="date"] {
+	width: 200px;
+	box-sizing: border-box;
+}
 
-        input[type="checkbox"] {
-            margin-right: 5px; 
-        }
+label {
+	display: block;
+	margin-bottom: 5px;
+}
 
-        button {
-            margin-right: 5px;
-        }
-		label {
-			
-		}
-		#myModal3 {
-			text-align: center;
-		}
+input[type="checkbox"] {
+	margin-right: 5px;
+}
+
+button {
+	margin-right: 5px;
+}
+
+#myModal3 {
+	text-align: center;
+}
 </style>
 </head>
 <body>
-<section layout:fragment="content">
+
+	<section layout:fragment="content">
+		<h1>설비수리관리</h1>
 
 		<div id="layoutSidenav_content" class="container text-center">
-			<table class="table">
-				<tbody>
-					<tr>
-                    	<th>설비코드 *</th>
-                    	<td colspan="2"><input type="text" id="equipmentCode"
-                        name="equipmentCode" required></td>
-                    	<th>설비명 *</th>
-                    	<td colspan="2"><input type="text" id="equipmentName"
-                        name="equipmentName" required data-toggle="modal"
-                        data-target="#myModal1"></td>
-                	</tr>
-					 <tr>
-                    	<th>담당자 *</th>
-						<td colspan="2"><input type="text" id="facName"
-                        name="facName" required data-toggle="modal"
-                        data-target="#myModal3"></td>
-                        <th>점검일</th>
-						<td colspan="2"><input type="date" id="purchaseDate">
-					</tr>	
-					<tr>
-						<th>수리사항</th>
-						<td><input type="text"></td>
-						
-					</tr>
-					<tr>
-						<th>수리내용</th>
-						<td colspan="2"><textarea rows="10" cols="30"></textarea>
-					</tr>
-					<tr>
-						<td colspan="6">
-							<button type="submit" class="btn btn-outline-success">저장</button>
-							<button type="button" class="btn btn-outline-danger">삭제</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+
+			<div class="col">
+				<br> <br>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>수리코드</th>
+							<th colspan="2"><input type="text" id="facRepCode"
+								name="facRepCode" required readonly></th>
+							<th>설비코드</th>
+							<th colspan="2"><input type="text" id="facCode"
+								name="facCode" required></th>
+							<th>설비명</th>
+							<th colspan="2"><input type="text" id="facName" name="facName" th:data-facCode="${facCode}" required>
+</th>
+							
+						</tr>
+						<tr>
+							<th>수리사항</th>
+							<th colspan="2"><input type="text" id="facRepRepairs"
+								name="facRepRepairs"></th>
+							<th>담당자</th>
+							<th colspan="2"><input type="text" id="facRepPerson"
+								name="facRepPerson" required></th>
+						</tr>
+						<tr>
+							<th>등록일자</th>
+							<th colspan="2"><input type="date" id="facRepDate"
+								name="facRepDate" required></th>
+							<th>수리내용</th>
+							<td colspan="2"><textarea rows="10" cols="30"
+									id="facRepContent" name="facRepContent"></textarea>
+						</tr>
+					</thead>
+				</table>
+				<input type="hidden" id="facNotCode" name="facNotCode" required>
+				<input type="hidden" id="facNotSituation" name="facNotSituation"
+					required>
+				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+				<button type="button" id="insertBtn" class="btn btn-outline-success">등록</button>
+				<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
+				<br> <br> <br>
+				<div id="grid" class="container"></div>
+			</div>
+		</div>
+
+		<div class="modal fade modal-xl" id="staticBackdropOne"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<!-- modal-dialog 클래스에 modal-dialog-scrollable 클래스 추가 -->
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold"></h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body" style="overflow-y: hidden;">
+						<!-- overflow-y 속성 추가 -->
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>설비코드</th>
+									<th>설비명</th>
+									<th>담당자</th>
+									<th>비가동등록사유</th>
+									<th>상태</th>
+								</tr>
+							</thead>
+							
+							<tbody style="text-align: center;">
+								<tr th:each="NotIns : ${Replist}"
+									th:data-facNotCode="${NotIns.facNotCode}"
+									th:data-facCode="${NotIns.facCode}"
+									th:data-facName="${NotIns.facName}"
+									th:data-facNotPerson="${NotIns.facNotPerson}"
+									th:data-facNotReason="${NotIns.facNotReason}"
+									th:data-facNotSituation="${NotIns.facNotSituation}"
+									data-bs-dismiss="modal"
+									th:onclick="'displaySelectedFacNotIns(this)'">
+									<td th:text="${NotIns.facCode}"></td>
+									<td th:text="${NotIns.facName}"></td>
+									<td th:text="${NotIns.facNotPerson}"></td>
+									<td th:text="${NotIns.facNotReason}"></td>
+									<td th:text="${NotIns.facNotSituation}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer" style="background-color: #0d6efd;">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
 		</div>
 
 
+		<script th:inline="javascript">
+           
+          document.getElementById('saveBtn').addEventListener("click", function() {
+            var facRepCode = document.getElementsByName("facRepCode")[0].value;
+            var facNotCode = document.getElementsByName("facNotCode")[0].value;
+            var facCode = document.getElementsByName("facCode")[0].value;
+            var facName = document.getElementsByName("facName")[0].value;
+            var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
+            var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
+            var facRepContent = document.getElementsByName("facRepContent")[0].value;
+            var facRepDate = document.getElementsByName("facRepDate")[0].value;
 
-		<!-- 설비코드 모달창 -->
-			<div class="modal" id="myModal1">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<!-- 모달 헤더 -->
-						<div class="modal-header">
-							<h4 class="modal-title">설비명</h4>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-						</div>
-						<div class="modal-body">
-							<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-							<table class="table">
-								<thead>
-							        <tr>
-							        	<th>No.</th>
-							        	<th>설비명</th>
-							        	<th>제조업체</th>
-							        </tr>
-							     </thead>
-							     <tbody>
-							     	 <tr>
-							         	<th>1</th>
-							          	<th>분쇄기</th>
-							          	<th>분쇄제조업체_A</th>
-							        </tr>
-							         <tr>
-							         	<th>2</th>
-							          	<th>혼합기</th>
-							          	<th>혼합제조업체_A</th>
-							        </tr>
-							     </tbody>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal">닫기</button>
-						</div>
-					</div>
-				</div>
-			</div>
+            if (!facName) {
+                alert("설비명을 입력해주세요.");
+                return;
+            }
+
+            var data = {
+            	facRepCode: facRepCode,
+                facNotCode: facNotCode,
+                facCode: facCode,
+                facName: facName,
+                facCode: facCode,
+                facRepRepairs: facRepRepairs,
+                facRepPerson: facRepPerson,
+                facRepContent: facRepContent,
+                facRepDate: facRepDate,
+            };
+            
+            // fac_ins update
+            fetch("/updateFacRep", {
+                method: "PUT",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+               console.log(response.status);
+                if (response.ok) {
+                    console.log(response);
+                    alert("등록완료!");
+                    location.href = '/facRep';  // 여기 경로로 가라
+                } else {
+                    console.log(response);
+                    alert("등록실패");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                alert(오류);
+            });
+        });
+        
+         
+        
+         document.getElementById('insertBtn').addEventListener("click", function() {
+         	    var facRepCode = document.getElementsByName("facRepCode")[0].value;
+         	    var facNotCode = document.getElementsByName("facNotCode")[0].value;
+         	    var facCode = document.getElementsByName("facCode")[0].value;
+         	    var facName = document.getElementsByName("facName")[0].value;
+         	    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
+         	    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
+         	    var facRepContent = document.getElementsByName("facRepContent")[0].value;
+         	    var facRepDate = document.getElementsByName("facRepDate")[0].value;
+   
+
+         	    var data = {
+         	    	facRepCode: facRepCode,
+         	        facNotCode: facNotCode,
+         	        facCode: facCode,
+         	        facName: facName,
+         	        facRepRepairs: facRepRepairs,
+         	        facRepPerson: facRepPerson,
+         	        facRepContent: facRepContent,
+         	        facRepDate: facRepDate,
+
+         	    };
+         	    
+         	    // 서버로 데이터 전송하여 insert 수행
+         	    fetch("/insertFacRep", {
+         	        method: "POST",
+         	        body: JSON.stringify(data),
+         	        headers: {
+         	            "Content-Type": "application/json"
+         	        }
+         	    })
+         	    .then(response => {
+         	        if (response.ok) {
+         	            console.log(response);
+         	            alert("등록되었습니다!");
+         	            // 페이지 새로고침
+         	            location.reload();
+         	        } else {
+         	            console.log(response);
+         	            alert("등록에 실패했습니다.");
+         	        }
+         	    })
+         	    .catch(error => {
+         	        console.error('Error:', error);
+         	        alert("등록에 실패했습니다.");
+         	    });
+         	});
+
+         	
+
+         	
+        // 그리드 페이징
+    
+        const grid = new tui.Grid({
+            el: document.getElementById('grid'),
+            data: [],
+            scrollX: false,
+            scrollY: false,
+            columns: [
+                {
+                    header: '수리코드',
+                    name: 'facRepCode',
+                    align: 'center',
+                },
+                {
+                    header: '설비명',
+                    name: 'facName',
+                    align: 'center',
+                },
+                {
+                    header: '설비코드',
+                    name: 'facCode',
+                    align: 'center',
+                },
+                {
+                    header: '수리사항',
+                    name: 'facRepRepairs',
+                    align: 'center'
+                },
+                {
+                    header: '담당자',
+                    name: 'facRepPerson',
+                    align: 'center'
+                },
+                {
+                    header: '수리내용',
+                    name: 'facRepContent',
+                    align: 'center'
+                },
+                {
+                    header: '등록일자',
+                    name: 'facRepDate',
+                    formatter :  formatDate,
+                    align: 'center'
+                },
+                {
+                    header: '상태',
+                    name: 'facNotSituation',
+                    align: 'center'
+                },
+       
+            ],
+            rowHeaders: ['rowNum'],
+            pageOptions: {
+                useClient: true,
+                perPage: 5
+            }
+        });
+        
+    
+         	
+     	fetch("/FacRepList")
+        .then(response => response.json())
+        .then(data => {
+            grid.resetData(data); // 그리드에 데이터를 설정
+            console.log("여기까진 온당!");
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            alert("데이터 불러오기 실패!");
+        });
+        
+     	
+     	
+        //  차기점검을 날짜포맷
+        function formatDate(dateString) {
+        	console.log(dateString);
+            // dateString을 Date 객체로 파싱
+            const date = new Date(dateString.value);
+            // 날짜 포맷 변경
+            const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+            return formattedDate;
+        }
+        
+     // 설비명 클릭 시 이벤트 처리해서 위에 input 박스에 값넣기
+        function handleFacNameClick(event) {
+            // 클릭한 행의 데이터 가져오기
+            const rowData = grid.getRowAt(event.rowKey);
 			
-			<!-- 공정명모달 -->
-			<div class="modal" id="myModal2">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<!-- 모달 헤더 -->
-						<div class="modal-header">
-							<h4 class="modal-title">공정명</h4>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-						</div>
-						<div class="modal-body">
-							<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-							<table class="table">
-								<thead>
-							        <tr>
-							        	<th>No.</th>
-							        	<th>공정명</th>
-							        	<th>공정코드</th>
-							        </tr>
-							     </thead>
-							     <tbody>
-							     	 <tr>
-							         	<th>1</th>
-							          	<th>아메리카노</th>
-							          	<th>Ame_01</th>
-							        </tr>	
-							         <tr>
-							         	<th>2</th>
-							          	<th>스위트아메리카노</th>
-							          	<th>SweAme_01</th>
-							        </tr>				        
-							     </tbody>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal">닫기</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<!-- 담당자모달 -->
-			<div class="modal" id="myModal3">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<!-- 모달 헤더 -->
-						<div class="modal-header">
-							<h4 class="modal-title">담당자명</h4>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-						</div>
-						<div class="modal-body">
-							<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-							<table class="table">
-								<thead>
-							        <tr>
-							        	<th>담당자</th>
-							        </tr>
-							     </thead>
-							     <tbody>
-							     	 <tr>
-							         	<th>조익수</th>
-							        </tr>
-							         <tr>
-							         	<th>김준성</th>
-							        </tr>
-							        <tr>
-							         	<th>박규현</th>
-							        </tr>
-							        <tr>
-							         	<th>윤성오</th>
-							        </tr>
-							        <tr>
-							         	<th>강현진</th>
-							        </tr>
-							     </tbody>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal">닫기</button>
-						</div>
-					</div>
-				</div>
-			</div>	
+            // 설비명과 담당자 값을 가져와서 input 박스에 넣기
+            const facRepCode = rowData.facRepCode;
+            const facCode = rowData.facCode;
+            const facName = rowData.facName;
+            const facRepPerson = rowData.facRepPerson;
+            const facRepRepairs = rowData.facRepRepairs;
+            const facRepContent = rowData.facRepContent;
+            const facRepDate = rowData.facRepDate;
+            
+            document.getElementById('facRepCode').value = facRepCode;
+            document.getElementById('facCode').value = facCode;
+            document.getElementById('facName').value = facName;
+            document.getElementById('facRepPerson').value = facRepPerson;
+            document.getElementById('facRepRepairs').value = facRepRepairs;
+            document.getElementById('facRepContent').value = facRepContent;
+            document.getElementById('facRepDate').value = facRepDate;
+        }
+
+        // grid 생성 코드 아래에 설비명 클릭 이벤트 리스너 등록
+        grid.on('click', (event) => {
+            if (event.columnName === 'facName') {
+                handleFacNameClick(event);
+            }
+        });
+		
+        
+        
+        function displaySelectedFacNotIns(element) {
+    		var facCode = element.getAttribute('data-facCode');
+    		var facNotCode = element.getAttribute('data-facNotCode');
+    		var facName = element.getAttribute('data-facName');
+    		var facNotPerson = element.getAttribute('data-facNotPerson');
+    		var facNotReason = element.getAttribute('data-facNotReason');
+    		var facNotSituation = element.getAttribute('data-facNotSituation');
+    		
+    		document.getElementById('facCode').value = facCode;
+    		document.getElementById('facNotCode').value = facNotCode;
+    		document.getElementById('facName').value = facName;
+    		document.getElementById('facNotPerson').value = facNotPerson;
+    		document.getElementById('facNotReason').value = facNotReason;
+    		document.getElementById('facNotSituation').value = facNotSituation;
+    	}
+    	
+    </script>
 	</section>
 </body>
 </html>

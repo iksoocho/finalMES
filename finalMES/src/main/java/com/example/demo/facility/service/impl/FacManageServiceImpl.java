@@ -10,6 +10,7 @@ import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacManageVO;
 import com.example.demo.facility.FacNotopVO;
+import com.example.demo.facility.FacRepVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
 
@@ -48,7 +49,6 @@ public class FacManageServiceImpl implements FacManageService {
 
 	@Override
 	public List<FacNotopVO> FacNotopList() {
-		// TODO Auto-generated method stub
 		return facManageMapper.getfacNotList();
 	}
 
@@ -74,8 +74,6 @@ public class FacManageServiceImpl implements FacManageService {
 	@Override
 	public void updateFacNot(FacNotopVO facNotopVO) {
 		facManageMapper.updateFacNot(facNotopVO);
-		
-		
 	}
 	
 	@Override
@@ -93,7 +91,7 @@ public class FacManageServiceImpl implements FacManageService {
 	
 	public void updateFacIns(FacInsVO facInsVO) {
 		// 판정이 적합일시 비가동상태를 대기로 업데이트
-		
+		// 판정이 적합인 경우 facNotSituation을 0으로 설정
 		facManageMapper.updateFacIns(facInsVO);
 	}
 	
@@ -121,10 +119,46 @@ public class FacManageServiceImpl implements FacManageService {
 		}
 		
 	}
-
+	
+	// 점검관리 판정 적합처리 업데이트
+	@Override
+	public void updateFacInsSi(String facNotCode) {
+		facManageMapper.updateFacInsSi(facNotCode);
+	}
 	
 	
+	// 설비관리
+	@Override
+	public List<FacRepVO> FacRepList() {
+		return facManageMapper.getfacRepList();
+	}
+
+	@Override
+	public int insertFacRep(FacRepVO facRepVO) {
+		int result = facManageMapper.insertFacRep(facRepVO);
+		if(result == 1) {
+			return 1;
+		} else {
+			return -1;
+		}
+		
+	}
+
+	@Override
+	public int insertFacRepNot(FacNotopVO facNotopVO) {
+		int result = facManageMapper.insertFacRepNot(facNotopVO);
+		if(result == 1) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+
+	@Override
+	public void updateFacRep(FacRepVO facRepVO) {
+		facManageMapper.updateFacRep(facRepVO);
+		
+	}
 	
-
-
+	
 }
