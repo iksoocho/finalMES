@@ -72,4 +72,26 @@
 	<select id="selectProcList" resultType="ProcVO">
 		select * from process order by proc_code desc
 	</select>
+	
+	<insert id="insertProcInfo" parameterType="ProcVO">
+		insert into
+		process(proc_name)
+		values(#{procName}) 
+	</insert>
+	
+	
+	<!-- 자재 불량-->
+	<select id="selectBadMatList" resultType="BadMatVO">
+		select * 
+		from bad_material
+		order by bad_mat_code desc
+	</select>
+	
+	<insert id="insertBadMatInfo" parameterType="BadMatVO">
+		insert into
+		bad_material(bad_mat_name, bad_mat_content)
+		values(#{badMatName}, #{badMatContent})
+		
+	</insert>
+	
 </mapper>

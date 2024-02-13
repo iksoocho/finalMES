@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.inform.BadMaterialVO;
 import com.example.demo.inform.EmpVO;
 import com.example.demo.inform.MatVO;
 import com.example.demo.inform.ProcVO;
@@ -95,6 +96,26 @@ public class InformServiceImpl implements InformService {
 	@Override
 	public List<ProcVO> getProcList() {
 		return informMapper.selectProcList();
+	}
+
+	@Override
+	public ProcVO insertProcInfo(ProcVO procVO) {
+		informMapper.insertProcInfo(procVO);
+		return procVO;
+	}
+	
+	
+	
+	//자재 불량
+	@Override
+	public List<BadMaterialVO> getBadMatList() {
+		return informMapper.selectBadMatList();
+	}
+
+	@Override
+	public BadMaterialVO insertBadMatInfo(BadMaterialVO badMatVO) {
+		informMapper.insertBadMatInfo(badMatVO);
+		return badMatVO;
 	}
 
 }

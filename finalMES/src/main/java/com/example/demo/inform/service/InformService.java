@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.repository.query.Param;
 
+import com.example.demo.inform.BadMaterialVO;
 import com.example.demo.inform.EmpVO;
 import com.example.demo.inform.MatVO;
 import com.example.demo.inform.ProcVO;
@@ -35,4 +36,10 @@ public interface InformService {
 	
 	//공정
 	public List<ProcVO> getProcList();
+	public ProcVO insertProcInfo(ProcVO procVO);
+	
+	
+	//자재 불량
+	public List<BadMaterialVO> getBadMatList();
+	public BadMaterialVO insertBadMatInfo(BadMaterialVO badMatVO);
 }
