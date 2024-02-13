@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.inform.mapper.InformMapper">
+<!--사원-->
 	<select id="selectEmpList" resultType="EmpVO">
 		SELECT e.*, d.dept_name
 		FROM employee e
 		INNER JOIN department d ON e.dept_code = d.dept_code
+		ORDER BY user_code 
 	</select>
 	
 	<insert id="insertEmpInfo" parameterType="EmpVO">
 		INSERT INTO 
-		EMPLOYEE(user_name, user_email, user_phone, dept_code, user_authority)
-		VALUES(#{userName},#{userEmail},#{userPhone},#{deptCode},#{userAuthority})
+		EMPLOYEE(user_name, user_password, user_email, user_phone, dept_code, user_authority)
+		VALUES(#{userName},#{userPassword}, #{userEmail},#{userPhone},#{deptCode},#{userAuthority})
 		
 	</insert>
 	
@@ -20,5 +22,54 @@
 		INNER JOIN department d ON e.dept_code = d.dept_code 
 		where user_code = #{userCode}
 	</select>
-
+	
+	<select id="checkPassword" resultType="int">
+		SELECT *
+		FROM employee
+		WHERE user_code = #{userCode} 
+		AND user_password = #{userPassword}
+	</select>
+	
+	<select id="getPass" parameterType="String" resultType="String">
+	    SELECT user_password 
+	    FROM employee 
+	    WHERE user_code = #{userCode}
+	</select>
+	
+	<update id="updatePass" >
+		UPDATE employee
+		SET user_password = #{userPassword}
+		WHERE user_code = #{userCode}
+	</update>
+	
+	
+	<!-- 자재 -->
+	<select id="selectMatList" resultType="MatVO">
+		select * 
+		from material order by mat_code desc
+	</select>
+	
+	<insert id="insertMatInfo" parameterType="MatVO">
+		INSERT INTO 
+		material(mat_name, mat_unit, mat_standard, mat_safe_stock)
+		VALUES(#{matName}, #{matUnit}, #{matStandard}, #{matSafeStock})
+	</insert>
+	
+	
+	<!-- 제품 -->
+	<select id="selectProdList" resultType="ProdVO">
+		SELECT * FROM product order by prod_code desc
+	</select>
+	
+	<insert id="insertProdInfo" parameterType="ProdVO">
+		INSERT INTO 
+		product(prod_name, prod_unit, prod_spec, prod_price)
+		VALUES(#{prodName}, #{prodUnit}, #{prodSpec}, #{prodPrice})
+	</insert>
+	
+	
+	<!-- 공정 -->
+	<select id="selectProcList" resultType="ProcVO">
+		select * from process order by proc_code desc
+	</select>
 </mapper>

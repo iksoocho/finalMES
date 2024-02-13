@@ -1,75 +1,251 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>myPage</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>myPage</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	width: 80%;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+input[type="text"], input[type="email"], input[type="tel"] {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+button {
+	background-color: #4CAF50;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #45a049;
+}
+
+/* 모달 상단 헤더 스타일 */
+.modal-header {
+	background-color: #f8f9fa; /* 상단 배경색 */
+	border-bottom: 1px solid #dee2e6; /* 하단 테두리 */
+	padding: 1rem; /* 패딩 */
+}
+
+/* 모달 제목 스타일 */
+.modal-title {
+	color: #495057; /* 글자색 */
+	font-weight: bold; /* 글자 굵기 */
+}
+
+/* 모달 내용 부분 스타일 */
+.modal-body {
+	padding: 1rem; /* 패딩 */
+}
+
+/* 모달 내부의 라벨 및 인풋 필드 스타일 */
+.modal-body label {
+	font-weight: bold; /* 글자 굵기 */
+	margin-bottom: 0.5rem; /* 마진 */
+}
+
+.modal-body input {
+	width: 100%; /* 너비 */
+	padding: 0.5rem; /* 패딩 */
+	margin-bottom: 1rem; /* 마진 */
+	border: 1px solid #ced4da; /* 테두리 */
+	border-radius: 0.25rem; /* 둥근 모서리 */
+}
+
+/* 모달 하단 푸터 스타일 */
+.modal-footer {
+	padding: 1rem; /* 패딩 */
+	border-top: 1px solid #dee2e6; /* 상단 테두리 */
+}
+
+/* 버튼 스타일 */
+.modal-footer .btn {
+	padding: 0.5rem 1rem; /* 패딩 */
+}
+
+/* 모달 다이얼로그의 너비 조정 */
+.modal-dialog {
+	max-width: 500px; /* 최대 너비 설정 */
+	margin: 250px auto; /* 중앙 정렬 */
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <section layout:fragment="content"> 
-        <div class="container">
-            <h2>MyPage</h2>
-            <div th:each="emp : ${vo}">
-                <div class="form-group">
-                    <label for="userCode">사원 번호:</label>
-                    <input type="text" id="userCode" name="userCode" th:value="${emp.userCode}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="deptName">부서:</label>
-                    <input type="text" id="deptName" name="deptName" th:value="${emp.deptName}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="userName">이름:</label>
-                    <input type="text" id="userName" name="userName" th:value="${emp.userName}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="userEmail">이메일:</label>
-                    <input type="email" id="userEmail" name="userEmail" th:value="${emp.userEmail}">
-                </div>
-                <div class="form-group">
-                    <label for="userPhone">전화 번호:</label>
-                    <input type="text" id="userPhone" name="userPhone" th:value="${emp.userPhone}">
-                </div>
-                <div class="form-group">
-                    <button type="button" onclick="changePassword()">비밀번호 변경</button>
-                </div>
-            </div>
-        </div>
-    </section>
+	<section layout:fragment="content">
+		<div class="container">
+			<h2>MyPage</h2>
+			<div th:each="emp : ${vo}">
+				<div class="form-group">
+					<label for="userCode">사원 번호:</label> <input type="text" id="userCode" name="userCode" th:value="${emp.userCode}" readonly>
+				</div>
+				<div class="form-group">
+					<label for="deptName">부서:</label> <input type="text" id="deptName" name="deptName" th:value="${emp.deptName}" readonly>
+				</div>
+				<div class="form-group">
+					<label for="userName">이름:</label> <input type="text" id="userName" name="userName" th:value="${emp.userName}" readonly>
+				</div>
+				<div class="form-group">
+					<label for="userEmail">이메일:</label> <input type="email" id="userEmail" name="userEmail" th:value="${emp.userEmail}" readonly>
+				</div>
+				<div class="form-group">
+					<label for="userPhone">전화 번호:</label> <input type="text" id="userPhone" name="userPhone" th:value="${emp.userPhone}" readonly>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#checkPassModal">비밀번호 변경</button>
+				</div>
+			</div>
+
+
+			<!-- ============================모달창============================ -->
+			<div class="modal fade modal-xl" id="checkPassModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">비밀번호 확인</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<!-- ============================모달 내용============================ -->
+						<div class="modal-body">
+							<div>
+								<label for="userCode">현재 비밀번호:</label> <input type="text" id="userPassword" name="userPassword">
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" id="checkPass">비밀번호 확인</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="modal fade modal-xl" id="updatePassModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="updatePassModal">비밀번호 변경</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<!-- ============================모달 내용============================ -->
+						<div class="modal-body">
+							<div>
+								<label for="userCode">새로운 비밀번호:</label> 
+								<input type="text" id="newPassword" name="newPassword">
+								<label for="userCode">비밀번호 확인:</label> 
+								<input type="text" id="checkNewPassword" name="checkNewPassword">
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" id="updatePass">비밀번호 변경</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<script>
+				$(document).ready(function() {
+					$("#checkPass").click(function() {
+						var userPassword = $("#userPassword").val(); // 비밀번호 값 가져오기
+
+						$.ajax({
+							url : '/checkPass',
+							type : 'POST', // 또는 POST, 서버의 설정에 따라 다름
+							data : {
+								userPassword : userPassword
+							},
+							success : function(response) {
+								if(response == "1"){
+									alert("비밀번호가 일치 합니다."); // 서버의 응답에 따라 알림 표시
+									
+									$('#checkPassModal').modal('hide');
+									$('#updatePassModal').modal('show');
+								}else{
+									alert("비밀번호가 일치하지 않습니다.");
+									$('#userPassword').val('').focus();
+								}
+								
+							},
+							error : function(xhr, status, error) {
+								alert("오류 발생: " + error);
+							}
+						});
+					});
+				});
+			</script>
+			<script>
+			$(document).ready(function() {
+				$("#updatePass").click(function() {
+
+					
+					
+					var newPassword = $("#newPassword").val(); // 비밀번호 값 가져오기
+					var checkNewPassword = $("#checkNewPassword").val();
+					
+					if(newPassword == checkNewPassword){
+						$.ajax({
+							url : '/passUpdate',
+							type : 'PUT', // 또는 POST, 서버의 설정에 따라 다름
+							data : {
+								userPassword : newPassword
+							},
+							success : function(response) {
+								if(response == "1"){
+									alert("비밀번호가 변경 되었습니다. 다시 로그인 해 주세요."); // 서버의 응답에 따라 알림 표시
+									location.href = '/logout';
+									//$('#updatePassModal').modal('hide');
+								}else{
+									alert("비밀번호가 변경 되지 않았습니다.");
+									
+								}
+								
+								
+							},
+							error : function(xhr, status, error) {
+								alert("오류 발생: " + error);
+							}
+						});
+					}else{
+						alert("비밀번호가 같지 않습니다.")
+						$('#newPassword').val('');
+						$('#checkNewPassword').val('');
+						$('#newPassword').focus();
+						return;
+					}
+					
+				});
+			});
+			</script>
+
+
+
+		</div>
+	</section>
 </body>
 </html>
