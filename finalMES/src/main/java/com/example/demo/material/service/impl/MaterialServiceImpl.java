@@ -123,8 +123,11 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 	}
 
-
-
+	@Override
+	public List<MatOrderInfoVO> getMaterialOrdInfoList1(String matCode) {
+		// TODO Auto-generated method stub
+		return materialMapper.getMaterialOrdInfoList1(matCode);
+	}
 
 
 }
