@@ -11,7 +11,7 @@
 	<section layout:fragment="content">
 		<h2>제품 관리</h2>
 		<div>
-			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="procInsert">저장</button>
+			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="badMatInsert">저장</button>
 			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
 		</div>
 		<div id="grid"></div>
@@ -65,13 +65,15 @@
 				scrollX: false,
 				scrollY: false,
 				columns: [
-					{header: '공정 코드', name: 'procCode'},
+					{header: '자재 불량 코드', name: 'badMatCode'},
 					{
-						header: '공정 명', name: 'procName',
+						header: '불량 명', name: 'badMatName',
 						editor: 'text'
 
 					},
-					{header: '등록일', name: 'procDate',
+					
+					{header: '불량 내용', name: 'badMatContent', editor: 'text'},
+					{header: '등록일', name: 'badMatDate',
 						formatter: function ({value}) {
 							if (value) {
 								var date = new Date(value);
@@ -123,13 +125,14 @@
 				
 
 				let data = {};
-				data.procName = newData[0].procName;
+				data.badMatName = newData[0].badMatName;
+				data.badMatContent = newData[0].badMatContent;
 				
 				
 
 				console.log('data : ', data);
 
-				fetch('/procInsert', {
+				fetch('/badMatInsert', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -146,7 +149,7 @@
 					.then(data => {
 						console.log('Success:', data);
 						alert(data);
-						location.href = '/procList'; // 성공적으로 처리된 후 리디렉트
+						location.href = '/badMatList'; // 성공적으로 처리된 후 리디렉트
 					})
 					.catch(error => {
 						console.error('Error:', error);
@@ -154,7 +157,7 @@
 			}
 
 			// "저장" 버튼에 이벤트 리스너를 등록합니다.
-			document.getElementById('procInsert').addEventListener('click', saveNewRows);
+			document.getElementById('badMatInsert').addEventListener('click', saveNewRows);
 
 		</script>
 
