@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.inform.BadMaterialVO;
 import com.example.demo.inform.EmpVO;
 import com.example.demo.inform.MatVO;
 import com.example.demo.inform.ProcVO;
@@ -165,5 +166,33 @@ public class InformController {
 		
 		 return "inform/procList";	
 		 }
+	 
+	 @PostMapping("/procInsert")
+	 @ResponseBody
+	 public String insertProc(@RequestBody ProcVO procVO) {
+		 String msg;
+		 informService.insertProcInfo(procVO);
+		 msg = "공정 정보가 등록 되었습니다.";
+		 return msg;
+	 }
+	 
+	 
+	//----------------------------------자재불량---------------------------------------------------------
+	 @GetMapping("badMatList")
+	 public String getBadMatList(Model model) {
+		 List<BadMaterialVO> list = informService.getBadMatList();
+		 model.addAttribute("list", list);
+		
+		 return "inform/badMatList";	
+		 }
+	 
+	 @PostMapping("/badMatInsert")
+	 @ResponseBody
+	 public String insertBadMat(@RequestBody BadMaterialVO badMatVO) {
+		 String msg;
+		 informService.insertBadMatInfo(badMatVO);
+		 msg = "공정 정보가 등록 되었습니다.";
+		 return msg;
+	 }
 	 
 }
