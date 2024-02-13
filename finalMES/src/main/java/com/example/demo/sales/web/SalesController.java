@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.sales.service.OrdService;
+import com.example.demo.sales.service.ProdDlvyService;
 import com.example.demo.sales.vo.business.BusinessListVO;
+import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
@@ -25,6 +27,7 @@ public class SalesController {
 
 	@Autowired
 	private OrdService ordService;
+	private ProdDlvyService prodDlvyService;
 
 	@GetMapping("/getOrder/{ordCode}") // 단건조회에 대한 상세목록도 같이 출력하게 SQL문 변경
 	public String getOrder(@PathVariable String ordCode, Model model) {
@@ -51,6 +54,15 @@ public class SalesController {
 
 		// 등록 후에 주문서 목록 페이지로 리다이렉션
 		return "sales/orderList"; // "/orderList"로 리다이렉션하도록 설정
+	}
+	
+	@PostMapping("/saveDlvy")
+	@ResponseBody
+	public String saveDlvy(@RequestBody ProdDlvyVO prodDlvyVO) {
+		String msg;
+		prodDlvyService.saveDlvy(prodDlvyVO);
+		msg = "출고등록이 완료되었습니다";
+		return msg;
 	}
 
 	@GetMapping("/orderList")

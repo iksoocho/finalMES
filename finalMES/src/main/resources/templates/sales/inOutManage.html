@@ -9,9 +9,12 @@
 	margin-bottom: 40px; /* 원하는 여백 크기로 조정 */
 }
 
+.prodLotList td, .prodLotList th {
+	width: 156px;
+}
+
 .table td, .table th {
 	text-align: center;
-	width: 156px; /* 고정된 너비 설정 */
 	white-space: nowrap; /* 텍스트가 너비를 넘어가더라도 줄바꿈 안 함 */
 	overflow: hidden; /* 너비를 넘어가는 부분 감춤 */
 	text-overflow: ellipsis; /* 너비를 넘어가는 부분에 '...' 추가 */
@@ -175,15 +178,15 @@ button {
 			<div class="containerTwo">
 				<h5>출고서정보</h5>
 				<button class="btn btn-primary" onclick="resetForm()">초기화</button>
-				<button class="btn btn-primary" onclick="saveOrder()">등록</button>
+				<button class="btn btn-primary" id="prodDlvyInsert">등록</button>
 				<table class="orderInfoOne">
 					<tr>
 						<th>출고서번호</th>
-						<td><input class="readInput" type="text" id="" name="" placeholder="시스템 자동발번" readonly></td>
+						<td><input class="readInput" type="text" id="outCode" name="outCode" placeholder="시스템 자동발번"></td>
 						<th>등록일</th>
-						<td><input type="date" id="registrationDate" name="" readonly></td>
+						<td><input type="date" id="registrationDate" name="outDate" readonly></td>
 						<th>출고서상태</th>
-						<td><select id="ordState" name="">
+						<td><select id="outState" name="outState">
 								<option value="0" selected>등록전
 								<option value="1" disabled>등록완료
 								<option value="2" disabled>출고 대기 중
@@ -194,7 +197,7 @@ button {
 					</tr>
 					<tr>
 						<th class="red">담당자</th>
-						<td class="serch"><input type="text" readonly> <input type="text" id="ordManager" name="">
+						<td class="serch"><input type="text" readonly> <input type="text" id="outManager" name="outManager">
 
 							<button type="button" class="btn btn-primary">
 								<p>검색</p>
@@ -321,6 +324,7 @@ button {
 						<table id="orderDetailsTable" class="table">
 							<thead>
 								<tr>
+									<th>주문서번호</th>
 									<th>주문상세코드</th>
 									<th>상품코드</th>
 									<th>품목명</th>
@@ -356,7 +360,7 @@ button {
 					</div>
 
 					<div class="modal-body">
-						<table>
+						<table class="prodLotList">
 							<thead style="text-align: center;" class="table">
 								<tr>
 									<th style="width: 42px;"></th>
@@ -396,11 +400,17 @@ button {
 				scrollY : false,
 				rowHeaders : [ 'rowNum', 'checkbox' ],
 				columns : [ {
+					header : '주문서번호',
+					name : 'ordCode',
+					align : 'center',
+				},
+					{
 					header : '주문상세번호',
 					name : 'ordDCode',
 					align: 'center',
+					sortable: true,
+				    sortingType: 'desc',
 				},
-					
 					{
 					header : '품목명',
 					name : 'prodName',
@@ -454,8 +464,9 @@ button {
 					align: "right",
 				}, {
 					header : '출고수량',
-					name : '',
+					name : 'outCount',
 					align: "right",
+					editor: 'text',
 					
 				},  ],
 
@@ -540,6 +551,7 @@ button {
 		                data.forEach(function (data) {
 		                	var dlvyDate = formatDate(data.dlvyDate); // 날짜 포맷
 		                    $('<tr>').append(
+		                    	$('<td>').text(data.ordCode),	
 		                    	$('<td>').text(data.ordDCode),	
 		                        $('<td>').text(data.prodCode),
 		                        $('<td>').text(data.prodName),
@@ -577,17 +589,19 @@ button {
 			        var cells = $(row).find('td');
 			        console.log(cells);
 			        // 주문 상세 정보에서 필요한 값 추출
-			        var ordDCode = cells.eq(0).text();
-			        var prodCode = cells.eq(1).text();
-			        var prodName = cells.eq(2).text();
-			        var prodUnit = cells.eq(3).text();
-			        var dlvyDate = cells.eq(4).text();
-			        var ordCount = cells.eq(5).text();
-			        var prodPrice = cells.eq(6).text();
-			        var ttlPrice = cells.eq(7).text();
+			        var ordCode = cells.eq(0).text();
+			        var ordDCode = cells.eq(1).text();
+			        var prodCode = cells.eq(2).text();
+			        var prodName = cells.eq(3).text();
+			        var prodUnit = cells.eq(4).text();
+			        var dlvyDate = cells.eq(5).text();
+			        var ordCount = cells.eq(6).text();
+			        var prodPrice = cells.eq(7).text();
+			        var ttlPrice = cells.eq(8).text();
 
 			        // 새로운 데이터 생성
 			        var newDataRow = {
+			        		ordCode : ordCode,
 			        		ordDCode: ordDCode,
 			            	prodCode: prodCode,
 			            	prodName: prodName,
@@ -596,6 +610,7 @@ button {
 			            	ordCount: ordCount,
 			            	prodPrice: prodPrice,
 			            	ttlPrice: ttlPrice
+			            	
 			        };
 
 			        newData.push(newDataRow);
@@ -652,25 +667,7 @@ button {
 			            alert(prodLotCode + '는 이미 추가된 품목입니다.');
 			        }
 
-			        // 주문 수량 체크
-			        var orderQuantity = parseInt(newOrderData[0].ordCount, 10);
-			        console.log(orderQuantity);
-			        var totalProdCount = mainGrid.getData().reduce(function (sum, dataRow) {
-			            return sum + parseInt(dataRow.prodCount, 10);
-			        }, 0);
-
-			        // 주문 수량이 현재고량보다 클 경우
-			        if (orderQuantity > totalProdCount) {
-			            var remainingQuantity = orderQuantity - totalProdCount;
-			            console.log('주문 수량이 현재고량보다 클 경우, 남은 수량: ' + remainingQuantity);
-			        }
-
-			        if (orderQuantity === totalProdCount) {
-			            // 주문 수량과 재고 합계가 일치하면 어떤 작업을 수행하세요.
-			            console.log('주문 수량과 재고 합계가 일치합니다.');
-			        } else {
-			            console.log('주문 수량과 재고 합계가 일치하지 않습니다.');
-			        }
+			        
 			    });
 
 			    // 모달 창 닫기
@@ -749,7 +746,50 @@ button {
 			    // 모달 열기 (만약 열려있지 않은 경우)
 			    $('#staticBackdropInventory').modal('show');
 			
-}
+			}
+			
+			//////////////////////////////////////INSERT///////////////////////////////////////////
+			document.querySelector('#prodDlvyInsert').addEventListener('click', function () {
+				// 데이터를 수집하여 배열에 저장
+		        const prodDlvyData = {
+		        		outCode: document.getElementById('outCode').value,
+		        		ordCode: document.querySelector('td[data-column-name="ordCode"] div').innerText,
+		        		outDate: document.getElementById('registrationDate').value,
+		        		outManager : document.getElementById('outManager').value,
+		        		outState : document.getElementById('outState').value
+				}
+				
+		        		console.log(prodDlvyData.outCode);
+						console.log(prodDlvyData.ordCode);
+						console.log(prodDlvyData.outDate);
+						console.log(prodDlvyData.outManager);
+						console.log(prodDlvyData.outState);
+						
+						// AJAX 요청으로 서버에 데이터 전송
+						fetch('/saveDlvy', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+
+							},
+							body: JSON.stringify(prodDlvyData)
+							
+						})
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('Network response was not ok');
+								}
+								return response.text();
+							})
+							.then(data => {
+								console.log('Success:', prodDlvyData);
+								alert(prodDlvyData);
+								location.href = '/inOutManage'; // 성공적으로 처리된 후 리디렉트
+							})
+							.catch(error => {
+								console.error('Error:', error);
+							});
+			});
 		</script>
 	</section>
 </body>

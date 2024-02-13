@@ -101,6 +101,7 @@
 		JOIN product p
 		ON od.prod_code = p.prod_code
 		WHERE od.ord_code = #{ordCode}
+		
 	</select>
 
 	<select id="getBusinessList" resultType="BusinessListVO"> <!-- 거래처 목록조회 -->
@@ -126,6 +127,7 @@
 		FROM prod_lot pl LEFT JOIN product p ON
 		pl.prod_code = p.prod_code
 		WHERE pl.prod_code = #{prodCode}
+		ORDER BY pl.prod_lot_code
 	</select>
 
 </mapper>
