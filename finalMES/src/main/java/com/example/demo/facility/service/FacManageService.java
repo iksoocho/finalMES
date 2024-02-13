@@ -41,5 +41,6 @@ public interface FacManageService {
 	public List<FacInsVO> FacInsList();
 	public void updateFacIns(FacInsVO facInsVO);
 	public int insertFacIns(FacInsDVO facInsDVO);
+	public int insertFacInsNot(FacNotopVO facNotopVO);
 	
 }

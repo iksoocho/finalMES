@@ -79,17 +79,6 @@ public class FacManageController {
 
 	}
 
-	// 등록
-//    @PostMapping("/facManagement")
-//    public String insertFacProcess(@RequestBody FacManageVO facManageVO) {
-//    	System.out.println("통신테스트");
-//    	System.out.println(facManageVO);
-//    	
-//    	facManageMapper.insertFac(facManageVO);
-//    	System.out.println("xxx");
-//		return "facility/facManagement";
-//    }
-
 	@PostMapping("/insrtFacAndNot")
 	@ResponseBody
 	public String insertFacAndNot(@RequestBody FacCompositeVO facCompositeVO) {
@@ -104,6 +93,16 @@ public class FacManageController {
 	public String insertFacIns(@RequestBody FacInsDVO facInsDVO) {
 		String msg;
 		facManageService.insertFacIns(facInsDVO);
+		msg = "등록성공";
+		return msg;
+	}
+
+	
+	@PostMapping("/insertFacInsNot")
+	@ResponseBody
+	public String insertFacInsNot(@RequestBody FacNotopVO facNotopVO) {
+		String msg;
+		facManageService.insertFacInsNot(facNotopVO);
 		msg = "등록성공";
 		return msg;
 	}

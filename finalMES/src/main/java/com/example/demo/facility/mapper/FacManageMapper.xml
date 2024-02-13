@@ -31,7 +31,7 @@
 		fi.fac_ins_person,
 		fi.fac_ins_jud,
 		fi.fac_ins_date,
-		fi.fac_ins_sel,
+		<!-- fi.fac_ins_sel, -->
 		fi.fac_ins_nexd,
 		fn.fac_not_situation,
 		fm.fac_name
@@ -66,9 +66,9 @@
 
 	<insert id="insertFacNot" parameterType="FacNotopVO">
 		INSERT INTO fac_notop
-		(fac_code, notop_code, fac_not_reason)
+		(fac_not_code, fac_name)
 		VALUES
-		(#{facCode}, 'NOTOP001',
+		(#{facNotCode}, 'NOTOP001',
 		'설비등록으로 인한 비가동')
 	</insert>
 
@@ -100,7 +100,7 @@
         fac_ins_person, 
         fac_ins_jud, 
         fac_ins_date, 
-        fac_ins_sel, 
+        <!-- fac_ins_sel,  -->
         fac_ins_nexd
     )
     VALUES (
@@ -111,18 +111,25 @@
         #{facInsPerson},
         #{facInsJud},
         #{facInsDate},
-        #{facInsSel},
+        <!-- #{facInsSel}, -->
         #{facInsNexd}
-    )
+        )
+	</insert>
+	
+	<insert id="insertFacInsNot" parameterType="FacNotopVO">
+		INSERT INTO fac_notop
+		(fac_not_code, fac_name)
+		VALUES
+		(#{facNotCode}, #{facName})
 	</insert>
 
 	<update id="updateFacIns" parameterType="FacInsVO">
-
 		<!-- 점검일정 등록시 자동으로 30일뒤로 차기점검일 등록됨 -->
-		UPDATE fac_ins SET fac_ins_check = #{facInsCheck}, fac_ins_person
-		= #{facInsPerson}, fac_ins_jud = #{facInsJud}, fac_ins_nexd =
-		fac_ins_date
-		+ INTERVAL '30' DAY WHERE fac_ins_code = #{facInsCode}
+		UPDATE fac_ins SET 
+		fac_ins_check = #{facInsCheck}, 
+		fac_ins_person	= #{facInsPerson}, 
+		fac_ins_jud = #{facInsJud}, 
+		fac_ins_nexd = fac_ins_date	+ INTERVAL '30' DAY WHERE fac_ins_code = #{facInsCode}
 
 	</update>
 
