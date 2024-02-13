@@ -162,6 +162,14 @@ public class FacManageController {
 	@ResponseBody
 	public String updateFacRep(@RequestBody FacRepVO facRepVO) {
 		String msg;
+		String facRepRepairs = facRepVO.getFacRepRepairs();
+		String facNotCode = facRepVO.getFacNotCode();
+		System.out.println("facRepRepairs : " + facRepRepairs);
+		System.out.println("facNotCode : " + facNotCode);
+		if ("수리완료".equals(facRepRepairs)) {
+		    System.out.println("적합합니다");
+		    facManageService.updateFacRepNot(facNotCode);
+		}
 		facManageService.updateFacRep(facRepVO);
 		System.out.println(facRepVO);
 		msg = "수정완료";

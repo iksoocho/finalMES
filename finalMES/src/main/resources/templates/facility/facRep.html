@@ -62,24 +62,28 @@ button {
 								name="facRepCode" required readonly></th>
 							<th>설비코드</th>
 							<th colspan="2"><input type="text" id="facCode"
-								name="facCode" required></th>
-							<th>설비명</th>
-							<th colspan="2"><input type="text" id="facName" name="facName" th:data-facCode="${facCode}" required>
-</th>
+								name="facCode" required readonly></th>
+							
+
 							
 						</tr>
 						<tr>
 							<th>수리사항</th>
 							<th colspan="2"><input type="text" id="facRepRepairs"
 								name="facRepRepairs"></th>
-							<th>담당자</th>
-							<th colspan="2"><input type="text" id="facRepPerson"
-								name="facRepPerson" required></th>
+							<th>설비명</th>
+							<th colspan="2"><input type="text" id="facName"
+							 name="facName" th:data-facCode="${facCode}" required readonly>
 						</tr>
 						<tr>
 							<th>등록일자</th>
 							<th colspan="2"><input type="date" id="facRepDate"
 								name="facRepDate" required></th>
+							<th>담당자</th>
+							<th colspan="2"><input type="text" id="facRepPerson"
+								name="facRepPerson" required></th>
+						</tr>
+						<tr>
 							<th>수리내용</th>
 							<td colspan="2"><textarea rows="10" cols="30"
 									id="facRepContent" name="facRepContent"></textarea>
@@ -156,12 +160,14 @@ button {
           document.getElementById('saveBtn').addEventListener("click", function() {
             var facRepCode = document.getElementsByName("facRepCode")[0].value;
             var facNotCode = document.getElementsByName("facNotCode")[0].value;
+            var facNotCode = document.getElementsByName("facNotCode")[0].value;
             var facCode = document.getElementsByName("facCode")[0].value;
             var facName = document.getElementsByName("facName")[0].value;
             var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
             var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
             var facRepContent = document.getElementsByName("facRepContent")[0].value;
             var facRepDate = document.getElementsByName("facRepDate")[0].value;
+            var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
 
             if (!facName) {
                 alert("설비명을 입력해주세요.");
@@ -178,6 +184,7 @@ button {
                 facRepPerson: facRepPerson,
                 facRepContent: facRepContent,
                 facRepDate: facRepDate,
+                facNotSituation: facNotSituation
             };
             
             // fac_ins update
@@ -216,7 +223,8 @@ button {
          	    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
          	    var facRepContent = document.getElementsByName("facRepContent")[0].value;
          	    var facRepDate = document.getElementsByName("facRepDate")[0].value;
-   
+   				
+         	    
 
          	    var data = {
          	    	facRepCode: facRepCode,

@@ -37,4 +37,6 @@ public interface FacManageMapper {
 	public int insertFacRep(FacRepVO facRepVO); 
 	public int insertFacRepNot(FacNotopVO facNotopVO);
 	public int updateFacRep(FacRepVO facRepVO);
+	// 수리쪽 수리사항 업데이트
+	public void updateFacRepNot(String facNotCode);
 }
