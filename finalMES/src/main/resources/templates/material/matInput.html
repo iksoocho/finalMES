@@ -8,22 +8,26 @@
 </head>
 <body>
 	<section layout:fragment="content">
-		<h3>입고관리</h3>
+		
+		<div id="ckeckGrid" class="container"><h3>검수 완료 목록</h3></div>
 
 
-
-		<div id="grid" class="container"></div>
+		<div id="inputGrid" class="container"><h3>입고목록</h3></div>
 
 	<script th:inline="javascript">
 		let matInputList = [[${matInputList}]]
 		
-		 const grid = new tui.Grid({
+		 const inputGrid = new tui.Grid({
 
-           el: document.getElementById('grid'),
+           el: document.getElementById('inputGrid'),
            data: matInputList, // 여기서 emps 데이터를 사용
            scrollX: false,
            scrollY: false,
 	      columns: [
+	        {
+	          header: 'LOT코드',
+	          name: 'matLotCode'
+	        },
 	        {
 	          header: '자재코드',
 	          name: 'matCode'
@@ -31,10 +35,6 @@
 	        {
 	          header: '자재명',
 	          name: 'matName'
-	        },
-	        {
-	          header: 'LOT코드',
-	          name: 'matLotCode'
 	        },
 	        {
 		      header: '자재 검사코드',
@@ -68,6 +68,66 @@
                perPage: 5
            }
 	    });
+		
+		
+		const ckeckGrid = new tui.Grid({
+
+	           el: document.getElementById('ckeckGrid'),
+	           scrollX: false,
+	           scrollY: false,
+		      columns: [
+		        {
+		          header: '발주상세코드',
+		          name: 'matOrCode'
+		        },
+		        {
+		          header: '발주량',
+		          name: 'matOrCount'
+		        },
+		        {
+		          header: '자재명',
+		          name: 'matName'
+		        },
+		        {
+			      header: '단위',
+			      name: 'matUnit'
+			    },
+		        {
+				  header: '규격',
+				  name: 'matStandard'
+				},
+		        {
+				  header: '거래처',
+				  name: 'businessName'
+				},
+		        {
+				  header: '합격량',
+				  name: 'matInsGood',
+	  		      formatter : function dateFormatter(params) {
+	  		    	  const date = new Date(params.value);
+	  		    	  const isoDate = date.toISOString().split('T')[0];
+	  		    	  return isoDate;
+	  		    	}
+				},
+		        {
+				  header: '불합격량',
+				  name: 'matInsBad'
+				},
+				{
+				  header: '불량내용',
+				  name: 'badMatContent'
+				},
+				{
+				  header: '검수일자',
+				  name: 'matInsDate'
+				},
+		      ],
+		      rowHeaders: ['rowNum'],
+	           pageOptions: {
+	               useClient: true,
+	               perPage: 5
+	           }
+		    });
 	</script>
 </section>
 </body>

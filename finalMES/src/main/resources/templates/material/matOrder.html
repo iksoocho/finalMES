@@ -1,69 +1,66 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout}"
->
-  <head>
-    <meta charset="UTF-8" />
-    <title>발주 관리 ^^</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+<title>발주 관리 ^^</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <style>
-      button {
-        float: right;
-        margin-right: 5px;
-        margin-bottom: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <section layout:fragment="content">
-      <div class="container">
-        <!--  ================== 그리드 ================  -->
-        <div class="row">
-          <div class="col-8">
-            <div id="matGrid" class="container">
-              <h2>현재 자재 재고</h2>
-            </div>
-          </div>
+<style>
+button {
+	float: right;
+	margin-right: 5px;
+	margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="container">
+			<!--  ================== 그리드 ================  -->
+			<div class="row">
+				<div class="col-8">
+					<div id="matGrid" class="container">
+						<h2>현재 자재 재고</h2>
+					</div>
+				</div>
 
-          <div class="col-4">
-            <div id="busiGrid" class="container">
-              <h2>거래처 목록</h2>
-            </div>
-          </div>
-        </div>
+				<div class="col-4">
+					<div id="busiGrid" class="container">
+						<h2>거래처 목록</h2>
+					</div>
+				</div>
+			</div>
 
 
 
-        <button type="button" class="btn btn-primary">
-          저장
-        </button>
-<!-- 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" -->
-<!-- 				data-bs-target="#exampleModal">조회</button> -->
+			<button class="btn btn-secondary"
+				style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
+			<!-- 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" -->
+			<!-- 				data-bs-target="#exampleModal">조회</button> -->
 
-				<button type="button" class="btn btn-primary" id="orderInsert">
-					저장
-				</button>
+			<button type="button" class="btn btn-primary" id="orderInsert">
+				저장</button>
 		</div>
 
 
 
-      <div class="container">
-        <h2>발주목록</h2>
+		<div class="container">
+			<h2>발주목록</h2>
 
-        <div id="ordGrid"></div>
-      </div>
+			<div id="ordGrid"></div>
+		</div>
 
-      <script th:inline="javascript">
-
+		<script th:inline="javascript">
                     // 현재 자재 재고
                  	let mat = [[${oList}]];
-                 	let matGrid, busiGrid, ordGrid;
+                 	let matGrid, busiGrid;
 
                  	document.addEventListener('DOMContentLoaded', function () {
                  	    // matGrid 초기화
@@ -94,10 +91,14 @@
                  	            let rowData = matGrid.getRow(rowKey);
                  	            if (rowData) {
                  	                var matCode = rowData.matCode;
-                 	                fetch('/matDetail?matCode=' + matCode)
+                 	                fetch('/matOrDetail?matCode=' + matCode)
                  	                    .then(response => response.json())
                  	                    .then(data => {
-                 	                        busiGrid.resetData(data);
+                 	                    	
+                 	                    		// 그리드 갱신
+                 	                    		busiGrid.resetData(data);
+             
+                 	                        
                  	                    })
                  	                    .catch(err => {
                  	                        console.error('Error:', err);
@@ -135,7 +136,8 @@
                  	                fetch('/matListDetail?businessCode=' + businessCode)
                  	                    .then(response => response.json())
                  	                    .then(data => {
-                 	                        ordGrid.resetData(data);
+                 	                    	ordGrid.resetData(data);
+                 	                        
                  	                    })
                  	                    .catch(err => {
                  	                        console.error('Error:', err);
@@ -143,10 +145,12 @@
                  	            }
                  	        }
                  	    });
-
+						
+                 	    let ordList = [[${mList}]]
                  	    // ordGrid 초기화
                  	    ordGrid = new tui.Grid({
                  	        el: document.getElementById('ordGrid'),
+                 	        data: ordList,
                  	        scrollX: false,
                  	        scrollY: false,
                  	        columns: [
@@ -155,8 +159,15 @@
                  	            	editor : 'text'},
                  	            { name: 'matCode', header: '자재코드' },
                  	            { name: 'businessName', header: '거래처명' },
+                 	            { name: 'matName', header: '자재명' },
                  	            { name: 'matOrCount', header: '발주량' },
-                 	            { name: 'matOrDate', header: '발주일', formatter: formatDate },
+                 	            { name: 'matOrDate', header: '발주일', formatter: formatDate,
+                 	            	editor: {
+        								type: 'datePicker',
+        								options: {
+        									format: 'yyyy-MM-dd'
+        								}	
+                 	            }},
                  	            { name: 'matOrDueDate', header: '납기요청일', formatter: formatDate,
                  	           	editor: {
     								type: 'datePicker',
@@ -214,106 +225,36 @@
 
                  return `<div style="background-color: ${OrColor}; ">${statusText}</div>`;
              }
-
-			
                  	
-//				
-//      			document.querySelectorAll('.plan-row').forEach(row => {
-//     				row.addEventListener('click', function () {
-//     					const planCode = this.getAttribute('data-plan-code');
+                 	
 
-//     					fetch('/planDetail?planCode=' + planCode)
-//     						.then(response => response.json())
-//     						.then(data => {
-//     							const detailsTbody = document.getElementById('planDetails');
-//     							detailsTbody.innerHTML = ''; // 기존 내용 초기화
-
-//     							// 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-//     							data.forEach(detail => {
-//     								const tr = document.createElement('tr');
-
-//     								const date = new Date(detail.dlvyDate);
-//     								const sDate = new Date(detail.start);
-//     								const eDate = new Date(detail.end);
-//     								const formattedDate = date.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-//     								const formattedSDate = sDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-//     								const formattedEDate = eDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-//     								console.log(detail);
-//     								tr.innerHTML = `
-//     									<td>${detail.dplanCode}</td>
-//     		                            <td>${detail.planCode}</td>
-//     		                            <td>${detail.prodCode}</td>
-//     		                            <td><input type="date" value="${formattedSDate}" name="startDate"></td>
-//     		                            <td><input type="date" value="${formattedEDate}" name="endDate"></td>
-//     		                            <td>${detail.prodCount}</td>
-//     		                            <td>${detail.ordCount}</td>
-//     		                            <td><input type="number" value="${detail.dplanCount}" name="planCount"></td>
-//     		                            <td>${formattedDate}</td>
-//     								`;
-//     								detailsTbody.appendChild(tr);
-//     							});
-//     						});
-//     				});
-//     			});
-
-
+			function addRow(){
+				
+      			ordGrid.prependRow({isNew: true});
+      		}
 
             // =============== insert ===============
             document.querySelector('#orderInsert').addEventListener('click', function() {
-         	const newOrder = document.querySelectorAll('.order')
-         	if(newOrder.length === 0 ){
+            const newData = ordGrid.getData().filter(row => row.isNew);
+            console.log(newData);
+//          	const newOrder = document.querySelectorAll('.order')
+//          	console.log(newOrder);
+         	if(newData.length === 0 ){
          		alert("insert 할 내용이 없습니다.")
          		return;
          	}
-		
+			
+         	console.log('추가된 행의 데이터:' , newData);
 	        // 이건 나중에 내가 원하는 걸로 바꾸기
 	        let data = {};
-	        let orderobj = {};
-	        let ordState = {};
-	        
-	        
-	        orderobj.matOrCode = document.querySelector('td[data-column-name="matOrCode"] div').innerHTML;
-	        console.log(orderobj.matOrCode);
-	        orderobj.matCode = document.querySelector('td[data-column-name="matCode"] div').innerHTML;
-	        orderobj.matOrName = document.querySelector('td[data-column-name="matOrName"] div').innerHTML;
-	        orderobj.matOrCount = document.querySelector('td[data-column-name="matOrCount"] div').innerHTML;
-	        orderobj.matOrDate = document.querySelector('td[data-column-name="matOrDate"] div').innerHTML;
-	        orderobj.matOrDueDate = document.querySelector('td[data-column-name="matOrDueDate"] div').innerHTML;
-	        orderobj.matOrManage = document.querySelector('td[data-column-name="matOrManage"] div').innerHTML;
-	        
-	        ordState.matOrCode = document.querySelector('td[data-column-name="matOrCode"] div').innerHTML;
-
-			let newMatORderRows = document.querySelectorAll('#ordGrid tbody tr');
-
-			let matOrderData = [];
-
-			for (let i = 1; i < newMatORderRows.length; i++) {
-				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
-				let obj = {};
-				let target = $(newMatORderRows[i]);
-
-				obj.matOrCode = target.find('td:eq(1)').text();
-				console.log("matOrCode : " + obj.matOrCode);
-				
-				obj.matOrName = target.find('td:eq(2)').text();
-				console.log("matOrName : " + obj.matOrName);
-				
-				obj.matOrCount = target.find('td:eq(5)').text();
-				
-				obj.matOrDate = target.find('td:eq(6)').text();
-				
-				obj.matOrDueDate = target.find('td:eq(7)').text();
-				
-				obj.matOrManage = target.find('td:eq(8)').text();
-				
-				matOrderData.push(obj);
-				
-			}
-
-			data.matOrderVO = orderobj;
-			data.matOrderInfoVO = matOrderData;
 			
-// 			data.planOrdVO = ordState;
+			data.matOrCode = newData[0].matOrCode;
+			
+			
+			console.log('data : ' , data);
+
+
+
 
 
 			console.log(data);
@@ -406,6 +347,6 @@
 		
 		
       </script>
-    </section>
-  </body>
+	</section>
+</body>
 </html>

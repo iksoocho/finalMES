@@ -36,6 +36,7 @@ public class MaterialController {
 				code = firstMatVO.getMatOrCode();
 			}
 		List<MatOrderInfoVO> mList = materialService.getMaterialOrdInfoList(code);
+		
 		List<OriginMaterialVO> oList = materialService.getOriginMaterialList();
 		List<OriginMaterialVO> buisList = materialService.getMatBusiness();
 		List<OriginMaterialVO> buisList1 = materialService.getMatBusiness1(code);
@@ -49,7 +50,13 @@ public class MaterialController {
 	}
 	
 	
-	// 발주 디테일
+	// 발주 목록 쪽 디테일 이거 바꿔야함 다른걸로 위에 mList랑 중복임
+	@GetMapping("/matOrDetail")
+	@ResponseBody
+	public List<MatOrderInfoVO> getMaterialOrdInfo(@RequestParam String matCode){
+		return materialService.getMaterialOrdInfoList1(matCode);
+	}
+	
 	@GetMapping("matDetail")
 	@ResponseBody
 	public List<MatOrderInfoVO> getMaterialOrdInfoList(@RequestParam String matCode){
@@ -101,7 +108,7 @@ public class MaterialController {
 	//발주 등록
 	@PostMapping("/matOrderInsert")
 	@ResponseBody
-	public String insertMatOrder(@RequestBody MatOrderCompositeVO matOrderCompositeVO) {
+	public String insertMatOrder(@RequestBody MatOrderVO matOrderVO) {
 //	    int result = materialService.insertMaterialOrder(matOrderVO);
 
 //	    System.out.println("result: " + result);
@@ -113,7 +120,7 @@ public class MaterialController {
 //	    }
 	    
 	    String msg;
-	    materialService.insertMaterialOrder(matOrderCompositeVO);
+	    materialService.insertMatOrder(matOrderVO);
 	    msg = "발주완료";
 	    
 	    return msg;
