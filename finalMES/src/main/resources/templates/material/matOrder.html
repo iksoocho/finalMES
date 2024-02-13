@@ -38,18 +38,15 @@ button {
 				</div>
 			</div>
 
-
-
 			<button class="btn btn-secondary"
-				style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
+				style="float: right; margin: 8px 5px" onclick="addRow()">
+				추가</button>
 			<!-- 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" -->
 			<!-- 				data-bs-target="#exampleModal">조회</button> -->
 
 			<button type="button" class="btn btn-primary" id="orderInsert">
 				저장</button>
 		</div>
-
-
 
 		<div class="container">
 			<h2>발주목록</h2>
@@ -58,294 +55,364 @@ button {
 		</div>
 
 		<script th:inline="javascript">
-                    // 현재 자재 재고
-                 	let mat = [[${oList}]];
-                 	let matGrid, busiGrid;
+                            // 현재 자재 재고
+                         	let mat = [[${oList}]];
+                         	let matGrid, busiGrid;
 
-                 	document.addEventListener('DOMContentLoaded', function () {
-                 	    // matGrid 초기화
-                 	    matGrid = new tui.Grid({
-                 	        el: document.getElementById('matGrid'),
-                 	        data: mat,
-                 	        columns: [
-                 	            { header: '자재코드', name: 'matCode', sortable: true, sortingType: 'desc' },
-                 	            { header: '자재명', name: 'matName' },
-                 	            { header: '단위', name: 'matUnit' },
-                 	            { header: '규격', name: 'matStandard' },
-                 	            { header: '현재고', name: 'matCount' },
-                 	            { header: '안전재고', name: 'matSafeStock' }
-                 	        ],
-                 	        rowHeaders: ['rowNum'],
-                 	        pageOptions: {
-                 	            useClient: true,
-                 	            perPage: 5
-                 	        }
-                 	    });
+                         	class DeleteButtonRenderer{
+                         		constructor(props){
+                         			const el = document.createElement('button');
+                         			el.textContent = '삭제';
+                         			el.addEventListener('click', () => {
 
-                 	    // matGrid 클릭 이벤트 핸들러
-                 	    matGrid.on('click', function (ev) {
-                 	    	console.log('ev 이벤트 :', ev.columnName)
-                 	        let columnName = ev.columnName;
-                 	        if (columnName === 'matCode') {
-                 	            let rowKey = ev.rowKey;
-                 	            let rowData = matGrid.getRow(rowKey);
-                 	            if (rowData) {
-                 	                var matCode = rowData.matCode;
-                 	                fetch('/matOrDetail?matCode=' + matCode)
-                 	                    .then(response => response.json())
-                 	                    .then(data => {
-                 	                    	
-                 	                    		// 그리드 갱신
-                 	                    		busiGrid.resetData(data);
-             
-                 	                        
-                 	                    })
-                 	                    .catch(err => {
-                 	                        console.error('Error:', err);
-                 	                    });
-                 	            }
-                 	        }
-                 	    });
+                         				const rowData = props.grid.getRow(props.rowKey)
+                         				const matOrCode = rowData.matOrCode;
+        //                  				const matCode = rowData.matCode;
+        								console.log("matOrCode :" , matOrCode)
 
-                 	    // busiGrid 초기화
-                 	    busiGrid = new tui.Grid({
-                 	        el: document.getElementById('busiGrid'),
-                 	        scrollX: false,
-                 	        scrollY: false,
-                 	        columns: [
-                 	            { header: '거래처코드', name: 'businessCode', sortable: true, sortingType: 'desc' },
-                 	            { header: '거래처명', name: 'businessName' },
-                 	            { header: '거래횟수', name: 'deal' }
-                 	        ],
-                 	        rowHeaders: ['rowNum'],
-                 	        pageOptions: {
-                 	            useClient: true,
-                 	            perPage: 5
-                 	        }
-                 	    });
+        								let data = {};
+        								let matObj = {};
+        								let ordObj = {};
 
-                 	    // busiGrid 클릭 이벤트 핸들러
-                 	    busiGrid.on('click', function (ev) {
-                 	        let columnName = ev.columnName;
-                 	        console.log('ev 이벤트', ev.columnName);
-                 	        if (columnName === 'businessCode') {
-                 	            let rowKey = ev.rowKey;
-                 	            let rowData = busiGrid.getRow(rowKey);
-                 	            if (rowData) {
-                 	                let businessCode = rowData.businessCode;
-                 	                fetch('/matListDetail?businessCode=' + businessCode)
-                 	                    .then(response => response.json())
-                 	                    .then(data => {
-                 	                    	ordGrid.resetData(data);
-                 	                        
-                 	                    })
-                 	                    .catch(err => {
-                 	                        console.error('Error:', err);
-                 	                    });
-                 	            }
-                 	        }
-                 	    });
-						
-                 	    let ordList = [[${mList}]]
-                 	    // ordGrid 초기화
-                 	    ordGrid = new tui.Grid({
-                 	        el: document.getElementById('ordGrid'),
-                 	        data: ordList,
-                 	        scrollX: false,
-                 	        scrollY: false,
-                 	        columns: [
-                 	            { name: 'matOrCode', header: '발주코드', sortable: true, sortingType: 'desc' },
-                 	            { name: 'matOrName', header: '발주명' ,
-                 	            	editor : 'text'},
-                 	            { name: 'matCode', header: '자재코드' },
-                 	            { name: 'businessName', header: '거래처명' },
-                 	            { name: 'matName', header: '자재명' },
-                 	            { name: 'matOrCount', header: '발주량' },
-                 	            { name: 'matOrDate', header: '발주일', formatter: formatDate,
-                 	            	editor: {
-        								type: 'datePicker',
-        								options: {
-        									format: 'yyyy-MM-dd'
-        								}	
-                 	            }},
-                 	            { name: 'matOrDueDate', header: '납기요청일', formatter: formatDate,
-                 	           	editor: {
-    								type: 'datePicker',
-    								options: {
-    									format: 'yyyy-MM-dd'
-    								}
-    							}},
-                 	            { name: 'matOrManager', header: '담당자' },
-                 	            {
-                 	                header: '발주상태',
-                 	                name: 'matOrState',
-                 	                formatter: getMatOrderStatus,
-                 	                filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
-                 	            }
-                 	        ],
-                 	        rowHeaders: ['rowNum', 'checkbox'],
-                 	        pageOptions: {
-                 	            useClient: true,
-                 	            perPage: 5
-                 	        }
-                 	    });
-                 	});
+        								matObj.matOrCode = matOrCode;
+        // 								matObj.matCode = matCode;
 
-                 	// 날짜 형식 지정 함수
-                 	function formatDate({ value }) {
-                 	    if (value) {
-                 	        let date = new Date(value);
-                 	        let year = date.getFullYear();
-                 	        let month = (date.getMonth() + 1).toString().padStart(2, '0');
-                 	        let day = date.getDate().toString().padStart(2, '0');
-                 	        return `${year}-${month}-${day}`;
-                 	    }
-                 	    return '';
+        								data.matOrderVO = matObj;
+        								data.matOrderInfoVO = ordObj;
+
+        								console.log("data : " + data);
+
+        								fetch('/' , {
+        									method: 'DELETE',
+        									hearders: {
+        										'Content-Type': 'application/json',
+        									},
+        									body: JSON.stringify(data)
+        								})
+        								.then(response => {
+        									if (!response.ok) {
+        										throw new Error('Network response was not ok');
+        									}
+        									return response.text();
+        								})
+        								.then(data => {
+        									console.log('Success:', data);
+        									alert(data);
+        									location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+        								})
+        								.catch(error => {
+        									console.error('Error:', error);
+        								});
+
+        						});
+
+        						this.el = el;
+        					}
+
+        					getElement() {
+        						return this.el;
+        					}
+        				}
+
+
+                         	document.addEventListener('DOMContentLoaded', function () {
+                         	    // matGrid 초기화
+                         	    matGrid = new tui.Grid({
+                         	        el: document.getElementById('matGrid'),
+                         	        data: mat,
+                         	        columns: [
+                         	            { header: '자재코드', name: 'matCode', sortable: true, sortingType: 'desc' },
+                         	            { header: '자재명', name: 'matName' },
+                         	            { header: '단위', name: 'matUnit' },
+                         	            { header: '규격', name: 'matStandard' },
+                         	            { header: '현재고', name: 'matCount' },
+                         	            { header: '안전재고', name: 'matSafeStock' }
+                         	        ],
+                         	        rowHeaders: ['rowNum'],
+                         	        pageOptions: {
+                         	            useClient: true,
+                         	            perPage: 5
+                         	        }
+                         	    });
+
+                         	    // matGrid 클릭 이벤트 핸들러
+                         	    matGrid.on('click', function (ev) {
+                         	    	console.log('ev 이벤트 :', ev.columnName)
+                         	        let columnName = ev.columnName;
+                         	        if (columnName === 'matCode') {
+                         	            let rowKey = ev.rowKey;
+                         	            let rowData = matGrid.getRow(rowKey);
+                         	            if (rowData) {
+                         	                var matCode = rowData.matCode;
+                         	                fetch('/matOrDetail?matCode=' + matCode)
+                         	                    .then(response => response.json())
+                         	                    .then(data => {
+
+                         	                    		// 그리드 갱신
+                         	                    		busiGrid.resetData(data);
+
+
+                         	                    })
+                         	                    .catch(err => {
+                         	                        console.error('Error:', err);
+                         	                    });
+                         	            }
+                         	        }
+                         	    });
+
+                         	    // busiGrid 초기화
+                         	    busiGrid = new tui.Grid({
+                         	        el: document.getElementById('busiGrid'),
+                         	        scrollX: false,
+                         	        scrollY: false,
+                         	        columns: [
+                         	            { header: '거래처코드', name: 'businessCode', sortable: true, sortingType: 'desc' },
+                         	            { header: '거래처명', name: 'businessName' },
+                         	            { header: '거래횟수', name: 'deal' }
+                         	        ],
+                         	        rowHeaders: ['rowNum'],
+                         	        pageOptions: {
+                         	            useClient: true,
+                         	            perPage: 5
+                         	        }
+                         	    });
+
+                         	    // busiGrid 클릭 이벤트 핸들러
+                         	    busiGrid.on('click', function (ev) {
+                         	        let columnName = ev.columnName;
+                         	        console.log('ev 이벤트', ev.columnName);
+                         	        if (columnName === 'businessCode') {
+                         	            let rowKey = ev.rowKey;
+                         	            let rowData = busiGrid.getRow(rowKey);
+                         	            if (rowData) {
+                         	                let businessCode = rowData.businessCode;
+                         	                fetch('/matListDetail?businessCode=' + businessCode)
+                         	                    .then(response => response.json())
+                         	                    .then(data => {
+                         	                    	ordGrid.resetData(data);
+
+                         	                    })
+                         	                    .catch(err => {
+                         	                        console.error('Error:', err);
+                         	                    });
+                         	            }
+                         	        }
+                         	    });
+
+                         	    let ordList = [[${mList}]]
+                         	    // ordGrid 초기화
+                         	    ordGrid = new tui.Grid({
+                         	        el: document.getElementById('ordGrid'),
+                         	        data: ordList,
+                         	        scrollX: false,
+                         	        scrollY: false,
+                         	        columns: [
+                         	            { name: 'matOrCode', header: '발주코드', sortable: true, sortingType: 'desc' },
+                         	            { name: 'matOrName', header: '발주명' ,
+                         	            	editor : 'text'},
+                         	            { name: 'matCode', header: '자재코드' },
+                         	            { name: 'businessName', header: '거래처명' },
+                         	            { name: 'matName', header: '자재명' },
+                         	            { name: 'matOrCount', header: '발주량' },
+                         	            { name: 'matOrDate', header: '발주일', formatter: formatDate,
+                         	            	editor: {
+                								type: 'datePicker',
+                								options: {
+                									format: 'yyyy-MM-dd'
+                								}
+                         	            }},
+                         	            { name: 'matOrDueDate', header: '납기요청일', formatter: formatDate,
+                         	           	editor: {
+            								type: 'datePicker',
+            								options: {
+            									format: 'yyyy-MM-dd'
+            								}
+            							}},
+                         	            { name: 'matOrManager', header: '담당자' },
+                         	            {
+                         	                header: '발주상태',
+                         	                name: 'matOrState',
+                         	                formatter: getMatOrderStatus,
+                         	                filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
+                         	            },
+                         	            {
+                							header: '삭제',
+                							name: 'deleteButton',
+                							align: "center",
+                							renderer: {
+                								type: DeleteButtonRenderer
+                							}
+                						}
+                         	        ],
+                         	        rowHeaders: ['rowNum', 'checkbox'],
+                         	        pageOptions: {
+                         	            useClient: true,
+                         	            perPage: 5
+                         	        }
+                         	    });
+                         	});
+
+                         	// 날짜 형식 지정 함수
+                         	function formatDate({ value }) {
+                         	    if (value) {
+                         	        let date = new Date(value);
+                         	        let year = date.getFullYear();
+                         	        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                         	        let day = date.getDate().toString().padStart(2, '0');
+                         	        return `${year}-${month}-${day}`;
+                         	    }
+                         	    return '';
+                         	}
+
+                         	// 발주 상태 형식 지정 함수
+                         function getMatOrderStatus(value, row) {
+                          console.log(value);
+                          let statusText, OrColor;
+
+                          switch (value.value) {
+                              case '1':
+                                  statusText = '발주완료';
+                                  OrColor = 'gray';
+                                  break;
+                              case '2':
+                                  statusText = '대기중';
+                                  OrColor = 'red';
+                                  break;
+                              default:
+                                  statusText = '알수없음';
+                                  OrColor = 'yellowgreen';
+                                  break;
+                          }
+
+                         return `<div style="background-color: ${OrColor}; ">${statusText}</div>`;
+                     }
+
+
+
+        			function addRow(){
+
+              			ordGrid.prependRow({isNew: true});
+              		}
+
+                    // =============== insert ===============
+                    document.querySelector('#orderInsert').addEventListener('click', function() {
+                    const newData = ordGrid.getData().filter(row => row.isNew);
+                    console.log(newData);
+        //          	const newOrder = document.querySelectorAll('.order')
+        //          	console.log(newOrder);
+                 	if(newData.length === 0 ){
+                 		alert("insert 할 내용이 없습니다.")
+                 		return;
                  	}
 
-                 	// 발주 상태 형식 지정 함수
-                 function getMatOrderStatus(value, row) {
-                  console.log(value);
-                  let statusText, OrColor;
+                 	console.log('추가된 행의 데이터:' , newData);
+        	        // 이건 나중에 내가 원하는 걸로 바꾸기
+        	        let data = {};
 
-                  switch (value.value) {
-                      case '1':
-                          statusText = '발주완료';
-                          OrColor = 'gray';
-                          break;
-                      case '2':
-                          statusText = '대기중';
-                          OrColor = 'red';
-                          break;
-                      default:
-                          statusText = '알수없음';
-                          OrColor = 'yellowgreen';
-                          break;
-                  }
+        			data.matOrCode = newData[0].matOrCode;
+        			data.matOrName = newData[0].matOrName;
+        			data.matCode = newData[0].matCode;
+        			data.businessName = newData[0].businessName;
+        			data.matName = newData[0].matName;
+        			data.matOrCount = newData[0].matOrCount;
+        			data.matOrDate = newData[0].matOrDate;
+        			data.matOrDueDate = newData[0].matOrDueDate;
+        			data.matOrManager = newData[0].matOrManager;
 
-                 return `<div style="background-color: ${OrColor}; ">${statusText}</div>`;
-             }
-                 	
-                 	
 
-			function addRow(){
-				
-      			ordGrid.prependRow({isNew: true});
-      		}
-
-            // =============== insert ===============
-            document.querySelector('#orderInsert').addEventListener('click', function() {
-            const newData = ordGrid.getData().filter(row => row.isNew);
-            console.log(newData);
-//          	const newOrder = document.querySelectorAll('.order')
-//          	console.log(newOrder);
-         	if(newData.length === 0 ){
-         		alert("insert 할 내용이 없습니다.")
-         		return;
-         	}
-			
-         	console.log('추가된 행의 데이터:' , newData);
-	        // 이건 나중에 내가 원하는 걸로 바꾸기
-	        let data = {};
-			
-			data.matOrCode = newData[0].matOrCode;
-			
-			
-			console.log('data : ' , data);
+        			console.log('data : ' , data);
 
 
 
 
 
-			console.log(data);
-			// AJAX 요청으로 서버에 데이터 전송
-			fetch('/matOrderInsert', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
+        			console.log(data);
+        			// AJAX 요청으로 서버에 데이터 전송
+        			fetch('/matOrderInsert', {
+        				method: 'POST',
+        				headers: {
+        					'Content-Type': 'application/json',
 
-				},
-				body: JSON.stringify(data)
-			})
-				.then(response => {
-					if (!response.ok) {
-						throw new Error('Network response was not ok');
-					}
-					return response.text();
-				})
-				.then(data => {
-					console.log('Success:', data);
-					alert(data);
-					location.href = '/matOrder'; // 성공적으로 처리된 후 리디렉트
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-
-
-
-		});
+        				},
+        				body: JSON.stringify(data)
+        			})
+        				.then(response => {
+        					if (!response.ok) {
+        						throw new Error('Network response was not ok');
+        					}
+        					return response.text();
+        				})
+        				.then(data => {
+        					console.log('Success:', data);
+        					alert(data);
+        					location.href = '/matOrder'; // 성공적으로 처리된 후 리디렉트
+        				})
+        				.catch(error => {
+        					console.error('Error:', error);
+        				});
 
 
-		//plan detail update
-// 		document.querySelector('#planDUpdate').addEventListener('click', function () {
-// 			const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
-// 			if (newDetail === null) {
-// 				alert("저장 할 내용이 없습니다.")
-// 				return;
-// 			}
 
-// 			let data = {};
+        		});
 
-// 			let newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
-// 			let planDetailData = [];
-// 			// 인덱스 4부터 시작하여 끝까지 반복합니다.
-// 			for (let i = 4; i < newPlanDetailRows.length; i++) {
-// 				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
-// 				let obj = {};
-// 				let target = $(newPlanDetailRows[i]);
-// 				obj.dplanCode = target.find('td:eq(0)').text();
-// 				obj.prodCode = target.find('td:eq(1)').text();
-// 				console.log("prodCode : " + obj.prodCode);
+        		//plan detail update
+        // 		document.querySelector('#planDUpdate').addEventListener('click', function () {
+        // 			const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
+        // 			if (newDetail === null) {
+        // 				alert("저장 할 내용이 없습니다.")
+        // 				return;
+        // 			}
 
-// 				obj.dplanStartDate = target.find('td:eq(2)').text();
-// 				console.log("dplanStartDate : " + obj.dplanStartDate);
-// 				obj.dplanEndDate = target.find('td:eq(3)').text();
-// 				obj.dplanCount = target.find('td:eq(6)').text();
+        // 			let data = {};
 
-// 				planDetailData.push(obj);
+        // 			let newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
-// 			}
-// 			data.planDVOList = planDetailData;
-// 			console.log(data);
-// 			// AJAX 요청으로 서버에 데이터 전송
-// 			fetch('/planDUpdate', {
-// 				method: 'put',
-// 				headers: {
-// 					'Content-Type': 'application/json',
+        // 			let planDetailData = [];
+        // 			// 인덱스 4부터 시작하여 끝까지 반복합니다.
+        // 			for (let i = 4; i < newPlanDetailRows.length; i++) {
+        // 				// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
+        // 				let obj = {};
+        // 				let target = $(newPlanDetailRows[i]);
+        // 				obj.dplanCode = target.find('td:eq(0)').text();
+        // 				obj.prodCode = target.find('td:eq(1)').text();
+        // 				console.log("prodCode : " + obj.prodCode);
 
-// 				},
-// 				body: JSON.stringify(data)
-// 			})
-// 				.then(response => {
-// 					if (!response.ok) {
-// 						throw new Error('Network response was not ok');
-// 					}
-// 					return response.text();
-// 				})
-// 				.then(data => {
-// 					console.log('Success:', data);
-// 					alert(data);
-// 					location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
-// 				})
-// 				.catch(error => {
-// 					console.error('Error:', error);
-// 				});
+        // 				obj.dplanStartDate = target.find('td:eq(2)').text();
+        // 				console.log("dplanStartDate : " + obj.dplanStartDate);
+        // 				obj.dplanEndDate = target.find('td:eq(3)').text();
+        // 				obj.dplanCount = target.find('td:eq(6)').text();
 
-// 		});
-		
-		
+        // 				planDetailData.push(obj);
+
+        // 			}
+        // 			data.planDVOList = planDetailData;
+        // 			console.log(data);
+        // 			// AJAX 요청으로 서버에 데이터 전송
+        // 			fetch('/planDUpdate', {
+        // 				method: 'put',
+        // 				headers: {
+        // 					'Content-Type': 'application/json',
+
+        // 				},
+        // 				body: JSON.stringify(data)
+        // 			})
+        // 				.then(response => {
+        // 					if (!response.ok) {
+        // 						throw new Error('Network response was not ok');
+        // 					}
+        // 					return response.text();
+        // 				})
+        // 				.then(data => {
+        // 					console.log('Success:', data);
+        // 					alert(data);
+        // 					location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+        // 				})
+        // 				.catch(error => {
+        // 					console.error('Error:', error);
+        // 				});
+
+        // 		});
       </script>
 	</section>
 </body>
