@@ -8,6 +8,7 @@ import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacManageVO;
 import com.example.demo.facility.FacNotopVO;
+import com.example.demo.facility.FacRepVO;
 
 @Mapper
 public interface FacManageMapper {
@@ -28,4 +29,12 @@ public interface FacManageMapper {
 	public int updateFacIns(FacInsVO facInsVO);
 	public int insertFacIns(FacInsDVO facInsDVO);
 	public int insertFacInsNot(FacNotopVO facNotopVO);
+	// 관리쪽 판정 업데이트
+	public void updateFacInsSi(String facNotCode);
+	
+	// 수리관리
+	public List<FacRepVO> getfacRepList();
+	public int insertFacRep(FacRepVO facRepVO); 
+	public int insertFacRepNot(FacNotopVO facNotopVO);
+	public int updateFacRep(FacRepVO facRepVO);
 }

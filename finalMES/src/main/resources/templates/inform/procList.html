@@ -9,9 +9,9 @@
 
 <body>
 	<section layout:fragment="content">
-		<h2>사원 관리</h2>
+		<h2>제품 관리</h2>
 		<div>
-			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="empInsert">저장</button>
+			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="procInsert">저장</button>
 			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
 		</div>
 		<div id="grid"></div>
@@ -65,66 +65,25 @@
 				scrollX: false,
 				scrollY: false,
 				columns: [
-					{header: '사원 번호', name: 'userCode'},
+					{header: '공정 코드', name: 'procCode'},
 					{
-						header: '이름', name: 'userName',
+						header: '공정 명', name: 'procName',
 						editor: 'text'
 
 					},
-					{
-						header: '부서명', name: 'deptName',
-						editor: {
-							type: 'select',
-							options: {
-								listItems: [
-									{text: '생산', value: 'prod'},
-									{text: '설비', value: 'fac'},
-									{text: '영업', value: 'sal'},
-									{text: '자재', value: 'mat'},
-
-								]
-							}
-						},
+					{header: '등록일', name: 'procDate',
 						formatter: function ({value}) {
-							if (value == 'prod') {
-								return '생산';
+							if (value) {
+								var date = new Date(value);
+								var year = date.getFullYear();
+								var month = (date.getMonth() + 1).toString().padStart(2, '0');
+								var day = date.getDate().toString().padStart(2, '0');
+								return `${year}-${month}-${day}`;
 							}
-							if (value == 'fac') {
-								return '설비';
-							}
-							if (value == 'sal') {
-								return '영업';
-							}
-							if (value == 'mat') {
-								return '자재';
-							}
-							return value;
+							return '';
 						}
-					},
-					{header: '이메일', name: 'userEmail', editor: 'text'},
-					{header: '연락처', name: 'userPhone', editor: 'text'},
-					{
-						header: '직급', name: 'userAuthority',
-						editor: {
-							type: 'select',
-							options: {
-								listItems: [
-									{text: '관리자', value: 'admin'},
-									{text: '일반사원', value: 'user'},
-									// 추가적인 옵션...
-								] // 위에서 정의한 옵션 목록 사용
-							}
-						},
-						formatter: function ({value}) {
-							if (value == 'admin') {
-								return '관리자';
-							}
-							if (value == 'user') {
-								return '일반사원';
-							}
-							return value;
-						}
-					},
+					}
+					
 
 				],
 				rowHeaders: ['rowNum'],
@@ -141,17 +100,7 @@
 
 		</script>
 		<script>
-			function convertDeptNameToCode(deptName) {
-				const deptNameToCodeMapping = {
-					'fac': 'dept001',
-					'prod': 'dept002',
-					'sal': 'dept003',
-					'mat': 'dept004'
-					// 여기에 더 많은 매핑을 추가할 수 있습니다.
-				};
-
-				return deptNameToCodeMapping[deptName] || deptName; // 매핑된 코드가 없다면 원래의 deptName을 반환
-			}
+			
 
 			function saveNewRows() {
 				// 새로 추가된 행만 필터링하여 가져옵니다.
@@ -167,24 +116,20 @@
 
 				// 서버에 데이터를 전송하는 코드를 여기에 추가합니다.
 				// 예: AJAX 요청을 사용하여 서버에 'newData'를 전송합니다.
-				console.log("부서이름 : ", newData[0].deptName);
+				
 
-				newData.forEach(row => {
-					row.deptCode = convertDeptNameToCode(row.deptName);
-				});
+				
 
-				console.log("부서 code : ", newData[0].deptCode);
+				
 
 				let data = {};
-				data.userName = newData[0].userName;
-				data.userEmail = newData[0].userEmail;
-				data.deptCode = newData[0].deptCode;
-				data.userPhone = newData[0].userPhone;
-				data.userAuthority = newData[0].userAuthority;
+				data.procName = newData[0].procName;
+				
+				
 
 				console.log('data : ', data);
 
-				fetch('/empInsert', {
+				fetch('/prodInsert', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -201,7 +146,7 @@
 					.then(data => {
 						console.log('Success:', data);
 						alert(data);
-						location.href = '/empList'; // 성공적으로 처리된 후 리디렉트
+						location.href = '/prodList'; // 성공적으로 처리된 후 리디렉트
 					})
 					.catch(error => {
 						console.error('Error:', error);
@@ -209,7 +154,7 @@
 			}
 
 			// "저장" 버튼에 이벤트 리스너를 등록합니다.
-			document.getElementById('empInsert').addEventListener('click', saveNewRows);
+			document.getElementById('procInsert').addEventListener('click', saveNewRows);
 
 		</script>
 

@@ -72,9 +72,16 @@ button {
 							<th>점검사항</th>
 							<th colspan="2"><input type="text" id="facInsCheck"
 								name="facInsCheck"></th>
-							<th>판정</th>
+							<!-- <th>판정</th>
 							<th colspan="2"><input type="text" id="facInsJud"
-								name="facInsJud"></th>
+								name="facInsJud"></th> -->
+					 		<th>판정</th>
+							<th colspan="2">
+							    <input type="radio" id="facInsJud1" name="facInsJud" value="적합">
+							    <label for="facInsJud1">적합</label>
+							    <input type="radio" id="facInsJud2" name="facInsJud" value="부적합">
+							    <label for="facInsJud2">부적합</label>
+							</th> 
 							<th>담당자</th>
 							<th colspan="2"><input type="text" id="facInsPerson"
 								name="facInsPerson" required></th>
@@ -86,12 +93,11 @@ button {
 							<th>차기점검일</th>
 							<th colspan="2"><input type="date" id="facInsNexd"
 								name="facInsNexd" required></th>
-						
-							
 						</tr>
 					</thead>
 				</table>
-				<input type="hidden" id="facNotCode"	name="facNotCode" required>	
+				<input type="hidden" id="facNotCode" name="facNotCode" required>	
+				<input type="hidden" id="facNotSituation" name="facNotSituation" required>	
 				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 				<button type="button" id="insertBtn" class="btn btn-outline-success">등록</button>
 				<button type="button" id="selectBtn" class="btn btn-outline-success"
@@ -100,9 +106,6 @@ button {
 				<div id="grid" class="container"></div>
 			</div>
 		</div>
-
-
-
 
 		<div class="modal fade modal-xl" id="staticBackdropOne"
 			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -130,7 +133,8 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="NotIns : ${Inslist}"
+								<!-- 컨트롤러에서 봐야함 -->
+								<tr th:each="NotIns : ${Inslist}" 
 									th:data-facNotCode="${NotIns.facNotCode}"
 									th:data-facCode="${NotIns.facCode}"
 									th:data-facName="${NotIns.facName}"
@@ -169,6 +173,8 @@ button {
             var facInsJud = document.getElementsByName("facInsJud")[0].value;
             var facInsDate = document.getElementsByName("facInsDate")[0].value;
             var facInsNexd = document.getElementsByName("facInsNexd")[0].value;
+            var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
+            
 
             if (!facName) {
                 alert("설비명을 입력해주세요.");
@@ -185,7 +191,8 @@ button {
                 facInsCheck: facInsCheck,
                 facInsJud: facInsJud,
                 facInsDate: facInsDate,
-                facInsNexd: facInsNexd
+                facInsNexd: facInsNexd,
+                facNotSituation: facNotSituation
             };
             
             // fac_ins update
@@ -225,6 +232,7 @@ button {
          	    var facInsJud = document.getElementsByName("facInsJud")[0].value;
          	    var facInsDate = document.getElementsByName("facInsDate")[0].value;
          	    var facInsNexd = document.getElementsByName("facInsNexd")[0].value;
+         	    
 
          	    if (!facName || !facInsPerson) {
          	        alert("설비명과 담당자를 입력해주세요.");
@@ -321,6 +329,11 @@ button {
                     formatter : formatDate,
                     align: 'facInsNexd'
                 },
+                {
+                    header: '상태',
+                    name: 'facNotSituation',
+                    align: 'center'
+                },
                
             ],
             rowHeaders: ['rowNum'],
@@ -341,6 +354,7 @@ button {
             alert("데이터 불러오기 실패!");
         }); 
         
+     	
         //  차기점검을 날짜포맷
         function formatDate(dateString) {
         	console.log(dateString);
