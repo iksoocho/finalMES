@@ -90,16 +90,12 @@ public class FacManageServiceImpl implements FacManageService {
 	}
 	
 	public void updateFacIns(FacInsVO facInsVO) {
-		// 판정이 적합일시 비가동상태를 대기로 업데이트
-		// 판정이 적합인 경우 facNotSituation을 0으로 설정
 		facManageMapper.updateFacIns(facInsVO);
 	}
 	
 	// 점검관리등록
 	@Override
 	public int insertFacIns(FacInsDVO facInsDVO) {
-		// 비가동상태 업데이트
-		
 		// 점검등록
 		int result = facManageMapper.insertFacIns(facInsDVO);
 		if(result == 1) {
@@ -157,6 +153,12 @@ public class FacManageServiceImpl implements FacManageService {
 	@Override
 	public void updateFacRep(FacRepVO facRepVO) {
 		facManageMapper.updateFacRep(facRepVO);
+		
+	}
+
+	@Override
+	public void updateFacRepNot(String facNotCode) {
+		facManageMapper.updateFacRepNot(facNotCode);
 		
 	}
 	

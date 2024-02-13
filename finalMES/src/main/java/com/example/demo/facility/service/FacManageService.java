@@ -51,5 +51,7 @@ public interface FacManageService {
 	public int insertFacRep(FacRepVO facRepVO);
 	public int insertFacRepNot(FacNotopVO facNotopVO);
 	public void updateFacRep(FacRepVO facRepVO);
+	// 수리사항 상태 업데이트
+	public void updateFacRepNot(String facNotCode);
 	
 }

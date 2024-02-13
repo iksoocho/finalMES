@@ -145,7 +145,7 @@
 	</update>
 
 
-	<!-- 설비관리 -->
+	<!-- 수리관리 -->
 	<select id="getfacRepList" resultType="FacRepVO">
 		SELECT fr.fac_rep_code,
 		fr.fac_code,
@@ -201,5 +201,12 @@
 		fac_rep_content = #{facRepContent},
 		fac_rep_person = #{facRepPerson}
 		WHERE fac_rep_code = #{facRepCode}
+	</update>
+	
+	<update id="updateFacRepNot" parameterType="String">
+		UPDATE fac_notop
+		SET
+		fac_not_situation = 0
+		WHERE fac_not_code = #{facNotCode}
 	</update>
 </mapper>
