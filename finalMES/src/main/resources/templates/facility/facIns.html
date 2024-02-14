@@ -50,7 +50,7 @@ button {
 	<section layout:fragment="content">
 		<h1>설비점검관리</h1>
 
-		<div id="layoutSidenav_content" class="container text-center">
+		<div class="container">
 
 			<div class="col">
 				<br> <br>
@@ -75,37 +75,40 @@ button {
 							<!-- <th>판정</th>
 							<th colspan="2"><input type="text" id="facInsJud"
 								name="facInsJud"></th> -->
-					 		<th>판정</th>
-							<th colspan="2">
-							    <input type="radio" id="facInsJud1" name="facInsJud" value="적합">
-							    <label for="facInsJud1">적합</label>
-							    <input type="radio" id="facInsJud2" name="facInsJud" value="부적합">
-							    <label for="facInsJud2">부적합</label>
-							</th> 
 							<th>담당자</th>
 							<th colspan="2"><input type="text" id="facInsPerson"
 								name="facInsPerson" required></th>
 						</tr>
 						<tr>
-							<th>점검일</th>
-							<th colspan="2"><input type="date" id="facInsDate"
-								name="facInsDate" required></th>
-							<th>차기점검일</th>
-							<th colspan="2"><input type="date" id="facInsNexd"
-								name="facInsNexd" required></th>
+						<tr>
+							<th style="vertical-align: middle;">판정</th>
+							<td colspan="2" style="vertical-align: middle;"><label
+								style="margin-right: 10px;"> <input type="radio"
+									id="facInsJud1" name="facInsJud" value="적합"> 적합
+							</label> <label> <input type="radio" id="facInsJud2"
+									name="facInsJud" value="부적합"> 부적합
+							</label></td>
 						</tr>
 					</thead>
 				</table>
-				<input type="hidden" id="facNotCode" name="facNotCode" required>	
-				<input type="hidden" id="facNotSituation" name="facNotSituation" required>	
+				<input type="hidden" id="facNotCode" name="facNotCode" required>
+				<input type="hidden" id="facNotSituation" name="facNotSituation"
+					required>
+				<div class="text-center">
 				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 				<button type="button" id="insertBtn" class="btn btn-outline-success">등록</button>
 				<button type="button" id="selectBtn" class="btn btn-outline-success"
 					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
+				<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
+				</div>
 				<br> <br> <br>
 				<div id="grid" class="container"></div>
 			</div>
 		</div>
+
+
+
+
 
 		<div class="modal fade modal-xl" id="staticBackdropOne"
 			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -115,7 +118,7 @@ button {
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #0d6efd;">
 						<h1 class="modal-title fs-5" id="staticBackdropLabel"
-							style="font-weight: bold">품목 목록</h1>
+							style="font-weight: bold">설비목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
@@ -134,7 +137,7 @@ button {
 							</thead>
 							<tbody style="text-align: center;">
 								<!-- 컨트롤러에서 봐야함 -->
-								<tr th:each="NotIns : ${Inslist}" 
+								<tr th:each="NotIns : ${Inslist}"
 									th:data-facNotCode="${NotIns.facNotCode}"
 									th:data-facCode="${NotIns.facCode}"
 									th:data-facName="${NotIns.facName}"
@@ -171,8 +174,6 @@ button {
             var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
             var facInsCheck = document.getElementsByName("facInsCheck")[0].value;
             var facInsJud = document.getElementsByName("facInsJud")[0].value;
-            var facInsDate = document.getElementsByName("facInsDate")[0].value;
-            var facInsNexd = document.getElementsByName("facInsNexd")[0].value;
             var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
             
 
@@ -190,8 +191,6 @@ button {
                 facInsPerson: facInsPerson,
                 facInsCheck: facInsCheck,
                 facInsJud: facInsJud,
-                facInsDate: facInsDate,
-                facInsNexd: facInsNexd,
                 facNotSituation: facNotSituation
             };
             
@@ -321,13 +320,13 @@ button {
                     header: '점검일',
                     name: 'facInsDate',
                     formatter :  formatDate,
-                    align: 'facInsDate'
+                    align: 'center'
                 },
                 {
                     header: '차기점검일',
                     name: 'facInsNexd',
                     formatter : formatDate,
-                    align: 'facInsNexd'
+                    align: 'center'
                 },
                 {
                     header: '상태',
@@ -376,10 +375,10 @@ button {
             const facInsCode = rowData.facInsCode;
             const facCode = rowData.facCode;
             const facNotCode = rowData.facNotCode;
-            const facInsDate = rowData.facInsDate;
+
             
             document.getElementById('facInsCode').value = facInsCode;
-            document.getElementById('facInsDate').value = facInsDate;
+
             document.getElementById('facNotCode').value = facNotCode;
             document.getElementById('facCode').value = facCode;
             document.getElementById('facName').value = facName;
@@ -411,6 +410,28 @@ button {
     		document.getElementById('facNotReason').value = facNotReason;
     		document.getElementById('facNotSituation').value = facNotSituation;
     	}
+    	
+    	// 검색 기능 추가
+     	 function searchFunction() {
+     	     var input, filter, table, tr, td, i, j, txtValue;
+     	     input = document.getElementById("searchInput");
+     	     filter = input.value.toUpperCase();
+     	     table = document.getElementById("grid");
+
+     	     tr = table.getElementsByTagName("tr");
+     	     for (i = 0; i < tr.length; i++) {
+     	         td = tr[i].getElementsByTagName("td");
+     	         for (j = 0; j < td.length; j++) {
+     	             txtValue = td[j].textContent || td[j].innerText;
+     	             if (txtValue.toUpperCase().indexOf(filter) > -1) {
+     	                 tr[i].style.display = "";
+     	                 break;
+     	             } else {
+     	                 tr[i].style.display = "none";
+     	             }
+     	         }
+     	     }
+     	 }
         
     </script>
 	</section>

@@ -19,6 +19,13 @@ import com.example.demo.facility.FacRepVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
 
+import lombok.extern.log4j.Log4j2;
+/**
+ * 설비관리 비가동관리 수리관리 점검관리
+ * @author 박규현
+ *
+ */
+@Log4j2
 @Controller
 public class FacManageController {
 
@@ -27,7 +34,11 @@ public class FacManageController {
 	@Autowired
 	FacManageService facManageService;
 
-	// 설비 전체조회
+	/**
+	 * 설비 전체조회
+	 * @param model
+	 * @return facility/facManagement
+	 */
 	@GetMapping("/facManagement")
 	public String list(Model model) {
 		model.addAttribute("list", facManageService.FacList(null));
@@ -35,7 +46,11 @@ public class FacManageController {
 
 	}
 
-	// 비가동 전체조회
+	/**
+	 * 비가동 전체조회
+	 * @param model
+	 * @return facility/facNotop
+	 */
 	@GetMapping("/facNotop")
 	public String Notoplist(Model model) {
 		model.addAttribute("nlist", facManageService.FacNotopList());
@@ -43,49 +58,51 @@ public class FacManageController {
 
 	}
 
-	// 비가동 수정
+	/**
+	 * 비가동 수정
+	 * @param model
+	 * @return msg
+	 */
 	@PutMapping("/updateFacNot")
 	@ResponseBody
 	public String updateFacNot(@RequestBody FacNotopVO facNotopVO) {
 		String msg;
 		facManageService.updateFacNot(facNotopVO);
-		System.out.println(facNotopVO);
 		msg = "수정완료";
+		log.info(msg);
 		return msg;
 	}
 
-	// 점검관리 전체조회
+	/**
+	 * 점검관리 리스트
+	 * @return 점검리스트
+	 */
 	@GetMapping("/facInsList")
 	@ResponseBody
 	public List<FacInsVO> getFacInsList() {
 		return facManageService.FacInsList();
 	}
 
-	// 점검관리 수정
+	/**
+	 * 점검관리 수정
+	 * @param facInsVO
+	 * @return msg
+	 */
 	@PutMapping("updateFacIns")
 	@ResponseBody
 	public String updateFacIns(@RequestBody FacInsVO facInsVO) {
 		String msg;
-		String facInsJud = facInsVO.getFacInsJud();
-		String facNotCode = facInsVO.getFacNotCode();
-		System.out.println("facInsJud : " + facInsJud);
-		System.out.println("facNotCode : " + facNotCode);
-		if ("적합".equals(facInsJud)) {
-		    System.out.println("적합합니다");
-		    facManageService.updateFacInsSi(facNotCode);
-		}
 		facManageService.updateFacIns(facInsVO);
-		System.out.println(facInsVO);
 		msg = "수정완료";
 		return msg;
 	}
-
-	// 점검관리 모달리스트
+	
+	// 설비점검관리	
 	@GetMapping("/facIns")
 	public String NotopInslist(Model model) {
+		// 모달 설비관리 리스트
 		model.addAttribute("Inslist", facManageService.FacNotopList());
 		return "facility/facIns";
-
 	}
 
 	@PostMapping("/insrtFacAndNot")
@@ -123,7 +140,9 @@ public class FacManageController {
 	 * 
 	 * }
 	 */
-	// 점검관리 전체조회
+	
+	
+	// 수리관리 전체조회
 	@GetMapping("/FacRepList")
 	@ResponseBody
 	public List<FacRepVO> getFacRepList() {
@@ -131,9 +150,10 @@ public class FacManageController {
 		
 	}
 	
-	// 수리관리 모달리스트
+	// 수리관리 리스트
 	@GetMapping("/facRep")
 	public String NotopReplist(Model model) {
+		// 수리관리 모달리스트
 		model.addAttribute("Replist", facManageService.FacNotopList());
 		return "facility/facRep";
 
@@ -142,13 +162,14 @@ public class FacManageController {
 	// insert
 	@PostMapping("/insertFacRep")
 	@ResponseBody
-	public String insertFacRep(@RequestBody FacRepVO facRepVO) {
+	public String insertFacRep(FacRepVO facRepVO) {
 		String msg;
 		facManageService.insertFacRep(facRepVO);
 		msg = "등록성공";
 		return msg;
 	}
 	
+	// 수리쪽 비가동처리 등록
 	@PostMapping("/insertFacRepNot")
 	@ResponseBody
 	public String insertFacRepNot(@RequestBody FacNotopVO facNotopVO) {
@@ -162,16 +183,7 @@ public class FacManageController {
 	@ResponseBody
 	public String updateFacRep(@RequestBody FacRepVO facRepVO) {
 		String msg;
-		String facRepRepairs = facRepVO.getFacRepRepairs();
-		String facNotCode = facRepVO.getFacNotCode();
-		System.out.println("facRepRepairs : " + facRepRepairs);
-		System.out.println("facNotCode : " + facNotCode);
-		if ("수리완료".equals(facRepRepairs)) {
-		    System.out.println("적합합니다");
-		    facManageService.updateFacRepNot(facNotCode);
-		}
 		facManageService.updateFacRep(facRepVO);
-		System.out.println(facRepVO);
 		msg = "수정완료";
 		return msg;
 	}

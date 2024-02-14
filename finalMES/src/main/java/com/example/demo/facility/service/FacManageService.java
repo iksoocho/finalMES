@@ -43,15 +43,11 @@ public interface FacManageService {
 	public void updateFacIns(FacInsVO facInsVO);
 	public int insertFacIns(FacInsDVO facInsDVO);
 	public int insertFacInsNot(FacNotopVO facNotopVO);
-	// 점검 판정 업데이트
-	public void updateFacInsSi(String facNotCode);
-	
+
 	// 수리관리
 	public List<FacRepVO> FacRepList();
 	public int insertFacRep(FacRepVO facRepVO);
 	public int insertFacRepNot(FacNotopVO facNotopVO);
 	public void updateFacRep(FacRepVO facRepVO);
-	// 수리사항 상태 업데이트
-	public void updateFacRepNot(String facNotCode);
 	
 }

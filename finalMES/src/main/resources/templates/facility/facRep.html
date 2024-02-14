@@ -90,13 +90,16 @@ button {
 						</tr>
 					</thead>
 				</table>
-				<input type="hidden" id="facNotCode" name="facNotCode" required>
+				<input type="hidden" id="facNotCode" name="facNotCode" value="">
 				<input type="hidden" id="facNotSituation" name="facNotSituation"
 					required>
+				<div class="text-center">
 				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 				<button type="button" id="insertBtn" class="btn btn-outline-success">등록</button>
 				<button type="button" id="selectBtn" class="btn btn-outline-success"
 					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
+				<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
+				</div>
 				<br> <br> <br>
 				<div id="grid" class="container"></div>
 			</div>
@@ -157,111 +160,136 @@ button {
 
 		<script th:inline="javascript">
            
-          document.getElementById('saveBtn').addEventListener("click", function() {
-            var facRepCode = document.getElementsByName("facRepCode")[0].value;
-            var facNotCode = document.getElementsByName("facNotCode")[0].value;
-            var facNotCode = document.getElementsByName("facNotCode")[0].value;
-            var facCode = document.getElementsByName("facCode")[0].value;
-            var facName = document.getElementsByName("facName")[0].value;
-            var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
-            var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
-            var facRepContent = document.getElementsByName("facRepContent")[0].value;
-            var facRepDate = document.getElementsByName("facRepDate")[0].value;
-            var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
+		document.getElementById('saveBtn').addEventListener("click", function() {
+		    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
+		    
+		    // 수리사항의 길이가 15를 초과하는지 확인
+		    if (facRepRepairs.length > 15) {
+		        alert("수리사항은 15글자 이하로 입력해주세요.");
+		        return;
+		    }
 
-            if (!facName) {
-                alert("설비명을 입력해주세요.");
-                return;
-            }
+		    // 수리사항이 비어있는지 확인
+		    if (!facRepRepairs.trim()) {
+		        alert("수리사항을 입력해주세요.");
+		        return;
+		    }
 
-            var data = {
-            	facRepCode: facRepCode,
-                facNotCode: facNotCode,
-                facCode: facCode,
-                facName: facName,
-                facCode: facCode,
-                facRepRepairs: facRepRepairs,
-                facRepPerson: facRepPerson,
-                facRepContent: facRepContent,
-                facRepDate: facRepDate,
-                facNotSituation: facNotSituation
-            };
-            
-            // fac_ins update
-            fetch("/updateFacRep", {
-                method: "PUT",
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => {
-               console.log(response.status);
-                if (response.ok) {
-                    console.log(response);
-                    alert("등록완료!");
-                    location.href = '/facRep';  // 여기 경로로 가라
-                } else {
-                    console.log(response);
-                    alert("등록실패");
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                alert(오류);
-            });
-        });
+		    // 나머지 필드들의 값을 가져옴
+		    var facRepCode = document.getElementsByName("facRepCode")[0].value;
+		    var facNotCode = document.getElementsByName("facNotCode")[0].value;
+		    var facCode = document.getElementsByName("facCode")[0].value;
+		    var facName = document.getElementsByName("facName")[0].value;
+		    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
+		    var facRepContent = document.getElementsByName("facRepContent")[0].value;
+		    var facRepDate = document.getElementsByName("facRepDate")[0].value;
+		    var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
+
+		    var data = {
+		        facRepCode: facRepCode,
+		        facNotCode: facNotCode,
+		        facCode: facCode,
+		        facName: facName,
+		        facRepRepairs: facRepRepairs,
+		        facRepPerson: facRepPerson,
+		        facRepContent: facRepContent,
+		        facRepDate: facRepDate,
+		        facNotSituation: facNotSituation
+		    };
+
+		    // JSON.stringify() 함수를 사용하여 JSON 형식으로 데이터를 변환
+		    var jsonData = JSON.stringify(data);
+		    
+		    // fac_ins update
+		    fetch("/updateFacRep", {
+		        method: "PUT",
+		        body: jsonData, // JSON 형식의 데이터를 전송
+		        headers: {
+		            "Content-Type": "application/json" // JSON 형식의 데이터임을 명시
+		        }
+		    })
+		    .then(response => {
+		        console.log(response.status);
+		        if (response.ok) {
+		            console.log(response);
+		            alert("등록완료!");
+		            location.href = '/facRep';  // 여기 경로로 가라
+		        } else {
+		            console.log(response);
+		            alert("등록실패");
+		        }
+		    })
+		    .catch(error => {
+		        console.log(error);
+		        alert(오류);
+		    });
+		});
+
         
          
         
-         document.getElementById('insertBtn').addEventListener("click", function() {
-         	    var facRepCode = document.getElementsByName("facRepCode")[0].value;
-         	    var facNotCode = document.getElementsByName("facNotCode")[0].value;
-         	    var facCode = document.getElementsByName("facCode")[0].value;
-         	    var facName = document.getElementsByName("facName")[0].value;
-         	    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
-         	    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
-         	    var facRepContent = document.getElementsByName("facRepContent")[0].value;
-         	    var facRepDate = document.getElementsByName("facRepDate")[0].value;
-   				
-         	    
+          document.getElementById('insertBtn').addEventListener("click", function() {
+        	    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
+        	    
+        	    // 수리사항의 길이가 15를 초과하는지 확인
+        	    if (facRepRepairs.length > 15) {
+        	        alert("수리사항은 15글자 이하로 입력해주세요.");
+        	        return;
+        	    }
 
-         	    var data = {
-         	    	facRepCode: facRepCode,
-         	        facNotCode: facNotCode,
-         	        facCode: facCode,
-         	        facName: facName,
-         	        facRepRepairs: facRepRepairs,
-         	        facRepPerson: facRepPerson,
-         	        facRepContent: facRepContent,
-         	        facRepDate: facRepDate,
+        	    // 수리사항이 비어있는지 확인
+        	    if (!facRepRepairs.trim()) {
+        	        alert("수리사항을 입력해주세요.");
+        	        return;
+        	    }
 
-         	    };
-         	    
-         	    // 서버로 데이터 전송하여 insert 수행
-         	    fetch("/insertFacRep", {
-         	        method: "POST",
-         	        body: JSON.stringify(data),
-         	        headers: {
-         	            "Content-Type": "application/json"
-         	        }
-         	    })
-         	    .then(response => {
-         	        if (response.ok) {
-         	            console.log(response);
-         	            alert("등록되었습니다!");
-         	            // 페이지 새로고침
-         	            location.reload();
-         	        } else {
-         	            console.log(response);
-         	            alert("등록에 실패했습니다.");
-         	        }
-         	    })
-         	    .catch(error => {
-         	        console.error('Error:', error);
-         	        alert("등록에 실패했습니다.");
-         	    });
-         	});
+        	    // 나머지 필드들의 값을 가져옴
+        	    var facRepCode = document.getElementsByName("facRepCode")[0].value;
+        	    var facNotCode = document.getElementsByName("facNotCode")[0].value;
+        	    var facCode = document.getElementsByName("facCode")[0].value;
+        	    var facName = document.getElementsByName("facName")[0].value;
+        	    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
+        	    var facRepContent = document.getElementsByName("facRepContent")[0].value;
+        	    var facRepDate = document.getElementsByName("facRepDate")[0].value;
+
+        	    var data = {
+        	        facRepCode: facRepCode,
+        	        facNotCode: facNotCode,
+        	        facCode: facCode,
+        	        facName: facName,
+        	        facRepRepairs: facRepRepairs,
+        	        facRepPerson: facRepPerson,
+        	        facRepContent: facRepContent,
+        	        facRepDate: facRepDate,
+        	    };
+
+        	    // JSON.stringify() 함수를 사용하여 JSON 형식으로 데이터를 변환
+        	    var jsonData = JSON.stringify(data);
+        	    
+        	    // 서버로 데이터 전송하여 insert 수행
+        	    fetch("/insertFacRep", {
+        	        method: "POST",
+        	        body: jsonData, // JSON 형식의 데이터를 전송
+        	        headers: {
+        	            "Content-Type": "application/json" // JSON 형식의 데이터임을 명시
+        	        }
+        	    })
+        	    .then(response => {
+        	        if (response.ok) {
+        	            console.log(response);
+        	            alert("등록되었습니다!");
+        	            // 페이지 새로고침
+        	            location.reload();
+        	        } else {
+        	            console.log(response);
+        	            alert("등록에 실패했습니다.");
+        	        }
+        	    })
+        	    .catch(error => {
+        	        console.error('Error:', error);
+        	        alert("등록에 실패했습니다.");
+        	    });
+        	});
 
          	
 
@@ -311,10 +339,23 @@ button {
                     align: 'center'
                 },
                 {
-                    header: '상태',
-                    name: 'facNotSituation',
-                    align: 'center'
-                },
+         	          header: '상태',
+         	          name: 'facNotSituation',
+         	          formatter: function(value) {
+         	            var numericValue = +value.value;
+
+         	            if (numericValue === 0) {
+         	              return '🟡';
+         	            } else if (numericValue === 1) {
+         	              return '🟢';
+         	            } else if (numericValue === 2) {
+         	              return '🔴';
+         	            } else {
+         	              return '알 수 없는 상태';
+         	            }
+         	          },
+         	          align: 'center'
+         	        }
        
             ],
             rowHeaders: ['rowNum'],
@@ -357,19 +398,23 @@ button {
             // 설비명과 담당자 값을 가져와서 input 박스에 넣기
             const facRepCode = rowData.facRepCode;
             const facCode = rowData.facCode;
+            const facNotCode = rowData.facNotCode;
             const facName = rowData.facName;
             const facRepPerson = rowData.facRepPerson;
             const facRepRepairs = rowData.facRepRepairs;
             const facRepContent = rowData.facRepContent;
             const facRepDate = rowData.facRepDate;
+            const facNotSituation = rowData.facNotSituation;
             
             document.getElementById('facRepCode').value = facRepCode;
             document.getElementById('facCode').value = facCode;
+            document.getElementById('facNotCode').value = facNotCode;
             document.getElementById('facName').value = facName;
             document.getElementById('facRepPerson').value = facRepPerson;
             document.getElementById('facRepRepairs').value = facRepRepairs;
             document.getElementById('facRepContent').value = facRepContent;
             document.getElementById('facRepDate').value = facRepDate;
+            document.getElementById('facNotSituation').value = facNotSituation;
         }
 
         // grid 생성 코드 아래에 설비명 클릭 이벤트 리스너 등록
@@ -396,6 +441,28 @@ button {
     		document.getElementById('facNotReason').value = facNotReason;
     		document.getElementById('facNotSituation').value = facNotSituation;
     	}
+        
+     // 검색 기능 추가
+     	 function searchFunction() {
+     	     var input, filter, table, tr, td, i, j, txtValue;
+     	     input = document.getElementById("searchInput");
+     	     filter = input.value.toUpperCase();
+     	     table = document.getElementById("grid");
+
+     	     tr = table.getElementsByTagName("tr");
+     	     for (i = 0; i < tr.length; i++) {
+     	         td = tr[i].getElementsByTagName("td");
+     	         for (j = 0; j < td.length; j++) {
+     	             txtValue = td[j].textContent || td[j].innerText;
+     	             if (txtValue.toUpperCase().indexOf(filter) > -1) {
+     	                 tr[i].style.display = "";
+     	                 break;
+     	             } else {
+     	                 tr[i].style.display = "none";
+     	             }
+     	         }
+     	     }
+     	 }
     	
     </script>
 	</section>

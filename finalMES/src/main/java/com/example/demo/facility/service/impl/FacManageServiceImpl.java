@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.facility.FacCompositeVO;
 import com.example.demo.facility.FacInsDVO;
@@ -89,7 +90,13 @@ public class FacManageServiceImpl implements FacManageService {
 		return facManageMapper.getfacInsList();
 	}
 	
+	@Transactional
 	public void updateFacIns(FacInsVO facInsVO) {
+		String facInsJud = facInsVO.getFacInsJud();
+		String facNotCode = facInsVO.getFacNotCode();
+		if ("적합".equals(facInsJud)) {
+		    facManageMapper.updateFacInsSi(facNotCode);
+		}
 		facManageMapper.updateFacIns(facInsVO);
 	}
 	
@@ -115,13 +122,6 @@ public class FacManageServiceImpl implements FacManageService {
 		}
 		
 	}
-	
-	// 점검관리 판정 적합처리 업데이트
-	@Override
-	public void updateFacInsSi(String facNotCode) {
-		facManageMapper.updateFacInsSi(facNotCode);
-	}
-	
 	
 	// 설비관리
 	@Override
@@ -151,16 +151,16 @@ public class FacManageServiceImpl implements FacManageService {
 	}
 
 	@Override
+	@Transactional
 	public void updateFacRep(FacRepVO facRepVO) {
+		String facRepRepairs = facRepVO.getFacRepRepairs();
+		String facNotCode = facRepVO.getFacNotCode();
+		if ("수리완료".equals(facRepRepairs)) {
+		    System.out.println("적합합니다");
+		    facManageMapper.updateFacRepNot(facNotCode);
+		}
 		facManageMapper.updateFacRep(facRepVO);
 		
 	}
-
-	@Override
-	public void updateFacRepNot(String facNotCode) {
-		facManageMapper.updateFacRepNot(facNotCode);
-		
-	}
-	
 	
 }
