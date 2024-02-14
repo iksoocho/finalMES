@@ -55,8 +55,8 @@ public class OrdServiceImpl implements OrdService {
 	}
 
 	@Override
-	public List<OrderVO> getOrderList() {
-		return ordMapper.getOrderList();
+	public List<OrderVO> getOrderList(OrderVO orderVO) {
+		return ordMapper.getOrderList(orderVO);
 	}
 
 	@Override

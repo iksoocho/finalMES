@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.service.ProdDlvyService;
 import com.example.demo.sales.vo.business.BusinessListVO;
+import com.example.demo.sales.vo.delivery.DlvyCompositeVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
@@ -22,6 +23,12 @@ import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
 import com.example.demo.sales.vo.product.ProductLotVO;
 
+/**
+ * 주문서 관리, 완제품출고 관리
+ * 
+ * @author 윤성오
+ *
+ */
 @Controller
 public class SalesController {
 
@@ -30,9 +37,14 @@ public class SalesController {
 
 	@Autowired
 	private ProdDlvyService prodDlvyService;
-	
-	
 
+	/**
+	 * 보류
+	 * 
+	 * @param ordCode
+	 * @param model
+	 * @return sales/orderList
+	 */
 	@GetMapping("/getOrder/{ordCode}") // 단건조회에 대한 상세목록도 같이 출력하게 SQL문 변경
 	public String getOrder(@PathVariable String ordCode, Model model) {
 		OrderVO order = ordService.getOrder(ordCode);
@@ -40,6 +52,12 @@ public class SalesController {
 		return "sales/orderList";
 	}
 
+	/**
+	 * 주문등록페이지. (거래처, 품목 리스트)
+	 * 
+	 * @param model
+	 * @return sales/orderInsert
+	 */
 	@GetMapping("/orderInsert")
 	public String getBusinessList(Model model) {
 		List<BusinessListVO> businessList = ordService.getBusinessList();
@@ -57,21 +75,22 @@ public class SalesController {
 		ordService.saveOrder(order);
 
 		// 등록 후에 주문서 목록 페이지로 리다이렉션
-		return "sales/orderList"; // "/orderList"로 리다이렉션하도록 설정
+		return "redirect:/orderList"; // "/orderList"로 리다이렉션하도록 설정
 	}
-	
+
+	// 출고서등록.
 	@PostMapping("/saveDlvy")
 	@ResponseBody
-	public String saveDlvy(@RequestBody ProdDlvyVO prodDlvyVO) {
+	public String saveDlvy(@RequestBody DlvyCompositeVO dlvyCompositeVO) {
 		String msg;
-		prodDlvyService.saveDlvy(prodDlvyVO);
+		prodDlvyService.saveDlvyWithDetail(dlvyCompositeVO);
 		msg = "출고등록이 완료되었습니다";
 		return msg;
 	}
 
 	@GetMapping("/orderList")
 	public String getOrderList(Model model) {
-		List<OrderVO> orderList = ordService.getOrderList();
+		List<OrderVO> orderList = ordService.getOrderList(null);
 		model.addAttribute("orderList", orderList);
 		return "sales/orderList";
 	}
@@ -80,22 +99,24 @@ public class SalesController {
 	@ResponseBody
 	public List<OrderDetailDVO> getOrderDetailList(@PathVariable String ordCode) {
 		List<OrderDetailDVO> orderDetailList = ordService.getOrderDetailList(ordCode);
-		// 추가 로직
 		return orderDetailList;
 	}
-	
+
 	@GetMapping("/productLotList/{prodCode}")
 	@ResponseBody
-	public List<ProductLotVO> getProductLotList(@PathVariable String prodCode){
+	public List<ProductLotVO> getProductLotList(@PathVariable String prodCode) {
 		List<ProductLotVO> productLotList = ordService.getProductLotList(prodCode);
 		return productLotList;
 	}
 
-	// inOutManage 페이지로 거래처, 주문서 뿌려주는 컨트롤러
+	// 출고관리 페이지로 거래처, 주문서 뿌려주는 컨트롤러
 	@GetMapping("/inOutManage")
-	public String getInOutList(Model model) {
+	public String getInOutList(Model model, OrderVO orderVO) {
 		List<BusinessListVO> businessList = ordService.getBusinessList();
-		List<OrderVO> orderList = ordService.getOrderList();
+		// 출고전 주문서 리스트
+		orderVO.setOrdState("o2");
+		List<OrderVO> orderList = ordService.getOrderList(orderVO);
+		
 		model.addAttribute("businessList", businessList);
 		model.addAttribute("orderList", orderList);
 		return "sales/inOutManage";

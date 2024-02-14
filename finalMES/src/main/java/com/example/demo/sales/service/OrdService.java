@@ -22,7 +22,7 @@ public interface OrdService {
 
 	void saveOrderDetail(OrderDetailVO orderDetailVO);
 
-	List<OrderVO> getOrderList();
+	List<OrderVO> getOrderList(OrderVO orderVO);
 
 	List<OrderDetailDVO> getOrderDetailList(String ordCode);
 	

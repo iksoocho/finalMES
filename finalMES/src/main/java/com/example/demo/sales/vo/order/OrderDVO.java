@@ -18,7 +18,8 @@ public class OrderDVO {
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date ordDate;
 	private String ordManager;
-	private int ordState;
+	private String ordState;
+	private String ordStateNm;
 	private String ordNote;
 	private int totalTtlPrice;
 	private List<OrderDetailVO> orderDetails;

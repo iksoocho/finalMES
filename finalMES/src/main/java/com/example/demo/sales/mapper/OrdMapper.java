@@ -22,7 +22,7 @@ public interface OrdMapper {
 
 	public void saveOrderDetail(OrderDetailVO orderDetailVO);
 
-	public List<OrderVO> getOrderList(); // 주문서 전체 조회
+	public List<OrderVO> getOrderList(OrderVO orderVO); // 주문서 전체 조회
 
 	public List<OrderDetailDVO> getOrderDetailList(String ordCode); // 주문서 상세 조회
 

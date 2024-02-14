@@ -63,35 +63,26 @@
 
 	<select id="getOrderList" resultType="OrderDVO">
 		SELECT
-		ord.ord_code,
-		ord.ord_state,
-		business.business_name AS business_name,
-		business.business_code AS business_code,
-		business.business_manager AS
-		business_manager,
-		business.business_manager_phone AS
-		business_manager_phone,
-		ord.ord_date,
-		ord.ord_manager,
-		SUM(ord_d.ttl_price) AS total_ttl_price,
-		ord.ord_note
-		FROM
-		ord_list
-		ord
-		LEFT JOIN ord_d_list ord_d ON ord.ord_code = ord_d.ord_code
-		LEFT
-		JOIN
-		business business ON ord.business_code = business.business_code
-		GROUP
-		BY
-		ord.ord_code, ord.ord_state, business.business_name,
-		business.business_code, business.business_manager,
-		business.business_manager_phone,
-		ord.ord_date, ord.ord_manager,
-		ord.ord_note
-		ORDER BY
-		ord.ord_date DESC, ord.ord_code
-		DESC
+				ord.ord_code,
+				find_codename(ord.ord_state)  ord_state_nm,
+				ord_state,
+				business.business_name,
+				business.business_code,
+				business.business_manager,
+				business.business_manager_phone,
+				ord.ord_date,
+				ord.ord_manager,
+				(select SUM(ord_d.ttl_price)from ord_d_list ord_d where ord.ord_code = ord_d.ord_code )  AS total_ttl_price,
+				ord.ord_note
+				
+		FROM	ord_list ord
+		LEFT JOIN business business ON ord.business_code = business.business_code
+		<where>
+		<if test ='ordState != null and ordState !="" '>
+			ord.ord_state = #{ordState}
+		</if>
+		</where>
+		ORDER BY ord.ord_date DESC, ord.ord_code DESC
 	</select>
 
 	<select id="getOrderDetailList" resultType="OrderDetailDVO">
