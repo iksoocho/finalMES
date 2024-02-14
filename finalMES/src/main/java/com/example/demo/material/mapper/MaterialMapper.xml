@@ -35,6 +35,7 @@
 		 FROM  mat_order      mo
 		 LEFT JOIN  business       b     ON mo.business_code = b.business_code
 		 LEFT JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
+         ORDER BY mat_or_code
 
 	</select>
 	
@@ -89,7 +90,7 @@
 		FROM material    m
 		JOIN mat_lot ml  ON m.mat_code = ml.mat_code
 		JOIN mat_return  mr ON ml.mat_lot_code = mr.mat_lot_code
-		JOIN business b  ON mr.business_code = b.business_code
+		FULL JOIN business b  ON mr.business_code = b.business_code
 		GROUP BY
 			  m.mat_code,
 			  m.mat_name,
@@ -234,6 +235,18 @@
 			)
 	
 	</insert>
+	
+	<update id="updateMatOrder" parameterType="String">
+		UPDATE mat_order
+		SET mat_or_count = #{matOrCount},
+		mat_or_due_date = #{matOrDueDate}
+		WHERE mat_or_code = #{matOrCode}
+	</update>
+	
+	<delete id="deleteMatOrder" parameterType="String">
+		DELETE FROM mat_order 
+		WHERE mat_or_code = #{matOrCode}
+	</delete>
 	
 
 </mapper>

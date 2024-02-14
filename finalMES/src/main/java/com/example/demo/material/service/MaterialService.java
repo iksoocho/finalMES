@@ -50,4 +50,10 @@ public interface MaterialService {
 	
 	public void insertMaterialOrder(MatOrderCompositeVO matOrderCompositeVO);
 	
+	//수정
+	public void updateMatOrder(MatOrderCompositeVO matOrderCompositeVO);
+	
+	//삭제
+	public void deleteMatOrder(MatOrderCompositeVO matOrderCompositeVO);
+	
 }
