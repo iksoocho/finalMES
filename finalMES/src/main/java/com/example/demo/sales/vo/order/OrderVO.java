@@ -15,7 +15,7 @@ public class OrderVO {
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date ordDate;
 	private String ordManager;
-	private int ordState;
+	private String ordState;
 	private String ordNote;
 	
 	private List<OrderDetailVO> orderDetails;

@@ -37,9 +37,9 @@ button {
 				</div>
 			</div>
 
-			<button class="btn btn-secondary"
-				style="float: right; margin: 8px 5px" onclick="addRow()">
-				추가</button>
+<!-- 			<button class="btn btn-secondary" -->
+<!-- 				style="float: right; margin: 8px 5px" onclick="addRow()"> -->
+<!-- 				추가</button> -->
 			<!-- 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" -->
 			<!-- 				data-bs-target="#exampleModal">조회</button> -->
 
@@ -56,62 +56,64 @@ button {
 		<script th:inline="javascript">
                             // 현재 자재 재고
                          	let mat = [[${oList}]];
-                         	let matGrid, busiGrid;
+                         	let matGrid, busiGrid, ordGrid;
 
-                         	class DeleteButtonRenderer{
-                         		constructor(props){
-                         			const el = document.createElement('button');
-                         			el.textContent = '삭제';
-                         			el.addEventListener('click', () => {
+                         	class DeleteButtonRenderer {
+                         	    constructor(props) {
+                         	        const el = document.createElement('button');
+                         	        el.textContent = '삭제';
+                         	        el.addEventListener('click', () => {
+                         	            const rowData = props.grid.getRow(props.rowKey);
+                         	            const matOrCode = rowData.matOrCode;
+                         	            const matCode = rowData.matCode;
+                         	            console.log("matOrCode :", matOrCode);
 
-                         				const rowData = props.grid.getRow(props.rowKey)
-                         				const matOrCode = rowData.matOrCode;
-        //                  				const matCode = rowData.matCode;
-        								console.log("matOrCode :" , matOrCode)
+                         	            let data = {};
+                         	            let matObj = {};
+                         	            let ordObj = {};
 
-        								let data = {};
-        								let matObj = {};
-        								let ordObj = {};
+                         	            matObj.matOrCode = matOrCode;
+                         	            console.log("matObj.matOrCode : " ,matObj.matOrCode);
+                         	            ordObj.matCode = matCode;
+                         	            console.log("ordObj.matCode :",ordObj.matCode)
 
-        								matObj.matOrCode = matOrCode;
-        // 								matObj.matCode = matCode;
+                         	            data.matOrderVO = matObj;
+                         	            console.log(data.matOrderVO);
+                         	            data.matOrderInfoVO = ordObj;
+                         	           console.log(data.matOrderInfoVO);
 
-        								data.matOrderVO = matObj;
-        								data.matOrderInfoVO = ordObj;
+                         	            console.log("data : ", data);
 
-        								console.log("data : " + data);
+                         	            fetch('/matDelete', {
+                         	                method: 'DELETE',
+                         	                headers: {
+                         	                    'Content-Type': 'application/json',
+                         	                },
+                         	                body: JSON.stringify(data)
+                         	            })
+                         	            .then(response => {
+                         	                if (!response.ok) {
+                         	                    throw new Error('Network response was not ok');
+                         	                }
+                         	                return response.text();
+                         	            })
+                         	            .then(data => {
+                         	                console.log('Success:', data);
+                         	                alert(data);
+                         	                location.href = '/matOrder'; // 성공적으로 처리된 후 리디렉트
+                         	            })
+                         	            .catch(error => {
+                         	                console.error('Error:', error);
+                         	            });
+                         	        });
 
-        								fetch('/' , {
-        									method: 'DELETE',
-        									hearders: {
-        										'Content-Type': 'application/json',
-        									},
-        									body: JSON.stringify(data)
-        								})
-        								.then(response => {
-        									if (!response.ok) {
-        										throw new Error('Network response was not ok');
-        									}
-        									return response.text();
-        								})
-        								.then(data => {
-        									console.log('Success:', data);
-        									alert(data);
-        									location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
-        								})
-        								.catch(error => {
-        									console.error('Error:', error);
-        								});
+                         	        this.el = el;
+                         	    }
 
-        						});
-
-        						this.el = el;
-        					}
-
-        					getElement() {
-        						return this.el;
-        					}
-        				}
+                         	    getElement() {
+                         	        return this.el;
+                         	    }
+                         	}
 
 
                          	document.addEventListener('DOMContentLoaded', function () {
@@ -135,21 +137,28 @@ button {
                          	    });
 
                          	    // matGrid 클릭 이벤트 핸들러
+                         	    let matmat = {};
                          	    matGrid.on('click', function (ev) {
                          	    	console.log('ev 이벤트 :', ev.columnName)
                          	        let columnName = ev.columnName;
                          	        if (columnName === 'matCode') {
                          	            let rowKey = ev.rowKey;
                          	            let rowData = matGrid.getRow(rowKey);
+                         	            console.log("rowData" ,rowData.matCode);
+                         	            matmat.matCode = rowData.matCode;
+                         	            matmat.matName = rowData.matName;
+                         	           	matmat.businessCode = rowData.businessCode;
+                         	           	matmat.businessName = rowData.businessName;
+                         	           
                          	            if (rowData) {
                          	                var matCode = rowData.matCode;
-                         	                fetch('/matOrDetail?matCode=' + matCode)
+                         	                fetch('/matBusinessList?matCode=' + matCode)
                          	                    .then(response => response.json())
                          	                    .then(data => {
-
+														console.log("data : ", data);
                          	                    		// 그리드 갱신
                          	                    		busiGrid.resetData(data);
-
+//                          	                    		busiGrid.prependRow(data);
 
                          	                    })
                          	                    .catch(err => {
@@ -183,20 +192,30 @@ button {
                          	        if (columnName === 'businessCode') {
                          	            let rowKey = ev.rowKey;
                          	            let rowData = busiGrid.getRow(rowKey);
+                         	            console.log("business : " , rowData);
                          	            if (rowData) {
-                         	                let businessCode = rowData.businessCode;
-                         	                fetch('/matListDetail?businessCode=' + businessCode)
-                         	                    .then(response => response.json())
-                         	                    .then(data => {
-                         	                    	ordGrid.resetData(data);
-
-                         	                    })
-                         	                    .catch(err => {
-                         	                        console.error('Error:', err);
-                         	                    });
+//                          	                let businessCode = rowData.businessCode;
+//                          	                let businessName = rowData.businessName;
+                         	                
+                         	                let businessCode = matmat.businessCode;
+                         	                let businessName = matmat.businessName;
+                         	                
+                         	                
+                         	                let matRowKey = matGrid.getFocusedCell();
+                         	                let matRow = matGrid.getRow(matRowKey);
+                         	                
+                         	                let matCode = matmat.matCode;
+                         	                let matName = matmat.matName;
+                         	                
+                         	                let data = {matCode, businessCode, businessName, matName}
+                         	                
+                         	                ordGrid.prependRow(data);
+                         	                
                          	            }
                          	        }
                          	    });
+                         	    
+                         	    
 
                          	    let ordList = [[${mList}]]
                          	    // ordGrid 초기화
@@ -212,7 +231,7 @@ button {
                          	            { name: 'matCode', header: '자재코드' },
                          	            { name: 'businessName', header: '거래처명' },
                          	            { name: 'matName', header: '자재명' },
-                         	            { name: 'matOrCount', header: '발주량' },
+                         	            { name: 'matOrCount', header: '발주량' , editor: 'text'},
                          	            { name: 'matOrDate', header: '발주일', formatter: formatDate,
                          	            	editor: {
                 								type: 'datePicker',
@@ -228,22 +247,22 @@ button {
             								}
             							}},
                          	            { name: 'matOrManager', header: '담당자' },
+                         	           {
+                         	               header: '발주상태',
+                         	               name: 'matOrState',
+                         	               formatter: getMatOrderStatus,
+                         	               filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
+                         	           },
                          	            {
-                         	                header: '발주상태',
-                         	                name: 'matOrState',
-                         	                formatter: getMatOrderStatus,
-                         	                filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
-                         	            },
-                         	            {
-                							header: '삭제',
-                							name: 'deleteButton',
-                							align: "center",
-                							renderer: {
-                								type: DeleteButtonRenderer
-                							}
+                         	               header: '삭제',
+                         	               name: 'deleteButton',
+                         	               align: "center",
+                         	               renderer: {
+                         	                  type: DeleteButtonRenderer
+                         	              }
                 						}
                          	        ],
-                         	        rowHeaders: ['rowNum', 'checkbox'],
+                         	        rowHeaders: ['rowNum'],
                          	        pageOptions: {
                          	            useClient: true,
                          	            perPage: 5
@@ -264,48 +283,48 @@ button {
                          	}
 
                          	// 발주 상태 형식 지정 함수
-                         function getMatOrderStatus(value, row) {
-                          console.log(value);
-                          let statusText, OrColor;
-
-                          switch (value.value) {
-                              case '1':
-                                  statusText = '발주완료';
-                                  OrColor = 'gray';
-                                  break;
-                              case '2':
-                                  statusText = '대기중';
-                                  OrColor = 'red';
-                                  break;
-                              default:
-                                  statusText = '알수없음';
-                                  OrColor = 'yellowgreen';
-                                  break;
-                          }
-
-                         return `<div style="background-color: ${OrColor}; ">${statusText}</div>`;
-                     }
-
+  						function getMatOrderStatus(value, row) {
+						    let statusText, backgroundColor;
+						
+						    switch (value) {
+						        case '1':
+						            statusText = '발주완료';
+						            backgroundColor = 'gray';
+						            break;
+						        case '2':
+						            statusText = '대기중';
+						            backgroundColor = 'red';
+						            break;
+						        default:
+						            statusText = '알수없음';
+						            backgroundColor = 'yellowgreen';
+						            break;
+						    }
+						
+						    return `<div style="background-color: ${backgroundColor}; ">${statusText}</div>`;
+						}
 
 
-        			function addRow(){
 
-              			ordGrid.prependRow({isNew: true});
-              		}
+//         			function addRow(){
+
+//               			ordGrid.prependRow({isNew: true});
+//               		}
 
                     // =============== insert ===============
                     document.querySelector('#orderInsert').addEventListener('click', function() {
-                    const newData = ordGrid.getData().filter(row => row.isNew);
+                    const newData = ordGrid.getModifiedRows().createdRows;
                     console.log(newData);
         //          	const newOrder = document.querySelectorAll('.order')
         //          	console.log(newOrder);
-                 	if(newData.length === 0 ){
-                 		alert("insert 할 내용이 없습니다.")
-                 		return;
-                 	}
+        
+        		
+	                if(newData.length === 0 ){
+    	             	alert("insert 할 내용이 없습니다.")
+        	         	return;
+            	    }
 
                  	console.log('추가된 행의 데이터:' , newData);
-        	        // 이건 나중에 내가 원하는 걸로 바꾸기
         	        let data = {};
 
         			data.matOrCode = newData[0].matOrCode;
@@ -316,13 +335,11 @@ button {
         			data.matOrCount = newData[0].matOrCount;
         			data.matOrDate = newData[0].matOrDate;
         			data.matOrDueDate = newData[0].matOrDueDate;
+        			console.log("data.matOrDueDate : " ,data.matOrDueDate);
         			data.matOrManager = newData[0].matOrManager;
 
 
         			console.log('data : ' , data);
-
-
-
 
 
         			console.log(data);

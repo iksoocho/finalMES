@@ -3,11 +3,7 @@ package com.example.demo.produce.web;
 
 import java.util.List;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,12 +16,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
+import com.example.demo.produce.PlanInsDVO;
+import com.example.demo.produce.PlanInsVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
 import com.example.demo.produce.PlanVO;
 import com.example.demo.produce.service.PlanService;
 
 
+import lombok.extern.log4j.Log4j2;
+
+
+/**
+ * 생산 계획, 생산 지시
+ * @author 조익수
+ *
+ */
+
+@Log4j2
 @Controller
 public class PlanController {
 	
@@ -44,7 +52,7 @@ public class PlanController {
 		List<PlanOrdVO> ordList = planService.getOrdList();
 		model.addAttribute("list", list);
 		model.addAttribute("dList", dList);
-		System.out.println("dList : "+ dList);
+		log.info(dList);
 		model.addAttribute("ordList", ordList);
 		
 		return "produce/planManage";
@@ -125,4 +133,26 @@ public class PlanController {
 	
 
 	
+	
+	
+	
+	//생산 지시
+	@GetMapping("planIns")
+	public String getPlanInsList(Model model) {
+		List<PlanInsVO> list = planService.getPlanInsList();
+		List<PlanVO> planList = planService.getPlanList();
+		
+		model.addAttribute("list", list);
+		model.addAttribute("planList", planList);
+		
+		
+		return "produce/planIns";
+	}
+	
+	@GetMapping("insDetail")
+	@ResponseBody
+	public List<PlanInsDVO> getInsDList(@RequestParam String insCode){
+		return planService.getPlanDInsList(insCode);
+	}
+
 }

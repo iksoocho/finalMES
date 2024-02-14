@@ -128,6 +128,27 @@ public class MaterialServiceImpl implements MaterialService {
 		// TODO Auto-generated method stub
 		return materialMapper.getMaterialOrdInfoList1(matCode);
 	}
+	
+	//수정
+	@Override
+	public void updateMatOrder(MatOrderCompositeVO matOrderCompositeVO) {
+		System.out.println(matOrderCompositeVO);
+		for(int i = 0; i < matOrderCompositeVO.getMatOrderInfoList().size(); i++) {
+			materialMapper.updateMatOrder(matOrderCompositeVO.getMatOrderInfoList().get(i));
+		}
+		
+	}
+	
+	// 삭제
+	@Override
+	public void deleteMatOrder(MatOrderCompositeVO matOrderCompositeVO) {
+		
+		
+		materialMapper.deleteMatOrder(matOrderCompositeVO.getMatOrderVO().getMatOrCode());
+	}
+
+
+
 
 
 }

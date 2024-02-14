@@ -46,8 +46,15 @@ public interface MaterialService {
 	
 	// 등록
 	public MatOrderVO insertMatOrder(MatOrderVO matOrderVO);
+	
 	public MatOrderInfoVO insertMatOrderInfo(MatOrderInfoVO matorderInfoVO);
 	
 	public void insertMaterialOrder(MatOrderCompositeVO matOrderCompositeVO);
+	
+	//수정
+	public void updateMatOrder(MatOrderCompositeVO matOrderCompositeVO);
+	
+	//삭제
+	public void deleteMatOrder(MatOrderCompositeVO matOrderCompositeVO);
 	
 }

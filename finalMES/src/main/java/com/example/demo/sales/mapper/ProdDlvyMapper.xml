@@ -3,8 +3,21 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.sales.mapper.ProdDlvyMapper">
 	<insert id="saveDlvy" parameterType="ProdDlvyVO">
-		INSERT INTO out_list(out_code, ord_code, out_date, out_manager, out_state)
-		VALUES(#{outCode}, #{ordCode}, #{outDate}, #{outManager}, #{outState})
+		<selectKey keyProperty="outCode" resultType="string"
+			order="BEFORE">
+			SELECT 'O' || #{ordCode} AS outCode FROM DUAL
+		</selectKey>
+		INSERT INTO OUT_LIST(out_code, ord_code, out_date, out_manager,
+		out_state)
+		VALUES(#{outCode}, #{ordCode}, #{outDate}, #{outManager},
+		#{outState})
+	</insert>
+
+	<insert id="saveDetailDlvy" parameterType="ProdDetailDlvyVO">
+		INSERT INTO
+		OUT_D_LIST(out_d_code, out_code, prod_lot_code, ord_d_code, out_count)
+		VALUES(#{outDCode}, #{outCode}, #{prodLotCode}, #{ordDCode},
+		#{outCount})
 	</insert>
 </mapper>
  

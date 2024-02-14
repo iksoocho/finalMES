@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>생산 계획 관리</title>
+	<title>생산지시관리</title>
 	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 	<style>
 		.tui-grid-row-odd .plan {
@@ -36,35 +36,36 @@
 						</div>
 						<!-- ============================모달 내용============================ -->
 						<div class="modal-body">
+						<h4>생산 계획</h4>
 							<div>
-								<h4>주문서</h4>
-								<!-- <button class="btn btn-secondary" style="float: right; margin: 0 5px;">선택</button> -->
+								
+								<button class="btn btn-secondary" style="float: right; margin: 0 5px;">선택</button>
 								<table class="table">
 									<thead>
 										<tr>
 											<th></th>
-											<th>주문코드</th>
-											<th>주문일자</th>
+											<th>생산 계획 코드</th>
+											<th>계획 일자</th>
 
 											<th>비고</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="ord : ${ordList}" th:data-ord-code="${ord.ordCode}" class="ord-row">
+										<tr th:each="plan : ${planList}" th:data-plan-code="${plan.planCode}" class="plan-row">
 											<td>
 												<div class="form-check">
-													<input class="form-check-input" type="radio" name="flexRadioDefault" th:id="${ord.ordCode}"> <label class="form-check-label" th:for="${ord.ordCode}"></label>
+													<input class="form-check-input" type="radio" name="flexRadioDefault" th:id="${plan.planCode}"> <label class="form-check-label" th:for="${plan.planCode}"></label>
 												</div>
 											</td>
-											<td th:text="${ord.ordCode}"></td>
-											<td th:text="${#dates.format(ord.ordDate, 'yyyy-MM-dd')}"></td>
-											<td th:text="${ord.ordNote}"></td>
+											<td th:text="${plan.planCode}"></td>
+											<td th:text="${#dates.format(plan.planDate, 'yyyy-MM-dd')}"></td>
+											<td th:text="${plan.planNote}"></td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
 
-							<div id="orderDetails"></div>
+							<div id="planDetails"></div>
 
 						</div>
 						<div class="modal-footer">
@@ -76,10 +77,10 @@
 			</div>
 
 			<!-- ============================메인============================ -->
-			<h2>생산 계획 관리</h2>
+			<h2>생산 지시 관리</h2>
 			<div>
 				<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planInsert">저장</button>
-				<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; margin: 8px 5px;">주문서 조회</button>
+				<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; margin: 8px 5px;">생산 계획 조회</button>
 				<div>
 					<div id="planGrid"></div>
 					<!-- <table class="table table-hover" id="planTable">
@@ -161,7 +162,7 @@
 
 		<script th:inline="javascript">
 			let plan = [[${list}]];
-			let planGrid, planDGrid;
+			let planGrid, planDGrid, modalPlan;
 			class NumberEditor {
 				constructor(props) {
 					const el = document.createElement('input');
@@ -249,18 +250,18 @@
 					// 그리드 컬럼 설정
 					columns: [
 
-						{header: '생산계획코드', name: 'planCode', className: 'plan-code', align: "center", },
-						{header: '주문코드', name: 'ordCode'},
+						{header: '생산 지시 코드', name: 'insCode', className: 'ins-code', align: "center", },
+						{header: '생산 계획 코드', name: 'planCode'},
 						{
-							header: '계획명',
-							name: 'planTitle',
+							header: '지시 명',
+							name: 'insTitle',
 							editor: 'text', // 이 부분을 추가하여 텍스트 입력을 가능하게 함
 							background: '#014386'
 						},
-						{header: '담당자', name: 'planPerson', align: "center"},
+						{header: '담당자', name: 'insPerson', align: "center"},
 						{
-							header: '생산계획일자',
-							name: 'planDate',
+							header: '생산 지시 일자',
+							name: 'insDate',
 							align: "center",
 							formatter: function ({value}) {
 								if (value) {
@@ -272,6 +273,12 @@
 								}
 								return '';
 							}
+						},
+						{
+							header: '비고',
+							name: 'insNote',
+							editor: 'text', // 이 부분을 추가하여 텍스트 입력을 가능하게 함
+							background: '#014386'
 						},
 						{
 							header: '삭제',
@@ -293,15 +300,15 @@
 				planGrid.on('click', function (ev) {
 					console.log(ev.columnName);
 					var columnName = ev.columnName;
-					if (columnName === 'planCode') {
+					if (columnName === 'insCode') {
 						var rowKey = ev.rowKey;
 						var rowData = planGrid.getRow(rowKey);
 
 						if (rowData) {
-							var planCode = rowData.planCode;
+							var insCode = rowData.insCode;
 
 							// planCode를 사용하여 상세 데이터 요청
-							fetch('/planDetail?planCode=' + planCode)
+							fetch('/insDetail?insCode=' + insCode)
 								.then(response => response.json())
 								.then(data => {
 									console.log(data);
@@ -323,11 +330,11 @@
 
 					columns: [
 						// 데이터 구조에 따라 컬럼을 정의하세요
-						{name: 'dplanCode', header: '생산계획 코드'},
+						{name: 'insCode', header: '생산 지시 코드'},
 
 						{name: 'prodCode', header: '제품 코드'},
 						{
-							name: 'start', header: '시작 일자',
+							name: 'dinsSdate', header: '시작 일자',
 							formatter: function ({value}) {
 								if (value) {
 									var date = new Date(value);
@@ -346,7 +353,7 @@
 							}
 						},
 						{
-							name: 'end', header: '종료 일자',
+							name: 'dinsEdate', header: '종료 일자',
 							formatter: function ({value}) {
 								if (value) {
 									var date = new Date(value);
@@ -364,31 +371,20 @@
 								}
 							}
 						},
-						{name: 'prodCount', header: '현재 재고', align: "center", },
-						{name: 'ordCount', header: '주문 수량', align: "center", },
+						
+						{name: 'dplanCount', header: '계획량', align: "center", },
 						{
-							name: 'dplanCount', header: '계획량', align: "center",
+							name: 'dinsCount', header: '지시량', align: "center",
 							editor: {
 								type: NumberEditor,
 								options: {
-									min: 'ordCount', // 최소값 설정
+									min: 1, // 최소값 설정
 									step: 10  // 증가량 설정
 								}
 							}
 						},
-						{
-							name: 'dlvyDate', header: '납기 일자',
-							formatter: function ({value}) {
-								if (value) {
-									var date = new Date(value);
-									var year = date.getFullYear();
-									var month = (date.getMonth() + 1).toString().padStart(2, '0');
-									var day = date.getDate().toString().padStart(2, '0');
-									return `${year}-${month}-${day}`;
-								}
-								return '';
-							}
-						},
+						
+						
 						// 데이터에 따라 다른 컬럼 추가
 					],
 					// 여기에 다른 그리드 옵션을 추가할 수 있습니다
@@ -402,6 +398,9 @@
 				console.log("planGrid", planGrid)
 
 			});
+			
+			
+			
 
 
 
@@ -419,12 +418,12 @@
 					return;
 				}
 
-				var ordCode = selectedRadio.id;
+				var planCode = selectedRadio.id;
 
 				// 주요 계획 테이블에 행 추가
 				var newRowData = {
-					planCode: '', // 새 계획 코드
-					ordCode: ordCode,
+					insCode: '',
+					planCode: planCode,
 
 					planTitle: '', // 사용자 입력에 따라 설정
 					planPerson: name, // 예시, 실제 데이터에 맞게 변경
@@ -447,16 +446,16 @@
 
 
 				// 상세 계획 테이블에 행 추가
-				tempOrderDetails.forEach(detail => {
+				tempPlanDetails.forEach(detail => {
 					var detailRowData = {
-						dplanCode: '', // 새 상세 계획 코드
-						ordCode: ordCode, // 상위 계획 코드
+						dInsCode: '', // 새 상세 지시 코드
+						
 						prodCode: detail.prodCode,
-						start: '', // 시작 일자, 사용자 입력에 따라 설정
-						end: '', // 종료 일자, 사용자 입력에 따라 설정
+						start: detail.start, // 시작 일자, 사용자 입력에 따라 설정
+						end: detail.end, // 종료 일자, 사용자 입력에 따라 설정
 						prodCount: detail.prodCount, // 현재 재고
 						ordCount: detail.ordCount, // 주문 수량
-						dplanCount: '', // 계획량, 사용자 입력에 따라 설정
+						dplanCount: detail.dplanCount, // 계획량, 사용자 입력에 따라 설정
 						dlvyDate: detail.dlvyDate, // 납기 일자
 						_attributes: {
 
@@ -481,9 +480,9 @@
 
 
 
-			let tempOrderDetails = [];
+			let tempPlanDetails = [];
 			// 초기에 모달 창을 만들 때 테이블 헤더를 미리 추가합니다.
-			const detailsContainer = document.getElementById('orderDetails');
+			const detailsContainer = document.getElementById('planDetails');
 			const table = document.createElement('table');
 			table.className = 'table';
 
@@ -492,34 +491,42 @@
 		        <tr>
 		            <th>제품 코드</th>
 		            <th>주문 수량</th>
-		            <th>납기일자</th>
+		            <th>시작 일자</th>
+		            <th>종료 일자</th>
+		            <th>납기 일자</th>
 		        </tr>
 		    `;
 			table.appendChild(thead);
 
 			detailsContainer.appendChild(table);
 
-			document.querySelectorAll('.ord-row').forEach(row => {
+			document.querySelectorAll('.plan-row').forEach(row => {
 				row.addEventListener('click', function () {
-					const ordCode = this.getAttribute('data-ord-code');
-					fetch('/orderDetail?ordCode=' + ordCode)
+					const planCode = this.getAttribute('data-plan-code');
+					fetch('/planDetail?planCode=' + planCode)
 						.then(response => response.json())
 						.then(data => {
-							tempOrderDetails = data;
+							tempPlanDetails = data;
 							// 테이블 본문을 업데이트합니다.
 							const tbody = document.createElement('tbody');
 
 							data.forEach(detail => {
+								console.log("detail : " , detail);
 								const tr = document.createElement('tr');
 
-								const date = new Date(detail.dlvyDate);
+								const date = new Date(detail.start);
+								const date2 = new Date(detail.end);
+								const date3 = new Date(detail.dlvyDate);
 								const formattedDate = date.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-
+								const formattedDate2 = date2.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+								const formattedDate3 = date3.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+								
 								tr.innerHTML = `
-		                            <td>${detail.prodCode}</td>
-		                            <td>${detail.ordCount}</td>
+		                            <td>${detail.planCode}</td>
+		                            <td>${detail.dplanCount}</td>
 		                            <td>${formattedDate}</td>
-		                            
+		                            <td>${formattedDate2}</td>
+		                            <td>${formattedDate3}</td>
 		                        `;
 								tbody.appendChild(tr);
 							});
@@ -538,7 +545,7 @@
 
 
 
-			document.querySelectorAll('.plan-row').forEach(row => {
+			/* document.querySelectorAll('.plan-row').forEach(row => {
 				row.addEventListener('click', function () {
 					const planCode = this.getAttribute('data-plan-code');
 
@@ -574,7 +581,7 @@
 							});
 						});
 				});
-			});
+			}); */
 
 
 
