@@ -32,28 +32,38 @@
 		       moi.mat_or_due_date,
 		       mo.mat_or_manager,
 		       mo.mat_or_state
-		 FROM  mat_order      mo
+		 FROM  mat_order           mo
 		 LEFT JOIN  business       b     ON mo.business_code = b.business_code
 		 LEFT JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
-         ORDER BY mat_or_code
+         ORDER BY mat_or_code DESC
 
 	</select>
 	
 	<!-- 발주 목록 쪽  -->
 	<select id="getMaterialOrdInfoList1" resultType="MatOrderInfoVO">
-		SELECT mo.mat_or_code,
-		       mo.mat_or_name, 
-		       mo.mat_code, 
-		       b.business_code,
-		       b.business_name,
-		       mo.mat_or_count,
-		       mo.mat_or_date,
-		       moi.mat_or_due_date,
-		       mo.mat_or_manager,
-		       mo.mat_or_state
-		 FROM  mat_order      mo
-		 JOIN  business       b     ON mo.business_code = b.business_code
-		 JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
+		SELECT
+			  m.mat_code,
+			  m.mat_name,
+			  m.mat_unit,
+			  m.mat_standard,
+			  m.mat_safe_stock,
+			  ml.mat_count,
+			  b.business_name,
+			  b.business_code,
+			  COUNT(mr.mat_lot_code) AS deal
+		FROM material      m
+		JOIN mat_lot       ml ON m.mat_code = ml.mat_code
+		JOIN mat_return    mr ON ml.mat_lot_code = mr.mat_lot_code
+		FULL JOIN business b  ON mr.business_code = b.business_code
+		GROUP BY
+			  m.mat_code,
+			  m.mat_name,
+			  m.mat_unit,
+			  m.mat_standard,
+			  m.mat_safe_stock,
+			  ml.mat_count,
+			  b.business_name,
+			  b.business_code
 
 	</select>
 	
@@ -87,9 +97,9 @@
 			  b.business_name,
 			  b.business_code,
 			  COUNT(mr.mat_lot_code) AS deal
-		FROM material    m
-		JOIN mat_lot ml  ON m.mat_code = ml.mat_code
-		JOIN mat_return  mr ON ml.mat_lot_code = mr.mat_lot_code
+		FROM material      m
+		JOIN mat_lot       ml ON m.mat_code = ml.mat_code
+		JOIN mat_return    mr ON ml.mat_lot_code = mr.mat_lot_code
 		FULL JOIN business b  ON mr.business_code = b.business_code
 		GROUP BY
 			  m.mat_code,
@@ -200,6 +210,7 @@
           (
              mat_code,
              business_code,
+
              mat_or_date, 
              mat_or_manager,
              mat_or_count,
@@ -209,7 +220,7 @@
         (
               #{matCode}, 
               #{businessCode},
-              #{matOrDate}, 
+              #{matOrDate},
               #{matOrManager},
               #{matOrCount},
               #{matOrName} 

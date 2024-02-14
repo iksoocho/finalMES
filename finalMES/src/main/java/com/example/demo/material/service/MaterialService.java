@@ -46,6 +46,7 @@ public interface MaterialService {
 	
 	// 등록
 	public MatOrderVO insertMatOrder(MatOrderVO matOrderVO);
+	
 	public MatOrderInfoVO insertMatOrderInfo(MatOrderInfoVO matorderInfoVO);
 	
 	public void insertMaterialOrder(MatOrderCompositeVO matOrderCompositeVO);
