@@ -26,6 +26,7 @@ public class MatOrderInfoVO {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date matOrDate;
 	private String matOrState;
+	private String matName;
 	
 	
 }
