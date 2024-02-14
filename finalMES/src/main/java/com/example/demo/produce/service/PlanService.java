@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
+import com.example.demo.produce.PlanInsDVO;
+import com.example.demo.produce.PlanInsVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
 import com.example.demo.produce.PlanVO;
@@ -25,4 +27,9 @@ public interface PlanService {
 	public void updatePlanDInfo(PlanCompositeVO planCompositeVO);
 	
 	public void deleteplanInfo(PlanCompositeVO planCompositeVO);
+	
+	
+	//생산 지시
+	public List<PlanInsVO> getPlanInsList();
+	public List<PlanInsDVO> getPlanDInsList(String insCode);
 }

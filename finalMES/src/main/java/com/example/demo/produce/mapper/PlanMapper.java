@@ -2,13 +2,15 @@ package com.example.demo.produce.mapper;
 
 import java.util.List;
 
-
 import com.example.demo.produce.PlanDVO;
+import com.example.demo.produce.PlanInsDVO;
+import com.example.demo.produce.PlanInsVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
 import com.example.demo.produce.PlanVO;
 
 public interface PlanMapper {
+	//생산 계획
 	public List<PlanVO> selectPlanList();
 	public List<PlanVO> selectPlanByOrdCode(String ordCode);
 	public List<PlanDVO> selectPlanDList(String planCode);
@@ -19,18 +21,34 @@ public interface PlanMapper {
 	public int insertPlanInfo(PlanVO planVO);
 	
 	public int insertPlanDInfo(PlanDVO planDVO);
+
+	public void deltePlanInfo(String planCode);
 	
-	public int updatePlanInfo(PlanDVO planDVO);
-	
+	public int updatePlanDInfo(PlanDVO planDVO);
 	
 	//주문서 상태 수정
 	public void updateOrderStateZero(String ordCode);
 	public void updateOrderStateOne(String ordCode);
 	
-	public void deltePlanInfo(String planCode);
 	
+	
+	
+	
+	//생산 지시
+	public List<PlanInsVO> selectPlanInsList();
+	//public List<PlanVO> selectPlanByOrdCode(String ordCode);
+	public List<PlanInsDVO> selectPlanDInsList(String insCode);
 
+	public int insertPlanInsInfo(PlanInsVO planInsVO);
 	
+	public int insertPlanDInsInfo(PlanInsVO planInsVO);
+	
+	public int updatePlanDInsInfo(PlanInsDVO planInsDVO);
+	
+	public void deltePlanInsInfo(String insCode);
+	//계획 상태 수정
+	public void updatePlanStateZero(String planCode);
+	public void updatePlanStateOne(String planCode);
 
 
 }

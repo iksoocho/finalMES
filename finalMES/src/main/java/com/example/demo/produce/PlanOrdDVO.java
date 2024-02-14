@@ -15,4 +15,5 @@ public class PlanOrdDVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dlvyDate;
 	private int ttlPrice;
+	
 }

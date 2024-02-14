@@ -8,4 +8,5 @@ import lombok.Data;
 public class MatOrderCompositeVO {
 	private MatOrderVO matOrderVO;
 	private List<MatOrderInfoVO> matOrderInfoList;
+	private MatOrderInfoVO matOrderInfoVO;
 }

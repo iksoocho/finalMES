@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
+import com.example.demo.produce.PlanInsDVO;
+import com.example.demo.produce.PlanInsVO;
 import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
 import com.example.demo.produce.PlanVO;
@@ -98,7 +100,7 @@ public class PlanServiceImpl implements PlanService{
 	public void updatePlanDInfo(PlanCompositeVO planCompositeVO) {
 		System.out.println(planCompositeVO);
 		for(int i = 0; i < planCompositeVO.getPlanDVOList().size(); i++) {
-			 planMapper.updatePlanInfo(planCompositeVO.getPlanDVOList().get(i));
+			 planMapper.updatePlanDInfo(planCompositeVO.getPlanDVOList().get(i));
 		}
 		
 	}
@@ -110,6 +112,21 @@ public class PlanServiceImpl implements PlanService{
 		//plan 삭제
 		planMapper.deltePlanInfo(planCompositeVO.getPlanVO().getPlanCode());
 		
+	}
+	
+	
+	
+	//생산 지시 
+	@Override
+	public List<PlanInsVO> getPlanInsList() {
+		// TODO Auto-generated method stub
+		return planMapper.selectPlanInsList();
+	}
+
+	@Override
+	public List<PlanInsDVO> getPlanDInsList(String insCode) {
+		// TODO Auto-generated method stub
+		return planMapper.selectPlanDInsList(insCode);
 	}
 
 	

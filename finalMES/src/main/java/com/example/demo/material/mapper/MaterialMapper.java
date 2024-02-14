@@ -47,5 +47,12 @@ public interface MaterialMapper {
 	public int insertMatOrder(MatOrderVO materialVO);
 	
 	public int insertMatOrderInfo(MatOrderInfoVO matOrderInfoVO);
+	
+	//수정
+	public void updateMatOrder(MatOrderInfoVO matOrderInfoVO);
+	
+	//삭제
+	public void deleteMatOrder(String matOrCode);
+
 
 }

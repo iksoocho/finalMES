@@ -55,7 +55,7 @@
 	<select id="selectOrdList" resultType="PlanOrdVO">
 		SELECT *
 		FROM ord_list
-		where ord_state = 1
+		where ord_state = 'o2'
 	</select>
 
 	<!-- order detail list -->
@@ -83,7 +83,7 @@
 	</insert>
 
 
-	<update id="updatePlanInfo" parameterType="PlanDVO">
+	<update id="updatePlanDInfo" parameterType="PlanDVO">
 		UPDATE PROD_D_PLAN
 		SET D_PLAN_START_DATE = #{dPlanStartDate},
 		D_PLAN_END_DATE = #{dPlanEndDate},
@@ -94,13 +94,13 @@
 
 	<update id="updateOrderStateZero" parameterType="String">
 		UPDATE ORD_LIST
-		SET ORD_STATE = 2
+		SET ORD_STATE = 'o3'
 		WHERE ORD_CODE = #{ordCode}
 	</update>
 
 	<update id="updateOrderStateOne" parameterType="String">
 		UPDATE ORD_LIST
-		SET ORD_STATE = 1
+		SET ORD_STATE = 'o2'
 		WHERE ORD_CODE = #{ordCode}
 	</update>
 
@@ -110,4 +110,46 @@
 	</delete>
 
 
+
+
+
+
+
+	<!-- 생산 지시 -->
+	
+	<!-- plan list -->
+	<select id="selectPlanInsList" resultType="PlanInsVO">
+		SELECT *
+		FROM PROD_INSTRUCTION
+		ORDER BY INS_CODE DESC
+	</select>
+	
+	<select id="selectPlanDInsList" resultType="PlanInsDVO">
+		SELECT
+		    pdp.prod_code,
+		    pdp.d_plan_code,
+		    pdp.plan_code,
+		    pdp.d_plan_count,
+		    pdp.d_plan_start_date AS "START",
+		    pdp.d_plan_end_date AS "END",
+		    pdp.d_plan_priority,
+		    pdp.d_plan_note,
+		    MAX(pdi.d_ins_sdate) AS d_ins_sdate,
+		    MAX(pdi.d_ins_edate) AS d_ins_edate
+		FROM
+		    prod_d_plan pdp
+		LEFT JOIN prod_instruction pi ON pdp.plan_code = pi.plan_code
+		LEFT JOIN prod_d_ins pdi ON pi.ins_code = pdi.ins_code
+		where pdi.ins_code = #{insCode}
+		GROUP BY
+		    pdp.prod_code,
+		    pdp.d_plan_code,
+		    pdp.plan_code,
+		    pdp.d_plan_count,
+		    pdp.d_plan_start_date,
+		    pdp.d_plan_end_date,
+		    pdp.d_plan_priority,
+		    pdp.d_plan_note
+		ORDER BY pdp.d_plan_code
+	</select>
 </mapper>
