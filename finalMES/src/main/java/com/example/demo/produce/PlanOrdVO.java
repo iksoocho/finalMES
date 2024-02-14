@@ -13,7 +13,7 @@ public class PlanOrdVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date ordDate;
 	private String ordManager;
-	private int ordState;
+	private String ordState;
 	private String ordNote;
 	
 	
