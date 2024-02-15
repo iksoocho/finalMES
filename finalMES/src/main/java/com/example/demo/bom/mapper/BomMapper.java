@@ -19,4 +19,7 @@ public interface BomMapper {
 	public int getBomSeq();
 	// bom insert
 	public void bomInsert(BomVO bomVO);
+	
+	//bom list
+	public List<BomVO> getBomList(String prodCode);
 }

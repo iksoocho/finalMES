@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.bom.BomVO;
@@ -46,6 +47,12 @@ public class BomController {
 		bomService.bomInsert(bomList);
 		msg = "bom 등록 완료";
 		return msg;
+	}
+	
+	@GetMapping("bomList")
+	@ResponseBody
+	public List<BomVO> bomList(@RequestParam String prodCode){
+		return bomService.getBomList(prodCode);
 	}
 }
 
