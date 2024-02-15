@@ -15,4 +15,6 @@ public interface BomService {
 	public int bomSeq();
 	// bom insert
 	public void bomInsert(List<BomVO> bomList);
+	//bom list 
+	public List<BomVO> getBomList(String prodCode);
 }
