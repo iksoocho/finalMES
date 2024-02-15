@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.material.MatInputVO;
+import com.example.demo.material.MatInspectionVO;
 import com.example.demo.material.MatOrderCompositeVO;
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
@@ -43,7 +44,7 @@ public class MaterialController {
 	@GetMapping("matOrder")
 	public String getMaterialOrderList(Model model) {
 		// 발주 내역
-		List<MatOrderInfoVO> mList = materialService.getMaterialOrdInfoList(null);
+		List<MatOrderInfoVO> mList = materialService.getMaterialOrdInfoList();
 		// 자재 리스트
 		List<OriginMaterialVO> oList = materialService.getOriginMaterialList();
 
@@ -69,11 +70,11 @@ public class MaterialController {
 	 * @param 미사용
 	 * @return
 	 */
-	@GetMapping("matDetail")
-	@ResponseBody
-	public List<MatOrderInfoVO> getMaterialOrdInfoList(@RequestParam String matCode) {
-		return materialService.getMaterialOrdInfoList(matCode);
-	}
+//	@GetMapping("matDetail")
+//	@ResponseBody
+//	public List<MatOrderInfoVO> getMaterialOrdInfoList(@RequestParam String matCode) {
+//		return materialService.getMaterialOrdInfoList(matCode);
+//	}
 
 
 	/**
@@ -98,7 +99,9 @@ public class MaterialController {
 	@GetMapping("matInput")
 	public String getInputList(Model model) {
 		List<MatInputVO> matInputList = materialService.getInputList();
+		List<MatInspectionVO> matInsList = materialService.getMatInsList();
 		model.addAttribute("matInputList", matInputList);
+		model.addAttribute("matInsList", matInsList);
 		return "material/matInput";
 	}
 
@@ -136,23 +139,24 @@ public class MaterialController {
 	 * @return 발주등록
 	 */
 	// 발주 등록
+//	@PostMapping("/matOrderInsert")
+//	@ResponseBody
+//	public String insertMatOrder(@RequestBody MatOrderCompositeVO matOrderCompositeVO) {
+//		String msg;
+//		materialService.insertMaterialOrder(matOrderCompositeVO);
+//		
+//		msg = "발주완료";
+//		return msg;
+//	}
+	
+	// 발주 등록
 	@PostMapping("/matOrderInsert")
 	@ResponseBody
 	public String insertMatOrder(@RequestBody MatOrderVO matOrderVO) {
-//	    int result = materialService.insertMaterialOrder(matOrderVO);
-
-//	    System.out.println("result: " + result);
-
-//	    if (result > 0) {
-//	        model.addAttribute("message", "주문이 성공적으로 등록되었습니다.");
-//	    } else {
-//	        model.addAttribute("message", "주문 등록에 실패하였습니다.");
-//	    }
-
 		String msg;
 		materialService.insertMatOrder(matOrderVO);
+		
 		msg = "발주완료";
-
 		return msg;
 	}
 
@@ -183,5 +187,10 @@ public class MaterialController {
 		msg = "발주가 목록에서 삭제되었습니다.";
 		return msg;
 	}
+	
+
+		
+	
+	
 
 }
