@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class BomVO {
 	private String bomCode;
-	private String bomName;
+	private int bomNum;
 	private String prodCode;
 	private String procCode;
 	private String matCode;
