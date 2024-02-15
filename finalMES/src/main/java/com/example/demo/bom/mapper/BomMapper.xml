@@ -17,7 +17,7 @@
 	
 	<insert id="bomInsert" parameterType="BomVO">
 		insert into
-		bom_material(bom_num, mat_code, proc_code, prod_code, bom_mat_count)
-		values(#{bomNum}, #{matCode}, #{procCode}, #{prodCode}, #{bomMatCount})
+		bom_material(bom_code ,bom_num, mat_code, proc_code, prod_code, bom_mat_count)
+		values(#{bomCode},#{bomNum}, #{matCode}, #{procCode}, #{prodCode}, #{bomMatCount})
 	</insert>
 </mapper>
