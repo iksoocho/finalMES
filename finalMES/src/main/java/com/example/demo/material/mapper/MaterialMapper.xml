@@ -43,14 +43,20 @@
 	
 	<!-- 발주 목록 쪽  -->
 	<select id="getMaterialOrdInfoList1" resultType="MatOrderInfoVO">
-		select  b.business_code,
-		        b.business_name,
-		        m.mat_code,
-		        m.mat_name
-		FROM material m
-		JOIN mat_order mo ON m.mat_code = mo.mat_code
-		JOIN business b ON mo.business_code = b.business_code
+		SELECT 
+		    b.business_code,
+		    b.business_name,
+		    m.mat_code,
+		    m.mat_name
+		FROM 
+		    business b
+		JOIN 
+		    mat_order mo ON b.business_code = mo.business_code
+		JOIN 
+		    material m ON mo.mat_code = m.mat_code
 		WHERE m.mat_code = #{matCode}
+		GROUP BY 
+		    b.business_code, b.business_name, m.mat_code, m.mat_name
 	</select>
 	
 	<!-- 발주 자재 관리 -->
