@@ -295,7 +295,33 @@
 					const lastRowIndex = planDGrid.getRowCount() - 1;
 					planDGrid.addRowClassName(lastRowIndex, 'new-row');
 				});
+				
+				
+				planGrid.on('click', function (ev) {
+					console.log(ev.columnName);
+					var columnName = ev.columnName;
+					if (columnName === 'prodCode') {
+						var rowKey = ev.rowKey;
+						var rowData = planGrid.getRow(rowKey);
 
+						if (rowData) {
+							var prodCode = rowData.prodCode;
+							console.log("prodCode : " + prodCode);
+							// planCode를 사용하여 상세 데이터 요청
+							fetch('/bomList?prodCode=' + prodCode)
+								.then(response => response.json())
+								.then(data => {
+									console.log("data" + data.bomCode);
+									// 상세 그리드에 데이터 표시
+									// grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
+									planDGrid.resetData(data);
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						}
+					}
+				});
 
 				planDGrid = new tui.Grid({
 					el: document.getElementById('planDGrid'),
@@ -343,7 +369,7 @@
 
 					],
 					rowHeaders: [],
-					pageOptions: {useClient: true, perPage: 5}
+					
 				});
 
 
@@ -380,43 +406,7 @@
 
 
 
-			document.querySelectorAll('.plan-row').forEach(row => {
-				row.addEventListener('click', function () {
-					const planCode = this.getAttribute('data-plan-code');
-
-					fetch('/planDetail?planCode=' + planCode)
-						.then(response => response.json())
-						.then(data => {
-							const detailsTbody = document.getElementById('planDetails');
-							detailsTbody.innerHTML = ''; // 기존 내용 초기화
-
-							// 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-							data.forEach(detail => {
-								const tr = document.createElement('tr');
-
-								const date = new Date(detail.dlvyDate);
-								const sDate = new Date(detail.start);
-								const eDate = new Date(detail.end);
-								const formattedDate = date.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-								const formattedSDate = sDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-								const formattedEDate = eDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-								console.log(detail);
-								tr.innerHTML = `
-									<td>${detail.dplanCode}</td>
-		                            <td>${detail.planCode}</td>
-		                            <td>${detail.prodCode}</td>
-		                            <td><input type="date" value="${formattedSDate}" name="startDate"></td>
-		                            <td><input type="date" value="${formattedEDate}" name="endDate"></td>
-		                            <td>${detail.prodCount}</td>
-		                            <td>${detail.ordCount}</td>
-		                            <td><input type="number" value="${detail.dplanCount}" name="planCount"></td>
-		                            <td>${formattedDate}</td>
-								`;
-								detailsTbody.appendChild(tr);
-							});
-						});
-				});
-			});
+			
 		</script>
 
 

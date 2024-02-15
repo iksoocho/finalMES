@@ -23,4 +23,7 @@ public class BomVO {
 	private int prodPrice;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date prodDate;
+	
+	//자재
+	private String matName;
 }
