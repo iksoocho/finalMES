@@ -6,4 +6,18 @@
     <select id="getProdList" resultType="com.example.demo.inform.ProdVO">
         SELECT * FROM product
     </select>
+    
+    <select id="getOriginMaterialList" resultType="com.example.demo.material.OriginMaterialVO">
+    	SELECT * FROM material
+    </select>
+    
+	<select id="getBomSeq" resultType="int">
+		select bom_code_seq.nextval from dual
+	</select>
+	
+	<insert id="bomInsert" parameterType="BomVO">
+		insert into
+		bom_material(bom_num, mat_code, proc_code, prod_code, bom_mat_count)
+		values(#{bomNum}, #{matCode}, #{procCode}, #{prodCode}, #{bomMatCount})
+	</insert>
 </mapper>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.material.MatInputVO;
+import com.example.demo.material.MatInspectionVO;
 import com.example.demo.material.MatOrderCompositeVO;
 import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
@@ -14,6 +15,7 @@ import com.example.demo.material.MatReturnVO;
 import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.material.mapper.MaterialMapper;
 import com.example.demo.material.service.MaterialService;
+import com.example.demo.sales.vo.business.BusinessListVO;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
@@ -28,37 +30,38 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 
 	// 발주 리스트 정보
-	@Override
-	public List<MatOrderVO> getMaterialOrderList() {
-		return materialMapper.getMaterialOrderList();
-	}
+//	@Override
+//	public List<MatOrderVO> getMaterialOrderList() {
+//		return materialMapper.getMaterialOrderList();
+//	}
+	
 	// 발주 전체 겸 상세 디테일 거래처에 리스트 띄우는거
 	@Override
-	public List<MatOrderInfoVO> getMaterialOrdInfoList(String matCode) {
+	public List<MatOrderInfoVO> getMaterialOrdInfoList() {
 		// TODO Auto-generated method stub
-		return materialMapper.getMaterialOrdInfoList(matCode);
+		return materialMapper.getMaterialOrdInfoList();
 	}
 	
 	
 	// 발주 거래처 관리에서 발주 목록으로 리스트 띄우는거
-	@Override
-	public List<OriginMaterialVO> getMatBusiness1(String businessCode) {
-		// TODO Auto-generated method stub
-		return materialMapper.getMatBusiness1(businessCode);
-	}
-	
-	@Override
-	public List<OriginMaterialVO> getMatBusiness() {
-		// TODO Auto-generated method stub
-		return materialMapper.getMatBusiness();
-	}
+//	@Override
+//	public List<OriginMaterialVO> getMatBusiness1(String businessCode) {
+//		// TODO Auto-generated method stub
+//		return materialMapper.getMatBusiness1(businessCode);
+//	}
+//	
+//	@Override
+//	public List<OriginMaterialVO> getMatBusiness() {
+//		// TODO Auto-generated method stub
+//		return materialMapper.getMatBusiness();
+//	}
 	
 	// 발주 목록에 추가하기
-	@Override
-	public List<MatOrderVO> getMatOrderList() {
-		// TODO Auto-generated method stub
-		return materialMapper.getMatOrderList();
-	}
+//	@Override
+//	public List<MatOrderVO> getMatOrderList() {
+//		// TODO Auto-generated method stub
+//		return materialMapper.getMatOrderList();
+//	}
 	
 	
 	// 발주 자재 관리
@@ -99,13 +102,22 @@ public class MaterialServiceImpl implements MaterialService {
 		// TODO Auto-generated method stub
 		return materialMapper.getReturnList();
 	}
-
+	
+	// 거래처 
+	@Override
+	public BusinessListVO insertBusiness(BusinessListVO businessListVO) {
+		materialMapper.insertBusiness(businessListVO);
+		return businessListVO;
+	}
+	
+	// 발주
 	@Override
 	public MatOrderVO insertMatOrder(MatOrderVO matOrderVO) {
 		materialMapper.insertMatOrder(matOrderVO);
 		return matOrderVO;
 	}
-
+	
+	// 발주상세
 	@Override
 	public MatOrderInfoVO insertMatOrderInfo(MatOrderInfoVO matorderInfoVO) {
 		materialMapper.insertMatOrderInfo(matorderInfoVO);
@@ -119,10 +131,12 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		for (int i = 0; i < matOrderCompositeVO.getMatOrderInfoList().size(); i++) {
 			matOrderCompositeVO.getMatOrderInfoList().get(i).setMatOrCode(matOrderCompositeVO.getMatOrderVO().getMatOrCode());
+			materialMapper.insertMatOrderInfo(matOrderCompositeVO.getMatOrderInfoList().get(i));
 			System.out.println("등록성공");
 		}
 	}
-
+	
+	// 자재 검수
 	@Override
 	public List<MatOrderInfoVO> getMaterialOrdInfoList1(String matCode) {
 		// TODO Auto-generated method stub
@@ -143,9 +157,15 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public void deleteMatOrder(MatOrderCompositeVO matOrderCompositeVO) {
 		
-		
 		materialMapper.deleteMatOrder(matOrderCompositeVO.getMatOrderVO().getMatOrCode());
 	}
+
+	@Override
+	public List<MatInspectionVO> getMatInsList() {
+		// TODO Auto-generated method stub
+		return materialMapper.getMatInsList();
+	}
+
 
 
 

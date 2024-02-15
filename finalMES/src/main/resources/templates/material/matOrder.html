@@ -19,36 +19,53 @@ button {
 	margin-bottom: 10px;
 }
 
+table {
+	border-collapse: collapse;
+	width: 20%; /* 크기를 조정합니다 */
+}
 
+th {
+	background-color: #f2f2f2;
+	color: #333;
+	font-weight: bold;
+	padding: 8px;
+	text-align: left;
+}
+
+td {
+	padding: 8px;
+	border-bottom: 1px solid #ddd;
+}
+
+input[type="text"] {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+	outline: none;
+	border-color: #4CAF50;
+}
 </style>
 </head>
 <body>
 	<section layout:fragment="content">
-	<h2>발주관리</h2>
+		<h2>발주관리</h2>
 		<div class="container">
 
-		
-			<!-- 신규 거래처 추가 버튼 -->
-			<button onclick="openModal()">신규 거래처 추가</button>
 
-			<!-- 모달 창 -->
-			<div id="myModal" class="modal">
-				<div class="modal-content">
-					<!-- 모달 창 닫기 버튼 -->
-					<span class="close" onclick="closeModal()">&times;</span>
-					<h2>신규 거래처 추가</h2>
-					<form id="newBusinessForm">
-						<label for="businessCode">거래처 코드:</label> <input type="text"
-							id="businessCode" name="businessCode" required><br>
-						<br> <label for="businessName">거래처명:</label> <input
-							type="text" id="businessName" name="businessName" required><br>
-						<br>
-						<button type="button" onclick="addNewBusiness()">추가</button>
-					</form>
-				</div>
-			</div>
+
 
 			<div>
+				<table>
+					<tr>
+						<th><input type="text" id="searchOrder"
+							oninput="searchFunction()" placeholder="검색..."></th>
+					</tr>
+				</table>
 				<table>
 					<tr>
 						<th><input type="text" id="searchOrder"
@@ -62,7 +79,7 @@ button {
 			<div class="row">
 				<div class="col-8">
 					<div id="matGrid" class="container">
-						<h2>현재 자재 재고</h2>
+						<h2>자재 목록</h2>
 					</div>
 				</div>
 				<div class="col-4">
@@ -161,7 +178,6 @@ button {
                          	            { header: '자재명', name: 'matName' },
                          	            { header: '단위', name: 'matUnit' },
                          	            { header: '규격', name: 'matStandard' },
-                         	            { header: '현재고', name: 'matCount' },
                          	            { header: '안전재고', name: 'matSafeStock' }
                          	        ],
                          	        rowHeaders: ['rowNum'],
@@ -210,8 +226,8 @@ button {
                          	        scrollY: false,
                          	        columns: [
                          	            { header: '거래처코드', name: 'businessCode', sortable: true, sortingType: 'desc' },
-                         	            { header: '거래처명', name: 'businessName' },
-                         	            { header: '거래횟수', name: 'deal' }
+                         	            { header: '거래처명', name: 'businessName' }
+                         	          
                          	        ],
                          	        rowHeaders: ['rowNum'],
                          	        pageOptions: {
@@ -232,8 +248,8 @@ button {
 //                          	                let businessCode = rowData.businessCode;
 //                          	                let businessName = rowData.businessName;
                          	                
-                         	                let businessCode = matmat.businessCode;
-                         	                let businessName = matmat.businessName;
+                         	                let businessCode = rowData.businessCode;
+                         	                let businessName = rowData.businessName;
                          	                
                          	                
                          	                let matRowKey = matGrid.getFocusedCell();
@@ -285,8 +301,10 @@ button {
                          	           {
                          	               header: '발주상태',
                          	               name: 'matOrState',
+                         	               align: "center",
                          	               formatter: getMatOrderStatus,
-                         	               filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
+                         	               filter: { type: 'text', showApplyBtn: true, showClearBtn: true },
+                         	               
                          	           },
                          	            {
                          	               header: '삭제',
@@ -358,21 +376,38 @@ button {
     	             	alert("insert 할 내용이 없습니다.")
         	         	return;
             	    }
+	                
+	                // 데이터 유효성 검사
+					for (const data of newData) {
+					  if (!data.matOrName || data.matOrName.trim() === "") {
+					    console.log("발주명을 확인해주세요.");
+					    return;
+					  }
+					}
+	                for (const data of newData) {
+	                    if (!data.matOrCount || isNaN(data.matOrCount) || Number(data.matOrCount) <= 0) {
+	                        alert("발주량을 확인해주세요.");
+	                        return;
+	                    }
+	                    // 다른 필드에 대한 유효성 검사도 여기에 추가할 수 있습니다.
+	                }
+	                
 
                  	console.log('추가된 행의 데이터:' , newData);
         	        let data = {};
-
+        	  
         			data.matOrCode = newData[0].matOrCode;
         			data.matOrName = newData[0].matOrName;
         			data.matCode = newData[0].matCode;
-        			data.businessName = newData[0].businessName;
+        			data.businessCode = newData[0].businessCode;
+        			
         			data.matName = newData[0].matName;
         			data.matOrCount = newData[0].matOrCount;
         			data.matOrDate = newData[0].matOrDate;
         			data.matOrDueDate = newData[0].matOrDueDate;
-        			console.log("data.matOrDueDate : " ,data.matOrDueDate);
         			data.matOrManager = newData[0].matOrManager;
-
+					
+        			
 
         			console.log('data : ' , data);
 
@@ -489,35 +524,6 @@ button {
      	 }
         
         
-        
-        // 모달 열기 함수
-        function openModal() {
-            document.getElementById('myModal').style.display = "block";
-        }
-
-        // 모달 닫기 함수
-        function closeModal() {
-            document.getElementById('myModal').style.display = "none";
-        }
-
-        // 신규 거래처 추가 함수
-        function addNewBusiness() {
-            // 사용자가 입력한 정보 가져오기
-            var businessCode = document.getElementById("businessCode").value;
-            var businessName = document.getElementById("businessName").value;
-
-            // 입력된 정보를 객체로 만들기
-            var newBusiness = {
-                businessCode: businessCode,
-                businessName: businessName
-            };
-
-            // 실제 서버로 전송하는 코드 작성
-            console.log('신규 거래처 정보:', newBusiness);
-
-            // 모달 닫기
-            closeModal();
-        }
       </script>
 	</section>
 </body>

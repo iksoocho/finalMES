@@ -42,12 +42,21 @@
 		FROM process
 	</select>
 	
+	<select id="getProdProgress" parameterType="String" resultType="ProdProgressJoinVO">
+		SELECT pr.proc_name, pg.prog_state, pg.prog_ins_count, pg.prog_pass_count
+		FROM process pr 
+		LEFT join prod_progress pg 
+		ON pg.proc_code=pr.proc_code 
+		AND d_ins_code=#{dInsCode}
+		ORDER BY pr.proc_code
+	</select>
 	
 	<!-- 작업중간등록 -->
 	<insert id="insertWorkMidRegist" parameterType="WorkMidRegistVO">
 		INSERT INTO prod_progress(
 		    d_ins_code
 		    , proc_code
+		    , prog_seq
 		    , prog_ins_count
 		    , prog_bad_count
 		    , prog_pass_count
@@ -58,10 +67,13 @@
 		VALUES(
 		    #{dInsCode}
 		    , #{procCode}
+		    , (	SELECT proc_seq 
+				FROM process_flow
+				WHERE proc_code = #{procCode})
 		    , #{progInsCount}
 		    , #{progBadCount}
 		    , #{progPassCount}
-		    , 0
+		    , #{progState}
 		    , TO_TIMESTAMP(#{startTime}, 'YY-MM-DD HH24:MI')
 		    , TO_TIMESTAMP(#{endTime}, 'YY-MM-DD HH24:MI')
 		)
@@ -83,6 +95,7 @@
 			prog_bad_count = (#{progBadCount} + prog_bad_count)
 			, prog_pass_count = (#{progPassCount} + prog_pass_count)
 			, end_time = TO_TIMESTAMP(#{endTime}, 'YY-MM-DD HH24:MI')
+			, prog_state = NVL(#{progState}, prog_state)
 		WHERE prog_code= #{progCode}
 	</update>
 

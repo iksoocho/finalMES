@@ -8,6 +8,9 @@
 </head>
 <body>
 	<section layout:fragment="content">
+		<div class="container">
+			
+		</div>
 		
 		<div id="ckeckGrid" class="container"><h3>검수 완료 목록</h3></div>
 
@@ -16,7 +19,7 @@
 
 	<script th:inline="javascript">
 		let matInputList = [[${matInputList}]]
-		
+		console.log(matInputList)
 		 const inputGrid = new tui.Grid({
 
            el: document.getElementById('inputGrid'),
@@ -69,13 +72,20 @@
            }
 	    });
 		
+	
+		let ckeckList = [[${matInsList}]]
+		console.log(ckeckList);
 		
 		const ckeckGrid = new tui.Grid({
-
 	           el: document.getElementById('ckeckGrid'),
+	           data: ckeckList,
 	           scrollX: false,
 	           scrollY: false,
 		      columns: [
+		    	{
+			      header: '자제검수코드',
+			      name: 'matInsCode'
+			    },
 		        {
 		          header: '발주상세코드',
 		          name: 'matOrCode'
@@ -103,11 +113,6 @@
 		        {
 				  header: '합격량',
 				  name: 'matInsGood',
-	  		      formatter : function dateFormatter(params) {
-	  		    	  const date = new Date(params.value);
-	  		    	  const isoDate = date.toISOString().split('T')[0];
-	  		    	  return isoDate;
-	  		    	}
 				},
 		        {
 				  header: '불합격량',
@@ -119,7 +124,12 @@
 				},
 				{
 				  header: '검수일자',
-				  name: 'matInsDate'
+				  name: 'matInsDate',
+				  formatter : function dateFormatter(params) {
+	  		    	  const date = new Date(params.value);
+	  		    	  const isoDate = date.toISOString().split('T')[0];
+	  		    	  return isoDate;
+	  		    	}
 				},
 		      ],
 		      rowHeaders: ['rowNum'],
