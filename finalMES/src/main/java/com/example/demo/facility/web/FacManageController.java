@@ -2,6 +2,8 @@ package com.example.demo.facility.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,8 +42,10 @@ public class FacManageController {
 	 * @return facility/facManagement
 	 */
 	@GetMapping("/facManagement")
-	public String list(Model model) {
+	public String list(Model model, HttpServletRequest session) {
 		model.addAttribute("list", facManageService.FacList(null));
+		System.out.println("userName : "+ session.getAttribute("userName"));
+		model.addAttribute("username", session.getSession().getAttribute("userName"));
 		return "facility/facManagement";
 
 	}
@@ -52,8 +56,10 @@ public class FacManageController {
 	 * @return facility/facNotop
 	 */
 	@GetMapping("/facNotop")
-	public String Notoplist(Model model) {
+	public String Notoplist(Model model, HttpServletRequest session) {
 		model.addAttribute("nlist", facManageService.FacNotopList());
+		System.out.println("userName : "+ session.getAttribute("userName"));
+		model.addAttribute("username", session.getSession().getAttribute("userName"));
 		return "facility/facNotop";
 
 	}
@@ -99,7 +105,9 @@ public class FacManageController {
 	
 	// 설비점검관리	
 	@GetMapping("/facIns")
-	public String NotopInslist(Model model) {
+	public String NotopInslist(Model model, HttpServletRequest session) {
+		System.out.println("userName : "+ session.getAttribute("userName"));
+		model.addAttribute("username", session.getSession().getAttribute("userName"));
 		// 모달 설비관리 리스트
 		model.addAttribute("Inslist", facManageService.FacNotopList());
 		return "facility/facIns";
@@ -152,7 +160,9 @@ public class FacManageController {
 	
 	// 수리관리 리스트
 	@GetMapping("/facRep")
-	public String NotopReplist(Model model) {
+	public String NotopReplist(Model model, HttpServletRequest session) {
+		System.out.println("userName : "+ session.getAttribute("userName"));
+		model.addAttribute("username", session.getSession().getAttribute("userName"));
 		// 수리관리 모달리스트
 		model.addAttribute("Replist", facManageService.FacNotopList());
 		return "facility/facRep";
