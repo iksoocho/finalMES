@@ -382,15 +382,17 @@
 
 
 			<script>
+			
 			//==========================insert===========================================================
 			document.querySelector('#bomInsert').addEventListener('click', function () {
+				let bomSeq; 
 				const newPlan = document.querySelectorAll('.new-row');
 				if (newPlan.length === 0) {
 					alert("저장 할 내용이 없습니다.")
 					return;
 				}
 		
-				fetch('/bomSeq')
+				/* fetch('/bomSeq')
 			    .then(response => {
 			        if (!response.ok) {
 			            throw new Error('Network response was not ok');
@@ -400,15 +402,38 @@
 			    .then(data => {
 			        console.log('Fetched data:', data);
 			        // 숫자로 변환하는 로직이 필요할 경우, parseInt(data, 10)를 사용
-
-			        location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
+					bomSeq = data;
+					console.log("bomSeq : " + bomSeq);
+			        //location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
 			    })
 			    .catch(error => {
 			        console.error('Error:', error);
-			    });
+			    }); */
+			    async function fetchBomSeq() {
+			        try {
+			            const response = await fetch('/bomSeq');
+			            if (!response.ok) {
+			                throw new Error('Network response was not ok');
+			            }
+			            const data = await response.text(); // 또는 response.json() if JSON expected
+			            console.log('Fetched data:', data);
+			            return data; // 반환된 데이터를 사용하거나 다른 작업을 수행
+			        } catch (error) {
+			            console.error('Error:', error);
+			        }
+			    }
+
+			    async function performAction() {
+			        bomSeq = await fetchBomSeq();
+			        console.log("bomSeq : " + bomSeq);
+			        // 추가 작업을 여기에서 수행할 수 있습니다.
+			    }
+
+			    // 이 함수를 이벤트 핸들러나 다른 곳에서 호출
+			    performAction();
 				
 				
-				/* let data = {};
+				let data = {};
 
 				var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 				console.log("newPlanDetailRows" + newPlanDetailRows);
@@ -417,6 +442,9 @@
 				for (var i = (newPlanDetailRows.length)/2 + 1; i < newPlanDetailRows.length; i++) {
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
+					console.log("bomSeq : "+ bomSeq);
+					let bomCode = 'BOM' + String(bomSeq).padStart(3, '0');
+					console.log("bomCode" + bomCode);
 					let target = $(newPlanDetailRows[i]);
 
 					obj.prodCode = target.find('td:eq(1)').text();
@@ -438,7 +466,7 @@
 
 				console.log(data);
 				// AJAX 요청으로 서버에 데이터 전송
-				fetch('/planInsert', {
+				fetch('/bomInsert', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -455,7 +483,7 @@
 					.then(data => {
 						console.log('Success:', data);
 						alert(data);
-						location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+						location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
 					})
 					.catch(error => {
 						console.error('Error:', error);
@@ -463,7 +491,7 @@
 
 
 
-			}); */
+			}); 
 
 
 			//plan detail update
@@ -522,7 +550,7 @@
 						console.error('Error:', error);
 					});*/
 
-			}); 
+			
 
 		</script>
 	</section>

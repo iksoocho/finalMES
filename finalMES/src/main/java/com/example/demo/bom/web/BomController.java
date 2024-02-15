@@ -32,6 +32,7 @@ public class BomController {
 	}
 	
 	@GetMapping("bomSeq")
+	@ResponseBody
 	public String bomSeq() {
 		log.info("bomseq :" +bomService.bomSeq());
 		String bomSeq =  String.valueOf(bomService.bomSeq());
