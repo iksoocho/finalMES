@@ -38,4 +38,9 @@ public class BomServiceImpl implements BomService{
 			bomMapper.bomInsert(bomList.get(i));
 		}
 	}
+
+	@Override
+	public List<BomVO> getBomList(String prodCode) {
+		return bomMapper.getBomList(prodCode);
+	}
 }

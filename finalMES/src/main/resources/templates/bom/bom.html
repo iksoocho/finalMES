@@ -1,30 +1,79 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
-<meta charset="UTF-8">
-<title>BOM관리</title>
-<script src="https://code.jquery.com/jquery-3.7.1.js"
-	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-	crossorigin="anonymous"></script>
-<style>
-.tui-grid-row-odd .plan {
-	background-color: #e0f7fa;
-	/* 예시로 빨간색을 지정했습니다. */
+	<meta charset="UTF-8">
+	<title>BOM관리</title>
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<style>
+		.tui-grid-row-odd .plan {
+			background-color: #e0f7fa;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+
+		.tui-grid-row-odd .detail {
+			background-color: #e0f7fa;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+
+		.tui-grid-row-even .detail {
+			background-color: #e0f7fa;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		/* 모달 스타일 */
+.modal-dialog {
+	max-width: 800px;
 }
 
-.tui-grid-row-odd .detail {
-	background-color: #e0f7fa;
-	/* 예시로 빨간색을 지정했습니다. */
+.modal-content {
+	border-radius: 10px;
 }
 
-.tui-grid-row-even .detail {
-	background-color: #e0f7fa;
-	/* 예시로 빨간색을 지정했습니다. */
+.modal-header {
+	background-color: #007bff;
+	color: white;
+	border-radius: 10px 10px 0 0;
 }
-</style>
+
+.modal-body {
+	padding: 20px;
+}
+
+.modal-footer {
+	border-radius: 0 0 10px 10px;
+}
+
+.modal-title {
+	font-size: 24px;
+}
+
+.table th, .table td {
+	text-align: center;
+}
+
+.modal-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.modal-table th, .modal-table td {
+	padding: 10px;
+	border-bottom: 1px solid #dee2e6;
+}
+
+.modal-table th {
+	background-color: #f8f9fa;
+}
+
+.modal-table tbody tr:hover {
+	background-color: #f2f2f2;
+}
+
+/* 모달 창 외부를 클릭하여 닫을 수 있도록 */
+.modal-backdrop {
+    opacity: 0.2;
+}
+	</style>
 </head>
 
 <body>
@@ -43,10 +92,8 @@
 
 
 				<div class="mt-4">
-					<button class="btn btn-secondary"
-						style="float: right; margin: 8px 5px;" id="bomInsert">저장</button>
-					<button class="btn btn-secondary"
-						style="float: right; margin: 8px 5px;" id="addRowBtn">추가</button>
+					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="bomInsert">저장</button>
+					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="addRowBtn">추가</button>
 					<div id="planDGrid"></div>
 
 				</div>
@@ -54,42 +101,39 @@
 		</div>
 
 		<!-- 모달 -->
-<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="materialModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="materialModalLabel">자재 정보</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table>
-                    <thead style="text-align: center;">
-                        <tr>
-                            <th>자재코드</th>
-                            <th>자재명</th>
-                        </tr>
-                    </thead>
-                    <tbody style="text-align: center;">
-                        <!-- Mlist 데이터를 동적으로 표시 -->
-                        <tr th:each="mat : ${Mlist}"
-                            th:data-matCode="${mat.matCode}"
-                            th:data-matName="${mat.matName}"
-                            data-bs-dismiss="modal" onclick="updateInputFields(this)">
-                            <td th:text="${mat.matCode}"></td>
-                            <td th:text="${mat.matName}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div id="materialInfo">
-                    <!-- 모달 내부에 표시될 데이터를 여기에 동적으로 표시 -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
-</div>
+		<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="materialModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="materialModalLabel">자재 정보</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>자재코드</th>
+									<th>자재명</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<!-- Mlist 데이터를 동적으로 표시 -->
+								<tr th:each="mat : ${Mlist}" th:data-matCode="${mat.matCode}" th:data-matName="${mat.matName}" data-bs-dismiss="modal" onclick="updateInputFields(this)">
+									<td th:text="${mat.matCode}"></td>
+									<td th:text="${mat.matName}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<div id="materialInfo">
+							<!-- 모달 내부에 표시될 데이터를 여기에 동적으로 표시 -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 		<script th:inline="javascript">
@@ -118,7 +162,7 @@
 					this.el.select();
 				}
 			};
-			
+
 			class DeleteButtonRenderer {
 				constructor(props) {
 					const el = document.createElement('button');
@@ -181,41 +225,41 @@
 					data: Plist,
 					// 그리드 컬럼 설정
 					columns: [
-					{
-						header: '제품코드',
-						name: 'prodCode',
-						className: 'prod-code',
-						align: "center",
-					},
-					{
-						header: '제품명',
-						name: 'prodName',
-						align: "center",
-					},
-					{
-						header: '단위',
-						name: 'prodUnit',
-						background: '#014386',
-						align: "center",
-					},
-					{
-						header: '규격',
-						name: 'prodSpec',
-						align: "center"
-					},
-					{
-						header: '가격',
-						name: 'prodPrice',
-						align: "center"
-					},
-					{
-						header: '삭제',
-						name: 'deleteButton',
-						align: "center",
-						renderer: {
-							type: DeleteButtonRenderer
+						{
+							header: '제품코드',
+							name: 'prodCode',
+							className: 'prod-code',
+							align: "center",
+						},
+						{
+							header: '제품명',
+							name: 'prodName',
+							align: "center",
+						},
+						{
+							header: '단위',
+							name: 'prodUnit',
+							background: '#014386',
+							align: "center",
+						},
+						{
+							header: '규격',
+							name: 'prodSpec',
+							align: "center"
+						},
+						{
+							header: '가격',
+							name: 'prodPrice',
+							align: "center"
+						},
+						{
+							header: '삭제',
+							name: 'deleteButton',
+							align: "center",
+							renderer: {
+								type: DeleteButtonRenderer
+							}
 						}
-					}
 					],
 
 					rowHeaders: ['rowNum'],
@@ -224,85 +268,111 @@
 						perPage: 5
 					}
 				});
-				
-				
-				 // 상단의 그리드의 제품리스트에서 해당 제품 클릭 후 추가버튼 누를 시 하단의 그리드의 추가
-				 document.querySelector('#addRowBtn').addEventListener('click', function () {
-				    // 선택한 행의 데이터 가져오기
-				    const focusedCell = planGrid.getFocusedCell();
 
-				    // 선택한 행의 데이터 가져오기
-				    const rowData = planGrid.getRow(focusedCell.rowKey);
 
-				    // rowData가 null인 경우 알림 표시 후 함수 종료
-				    if (!rowData) {
-				        alert("제품을 선택하세요.");
-				        return;
-				    }
+				// 상단의 그리드의 제품리스트에서 해당 제품 클릭 후 추가버튼 누를 시 하단의 그리드의 추가
+				document.querySelector('#addRowBtn').addEventListener('click', function () {
+					// 선택한 행의 데이터 가져오기
+					const focusedCell = planGrid.getFocusedCell();
 
-				    // 선택한 행의 제품 코드와 제품명 가져오기
-				    const prodCode = rowData.prodCode;
-				    const prodName = rowData.prodName;
+					// 선택한 행의 데이터 가져오기
+					const rowData = planGrid.getRow(focusedCell.rowKey);
 
-				    // 하단 그리드에 새로운 행 추가
-				    planDGrid.appendRow({ prodCode: prodCode, prodName: prodName });
+					// rowData가 null인 경우 알림 표시 후 함수 종료
+					if (!rowData) {
+						alert("제품을 선택하세요.");
+						return;
+					}
 
-				    // 추가된 행을 하이라이트 표시합니다.
-				    const lastRowIndex = planDGrid.getRowCount() - 1;
-				    planDGrid.addRowClassName(lastRowIndex, 'new-row');
+					// 선택한 행의 제품 코드와 제품명 가져오기
+					const prodCode = rowData.prodCode;
+					const prodName = rowData.prodName;
+
+					// 하단 그리드에 새로운 행 추가
+					planDGrid.appendRow({prodCode: prodCode, prodName: prodName});
+
+					// 추가된 행을 하이라이트 표시합니다.
+					const lastRowIndex = planDGrid.getRowCount() - 1;
+					planDGrid.addRowClassName(lastRowIndex, 'new-row');
 				});
+				
+				
+				planGrid.on('click', function (ev) {
+					console.log(ev.columnName);
+					var columnName = ev.columnName;
+					if (columnName === 'prodCode') {
+						var rowKey = ev.rowKey;
+						var rowData = planGrid.getRow(rowKey);
 
+						if (rowData) {
+							var prodCode = rowData.prodCode;
+							console.log("prodCode : " + prodCode);
+							// planCode를 사용하여 상세 데이터 요청
+							fetch('/bomList?prodCode=' + prodCode)
+								.then(response => response.json())
+								.then(data => {
+									console.log("data" + data.bomCode);
+									// 상세 그리드에 데이터 표시
+									// grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
+									planDGrid.resetData(data);
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						}
+					}
+				});
 
 				planDGrid = new tui.Grid({
 					el: document.getElementById('planDGrid'),
 					scrollX: false,
 					scrollY: false,
 					columns: [
-						{ 
+						{
 							header: 'BOM 코드',
 							name: 'bomCode',
 							align: 'center'
 						},
-						{ 
+						{
 							header: '제품 코드',
 							name: 'prodCode',
 							align: 'center'
 						},
-						{ 
+						{
 							header: '제품명',
 							name: 'prodName',
 							align: 'center'
 						},
-						{ 
+						{
 							header: '자재코드',
 							name: 'matCode',
 							align: "center",
 						},
-						{ 
+						{
 							header: '자재명',
 							name: 'matName',
 							align: "center",
 						},
-						{ 
+						{
 							header: '순번',
 							name: 'bomNum',
 							align: "center",
 							editor: "text"
 						},
-						{ 
+						{
 							header: '수량',
 							name: 'bomMatCount',
 							align: "center",
 							editor: "text"
 						},
-						
-						
+
+
 					],
 					rowHeaders: [],
-					pageOptions: { useClient: true, perPage: 5 }
+					
 				});
-				
-			
+
+
 				// 모달 열기 이벤트 처리
 				planDGrid.on('click', function (ev) {
 					if (ev.columnName === 'matCode') {
@@ -320,60 +390,24 @@
 
 				console.log("planGrid", planGrid)
 			});
-			
-			
+
+
 			// 모달창에서 클릭 시 그리드에 값 넣기
 			function updateInputFields(rowElement) {
-			    // 클릭한 <tr> 요소에서 데이터 속성을 가져옴
-			    var matCode = rowElement.getAttribute('data-matCode');
-			    var matName = rowElement.getAttribute('data-matName');
+				// 클릭한 <tr> 요소에서 데이터 속성을 가져옴
+				var matCode = rowElement.getAttribute('data-matCode');
+				var matName = rowElement.getAttribute('data-matName');
 
-			    // 가져온 값을 그리드에 넣기
-			    var selectedRowKey = planDGrid.getFocusedCell().rowKey; // 현재 선택한 행의 키를 가져옵니다.
-			    planDGrid.setValue(selectedRowKey, 'matCode', matCode); // 특정 열에 자재코드를 설정합니다.
-			    planDGrid.setValue(selectedRowKey, 'matName', matName); // 특정 열에 자재명을 설정합니다.
+				// 가져온 값을 그리드에 넣기
+				var selectedRowKey = planDGrid.getFocusedCell().rowKey; // 현재 선택한 행의 키를 가져옵니다.
+				planDGrid.setValue(selectedRowKey, 'matCode', matCode); // 특정 열에 자재코드를 설정합니다.
+				planDGrid.setValue(selectedRowKey, 'matName', matName); // 특정 열에 자재명을 설정합니다.
 			}
+
+
+
 			
-			
-
-			document.querySelectorAll('.plan-row').forEach(row => {
-				row.addEventListener('click', function () {
-					const planCode = this.getAttribute('data-plan-code');
-
-					fetch('/planDetail?planCode=' + planCode)
-						.then(response => response.json())
-						.then(data => {
-							const detailsTbody = document.getElementById('planDetails');
-							detailsTbody.innerHTML = ''; // 기존 내용 초기화
-
-							// 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-							data.forEach(detail => {
-								const tr = document.createElement('tr');
-
-								const date = new Date(detail.dlvyDate);
-								const sDate = new Date(detail.start);
-								const eDate = new Date(detail.end);
-								const formattedDate = date.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-								const formattedSDate = sDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-								const formattedEDate = eDate.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-								console.log(detail);
-								tr.innerHTML = `
-									<td>${detail.dplanCode}</td>
-		                            <td>${detail.planCode}</td>
-		                            <td>${detail.prodCode}</td>
-		                            <td><input type="date" value="${formattedSDate}" name="startDate"></td>
-		                            <td><input type="date" value="${formattedEDate}" name="endDate"></td>
-		                            <td>${detail.prodCount}</td>
-		                            <td>${detail.ordCount}</td>
-		                            <td><input type="number" value="${detail.dplanCount}" name="planCount"></td>
-		                            <td>${formattedDate}</td>
-								`;
-								detailsTbody.appendChild(tr);
-							});
-						});
-				});
-			});
-			</script>
+		</script>
 
 
 
@@ -381,117 +415,119 @@
 
 
 
-			<script>
-			
+		<script>
+
 			//==========================insert===========================================================
 			document.querySelector('#bomInsert').addEventListener('click', function () {
-				let bomSeq; 
+				let bomSeq;
 				const newPlan = document.querySelectorAll('.new-row');
 				if (newPlan.length === 0) {
 					alert("저장 할 내용이 없습니다.")
 					return;
 				}
-		
+
 				/* fetch('/bomSeq')
-			    .then(response => {
-			        if (!response.ok) {
-			            throw new Error('Network response was not ok');
-			        }
-			        return response.text(); // 또는 response.json() if JSON expected
-			    })
-			    .then(data => {
-			        console.log('Fetched data:', data);
-			        // 숫자로 변환하는 로직이 필요할 경우, parseInt(data, 10)를 사용
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.text(); // 또는 response.json() if JSON expected
+				})
+				.then(data => {
+					console.log('Fetched data:', data);
+					// 숫자로 변환하는 로직이 필요할 경우, parseInt(data, 10)를 사용
 					bomSeq = data;
 					console.log("bomSeq : " + bomSeq);
-			        //location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
-			    })
-			    .catch(error => {
-			        console.error('Error:', error);
-			    }); */
-			    async function fetchBomSeq() {
-			        try {
-			            const response = await fetch('/bomSeq');
-			            if (!response.ok) {
-			                throw new Error('Network response was not ok');
-			            }
-			            const data = await response.text(); // 또는 response.json() if JSON expected
-			            console.log('Fetched data:', data);
-			            return data; // 반환된 데이터를 사용하거나 다른 작업을 수행
-			        } catch (error) {
-			            console.error('Error:', error);
-			        }
-			    }
-
-			    async function performAction() {
-			        bomSeq = await fetchBomSeq();
-			        console.log("bomSeq : " + bomSeq);
-			        // 추가 작업을 여기에서 수행할 수 있습니다.
-			    }
-
-			    // 이 함수를 이벤트 핸들러나 다른 곳에서 호출
-			    performAction();
-				
-				
-				let data = {};
-
-				var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
-				console.log("newPlanDetailRows" + newPlanDetailRows);
-				let planDetailData = [];
-
-				for (var i = (newPlanDetailRows.length)/2 + 1; i < newPlanDetailRows.length; i++) {
-					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
-					let obj = {};
-					console.log("bomSeq : "+ bomSeq);
-					let bomCode = 'BOM' + String(bomSeq).padStart(3, '0');
-					console.log("bomCode" + bomCode);
-					let target = $(newPlanDetailRows[i]);
-
-					obj.prodCode = target.find('td:eq(1)').text();
-					console.log("prodCode : " + obj.prodCode);
-
-					obj.matCode = target.find('td:eq(3)').text();
-					console.log("matCode : " + obj.matCode);
-					obj.bomNum = target.find('td:eq(5)').text();
-					obj.bomMatCount = target.find('td:eq(6)').text();
-
-					planDetailData.push(obj);
-
-				}
-
-				
-				data = planDetailData;
-				
-
-
-				console.log(data);
-				// AJAX 요청으로 서버에 데이터 전송
-				fetch('/bomInsert', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-
-					},
-					body: JSON.stringify(data)
+					//location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
 				})
-					.then(response => {
+				.catch(error => {
+					console.error('Error:', error);
+				}); */
+				async function fetchBomSeq() {
+					try {
+						const response = await fetch('/bomSeq');
 						if (!response.ok) {
 							throw new Error('Network response was not ok');
 						}
-						return response.text();
-					})
-					.then(data => {
-						console.log('Success:', data);
-						alert(data);
-						location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
-					})
-					.catch(error => {
+						const data = await response.text(); // 또는 response.json() if JSON expected
+						console.log('Fetched data:', data);
+						return data; // 반환된 데이터를 사용하거나 다른 작업을 수행
+					} catch (error) {
 						console.error('Error:', error);
-					});
+					}
+				}
+
+				async function performAction() {
+					bomSeq = await fetchBomSeq();
+					console.log("bomSeq : " + bomSeq);
+					// 추가 작업을 여기에서 수행할 수 있습니다.
+					let data = {};
+
+					var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
+					console.log("newPlanDetailRows" + newPlanDetailRows);
+					let planDetailData = [];
+
+					for (var i = (newPlanDetailRows.length) / 2 + 1; i < newPlanDetailRows.length; i++) {
+						// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
+						let obj = {};
+						console.log("bomSeq2 : " + bomSeq);
+						let bomCode = 'BOM' + String(bomSeq).padStart(3, '0');
+						console.log("bomCode" + bomCode);
+						let target = $(newPlanDetailRows[i]);
+						obj.bomCode = bomCode;
+						obj.prodCode = target.find('td:eq(1)').text();
+						console.log("prodCode : " + obj.prodCode);
+
+						obj.matCode = target.find('td:eq(3)').text();
+						console.log("matCode : " + obj.matCode);
+						obj.bomNum = target.find('td:eq(5)').text();
+						obj.bomMatCount = target.find('td:eq(6)').text();
+
+						planDetailData.push(obj);
+
+					}
+
+
+					data = planDetailData;
 
 
 
-			}); 
+					console.log(data);
+					// AJAX 요청으로 서버에 데이터 전송
+					fetch('/bomInsert', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+
+						},
+						body: JSON.stringify(data)
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.text();
+						})
+						.then(data => {
+							console.log('Success:', data);
+							alert(data);
+							location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
+						})
+						.catch(error => {
+							console.error('Error:', error);
+						});
+				}
+
+				// 이 함수를 이벤트 핸들러나 다른 곳에서 호출
+				performAction();
+
+
+
+
+
+
+
+			});
 
 
 			//plan detail update
@@ -550,7 +586,7 @@
 						console.error('Error:', error);
 					});*/
 
-			
+
 
 		</script>
 	</section>

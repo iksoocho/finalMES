@@ -12,6 +12,7 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <title>설비등록</title>
 <style>
+/* 기존 스타일 유지 */
 #layoutSidenav_content {
 	margin-top: 20px;
 }
@@ -43,287 +44,231 @@ button {
 #myModal3 {
 	text-align: center;
 }
+
+/* 모달 스타일 */
+.modal-dialog {
+	max-width: 800px;
+}
+
+.modal-content {
+	border-radius: 10px;
+}
+
+.modal-header {
+	background-color: #007bff;
+	color: white;
+	border-radius: 10px 10px 0 0;
+}
+
+.modal-body {
+	padding: 20px;
+}
+
+.modal-footer {
+	border-radius: 0 0 10px 10px;
+}
+
+.modal-title {
+	font-size: 24px;
+}
+
+.table th, .table td {
+	text-align: center;
+}
+
+.modal-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.modal-table th, .modal-table td {
+	padding: 10px;
+	border-bottom: 1px solid #dee2e6;
+}
+
+.modal-table th {
+	background-color: #f8f9fa;
+}
+
+.modal-table tbody tr:hover {
+	background-color: #f2f2f2;
+}
+
+/* 모달 창 외부를 클릭하여 닫을 수 있도록 */
+.modal-backdrop {
+    opacity: 0.2;
+}
 </style>
 </head>
 <body>
 
 	<section layout:fragment="content">
-	<div class="container">
-	
-		<h2>설비관리</h2>
-		<br>
 		<div class="container">
-			<table class="table">
-				<tbody>
-					<tr>
-						<th>설비명 *</th>
-						<td colspan="2"><input type="text" id="facName"
-							name="facName" required data-toggle="modal"
-							data-target="#myModal1"></td>
-						<th>최고온도</th>
-						<td colspan="2"><input type="text" id="facHig" name="facHig"
-							required></td>
-					</tr>
-					<tr>
-						<th>공정명 *</th>
-						<td colspan="2"><input type="text" id="procName"
-							name="procName" required data-toggle="modal"
-							data-target="#myModal2"></td>
-						<th>최저온도</th>
-						<td colspan="2"><input type="text" id="facLow" name="facLow"
-							required></td>
 
-
-					</tr>
-					<tr>
-						<th>공정코드 *</th>
-						<td colspan="2"><input type="text" id="procCode"
-							name="procCode" required></td>
-
-						<th>거래처 *</th>
-						<td colspan="2"><input type="text" id="businessCode"
-							name="businessCode" required data-toggle="modal"
-							data-target="#myModal4"></td>
-					</tr>
-					<tr>
-						<th>담당자 *</th>
-						<td colspan="2"><input type="text" id="facPerson"
-							name="facPerson" required data-toggle="modal"
-							data-target="#myModal3"></td>
-						<th>입고일</th>
-						<td colspan="2"><input type="date" id="facDate"
-							name="facDate" required></td>
-
-					</tr>
-					<tr>
-						<th>점검주기 선택</th>
-						<td><select id="facInscycle" name="facInscycle">
-								<option value="선택">선택</option>
-								<option value="매일">매일</option>
-								<option value="매주">매주</option>
-								<option value="매월">매월(30일)</option>
-						</select></td>
-
-						<!-- <th>이미지</th>
-						<td colspan="2"><input type="file" name="facImage"></td> -->
-					</tr>
-				</tbody>
-			</table>
+			<h2>설비관리</h2>
 			<br>
-			<div class="text-center">
-			<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-			<button type="button" class="btn btn-outline-primary"
-				onclick="downloadCSV()">엑셀 다운로드</button>
-			<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
-			</div>
-			<br><br>
-			<div id="grid" class="container"></div>
-		</div>
+			<div class="container">
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>설비명 *</th>
+							<td colspan="2"><input type="text" id="facName"
+								name="facName" required></td>
+							<th>최고온도 *</th>
+							<td colspan="2"><input type="text" id="facHig" name="facHig"
+								required></td>
+						</tr>
+						<tr>
+							<th>최저온도 *</th>
+							<td colspan="2"><input type="text" id="facLow" name="facLow"
+								required></td>
+							<th>입고일 *</th>
+							<td colspan="2"><input type="date" id="facDate"
+								name="facDate" required></td>
+						</tr>
+						<tr>
+							<th>공정명 *</th>
+							<td colspan="2"><input type="text" id="procName"
+								name="procName" required data-toggle="modal"
+								data-target="#myModal2"></td>
 
-	</div>
+							<th>공정코드 *</th>
+							<td colspan="2"><input type="text" id="procCode"
+								name="procCode" required></td>
 
-		<!-- 하단의 설비 리스트 -->
-
-		<!-- <table>
-					<tr th:each="fac: ${list}">
-						<td th:text="${facStat.count}"></td>
-						<td th:text="${fac.facCode}"></td>
-						<td th:text="${fac.facName}"></td>
-						<td th:text="${fac.facPerson}"></td>
-						날짜변환 
-						<td th:text="${#dates.format(fac.facDate, 'yyyy-MM-dd')}"></td>
-						<td th:text="${fac.facInscycle}"></td>
-					</tr>
-				</table> -->
-
-
-
-
-
-		<!-- 설비코드 모달창 -->
-		<div class="modal" id="myModal1">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<!-- 모달 헤더 -->
-					<div class="modal-header">
-						<h4 class="modal-title">설비명</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					<div class="modal-body">
-						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>설비명</th>
-									<th>제조업체</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="fac: ${list}">
-									<td th:text="${facStat.count}"></td>
-									<td th:text="${fac.facName}" th:data-facName="${fac.facName}"
-										th:id="${fac.facName}" th:data-facPerson="${fac.facPerson}"
-										onclick="updateInputFields(this)" data-bs-dismiss="modal"></td>
-									<td th:text="${fac.businessCode}" th:id="${fac.businessCode}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">닫기</button>
-					</div>
+						</tr>
+						<tr>
+							<th>거래처 *</th>
+							<td colspan="2"><input type="text" id="businessCode"
+								name="businessCode" required data-toggle="modal"
+								data-target="#myModal4"></td>
+							<th>담당자 *</th>
+							<td colspan="2"><input type="text" id="facPerson"
+								name="facPerson" th:value="${username}" required></td>
+						</tr>
+						<tr>
+							<th>점검주기 선택</th>
+							<td><select id="facInscycle" name="facInscycle">
+									<option value="선택">선택</option>
+									<option value="매일">매일</option>
+									<option value="매주">매주</option>
+									<option value="매월">매월(30일)</option>
+							</select></td>
+						</tr>
+					</tbody>
+				</table>
+				<br>
+				<div class="text-center">
+					<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+					<button type="button" class="btn btn-outline-primary"
+						onclick="downloadCSV()">엑셀 다운로드</button>
+					<input type="text" id="searchInput" oninput="searchFunction()"
+						placeholder="검색...">
 				</div>
+				<br> <br>
+				<div id="grid" class="container"></div>
 			</div>
+
 		</div>
-
-
-
+		
 		<!-- 공정명모달 -->
-		<div class="modal" id="myModal2">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<!-- 모달 헤더 -->
-					<div class="modal-header">
-						<h4 class="modal-title">공정명</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					<div class="modal-body">
-						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>공정명</th>
-									<th>공정코드</th>
-									<th>공정등록일</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="fac: ${list}">
-									<td th:text="${facStat.count}"></td>
-									<td th:text="${fac.procName}"
-										th:data-procCode="${fac.procCode}"
-										th:data-procName="${fac.procName}"
-										onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
-									<td th:text="${fac.procCode}"></td>
-									<!-- 날짜변환  -->
-									<td th:text="${#dates.format(fac.procDate, 'yyyy-MM-dd')}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">닫기</button>
-					</div>
-				</div>
-			</div>
-		</div>
+      <div class="modal" id="myModal2">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <!-- 모달 헤더 -->
+               <div class="modal-header">
+                  <h4 class="modal-title">공정명</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+               </div>
+               <div class="modal-body">
+                  <!-- 모달 내용 데이터로 받아와야함 설비명 -->
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th>No.</th>
+                           <th>공정명</th>
+                           <th>공정코드</th>
+                           <th>공정등록일</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each="fac: ${list}">
+                           <td th:text="${facStat.count}"></td>
+                           <td th:text="${fac.procName}"
+                              th:data-procCode="${fac.procCode}"
+                              th:data-procName="${fac.procName}"
+                              onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
+                           <td th:text="${fac.procCode}"></td>
+                           <!-- 날짜변환  -->
+                           <td th:text="${#dates.format(fac.procDate, 'yyyy-MM-dd')}"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary"
+                     data-dismiss="modal">닫기</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      
+      <!-- 거래처모달 -->
+      <div class="modal" id="myModal4">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <!-- 모달 헤더 -->
+               <div class="modal-header">
+                  <h4 class="modal-title">거래처</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+               </div>
+               <div class="modal-body">
+                  <!-- 모달 내용 데이터로 받아와야함 설비명 -->
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th>거래처</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each="fac: ${list}">
+                           <td th:text="${fac.businessCode}"
+                              th:data-businessCode="${fac.businessCode}"
+                              onclick="updateInputFields3(this)" data-bs-dismiss="modal"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary"
+                     data-dismiss="modal">닫기</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      
+		
 	
 
-		<!-- 담당자모달 -->
-		<div class="modal" id="myModal3">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<!-- 모달 헤더 -->
-					<div class="modal-header">
-						<h4 class="modal-title">담당자명</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					<div class="modal-body">
-						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>담당자</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="fac: ${list}">
-									<td th:text="${fac.facPerson}"
-										th:data-facPerson="${fac.facPerson}"
-										onclick="updateInputFields2(this)" data-bs-dismiss="modal"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">닫기</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- 거래처모달 -->
-		<div class="modal" id="myModal4">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<!-- 모달 헤더 -->
-					<div class="modal-header">
-						<h4 class="modal-title">거래처</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					<div class="modal-body">
-						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>거래처</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="fac: ${list}">
-									<td th:text="${fac.businessCode}"
-										th:data-businessCode="${fac.businessCode}"
-										onclick="updateInputFields3(this)" data-bs-dismiss="modal"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">닫기</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script th:inline="javascript">
-	// 모달창 내부에 있는 데이터 input 에 담는 함수
-	function updateInputFields(Element) {
-		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
-		var facName = Element.getAttribute('data-facName');
-		
-
-		// 입력 필드의 값 설정
-		document.getElementById('facName').value = facName;
-		
-
-	}
-
-	function updateInputFields1(Element) {
-		// 클릭한 <td> 요소에서 데이터 속성을 가져옴
-		var procCode = Element.getAttribute('data-procCode');
-		var procName = Element.getAttribute('data-procName');
-
-		// 입력 필드의 값 설정
-		document.getElementById('procCode').value = procCode;
-		document.getElementById('procName').value = procName;
-		
-	}
-
-	function updateInputFields2(Element) {
-		var facPerson = Element.getAttribute('data-facPerson');
-		document.getElementById('facPerson').value = facPerson;
-	}
+	<script th:inline="javascript">
 	
-	function updateInputFields3(Element) {
-		var businessCode = Element.getAttribute('data-businessCode');
-		document.getElementById('businessCode').value = businessCode;
-	}
 	
+	 function updateInputFields1(Element) {
+	      // 클릭한 <td> 요소에서 데이터 속성을 가져옴
+	      var procCode = Element.getAttribute('data-procCode');
+	      var procName = Element.getAttribute('data-procName');
+
+	      // 입력 필드의 값 설정
+	      document.getElementById('procCode').value = procCode;
+	      document.getElementById('procName').value = procName;
+	      
+	   }
+
+	 function updateInputFields3(Element) {
+	      var businessCode = Element.getAttribute('data-businessCode');
+	      document.getElementById('businessCode').value = businessCode;
+	   }
+
 	
 	// 등록
 	document.getElementById('saveBtn').addEventListener("click", function() {
@@ -335,7 +280,6 @@ button {
 		  var facLow = document.getElementsByName("facLow")[0].value;
 		  var facDate = document.getElementsByName("facDate")[0].value;
 		  var facInscycle = document.getElementsByName("facInscycle")[0].value;
-		  /* var facImage = document.getElementsByName("facImage")[0].value; */
 		  var facPerson = document.getElementsByName("facPerson")[0].value;
 		  
 		    // 등록 시 유효성검사
@@ -363,8 +307,6 @@ button {
 		        alert("거래처를 입력해주세요.");
 		        return;
 		    }
-
-		    
 	    
 	            var facData = {
 	            	procCode: procCode,
@@ -374,9 +316,7 @@ button {
 	                facLow: facLow,
 	                facDate: facDate,
 	                facInscycle: facInscycle,
-	                /* facImage: facImage, */
 	                facPerson: facPerson,
-	                
 	            
 	            };
 	            var notData = {};
@@ -403,7 +343,7 @@ button {
 			    })
 			    .catch(error => {
 			        console.log(error);
-			        alert(오류);
+			        alert("오류");
 			    });
 			});
 	
@@ -502,11 +442,7 @@ button {
   	     }
   	 }
 
-
-
-
-
 </script>
-	</section>
+</section>
 </body>
 </html>

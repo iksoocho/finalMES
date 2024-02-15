@@ -17,7 +17,24 @@
 	
 	<insert id="bomInsert" parameterType="BomVO">
 		insert into
-		bom_material(bom_num, mat_code, proc_code, prod_code, bom_mat_count)
-		values(#{bomNum}, #{matCode}, #{procCode}, #{prodCode}, #{bomMatCount})
+		bom_material(bom_code ,bom_num, mat_code, proc_code, prod_code, bom_mat_count)
+		values(#{bomCode},#{bomNum}, #{matCode}, #{procCode}, #{prodCode}, #{bomMatCount})
 	</insert>
+	
+	<select id="getBomList" resultType="BomVO">
+		select 
+			bom.bom_code,
+			bom.bom_num,
+			bom.mat_code,
+			bom.prod_code,
+			bom.proc_code,
+			bom.bom_mat_count,
+			m.mat_name,
+			p.prod_name
+		from bom_material bom
+		join material m on bom.mat_code = m.mat_code
+		join product p on bom.prod_code = p.prod_code
+		where bom.prod_code = #{prodCode}
+	</select>
+	
 </mapper>
