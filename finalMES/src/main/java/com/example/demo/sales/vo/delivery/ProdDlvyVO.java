@@ -13,5 +13,5 @@ public class ProdDlvyVO {
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date outDate;
 	private String outManager;
-	private int outState;
+	private String outState;
 }

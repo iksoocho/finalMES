@@ -63,24 +63,26 @@
 
 	<select id="getOrderList" resultType="OrderDVO">
 		SELECT
-				ord.ord_code,
-				find_codename(ord.ord_state)  ord_state_nm,
-				ord_state,
-				business.business_name,
-				business.business_code,
-				business.business_manager,
-				business.business_manager_phone,
-				ord.ord_date,
-				ord.ord_manager,
-				(select SUM(ord_d.ttl_price)from ord_d_list ord_d where ord.ord_code = ord_d.ord_code )  AS total_ttl_price,
-				ord.ord_note
-				
-		FROM	ord_list ord
-		LEFT JOIN business business ON ord.business_code = business.business_code
+		ord.ord_code,
+		find_codename(ord.ord_state) ord_state_nm,
+		ord_state,
+		business.business_name,
+		business.business_code,
+		business.business_manager,
+		business.business_manager_phone,
+		ord.ord_date,
+		ord.ord_manager,
+		(select SUM(ord_d.ttl_price)from ord_d_list ord_d where ord.ord_code =
+		ord_d.ord_code ) AS total_ttl_price,
+		ord.ord_note
+
+		FROM ord_list ord
+		LEFT JOIN business business ON ord.business_code =
+		business.business_code
 		<where>
-		<if test ='ordState != null and ordState !="" '>
-			ord.ord_state = #{ordState}
-		</if>
+			<if test='ordState != null and ordState !="" '>
+				ord.ord_state = #{ordState}
+			</if>
 		</where>
 		ORDER BY ord.ord_date DESC, ord.ord_code DESC
 	</select>
@@ -92,7 +94,7 @@
 		JOIN product p
 		ON od.prod_code = p.prod_code
 		WHERE od.ord_code = #{ordCode}
-		
+
 	</select>
 
 	<select id="getBusinessList" resultType="BusinessListVO"> <!-- 거래처 목록조회 -->
@@ -109,16 +111,17 @@
 	</select>
 
 	<!-- 여러 개의 ProductLotVO 객체를 반환하는 SQL 쿼리 -->
-	<select id="getProductLotList" parameterType="String"
-		resultType="ProductLotVO">
-		SELECT pl.prod_lot_code, pl.prod_count,
-		pl.prod_input_count,
-		pl.prod_output_count,
-		pl.prod_code, p.prod_name
-		FROM prod_lot pl LEFT JOIN product p ON
-		pl.prod_code = p.prod_code
-		WHERE pl.prod_code = #{prodCode}
+	<select id="getProductLotList" parameterType="String" resultType="ProductLotVO">
+		SELECT
+			pl.prod_lot_code, pl.prod_count,
+			pl.prod_input_count, pl.prod_output_count,
+			pl.prod_code, p.prod_name
+
+		FROM prod_lot pl
+		LEFT JOIN product p ON pl.prod_code = p.prod_code
+		WHERE pl.prod_code = #{prodCode} AND pl.prod_count > 0
 		ORDER BY pl.prod_lot_code
 	</select>
+	
 
 </mapper>
