@@ -6,8 +6,16 @@
 	<title>생산지시관리</title>
 	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 	<style>
-		.tui-grid-row-odd .plan {
+		.tui-grid-row-odd .ins {
 			background-color: #e0f7fa;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		.tui-grid-row-odd .ins.insTitle {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		.tui-grid-row-odd .ins.insNote {
+			background-color: #FDC0CE;
 			/* 예시로 빨간색을 지정했습니다. */
 		}
 
@@ -15,9 +23,33 @@
 			background-color: #e0f7fa;
 			/* 예시로 빨간색을 지정했습니다. */
 		}
+		.tui-grid-row-odd .dinsSdate {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		.tui-grid-row-odd .dinsEdate {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		.tui-grid-row-odd .dinsCount {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
 
 		.tui-grid-row-even .detail {
 			background-color: #e0f7fa;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		.tui-grid-row-even .dinsSdate {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		.tui-grid-row-even .dinsEdate {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+		.tui-grid-row-even .dinsCount {
+			background-color: #FDC0CE;
 			/* 예시로 빨간색을 지정했습니다. */
 		}
 	</style>
@@ -79,7 +111,7 @@
 			<!-- ============================메인============================ -->
 			<h2>생산 지시 관리</h2>
 			<div>
-				<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planInsert">저장</button>
+				<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="insInsert">저장</button>
 				<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; margin: 8px 5px;">생산 계획 조회</button>
 				<div>
 					<div id="planGrid"></div>
@@ -195,22 +227,22 @@
 
 						const rowData = props.grid.getRow(props.rowKey);
 						const planCode = rowData.planCode;
-						const ordCode = rowData.ordCode;
+						const insCode = rowData.insCode;
 						console.log("planCode : " + planCode)
-						console.log("ordCode : " + ordCode)
+						console.log("ordCode : " + insCode)
 						let data = {};
+						let insObj = {};
 						let planObj = {};
-						let ordObj = {};
 
 						planObj.planCode = planCode;
-						ordObj.ordCode = ordCode;
+						insObj.insCode = insCode;
 
 						data.planVO = planObj;
-						data.planOrdVO = ordObj;
+						data.planInsVO = insObj;
 
 						console.log("data : " + data);
 
-						fetch('/planDelete', {
+						fetch('/insDelete', {
 							method: 'DELETE',
 							headers: {
 								'Content-Type': 'application/json',
@@ -227,7 +259,7 @@
 							.then(data => {
 								console.log('Success:', data);
 								alert(data);
-								location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+								location.href = '/planIns'; // 성공적으로 처리된 후 리디렉트
 							})
 							.catch(error => {
 								console.error('Error:', error);
@@ -256,7 +288,7 @@
 							header: '지시 명',
 							name: 'insTitle',
 							editor: 'text', // 이 부분을 추가하여 텍스트 입력을 가능하게 함
-							background: '#014386'
+							className: 'insTitle'
 						},
 						{header: '담당자', name: 'insPerson', align: "center"},
 						{
@@ -278,7 +310,7 @@
 							header: '비고',
 							name: 'insNote',
 							editor: 'text', // 이 부분을 추가하여 텍스트 입력을 가능하게 함
-							background: '#014386'
+							className: 'insNote'
 						},
 						{
 							header: '삭제',
@@ -330,11 +362,13 @@
 
 					columns: [
 						// 데이터 구조에 따라 컬럼을 정의하세요
+						{name: 'dinsCode', header: '상세 지시 코드'},
 						{name: 'insCode', header: '생산 지시 코드'},
 
 						{name: 'prodCode', header: '제품 코드'},
 						{
 							name: 'dinsSdate', header: '시작 일자',
+							className: 'dinsSdate',
 							formatter: function ({value}) {
 								if (value) {
 									var date = new Date(value);
@@ -354,6 +388,7 @@
 						},
 						{
 							name: 'dinsEdate', header: '종료 일자',
+							className: 'dinsSdate',
 							formatter: function ({value}) {
 								if (value) {
 									var date = new Date(value);
@@ -375,6 +410,7 @@
 						{name: 'dplanCount', header: '계획량', align: "center", },
 						{
 							name: 'dinsCount', header: '지시량', align: "center",
+							className: 'dinsCount',
 							editor: {
 								type: NumberEditor,
 								options: {
@@ -414,7 +450,7 @@
 				planDGrid.resetData([]);
 				var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
 				if (!selectedRadio) {
-					alert('주문을 선택해주세요.');
+					alert('계획을 선택해주세요.');
 					return;
 				}
 
@@ -425,14 +461,14 @@
 					insCode: '',
 					planCode: planCode,
 
-					planTitle: '', // 사용자 입력에 따라 설정
-					planPerson: name, // 예시, 실제 데이터에 맞게 변경
-					planDate: new Date().toISOString().substring(0, 10), // 오늘 날짜
+					insTitle: '', // 사용자 입력에 따라 설정
+					insPerson: name, // 예시, 실제 데이터에 맞게 변경
+					insDate: new Date().toISOString().substring(0, 10), // 오늘 날짜
 					_attributes: {
 
 						className: {
 							// Add class name on a row
-							row: ['plan']
+							row: ['ins']
 						}
 					}
 
@@ -451,8 +487,8 @@
 						dInsCode: '', // 새 상세 지시 코드
 						
 						prodCode: detail.prodCode,
-						start: detail.start, // 시작 일자, 사용자 입력에 따라 설정
-						end: detail.end, // 종료 일자, 사용자 입력에 따라 설정
+						dinsSdate: detail.start, // 시작 일자, 사용자 입력에 따라 설정
+						dinsEdate: detail.end, // 종료 일자, 사용자 입력에 따라 설정
 						prodCount: detail.prodCount, // 현재 재고
 						ordCount: detail.ordCount, // 주문 수량
 						dplanCount: detail.dplanCount, // 계획량, 사용자 입력에 따라 설정
@@ -592,55 +628,61 @@
 
 
 			//==========================insert===========================================================
-			document.querySelector('#planInsert').addEventListener('click', function () {
-				const newPlan = document.querySelectorAll('.plan');
+			document.querySelector('#insInsert').addEventListener('click', function () {
+				const newPlan = document.querySelectorAll('.ins');
 				if (newPlan.length === 0) {
 					alert("저장 할 내용이 없습니다.")
 					return;
 				}
 
 				let data = {};
-				let planobj = {};
-				let ordState = {};
+				let insobj = {};
+				let planState = {};
 				// 'new-row' 클래스를 가진 행들만 선택
 
 
-				planobj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
-				planobj.planTitle = document.querySelector('td[data-column-name="planTitle"] div').innerHTML;
-				planobj.planPerson = document.querySelector('td[data-column-name="planPerson"] div').innerHTML;
-				planobj.planDate = document.querySelector('td[data-column-name="planDate"] div').innerHTML;
+				insobj.planCode = document.querySelector('td[data-column-name="planCode"] div').innerHTML;
+				insobj.insTitle = document.querySelector('td[data-column-name="insTitle"] div').innerHTML;
+				insobj.insPerson = document.querySelector('td[data-column-name="insPerson"] div').innerHTML;
+				insobj.insDate = document.querySelector('td[data-column-name="insDate"] div').innerHTML;
+				insobj.insNote = document.querySelector('td[data-column-name="insNote"] div').innerHTML;
+				
+				console.log("insobj : " + insobj);
+				
+				
+				planState.planCode = document.querySelector('td[data-column-name="planCode"] div').innerHTML;
 
-				ordState.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
+				var newInsDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
-				var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
+				let insDetailData = [];
 
-				let planDetailData = [];
-
-				for (var i = 4; i < newPlanDetailRows.length; i++) {
+				for (var i = 4; i < newInsDetailRows.length; i++) {
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
-					let target = $(newPlanDetailRows[i]);
-
+					let target = $(newInsDetailRows[i]);
+					
+					obj.insCode = target.find('td:eq(0)').text();
+					console.log("prodCode : " + obj.prodCode);
 					obj.prodCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
 
-					obj.dplanStartDate = target.find('td:eq(2)').text();
-					console.log("dplanStartDate : " + obj.dplanStartDate);
-					obj.dplanEndDate = target.find('td:eq(3)').text();
-					obj.dplanCount = target.find('td:eq(6)').text();
-
-					planDetailData.push(obj);
+					obj.dinsSdate = target.find('td:eq(2)').text();
+					console.log("dinsSdate : " + obj.dinsSdate);
+					obj.dinsEdate = target.find('td:eq(3)').text();
+					obj.dinsCount = target.find('td:eq(5)').text();
+					console.log("dinsCount : " + obj.dinsCount);
+					insDetailData.push(obj);
 
 				}
-
-				data.planVO = planobj;
-				data.planDVOList = planDetailData;
-				data.planOrdVO = ordState;
+				console.log("insDetailData : " + insDetailData);
+				data.planInsVO = insobj;
+				data.planInsDList = insDetailData;
+				data.planVO = planState;
 
 
 				console.log(data);
 				// AJAX 요청으로 서버에 데이터 전송
-				fetch('/planInsert', {
+				fetch('/insInsert', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -657,7 +699,7 @@
 					.then(data => {
 						console.log('Success:', data);
 						alert(data);
-						location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+						location.href = '/planIns'; // 성공적으로 처리된 후 리디렉트
 					})
 					.catch(error => {
 						console.error('Error:', error);
@@ -668,7 +710,7 @@
 			});
 
 
-			//plan detail update
+			//ins detail update
 			document.querySelector('#planDUpdate').addEventListener('click', function () {
 				const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
 				if (newDetail === null) {
@@ -686,22 +728,21 @@
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
-					obj.dplanCode = target.find('td:eq(0)').text();
-					obj.prodCode = target.find('td:eq(1)').text();
-					console.log("prodCode : " + obj.prodCode);
+					obj.dinsCode = target.find('td:eq(0)').text();
+					
 
-					obj.dplanStartDate = target.find('td:eq(2)').text();
-					console.log("dplanStartDate : " + obj.dplanStartDate);
-					obj.dplanEndDate = target.find('td:eq(3)').text();
-					obj.dplanCount = target.find('td:eq(6)').text();
+					obj.dinsSdate = target.find('td:eq(3)').text();
+					console.log("dplanStartDate : " + obj.dinsSdate);
+					obj.dinsEdate = target.find('td:eq(4)').text();
+					obj.dinsCount = target.find('td:eq(6)').text();
 
 					planDetailData.push(obj);
 
 				}
-				data.planDVOList = planDetailData;
+				data.planInsDList = planDetailData;
 				console.log(data);
 				// AJAX 요청으로 서버에 데이터 전송
-				fetch('/planDUpdate', {
+				fetch('/insDUpdate', {
 					method: 'put',
 					headers: {
 						'Content-Type': 'application/json',
@@ -718,7 +759,7 @@
 					.then(data => {
 						console.log('Success:', data);
 						alert(data);
-						location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+						location.href = '/planIns'; // 성공적으로 처리된 후 리디렉트
 					})
 					.catch(error => {
 						console.error('Error:', error);

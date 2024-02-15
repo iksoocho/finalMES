@@ -2,6 +2,7 @@ package com.example.demo.produce.service;
 
 import java.util.List;
 
+import com.example.demo.produce.InsCompositeVO;
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanInsDVO;
@@ -32,4 +33,10 @@ public interface PlanService {
 	//생산 지시
 	public List<PlanInsVO> getPlanInsList();
 	public List<PlanInsDVO> getPlanDInsList(String insCode);
+//	public PlanInsVO insertInsInfo(PlanInsVO planInsVO);
+//	public PlanInsDVO insertInsDInfo(PlanInsDVO planInsDVO);
+	public void insertInsWithDetail(InsCompositeVO insCompositeVO);
+	public void deleteInsInfo(InsCompositeVO insCompositeVO);
+	
+	public void updateInsDInfo(InsCompositeVO insCompositeVO);
 }

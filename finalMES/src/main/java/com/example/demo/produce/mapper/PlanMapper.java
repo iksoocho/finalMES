@@ -41,7 +41,7 @@ public interface PlanMapper {
 
 	public int insertPlanInsInfo(PlanInsVO planInsVO);
 	
-	public int insertPlanDInsInfo(PlanInsVO planInsVO);
+	public int insertPlanDInsInfo(PlanInsDVO planInsDVO);
 	
 	public int updatePlanDInsInfo(PlanInsDVO planInsDVO);
 	
@@ -49,6 +49,10 @@ public interface PlanMapper {
 	//계획 상태 수정
 	public void updatePlanStateZero(String planCode);
 	public void updatePlanStateOne(String planCode);
+	
+	public void deleteInsInfo(String insCode);
+	
+	public void updateInsDInfo(PlanInsDVO planInsDVO);
 
 
 }

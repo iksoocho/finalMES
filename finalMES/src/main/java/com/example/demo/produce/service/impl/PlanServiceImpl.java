@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.produce.InsCompositeVO;
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanInsDVO;
@@ -128,6 +129,44 @@ public class PlanServiceImpl implements PlanService{
 		// TODO Auto-generated method stub
 		return planMapper.selectPlanDInsList(insCode);
 	}
+
+	@Override
+	public void insertInsWithDetail(InsCompositeVO insCompositeVO) {
+		planMapper.updatePlanStateZero(insCompositeVO.getPlanVO().getPlanCode());
+		
+		// prod_plan에 데이터 삽입
+    	planMapper.insertPlanInsInfo(insCompositeVO.getPlanInsVO());
+    	
+    	
+    	//루프 돌면서 상세 insert
+        for (int i =0; i<insCompositeVO.getPlanInsDList().size(); i++) {
+        	insCompositeVO.getPlanInsDList().get(i).setInsCode(insCompositeVO.getPlanInsVO().getInsCode()); // prod_d_plan의 각 항목에 planCode 설정
+            planMapper.insertPlanDInsInfo(insCompositeVO.getPlanInsDList().get(i)); // prod_d_plan에 데이터 삽입
+            System.out.println("등록성공");
+        }
+		
+	}
+
+	@Override
+	public void deleteInsInfo(InsCompositeVO insCompositeVO) {
+		planMapper.updatePlanStateOne(insCompositeVO.getPlanVO().getPlanCode());
+		
+		planMapper.deleteInsInfo(insCompositeVO.getPlanInsVO().getInsCode());
+		
+	}
+
+	@Override
+	public void updateInsDInfo(InsCompositeVO insCompositeVO) {
+		for (int i =0; i<insCompositeVO.getPlanInsDList().size(); i++) {
+            planMapper.updateInsDInfo(insCompositeVO.getPlanInsDList().get(i)); // prod_d_plan에 데이터 삽입
+            System.out.println("수정성공");
+        }
+		
+	}
+
+	
+
+	
 
 	
 

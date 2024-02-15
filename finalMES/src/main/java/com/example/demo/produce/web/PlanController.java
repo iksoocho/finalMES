@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.produce.InsCompositeVO;
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanInsDVO;
@@ -22,7 +23,6 @@ import com.example.demo.produce.PlanOrdDVO;
 import com.example.demo.produce.PlanOrdVO;
 import com.example.demo.produce.PlanVO;
 import com.example.demo.produce.service.PlanService;
-
 
 import lombok.extern.log4j.Log4j2;
 
@@ -155,4 +155,34 @@ public class PlanController {
 		return planService.getPlanDInsList(insCode);
 	}
 
+	
+	
+	@PostMapping("/insInsert")
+	@ResponseBody
+    public String insertIns(@RequestBody InsCompositeVO insCompositeVO) {
+			String msg;
+        	planService.insertInsWithDetail(insCompositeVO);
+        	msg = "생산 지시 및 상세 정보가 성공적으로 삽입되었습니다.";
+            return msg;
+     
+    }
+	
+	@DeleteMapping("insDelete")
+	@ResponseBody
+	public String deleteIns(@RequestBody InsCompositeVO insCompositeVO) {
+		String msg;
+		planService.deleteInsInfo(insCompositeVO);
+		msg = "생산 지시가 삭제 되었습니다.";
+		return msg;
+	}
+	
+	@PutMapping("/insDUpdate")
+	@ResponseBody
+	public String updateInsDetail(@RequestBody InsCompositeVO insCompositeVO) {
+		String msg;
+		planService.updateInsDInfo(insCompositeVO);
+		msg = "상세 지시가 수정 되었습니다.";
+		return msg;
+				
+	}
 }

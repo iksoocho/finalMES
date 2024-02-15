@@ -6,6 +6,7 @@
 	<select id="selectPlanList" resultType="PlanVO">
 		SELECT *
 		FROM PROD_PLAN
+		WHERE PLAN_STATE = 'p1'
 		ORDER BY PLAN_CODE DESC
 	</select>
 
@@ -126,30 +127,70 @@
 	
 	<select id="selectPlanDInsList" resultType="PlanInsDVO">
 		SELECT
-		    pdp.prod_code,
-		    pdp.d_plan_code,
-		    pdp.plan_code,
-		    pdp.d_plan_count,
-		    pdp.d_plan_start_date AS "START",
-		    pdp.d_plan_end_date AS "END",
-		    pdp.d_plan_priority,
-		    pdp.d_plan_note,
+			pdi.d_ins_code,
+		    pdi.prod_code,
+		    MAX(pdp.d_plan_count) AS d_plan_count, 
+		    pdi.ins_code,
+		    pdi.d_ins_count,
 		    MAX(pdi.d_ins_sdate) AS d_ins_sdate,
 		    MAX(pdi.d_ins_edate) AS d_ins_edate
 		FROM
 		    prod_d_plan pdp
-		LEFT JOIN prod_instruction pi ON pdp.plan_code = pi.plan_code
-		LEFT JOIN prod_d_ins pdi ON pi.ins_code = pdi.ins_code
-		where pdi.ins_code = #{insCode}
+		INNER JOIN prod_instruction pi ON pdp.plan_code = pi.plan_code
+		INNER JOIN prod_d_ins pdi ON pi.ins_code = pdi.ins_code
+		WHERE
+		    pdi.ins_code = #{insCode}
 		GROUP BY
-		    pdp.prod_code,
-		    pdp.d_plan_code,
-		    pdp.plan_code,
-		    pdp.d_plan_count,
-		    pdp.d_plan_start_date,
-		    pdp.d_plan_end_date,
-		    pdp.d_plan_priority,
-		    pdp.d_plan_note
-		ORDER BY pdp.d_plan_code
+			pdi.d_ins_code,
+		    pdi.prod_code,
+		    pdi.ins_code,
+		    pdi.d_ins_count
+		ORDER BY
+		    pdi.prod_code
+	
 	</select>
+	
+	<insert id="insertPlanInsInfo" parameterType="PlanInsVO">
+		<selectKey keyProperty="insCode" resultType="string" order="BEFORE">
+			SELECT
+				'INS'||LPAD(INS_CODE_SEQ.NEXTVAL,3,0) FROM DUAL
+		</selectKey>
+		INSERT INTO PROD_INSTRUCTION(INS_CODE, PLAN_CODE, INS_TITLE, INS_PERSON,
+		INS_DATE,INS_NOTE)
+		VALUES(#{insCode},#{planCode},#{insTitle},#{insPerson},#{insDate},#{insNote}) 
+	</insert>
+
+	<insert id="insertPlanDInsInfo" parameterType="PlanInsDVO">
+		INSERT INTO
+		PROD_D_INS(INS_CODE, PROD_CODE, D_INS_COUNT, D_INS_SDATE,
+		D_INS_EDATE )
+		VALUES(#{insCode},#{prodCode},#{dinsCount},#{dinsSdate},#{dinsEdate})
+	</insert>
+	
+	<update id="updatePlanStateZero" parameterType="String">
+		UPDATE PROD_PLAN
+		SET PLAN_STATE = 'p2'
+		WHERE PLAN_CODE = #{palnCode}
+	</update>
+	
+	<update id="updatePlanStateOne" parameterType="String">
+		UPDATE PROD_PLAN
+		SET PLAN_STATE = 'p1'
+		WHERE PLAN_CODE = #{palnCode}
+	</update>
+	
+	<delete id="deleteInsInfo" parameterType="String">
+		DELETE FROM PROD_INSTRUCTION
+		WHERE INS_CODE = #{insCode}
+	</delete>
+	
+	<update id="updateInsDInfo" parameterType="PlanInsDVO">
+		UPDATE PROD_D_INS
+		SET D_INS_SDATE = #{dinsSdate},
+			D_INS_EDATE = #{dinsEdate},
+			D_INS_COUNT = #{dinsCount}
+		WHERE D_INS_CODE = #{dinsCode}
+	</update>
+	
+	
 </mapper>

@@ -6,14 +6,14 @@ import lombok.Data;
 
 @Data
 public class PlanInsDVO {
-	private String dInsCode;
+	private String dinsCode;
 	private String insCode;
 	private String prodCode;
-	private int dInsCount;
-	private Date dInsSdate;
-	private Date dInsEdate;
-	private String dInsNote;
-	private String dPlanCount;
+	private int dinsCount;
+	private Date dinsSdate;
+	private Date dinsEdate;
+	private String dinsNote;
+	private String dplanCount;
 	
 	
 }
