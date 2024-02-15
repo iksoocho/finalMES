@@ -13,6 +13,7 @@ import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
+import com.example.demo.produce.ProdProgressJoinVO;
 import com.example.demo.produce.WorkLoadVO;
 import com.example.demo.produce.service.ProdInsService;
 
@@ -57,12 +58,14 @@ public class ProdInsController {
 		List<WorkLoadVO> load = prodInsService.getWorkPageLoadData(prodCode);
 		List<ProcessVO> proc = prodInsService.getProcData();
 		List<FacCateVO> fac = prodInsService.getFacSelect("proc01");
+		List<ProdProgressJoinVO> prJoin = prodInsService.getProdProgress(dInsCode);
 		System.out.println(vo);
 		System.out.println(load);
 		model.addAttribute("vo", vo);
 		model.addAttribute("load", load);
 		model.addAttribute("proc", proc);
 		model.addAttribute("fac", fac);
+		model.addAttribute("prJoin", prJoin);
 		
 		return "produce/workRegist";
 	}

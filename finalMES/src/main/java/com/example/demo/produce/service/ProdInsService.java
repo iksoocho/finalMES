@@ -6,6 +6,7 @@ import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
+import com.example.demo.produce.ProdProgressJoinVO;
 import com.example.demo.produce.WorkLoadVO;
 
 public interface ProdInsService {
@@ -15,4 +16,5 @@ public interface ProdInsService {
 	public List<WorkLoadVO> getWorkPageLoadData(String prodCode);
 	public List<ProcessVO> getProcData();
 	public List<FacCateVO> getFacSelect(String procCode);
+	public List<ProdProgressJoinVO> getProdProgress(String dInsCode);
 }

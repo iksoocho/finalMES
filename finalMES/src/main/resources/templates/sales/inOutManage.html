@@ -193,12 +193,12 @@ button {
 						<td><input type="date" id="registrationDate" name="outDate" readonly></td>
 						<th>출고서상태</th>
 						<td><select id="outState" name="outState">
-								<option value="0" selected>등록전
-								<option value="1" disabled>등록완료
-								<option value="2" disabled>출고 대기 중
-								<option value="3" disabled>출고중
-								<option value="4" disabled>출고 완료
-								<option value="5" disabled>도착 완료
+								<option value="dlvy1" selected>등록전
+								<option value="dlvy2" disabled>등록완료
+								<option value="dlvy3" disabled>출고 대기 중
+								<option value="dlvy4" disabled>출고중
+								<option value="dlvy5" disabled>출고 완료
+								<option value="dlvy6" disabled>도착 완료
 						</select></td>
 					</tr>
 					<tr>
@@ -777,6 +777,7 @@ button {
 				// 데이터를 수집하여 배열에 저장
 				let data = {};
 				let outObj = {};
+				let ordCode = {};
 				
 				outObj.outCode = document.getElementById('outCode').value;
 				outObj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerText;
@@ -784,6 +785,8 @@ button {
 				outObj.outManager = document.getElementById('outManager').value;
 				outObj.outState = document.getElementById('outState').value;
 		        
+				ordCode.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerText;
+				
 				var newOutDetailRows = document.querySelectorAll('#outGrid tbody');
 				var fourthTBody = newOutDetailRows[3];
 		        		
@@ -808,7 +811,8 @@ button {
 				});
 				
 				data.prodDlvyVO = outObj;
-				data.ProdDetailDlvyList = outDetailData;
+				data.prodDetailDlvyList = outDetailData;
+				data.orderVO = ordCode;
 
 						// AJAX 요청으로 서버에 데이터 전송
 						fetch('/saveDlvy', {

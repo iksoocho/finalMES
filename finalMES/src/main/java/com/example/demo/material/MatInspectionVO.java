@@ -13,4 +13,12 @@ public class MatInspectionVO {
 	private int matInsBad;		// 불량
 	private String matNote;		// 비고
 	private Date matInsDate;	// 자재검사일자
+	
+	private String matName;
+	private String matUnit;
+	private String matStandard;
+	private String businessName;
+	private String businessCode;
+	private String badMatContent;
+	private String matOrCount;
 }

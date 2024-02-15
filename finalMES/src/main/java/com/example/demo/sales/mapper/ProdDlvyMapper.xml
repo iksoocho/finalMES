@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.sales.mapper.ProdDlvyMapper">
+
+	<!-- 출고서 부모 -->
 	<insert id="saveDlvy" parameterType="ProdDlvyVO">
 		<selectKey keyProperty="outCode" resultType="string"
 			order="BEFORE">
@@ -12,12 +14,28 @@
 		VALUES(#{outCode}, #{ordCode}, #{outDate}, #{outManager},
 		#{outState})
 	</insert>
-
+	
+	<!-- 출고서 자식 -->
 	<insert id="saveDetailDlvy" parameterType="ProdDetailDlvyVO">
 		INSERT INTO
 		OUT_D_LIST(out_d_code, out_code, prod_lot_code, ord_d_code, out_count)
 		VALUES(#{outDCode}, #{outCode}, #{prodLotCode}, #{ordDCode},
 		#{outCount})
 	</insert>
+	
+	<!-- 출고등록시 재고량 계산 -->
+	<update id="updateInventory" parameterType="ProductLotDVO">
+		UPDATE prod_lot
+    	SET prod_count = prod_count - #{prodOutputCount},
+        prod_output_count = COALESCE(prod_output_count, 0) + #{prodOutputCount}
+    	WHERE prod_lot_code = #{prodLotCode}
+	</update>
+	
+	<!-- 출고등록시 주문서 상태 변경 -->
+	<update id="updateOrderState" parameterType="OrderVO">
+    	UPDATE ord_list
+    	SET ord_state = 'o3'
+    	WHERE ord_code = #{ordCode}
+	</update>
 </mapper>
  

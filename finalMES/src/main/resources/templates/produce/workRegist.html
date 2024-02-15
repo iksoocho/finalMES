@@ -143,7 +143,7 @@
                 placeholder="작업자"
                 aria-label="Worker"
                 id="Worker"
-                value="김준성"
+                th:value=${session.userName}
                 readonly
               />
             </div>
@@ -160,9 +160,11 @@
               <input
                 type="text"
                 class="form-control form-control-lg text-center"
-                placeholder="공정흐름?설비?"
+                placeholder="설비선택"
                 aria-label="selectedFacCode"
                 id="selectedFacCode"
+                data-bs-toggle="modal"
+              	data-bs-target="#facSelect"
                 readonly
               />
             </div>
@@ -182,10 +184,10 @@
               />
             </div>
           </div>
-          <p th:text="${vo}"></p>
+          <!-- <p th:text="${vo}"></p> -->
           <div class="row mt-4">
-            <div class="col-6">
-              <p th:text="${load[0].prodName}"></p>
+            <div class="col-6 text-center">
+              <h3 th:text="${load[0].prodName}"></h3>
 
               <table class="table">
                 <thead>
@@ -195,9 +197,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr th:block th:each="list : ${load}">
+                  <tr th:block th:each="list : ${prJoin}">
                     <td th:text="${list.procName}"></td>
-                    <td>ㅇㅁㅇ</td>
+                    <td>
+						<span th:if="${list.progState == 1}">생산중
+						<span th:text= "' ( ' + ${list.progPassCount} + '/' + ${list.progInsCount} + ' )'"></span>
+						</span>
+						<span th:if="${list.progState == 3}">작업완료</span>
+						<span th:if="${list.progState == null}">시작전</span>
+					</td>
                   </tr>
                 </tbody>
               </table>
@@ -213,10 +221,11 @@
                   <input
                     type="number"
                     class="form-control form-control-lg text-center"
-                    value="0"
+                    value=0
                     aria-label="workCount"
                     id="workCount"
                     th:max="${vo.dInsCount}"
+                    th:min=0
                   />
                 </div>
               </div>
@@ -324,6 +333,7 @@
                     class="btn btn-danger text-center fw-bolder fs-5"
                     type="button"
                     id="workCancel"
+                    onclick="workCancle()"
                   >
                     등록취소
                   </button>
@@ -481,6 +491,7 @@
         	let progpasscount = document.querySelector('input[id="workCount"]').value;
         	let starttime = document.querySelector('input[id="workStart"]').name;
         	let endtime = document.querySelector('input[id="workEnd"]').name;
+        	
         	console.log("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode);
 
         	let vo={
@@ -498,11 +509,18 @@
         	.then((data) => {
         		console.log('조회결과 : ', data);
 
-
         		console.log('vo : ', vo);
 
-        		if(data){
+        		if(data.length != 0){
         			alert("이미 데이터가 존재");
+        			
+	        		vo.progCode = data[0].progCode;
+	        		console.log('vo추가 : ', vo);
+	        		
+	        		if(data[0].progInsCount == (data[0].progPassCount + parseInt(vo.progPassCount))){
+	        			vo.progState = 3;
+		            }
+        			
         			fetch('/workMidUpdate', {
         				method : 'put',
         				headers : {
@@ -519,14 +537,20 @@
         			.then(data => {
         				console.log('Success : ', data);
         				alert(data);
-        				location.href = '/planOrderList';
+        				/* location.href = '/planOrderList'; */
         			})
         			.catch(error => {
         				console.log('Error : ', error);
         			});
 
         		}else{
-
+					if(parseInt(vo.progPassCount) == vo.progInsCount){
+						vo.progState = 3;
+					} else{
+						vo.progState = 1;
+					}
+        			
+        			
         			fetch('/workMidInsert', {
         				method: 'POST',
         	            headers: {
@@ -548,10 +572,17 @@
         	            console.error('Error:', error);
         	        });
         		}
-
         	});
-
-
+        }
+        
+        function workCancle(){
+        	let starttime = document.querySelector('input[id="workStart"]').name;
+        	if(starttime.length == 0){
+        		location.href = '/planOrderList';
+        	} else{
+        		alert("작업을 시작한 상태에서는 취소가 불가능합니다.");
+        		return;
+        	}
         }
       </script>
     </section>

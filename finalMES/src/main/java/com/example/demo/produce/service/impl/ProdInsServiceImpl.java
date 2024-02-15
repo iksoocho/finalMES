@@ -9,6 +9,7 @@ import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdInsDetailVO;
 import com.example.demo.produce.ProdInsVO;
+import com.example.demo.produce.ProdProgressJoinVO;
 import com.example.demo.produce.WorkLoadVO;
 import com.example.demo.produce.mapper.InsMapper;
 import com.example.demo.produce.mapper.WorkMapper;
@@ -51,6 +52,11 @@ public class ProdInsServiceImpl implements ProdInsService{
 	@Override
 	public List<FacCateVO> getFacSelect(String procCode) {
 		return workMapper.getFacSelect(procCode);
+	}
+
+	@Override
+	public List<ProdProgressJoinVO> getProdProgress(String dInsCode) {
+		return workMapper.getProdProgress(dInsCode);
 	}
 
 }
