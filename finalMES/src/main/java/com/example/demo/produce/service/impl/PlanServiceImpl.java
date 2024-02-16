@@ -131,6 +131,7 @@ public class PlanServiceImpl implements PlanService{
 	}
 
 	@Override
+	@Transactional
 	public void insertInsWithDetail(InsCompositeVO insCompositeVO) {
 		planMapper.updatePlanStateZero(insCompositeVO.getPlanVO().getPlanCode());
 		
@@ -143,7 +144,24 @@ public class PlanServiceImpl implements PlanService{
         	insCompositeVO.getPlanInsDList().get(i).setInsCode(insCompositeVO.getPlanInsVO().getInsCode()); // prod_d_plan의 각 항목에 planCode 설정
             planMapper.insertPlanDInsInfo(insCompositeVO.getPlanInsDList().get(i)); // prod_d_plan에 데이터 삽입
             System.out.println("등록성공");
+            
+            String prodCode = insCompositeVO.getPlanInsDList().get(i).getProdCode();
+            String dinsCode = insCompositeVO.getPlanInsDList().get(i).getDinsCode();
+            int dinsCount = insCompositeVO.getPlanInsDList().get(i).getDinsCount();
+            System.out.println("prodCode : " + prodCode);
+            planMapper.selectBomByProd(prodCode);
+            
+            System.out.println("bomList : " + planMapper.selectBomByProd(prodCode));
+            for(int j = 0; j < planMapper.selectBomByProd(prodCode).size(); j++) {
+            	String matCode = planMapper.selectBomByProd(prodCode).get(j).getMatCode();
+            	String procCode = planMapper.selectBomByProd(prodCode).get(j).getProcCode();
+            	int matCount = Integer.parseInt(planMapper.selectBomByProd(prodCode).get(j).getBomMatCount());
+            	int matTotalCon = dinsCount * matCount;
+            	System.out.println("matTotalCon : " + matTotalCon);
+            }
         }
+        
+        
 		
 	}
 

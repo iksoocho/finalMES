@@ -149,6 +149,7 @@
 
 				<div class="mt-4">
 					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planDUpdate">저장</button>
+					<h5>상세 지시</h5>
 					<div id="planDGrid"></div>
 					<!-- <table class="table table-hover" id="planDetailTable">
 						<thead>
@@ -425,10 +426,7 @@
 					],
 					// 여기에 다른 그리드 옵션을 추가할 수 있습니다
 					rowHeaders: [],
-					pageOptions: {
-						useClient: true,
-						perPage: 5
-					}
+					
 				});
 
 				console.log("planGrid", planGrid)
@@ -656,20 +654,20 @@
 
 				let insDetailData = [];
 
-				for (var i = 4; i < newInsDetailRows.length; i++) {
+				for (var i = (newInsDetailRows.length)/2 +1 ; i < newInsDetailRows.length; i++) {
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newInsDetailRows[i]);
 					
-					obj.insCode = target.find('td:eq(0)').text();
+					obj.insCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
-					obj.prodCode = target.find('td:eq(1)').text();
+					obj.prodCode = target.find('td:eq(2)').text();
 					console.log("prodCode : " + obj.prodCode);
 
-					obj.dinsSdate = target.find('td:eq(2)').text();
+					obj.dinsSdate = target.find('td:eq(3)').text();
 					console.log("dinsSdate : " + obj.dinsSdate);
-					obj.dinsEdate = target.find('td:eq(3)').text();
-					obj.dinsCount = target.find('td:eq(5)').text();
+					obj.dinsEdate = target.find('td:eq(4)').text();
+					obj.dinsCount = target.find('td:eq(6)').text();
 					console.log("dinsCount : " + obj.dinsCount);
 					insDetailData.push(obj);
 

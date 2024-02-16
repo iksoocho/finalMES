@@ -2,6 +2,7 @@ package com.example.demo.produce.service;
 
 import java.util.List;
 
+import com.example.demo.bom.BomVO;
 import com.example.demo.produce.InsCompositeVO;
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
@@ -39,4 +40,6 @@ public interface PlanService {
 	public void deleteInsInfo(InsCompositeVO insCompositeVO);
 	
 	public void updateInsDInfo(InsCompositeVO insCompositeVO);
+	
+	
 }

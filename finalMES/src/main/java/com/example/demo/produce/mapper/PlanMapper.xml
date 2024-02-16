@@ -192,5 +192,17 @@
 		WHERE D_INS_CODE = #{dinsCode}
 	</update>
 	
+	<select id="selectBomByProd" resultType="BomVO">
+		select * from bom_material
+		where prod_code = #{prodCode}
+	</select>
+	
+	<insert id="insertMatUse">
+		insert into 
+		mat_use(mat_code, proc_code, d_ins_code, mat_total_con)
+		values(#{matCode}, #{procCode}, #{dinsCode}, #{matTotalCon})
+		
+	</insert>
+	
 	
 </mapper>
