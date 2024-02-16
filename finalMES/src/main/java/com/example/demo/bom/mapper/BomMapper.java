@@ -20,6 +20,8 @@ public interface BomMapper {
 	// bom insert
 	public void bomInsert(BomVO bomVO);
 	
-	//bom list
+	// bom list
 	public List<BomVO> getBomList(String prodCode);
+	// bom delete
+	public void bomDelete(String bomCode);
 }

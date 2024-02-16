@@ -66,6 +66,7 @@ public class ProdInsController {
 		model.addAttribute("proc", proc);
 		model.addAttribute("fac", fac);
 		model.addAttribute("prJoin", prJoin);
+		model.addAttribute("prodCode", prodCode);
 		
 		return "produce/workRegist";
 	}
