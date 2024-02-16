@@ -37,5 +37,14 @@
     	SET ord_state = 'o3'
     	WHERE ord_code = #{ordCode}
 	</update>
+	
+	<!-- 출고서 조회 -->
+	<select id="prodDlvyList" resultType="ProdDlvyDVO">
+		SELECT outl.out_code, outl.out_date, outl.out_manager, find_codename(outl.out_state) AS out_state, bus.business_name
+		FROM out_list outl
+		LEFT JOIN ord_list ordl ON(outl.ord_code = ordl.ord_code)
+		LEFT JOIN business bus ON(ordl.business_code = bus.business_code)
+		ORDER BY outl.out_date
+	</select>
 </mapper>
  
