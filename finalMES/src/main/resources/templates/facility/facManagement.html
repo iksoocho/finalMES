@@ -188,19 +188,16 @@ button {
                            <th>No.</th>
                            <th>공정명</th>
                            <th>공정코드</th>
-                           <th>공정등록일</th>
                         </tr>
                      </thead>
                      <tbody>
-                        <tr th:each="fac: ${list}">
+                        <tr th:each="fac: ${proList}">
                            <td th:text="${facStat.count}"></td>
                            <td th:text="${fac.procName}"
                               th:data-procCode="${fac.procCode}"
                               th:data-procName="${fac.procName}"
                               onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
                            <td th:text="${fac.procCode}"></td>
-                           <!-- 날짜변환  -->
-                           <td th:text="${#dates.format(fac.procDate, 'yyyy-MM-dd')}"></td>
                         </tr>
                      </tbody>
                   </table>
