@@ -16,6 +16,7 @@ import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.service.ProdDlvyService;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.delivery.DlvyCompositeVO;
+import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
@@ -86,6 +87,14 @@ public class SalesController {
 		prodDlvyService.saveDlvyWithDetail(dlvyCompositeVO);
 		msg = "출고등록이 완료되었습니다";
 		return msg;
+	}
+	
+	// 출고서 리스트.
+	@GetMapping("/inOutList")
+	public String getProdDlvyList(Model model) {
+		List<ProdDlvyDVO> prodDlvyList = prodDlvyService.getProdDlvyList(null);
+		model.addAttribute("prodDlvyList", prodDlvyList);
+		return "sales/inOutList";
 	}
 
 	@GetMapping("/orderList")

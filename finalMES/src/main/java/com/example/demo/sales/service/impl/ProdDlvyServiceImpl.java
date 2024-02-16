@@ -1,5 +1,7 @@
 package com.example.demo.sales.service.impl;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import com.example.demo.sales.mapper.ProdDlvyMapper;
 import com.example.demo.sales.service.ProdDlvyService;
 import com.example.demo.sales.vo.delivery.DlvyCompositeVO;
 import com.example.demo.sales.vo.delivery.ProdDetailDlvyVO;
+import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 
 @Service
@@ -50,5 +53,13 @@ public class ProdDlvyServiceImpl implements ProdDlvyService {
 		
 		System.out.println("등록성공");
 	}
+
+	@Override
+	public List<ProdDlvyDVO> getProdDlvyList(ProdDlvyDVO prodDlvyDVO) {
+		// TODO Auto-generated method stub
+		return prodDlvyMapper.prodDlvyList(prodDlvyDVO);
+	}
+
+	
 
 }
