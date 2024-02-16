@@ -13,7 +13,7 @@
 		JOIN process p ON fm.proc_code = p.proc_code
 		JOIN fac_notop n ON fm.fac_code = n.fac_code
 		LEFT JOIN not_operator no ON n.notop_code = no.notop_code
-		order by fac_code desc
+		order by fm.fac_code desc
 	</select>
 	
 	

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.bom.BomVO;
 import com.example.demo.bom.service.BomService;
 import com.example.demo.material.OriginMaterialVO;
+import com.example.demo.produce.ProcessVO;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -30,6 +31,8 @@ public class BomController {
 		model.addAttribute("Plist", bomService.ProdList());
 		List<OriginMaterialVO> MaterialList = bomService.OriginMaterialList();
 		model.addAttribute("Mlist", MaterialList);
+		List<ProcessVO> ProcessList = bomService.ProcessList();
+		model.addAttribute("Clist", ProcessList);
 		return "bom/bom";
 	}
 	

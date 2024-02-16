@@ -21,6 +21,7 @@ import com.example.demo.facility.FacRepVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
 import com.example.demo.produce.service.ProdInsService;
+import com.example.demo.sales.service.OrdService;
 
 import lombok.extern.log4j.Log4j2;
 /**
@@ -38,6 +39,8 @@ public class FacManageController {
 	FacManageService facManageService;
 	@Autowired
 	ProdInsService prodInsService;
+	@Autowired
+	OrdService ordService;
 
 	/**
 	 * 설비 전체조회
@@ -48,6 +51,8 @@ public class FacManageController {
 	public String list(Model model, HttpServletRequest session) {
 		model.addAttribute("list", facManageService.FacList(null));
 		model.addAttribute("proList", prodInsService.getProcData());
+		model.addAttribute("busiList", ordService.getBusinessList());
+		System.out.println(ordService.getBusinessList());
 		System.out.println("userName : "+ session.getAttribute("userName"));
 		model.addAttribute("username", session.getSession().getAttribute("userName"));
 		return "facility/facManagement";

@@ -106,7 +106,7 @@
 			</div>
 		</div>
 
-		<!-- 모달 -->
+		<!-- 자재모달 -->
 		<div class="modal fade" id="materialModal" tabindex="-1"
 			aria-labelledby="materialModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -135,6 +135,46 @@
 							</tbody>
 						</table>
 						<div id="materialInfo">
+							<!-- 모달 내부에 표시될 데이터를 여기에 동적으로 표시 -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 공정모달 -->
+		<div class="modal fade" id="processModal" tabindex="-1"
+			aria-labelledby="processModalabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="processModalLabel">공정 정보</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>공정코드</th>
+									<th>공정명</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<!-- Plist 데이터를 동적으로 표시 -->
+								<tr th:each="proc : ${Clist}" th:data-procCode="${proc.procCode}"
+									th:data-procName="${proc.procName}" data-bs-dismiss="modal"
+									onclick="updateInputFields1(this)">
+									<td th:text="${proc.procCode}"></td>
+									<td th:text="${proc.procName}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<div id="procInfo">
 							<!-- 모달 내부에 표시될 데이터를 여기에 동적으로 표시 -->
 						</div>
 					</div>
@@ -335,6 +375,12 @@
 							align: 'center'
 						},
 						{
+							header: '순번',
+							name: 'bomNum',
+							align: "center",
+							editor: "text"
+						},
+						{
 							header: '제품 코드',
 							name: 'prodCode',
 							align: 'center'
@@ -355,10 +401,9 @@
 							align: "center",
 						},
 						{
-							header: '순번',
-							name: 'bomNum',
+							header: '공정명',
+							name: 'procName',
 							align: "center",
-							editor: "text"
 						},
 						{
 							header: '수량',
@@ -396,12 +441,27 @@
 						materialModal.show();
 					}
 				});
+				
+				planDGrid.on('click', function (ev) {
+					if (ev.columnName === 'procName') {
+						const rowData = planDGrid.getRow(ev.rowKey);
+						const processCode = rowData.procCode;
+						const processName = rowData.procName;
+						// 모달에 자재코드 데이터 표시
+						document.getElementById('procInfo').innerText = processCode;
+						document.getElementById('procInfo').innerText = processName;
+						// 모달 열기
+						const processModal = new bootstrap.Modal(document.getElementById('processModal'));
+						processModal.show();
+					}
+				});
+
 
 				console.log("planGrid", planGrid)
 			});
 
 
-			// 모달창에서 클릭 시 그리드에 값 넣기
+			// 자재모달창에서 클릭 시 그리드에 값 넣기
 			function updateInputFields(rowElement) {
 				// 클릭한 <tr> 요소에서 데이터 속성을 가져옴
 				var matCode = rowElement.getAttribute('data-matCode');
@@ -411,6 +471,18 @@
 				var selectedRowKey = planDGrid.getFocusedCell().rowKey; // 현재 선택한 행의 키를 가져옵니다.
 				planDGrid.setValue(selectedRowKey, 'matCode', matCode); // 특정 열에 자재코드를 설정합니다.
 				planDGrid.setValue(selectedRowKey, 'matName', matName); // 특정 열에 자재명을 설정합니다.
+			}
+			
+			// 공정모달창에서 클릭 시 그리드에 값 넣기
+			function updateInputFields1(rowElement) {
+				// 클릭한 <tr> 요소에서 데이터 속성을 가져옴
+				var procCode = rowElement.getAttribute('data-procCode');
+				var procName = rowElement.getAttribute('data-procName');
+
+				// 가져온 값을 그리드에 넣기
+				var selectedRowKey = planDGrid.getFocusedCell().rowKey; // 현재 선택한 행의 키를 가져옵니다.
+				planDGrid.setValue(selectedRowKey, 'procCode', procCode); // 특정 열에 자재코드를 설정합니다.
+				planDGrid.setValue(selectedRowKey, 'procName', procName); // 특정 열에 자재명을 설정합니다.
 			}
 		</script>
 
