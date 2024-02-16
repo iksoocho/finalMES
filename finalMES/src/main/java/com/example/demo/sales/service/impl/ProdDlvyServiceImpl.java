@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.sales.mapper.ProdDlvyMapper;
 import com.example.demo.sales.service.ProdDlvyService;
 import com.example.demo.sales.vo.delivery.DlvyCompositeVO;
+import com.example.demo.sales.vo.delivery.ProdDetailDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDetailDlvyVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
@@ -58,6 +59,12 @@ public class ProdDlvyServiceImpl implements ProdDlvyService {
 	public List<ProdDlvyDVO> getProdDlvyList(ProdDlvyDVO prodDlvyDVO) {
 		// TODO Auto-generated method stub
 		return prodDlvyMapper.prodDlvyList(prodDlvyDVO);
+	}
+
+	@Override
+	public List<ProdDetailDlvyDVO> getProdDetailDlvyList(ProdDetailDlvyDVO prodDetailDlvyDVO) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

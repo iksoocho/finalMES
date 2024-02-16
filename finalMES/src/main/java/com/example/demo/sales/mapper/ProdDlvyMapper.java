@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.example.demo.sales.vo.delivery.ProdDetailDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDetailDlvyVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
@@ -21,4 +22,6 @@ public interface ProdDlvyMapper {
 	public void updateOrderState(String ordCode); // 출고등록시 주문서 상태 업데이트
 	
 	public List<ProdDlvyDVO> prodDlvyList(ProdDlvyDVO prodDlvyDVO); // 제품출고서 조회
+	
+	public List<ProdDetailDlvyDVO> prodDetailDlvyList(ProdDetailDlvyDVO prodDetailDlvyDVO); // 제품출고서 상세 조회
 }
