@@ -1,26 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
 
 <head>
-	<meta charset="UTF-8">
-	<title>BOM관리</title>
-	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-	<style>
-		.tui-grid-row-odd .plan {
-			background-color: #e0f7fa;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+<meta charset="UTF-8">
+<title>BOM관리</title>
+<script src="https://code.jquery.com/jquery-3.7.1.js"
+	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+	crossorigin="anonymous"></script>
+<style>
+.tui-grid-row-odd .plan {
+	background-color: #e0f7fa;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-odd .detail {
-			background-color: #e0f7fa;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-odd .detail {
+	background-color: #e0f7fa;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-even .detail {
-			background-color: #e0f7fa;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
-		/* 모달 스타일 */
+.tui-grid-row-even .detail {
+	background-color: #e0f7fa;
+	/* 예시로 빨간색을 지정했습니다. */
+}
+/* 모달 스타일 */
 .modal-dialog {
 	max-width: 800px;
 }
@@ -71,9 +75,9 @@
 
 /* 모달 창 외부를 클릭하여 닫을 수 있도록 */
 .modal-backdrop {
-    opacity: 0.2;
+	opacity: 0.2;
 }
-	</style>
+</style>
 </head>
 
 <body>
@@ -92,21 +96,25 @@
 
 
 				<div class="mt-4">
-					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="bomInsert">저장</button>
-					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="addRowBtn">추가</button>
+					<button class="btn btn-secondary"
+						style="float: right; margin: 8px 5px;" id="bomInsert">저장</button>
+					<button class="btn btn-secondary"
+						style="float: right; margin: 8px 5px;" id="addRowBtn">추가</button>
 					<div id="planDGrid"></div>
 
 				</div>
 			</div>
 		</div>
 
-		<!-- 모달 -->
-		<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="materialModalLabel" aria-hidden="true">
+		<!-- 자재모달 -->
+		<div class="modal fade" id="materialModal" tabindex="-1"
+			aria-labelledby="materialModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="materialModalLabel">자재 정보</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<table>
@@ -118,7 +126,9 @@
 							</thead>
 							<tbody style="text-align: center;">
 								<!-- Mlist 데이터를 동적으로 표시 -->
-								<tr th:each="mat : ${Mlist}" th:data-matCode="${mat.matCode}" th:data-matName="${mat.matName}" data-bs-dismiss="modal" onclick="updateInputFields(this)">
+								<tr th:each="mat : ${Mlist}" th:data-matCode="${mat.matCode}"
+									th:data-matName="${mat.matName}" data-bs-dismiss="modal"
+									onclick="updateInputFields(this)">
 									<td th:text="${mat.matCode}"></td>
 									<td th:text="${mat.matName}"></td>
 								</tr>
@@ -129,7 +139,48 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 공정모달 -->
+		<div class="modal fade" id="processModal" tabindex="-1"
+			aria-labelledby="processModalabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="processModalLabel">공정 정보</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>공정코드</th>
+									<th>공정명</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<!-- Plist 데이터를 동적으로 표시 -->
+								<tr th:each="proc : ${Clist}" th:data-procCode="${proc.procCode}"
+									th:data-procName="${proc.procName}" data-bs-dismiss="modal"
+									onclick="updateInputFields1(this)">
+									<td th:text="${proc.procCode}"></td>
+									<td th:text="${proc.procName}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<div id="procInfo">
+							<!-- 모달 내부에 표시될 데이터를 여기에 동적으로 표시 -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
 					</div>
 				</div>
 			</div>
@@ -163,61 +214,7 @@
 				}
 			};
 
-			class DeleteButtonRenderer {
-				constructor(props) {
-					const el = document.createElement('button');
-					el.textContent = '삭제';
-					el.addEventListener('click', () => {
 
-						const rowData = props.grid.getRow(props.rowKey);
-						const planCode = rowData.planCode;
-						const ordCode = rowData.ordCode;
-						console.log("planCode : " + planCode)
-						console.log("ordCode : " + ordCode)
-						let data = {};
-						let planObj = {};
-						let ordObj = {};
-
-						planObj.planCode = planCode;
-						ordObj.ordCode = ordCode;
-
-						data.planVO = planObj;
-						data.planOrdVO = ordObj;
-
-						console.log("data : " + data);
-
-						fetch('/planDelete', {
-							method: 'DELETE',
-							headers: {
-								'Content-Type': 'application/json',
-
-							},
-							body: JSON.stringify(data)
-						})
-							.then(response => {
-								if (!response.ok) {
-									throw new Error('Network response was not ok');
-								}
-								return response.text();
-							})
-							.then(data => {
-								console.log('Success:', data);
-								alert(data);
-								location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
-							})
-							.catch(error => {
-								console.error('Error:', error);
-							});
-
-					});
-
-					this.el = el;
-				}
-
-				getElement() {
-					return this.el;
-				}
-			}
 
 			document.addEventListener('DOMContentLoaded', function () {
 				planGrid = new tui.Grid({
@@ -252,14 +249,7 @@
 							name: 'prodPrice',
 							align: "center"
 						},
-						{
-							header: '삭제',
-							name: 'deleteButton',
-							align: "center",
-							renderer: {
-								type: DeleteButtonRenderer
-							}
-						}
+						
 					],
 
 					rowHeaders: ['rowNum'],
@@ -322,6 +312,57 @@
 						}
 					}
 				});
+				
+				class DeleteButtonRenderer {
+					constructor(props) {
+						const el = document.createElement('button');
+						el.textContent = '삭제';
+						el.addEventListener('click', () => {
+
+							const rowData = props.grid.getRow(props.rowKey);
+							const bomCode = rowData.bomCode;
+							console.log("bomCode : " + bomCode)
+							let data = {};
+							let bomObj = {};
+
+							bomObj.bomCode = bomCode;
+
+							data.bomVO = bomObj;
+
+							console.log("data : " + data);
+
+							fetch('/bomDelete', {
+								method: 'DELETE',
+								headers: {
+									'Content-Type': 'application/json',
+
+								},
+								body: JSON.stringify(data)
+							})
+								.then(response => {
+									if (!response.ok) {
+										throw new Error('Network response was not ok');
+									}
+									return response.text();
+								})
+								.then(data => {
+									console.log('Success:', data);
+									alert(data);
+									location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+
+						});
+
+						this.el = el;
+					}
+
+					getElement() {
+						return this.el;
+					}
+				}
 
 				planDGrid = new tui.Grid({
 					el: document.getElementById('planDGrid'),
@@ -332,6 +373,12 @@
 							header: 'BOM 코드',
 							name: 'bomCode',
 							align: 'center'
+						},
+						{
+							header: '순번',
+							name: 'bomNum',
+							align: "center",
+							editor: "text"
 						},
 						{
 							header: '제품 코드',
@@ -354,10 +401,9 @@
 							align: "center",
 						},
 						{
-							header: '순번',
-							name: 'bomNum',
+							header: '공정명',
+							name: 'procName',
 							align: "center",
-							editor: "text"
 						},
 						{
 							header: '수량',
@@ -365,6 +411,14 @@
 							align: "center",
 							editor: "text"
 						},
+						{
+							header: '삭제',
+							name: 'deleteButton',
+							align: "center",
+							renderer: {
+								type: DeleteButtonRenderer
+							}
+						}
 
 
 					],
@@ -387,12 +441,27 @@
 						materialModal.show();
 					}
 				});
+				
+				planDGrid.on('click', function (ev) {
+					if (ev.columnName === 'procName') {
+						const rowData = planDGrid.getRow(ev.rowKey);
+						const processCode = rowData.procCode;
+						const processName = rowData.procName;
+						// 모달에 자재코드 데이터 표시
+						document.getElementById('procInfo').innerText = processCode;
+						document.getElementById('procInfo').innerText = processName;
+						// 모달 열기
+						const processModal = new bootstrap.Modal(document.getElementById('processModal'));
+						processModal.show();
+					}
+				});
+
 
 				console.log("planGrid", planGrid)
 			});
 
 
-			// 모달창에서 클릭 시 그리드에 값 넣기
+			// 자재모달창에서 클릭 시 그리드에 값 넣기
 			function updateInputFields(rowElement) {
 				// 클릭한 <tr> 요소에서 데이터 속성을 가져옴
 				var matCode = rowElement.getAttribute('data-matCode');
@@ -403,17 +472,19 @@
 				planDGrid.setValue(selectedRowKey, 'matCode', matCode); // 특정 열에 자재코드를 설정합니다.
 				planDGrid.setValue(selectedRowKey, 'matName', matName); // 특정 열에 자재명을 설정합니다.
 			}
-
-
-
 			
+			// 공정모달창에서 클릭 시 그리드에 값 넣기
+			function updateInputFields1(rowElement) {
+				// 클릭한 <tr> 요소에서 데이터 속성을 가져옴
+				var procCode = rowElement.getAttribute('data-procCode');
+				var procName = rowElement.getAttribute('data-procName');
+
+				// 가져온 값을 그리드에 넣기
+				var selectedRowKey = planDGrid.getFocusedCell().rowKey; // 현재 선택한 행의 키를 가져옵니다.
+				planDGrid.setValue(selectedRowKey, 'procCode', procCode); // 특정 열에 자재코드를 설정합니다.
+				planDGrid.setValue(selectedRowKey, 'procName', procName); // 특정 열에 자재명을 설정합니다.
+			}
 		</script>
-
-
-
-
-
-
 
 		<script>
 

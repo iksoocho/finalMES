@@ -188,19 +188,16 @@ button {
                            <th>No.</th>
                            <th>공정명</th>
                            <th>공정코드</th>
-                           <th>공정등록일</th>
                         </tr>
                      </thead>
                      <tbody>
-                        <tr th:each="fac: ${list}">
+                        <tr th:each="fac: ${proList}">
                            <td th:text="${facStat.count}"></td>
                            <td th:text="${fac.procName}"
                               th:data-procCode="${fac.procCode}"
                               th:data-procName="${fac.procName}"
                               onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
                            <td th:text="${fac.procCode}"></td>
-                           <!-- 날짜변환  -->
-                           <td th:text="${#dates.format(fac.procDate, 'yyyy-MM-dd')}"></td>
                         </tr>
                      </tbody>
                   </table>
@@ -227,14 +224,19 @@ button {
                   <table class="table">
                      <thead>
                         <tr>
-                           <th>거래처</th>
+                           <th>No.</th>
+                           <th>거래처명</th>
+                           <th>거레처코드</th>
                         </tr>
                      </thead>
                      <tbody>
-                        <tr th:each="fac: ${list}">
-                           <td th:text="${fac.businessCode}"
+                        <tr th:each="fac: ${busiList}">
+                           <td th:text="${facStat.count}"></td>
+                           <td th:text="${fac.businessName}"
                               th:data-businessCode="${fac.businessCode}"
+                              th:data-businessName="${fac.businessName}"
                               onclick="updateInputFields3(this)" data-bs-dismiss="modal"></td>
+                           <td th:text="${fac.businessCode}"></td>
                         </tr>
                      </tbody>
                   </table>
@@ -247,8 +249,6 @@ button {
          </div>
       </div>
       
-		
-	
 
 	<script th:inline="javascript">
 	
@@ -266,7 +266,9 @@ button {
 
 	 function updateInputFields3(Element) {
 	      var businessCode = Element.getAttribute('data-businessCode');
+	      var businessName = Element.getAttribute('data-businessName');
 	      document.getElementById('businessCode').value = businessCode;
+	      document.getElementById('businessName').value = businessName;
 	   }
 
 	

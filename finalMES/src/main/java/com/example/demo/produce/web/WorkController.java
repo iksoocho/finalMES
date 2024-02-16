@@ -15,7 +15,10 @@ import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.WorkMidRegistVO;
 import com.example.demo.produce.service.WorkService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Controller
+@Log4j2
 public class WorkController {
 	
 	@Autowired
@@ -24,6 +27,7 @@ public class WorkController {
 	@GetMapping("facList")
 	@ResponseBody
 	public List<FacCateVO> selectedFacList(@RequestParam String procCode) {
+		log.debug("FacList");
 		return workService.getFacSelect(procCode);
 	}
 	

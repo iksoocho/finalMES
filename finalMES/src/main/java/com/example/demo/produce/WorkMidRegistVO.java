@@ -14,4 +14,5 @@ public class WorkMidRegistVO {
 	private int progState;
 	private String startTime;
 	private String endTime;
+	private String prodCode;
 }	

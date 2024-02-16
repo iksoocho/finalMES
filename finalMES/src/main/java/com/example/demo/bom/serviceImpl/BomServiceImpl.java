@@ -10,6 +10,7 @@ import com.example.demo.bom.mapper.BomMapper;
 import com.example.demo.bom.service.BomService;
 import com.example.demo.inform.ProdVO;
 import com.example.demo.material.OriginMaterialVO;
+import com.example.demo.produce.ProcessVO;
 
 @Service
 public class BomServiceImpl implements BomService{
@@ -25,6 +26,11 @@ public class BomServiceImpl implements BomService{
 	@Override
 	public List<OriginMaterialVO> OriginMaterialList() {
 		return bomMapper.getOriginMaterialList();
+	}
+	
+	@Override
+	public List<ProcessVO> ProcessList() {
+		return bomMapper.getProcessList();
 	}
 
 	@Override
@@ -43,4 +49,12 @@ public class BomServiceImpl implements BomService{
 	public List<BomVO> getBomList(String prodCode) {
 		return bomMapper.getBomList(prodCode);
 	}
+
+	@Override
+	public void bomDelete(BomVO bomVO) {
+		bomMapper.bomDelete(null);
+		
+	}
+
+	
 }

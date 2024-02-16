@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.bom.BomVO;
 import com.example.demo.bom.service.BomService;
 import com.example.demo.material.OriginMaterialVO;
+import com.example.demo.produce.ProcessVO;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -29,6 +31,8 @@ public class BomController {
 		model.addAttribute("Plist", bomService.ProdList());
 		List<OriginMaterialVO> MaterialList = bomService.OriginMaterialList();
 		model.addAttribute("Mlist", MaterialList);
+		List<ProcessVO> ProcessList = bomService.ProcessList();
+		model.addAttribute("Clist", ProcessList);
 		return "bom/bom";
 	}
 	
@@ -53,6 +57,15 @@ public class BomController {
 	@ResponseBody
 	public List<BomVO> bomList(@RequestParam String prodCode){
 		return bomService.getBomList(prodCode);
+	}
+	
+	@DeleteMapping("/bomDelete")
+	@ResponseBody
+	public String bomDelete(@RequestBody BomVO bomVO) {
+		String msg;
+		bomService.bomDelete(bomVO);
+		msg = "삭제완료";
+		return msg;
 	}
 }
 

@@ -13,7 +13,10 @@
 		JOIN process p ON fm.proc_code = p.proc_code
 		JOIN fac_notop n ON fm.fac_code = n.fac_code
 		LEFT JOIN not_operator no ON n.notop_code = no.notop_code
+		order by fm.fac_code desc
 	</select>
+	
+	
 
 	<select id="getfacNotList" resultType="FacNotopVO">
 		SELECT fm.fac_name, 
@@ -71,7 +74,6 @@
 		(fac_code, notop_code)
 		VALUES
 		(#{facCode}, 'notop_03')
-		order by fac_code desc
 	</insert>
 
 	<update id="updateFacNot" parameterType="FacNotopVO">

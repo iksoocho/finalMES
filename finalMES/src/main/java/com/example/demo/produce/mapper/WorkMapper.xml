@@ -69,7 +69,8 @@
 		    , #{procCode}
 		    , (	SELECT proc_seq 
 				FROM process_flow
-				WHERE proc_code = #{procCode})
+				WHERE proc_code = #{procCode}
+				AND prod_code = #{prodCode})
 		    , #{progInsCount}
 		    , #{progBadCount}
 		    , #{progPassCount}

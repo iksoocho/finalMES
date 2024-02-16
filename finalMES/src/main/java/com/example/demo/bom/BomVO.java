@@ -26,4 +26,7 @@ public class BomVO {
 	
 	//자재
 	private String matName;
+	
+	// 공정
+	private String procName;
 }

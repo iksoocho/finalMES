@@ -491,6 +491,7 @@
         	let progpasscount = document.querySelector('input[id="workCount"]').value;
         	let starttime = document.querySelector('input[id="workStart"]').name;
         	let endtime = document.querySelector('input[id="workEnd"]').name;
+        	let prodCode = '[[${prodCode}]]';
         	
         	console.log("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode);
 
@@ -501,8 +502,10 @@
         			progBadCount : progbadcount,
         			progPassCount : progpasscount,
         			startTime : starttime,
-        			endTime : endtime
+        			endTime : endtime,
+        			prodCode : prodCode
         	};
+        	
 
         	fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
         	.then((response) => response.json())
@@ -510,6 +513,8 @@
         		console.log('조회결과 : ', data);
 
         		console.log('vo : ', vo);
+        		
+        		
 
         		if(data.length != 0){
         			alert("이미 데이터가 존재");

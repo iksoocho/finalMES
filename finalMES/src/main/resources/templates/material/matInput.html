@@ -6,18 +6,58 @@
 <meta charset="UTF-8">
 <title>입고 관리^^</title>
 </head>
+<style>
+.custom-style {
+	float: right;
+}
+</style>
 <body>
 	<section layout:fragment="content">
-		<div class="container">
-			<button>입고</button>
+		<!-- Modal -->
+		<div class="modal fade modal-lg" id="staticBackdrop"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel">Modal
+							title</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<h3>발주 주문서</h3>
+
+
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Understood</button>
+					</div>
+				</div>
+			</div>
 		</div>
-		
-		<div id="ckeckGrid" class="container"><h3>검수 완료 목록</h3></div>
 
 
-		<div id="inputGrid" class="container"><h3>입고목록</h3></div>
+		<div class="container">
+			<h3>검수 목록</h3>
+			<button type="button" class="btn btn-outline-primary custom-style"
+				data-bs-toggle="modal" data-bs-target="#staticBackdrop">주문서
+				조회</button>
+			<button type="button" class="btn btn-outline-primary custom-style"
+				id="orderInsert">저장</button>
 
-	<script th:inline="javascript">
+			<div id="ckeckGrid"></div>
+
+			<h3>입고목록</h3>
+			<div id="inputGrid"></div>
+			<!-- Button trigger modal -->
+
+		</div>
+
+		<script th:inline="javascript">
 		let matInputList = [[${matInputList}]]
 		console.log(matInputList)
 		 const inputGrid = new tui.Grid({
@@ -87,12 +127,8 @@
 			      name: 'matInsCode'
 			    },
 		        {
-		          header: '발주상세코드',
+		          header: '발주코드',
 		          name: 'matOrCode'
-		        },
-		        {
-		          header: '발주량',
-		          name: 'matOrCount'
 		        },
 		        {
 		          header: '자재명',
@@ -111,34 +147,82 @@
 				  name: 'businessName'
 				},
 		        {
+		          header: '발주량',
+		          name: 'matOrCount'
+		        },
+		        {
 				  header: '합격량',
-				  name: 'matInsGood',
+				  name: 'matInsGood', 
+				  editor: 'text'
 				},
 		        {
 				  header: '불합격량',
-				  name: 'matInsBad'
-				},
-				{
-				  header: '불량내용',
-				  name: 'badMatContent'
+				  name: 'matInsBad',
+				  editor: 'text'
 				},
 				{
 				  header: '검수일자',
 				  name: 'matInsDate',
-				  formatter : function dateFormatter(params) {
-	  		    	  const date = new Date(params.value);
-	  		    	  const isoDate = date.toISOString().split('T')[0];
-	  		    	  return isoDate;
-	  		    	}
-				},
+					editor: {
+						type: 'datePicker',
+						options: {
+							format: 'yyyy-MM-dd'
+						}
+ 	            }},
 		      ],
-		      rowHeaders: ['rowNum'],
+		      rowHeaders: ['rowNum', 'checkbox'],
 	           pageOptions: {
 	               useClient: true,
 	               perPage: 5
 	           }
 		    });
+		
+		// ================ matIns isnert ==================
+// 		document.querySelector('#orderInsert').addEventListener('click', function() {
+//         let name = [[${session.userName}]]
+//         const newData = ckeckGrid.getModifiedRows().createdRows;
+//         console.log(newData);
+        
+//         console.log('추가된 데이터 :' , newData);
+//         let data = {};
+        
+//         data.matInsCode = newData[0].matInsCode;
+//         data.matOrCode = newData[0].matOrCode;
+//         data.matName = newData[0].matName;
+//         data.matUnit = newData[0].matUnit;
+//         data.matStandard = newData[0].matStandard;
+//         data.businessName = newData[0].businessName;
+//         data.matOrCount = newData[0].matOrCount;
+//         data.matInsGood = newData[0].matInsGood;
+//         data.matInsBad = newData[0].matInsBad;
+//         data.matInsDate = newData[0].matInsDate;
+        
+//         console.log(data);
+        // AJAX 요청
+//         fetch('/', {
+//         	method: 'POST',
+//         	headers: {
+//         		'Content-Type': 'application/json',
+
+//         	},
+//         	body: JSON.stringify(data)
+//         })
+//         .then(response =>{
+//         	if (!response.ok) {
+// 				throw new Error('Network response was not ok');
+// 			}
+// 			return response.text();
+//         })
+//         .then(data => {
+//         	console.log('Success:', data);
+// 			alert(data);
+// 			location.href = '/'; // 성공적으로 처리된 후 리디렉트
+//         })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+//         .catch(error => {
+//         	console.error('Error:', error);
+//         });
+        
 	</script>
-</section>
+	</section>
 </body>
 </html>
