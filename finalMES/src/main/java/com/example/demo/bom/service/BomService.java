@@ -17,4 +17,6 @@ public interface BomService {
 	public void bomInsert(List<BomVO> bomList);
 	//bom list 
 	public List<BomVO> getBomList(String prodCode);
+	// bom delete
+	public void bomDelete(BomVO bomVO);
 }
