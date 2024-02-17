@@ -26,5 +26,7 @@ public interface BomMapper {
 	// bom list
 	public List<BomVO> getBomList(String prodCode);
 	// bom delete
-	public void bomDelete(String bomCode);
+	public int bomDelete(BomVO bomVO);
+	// bom update
+	public int bomUpdate(BomVO bomVO);
 }

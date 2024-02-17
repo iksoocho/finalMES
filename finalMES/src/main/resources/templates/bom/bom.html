@@ -100,6 +100,8 @@
 						style="float: right; margin: 8px 5px;" id="bomInsert">저장</button>
 					<button class="btn btn-secondary"
 						style="float: right; margin: 8px 5px;" id="addRowBtn">추가</button>
+					<button class="btn btn-secondary"
+						style="float: right; margin: 8px 5px;" id="bomUpdate">수정완료</button>
 					<div id="planDGrid"></div>
 
 				</div>
@@ -313,7 +315,7 @@
 					}
 				});
 				
-				class DeleteButtonRenderer {
+				class DeleteButtonBOM {
 					constructor(props) {
 						const el = document.createElement('button');
 						el.textContent = '삭제';
@@ -321,11 +323,16 @@
 
 							const rowData = props.grid.getRow(props.rowKey);
 							const bomCode = rowData.bomCode;
+							const bomNum = rowData.bomNum;
 							console.log("bomCode : " + bomCode)
+							console.log("bomNum : " + bomNum)
 							let data = {};
 							let bomObj = {};
 
 							bomObj.bomCode = bomCode;
+							bomObj.bomNum = bomNum;
+							console.log('bomOjb ' + bomObj);
+							console.log();
 
 							data.bomVO = bomObj;
 
@@ -337,7 +344,7 @@
 									'Content-Type': 'application/json',
 
 								},
-								body: JSON.stringify(data)
+								body: JSON.stringify(bomObj)
 							})
 								.then(response => {
 									if (!response.ok) {
@@ -352,7 +359,7 @@
 								})
 								.catch(error => {
 									console.error('Error:', error);
-								});
+								}); 
 
 						});
 
@@ -416,7 +423,7 @@
 							name: 'deleteButton',
 							align: "center",
 							renderer: {
-								type: DeleteButtonRenderer
+								type: DeleteButtonBOM
 							}
 						}
 
@@ -602,7 +609,7 @@
 
 
 			//plan detail update
-			/* document.querySelector('#planDUpdate').addEventListener('click', function () {
+			document.querySelector('#planDUpdate').addEventListener('click', function () {
 				const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
 				if (newDetail === null) {
 					alert("저장 할 내용이 없습니다.")
@@ -655,7 +662,7 @@
 					})
 					.catch(error => {
 						console.error('Error:', error);
-					});*/
+					});
 
 
 
