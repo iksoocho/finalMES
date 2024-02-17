@@ -124,7 +124,7 @@ button {
 								<tr>
 									<th>설비코드</th>
 									<th>설비명</th>
-									<th>담당자</th>
+									<!-- <th>담당자</th> -->
 									<th>비가동등록사유</th>
 									<th>상태</th>
 								</tr>
@@ -135,14 +135,14 @@ button {
 									th:data-facNotCode="${NotIns.facNotCode}"
 									th:data-facCode="${NotIns.facCode}"
 									th:data-facName="${NotIns.facName}"
-									th:data-facNotPerson="${NotIns.facNotPerson}"
+									
 									th:data-facNotReason="${NotIns.facNotReason}"
 									th:data-facNotSituation="${NotIns.facNotSituation}"
 									data-bs-dismiss="modal"
 									th:onclick="'displaySelectedFacNotIns(this)'">
 									<td th:text="${NotIns.facCode}"></td>
 									<td th:text="${NotIns.facName}"></td>
-									<td th:text="${NotIns.facNotPerson}"></td>
+									
 									<td th:text="${NotIns.facNotReason}"></td>
 									<td th:text="${NotIns.facNotSituation}"></td>
 								</tr>
@@ -159,7 +159,8 @@ button {
 
 
 		<script th:inline="javascript">
-           
+        
+		// saveBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 호출
 		document.getElementById('saveBtn').addEventListener("click", function() {
 		    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
 		    
@@ -175,7 +176,7 @@ button {
 		        return;
 		    }
 
-		    // 나머지 필드들의 값을 가져옴
+		    // 입력필드의 name 값을 가져와서 각 변수에 할당
 		    var facRepCode = document.getElementsByName("facRepCode")[0].value;
 		    var facNotCode = document.getElementsByName("facNotCode")[0].value;
 		    var facCode = document.getElementsByName("facCode")[0].value;
@@ -184,7 +185,8 @@ button {
 		    var facRepContent = document.getElementsByName("facRepContent")[0].value;
 		    var facRepDate = document.getElementsByName("facRepDate")[0].value;
 		    var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
-
+			
+		    // 등록할 데이터 객체로 
 		    var data = {
 		        facRepCode: facRepCode,
 		        facNotCode: facNotCode,
@@ -201,6 +203,7 @@ button {
 		    var jsonData = JSON.stringify(data);
 		    
 		    // fac_ins update
+		    // fetch로 서버에 PUT 요청
 		    fetch("/updateFacRep", {
 		        method: "PUT",
 		        body: jsonData, // JSON 형식의 데이터를 전송
@@ -213,7 +216,7 @@ button {
 		        if (response.ok) {
 		            console.log(response);
 		            alert("등록완료!");
-		            location.href = '/facRep';  // 여기 경로로 가라
+		            location.href = '/facRep';  // 여기 경로로 리디렉션
 		        } else {
 		            console.log(response);
 		            alert("등록실패");
@@ -227,7 +230,7 @@ button {
 
         
          
-        
+          // insetBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 호출
           document.getElementById('insertBtn').addEventListener("click", function() {
         	    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
         	    
@@ -243,15 +246,17 @@ button {
         	        return;
         	    }
 
-        	    // 나머지 필드들의 값을 가져옴
+        	    // 입력필드의 name 값 받아와서 각 변수에 할당
         	    var facRepCode = document.getElementsByName("facRepCode")[0].value;
         	    var facNotCode = document.getElementsByName("facNotCode")[0].value;
         	    var facCode = document.getElementsByName("facCode")[0].value;
         	    var facName = document.getElementsByName("facName")[0].value;
         	    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
+        	    var facRepPerson = document.getElementsByName("facRepRepairs")[0].value;
         	    var facRepContent = document.getElementsByName("facRepContent")[0].value;
         	    var facRepDate = document.getElementsByName("facRepDate")[0].value;
-
+				
+        	    // 등록할 데이터 객체로 할당
         	    var data = {
         	        facRepCode: facRepCode,
         	        facNotCode: facNotCode,
@@ -430,14 +435,14 @@ button {
     		var facCode = element.getAttribute('data-facCode');
     		var facNotCode = element.getAttribute('data-facNotCode');
     		var facName = element.getAttribute('data-facName');
-    		var facNotPerson = element.getAttribute('data-facNotPerson');
+    		/* var facNotPerson = element.getAttribute('data-facNotPerson'); */
     		var facNotReason = element.getAttribute('data-facNotReason');
     		var facNotSituation = element.getAttribute('data-facNotSituation');
     		
     		document.getElementById('facCode').value = facCode;
     		document.getElementById('facNotCode').value = facNotCode;
     		document.getElementById('facName').value = facName;
-    		document.getElementById('facNotPerson').value = facNotPerson;
+    		/* document.getElementById('facNotPerson').value = facNotPerson; */
     		document.getElementById('facNotReason').value = facNotReason;
     		document.getElementById('facNotSituation').value = facNotSituation;
     	}
