@@ -23,5 +23,5 @@ public interface ProdDlvyMapper {
 	
 	public List<ProdDlvyDVO> prodDlvyList(ProdDlvyDVO prodDlvyDVO); // 제품출고서 조회
 	
-	public List<ProdDetailDlvyDVO> prodDetailDlvyList(ProdDetailDlvyDVO prodDetailDlvyDVO); // 제품출고서 상세 조회
+	public List<ProdDetailDlvyDVO> prodDetailDlvyList(String outCode); // 제품출고서 상세 조회
 }

@@ -26,6 +26,7 @@ public interface ProdDlvyService {
 	public List<ProdDlvyDVO> getProdDlvyList(ProdDlvyDVO prodDlvyDVO);
 	
 	// 출고서 상세 조회
-	public List<ProdDetailDlvyDVO> getProdDetailDlvyList(ProdDetailDlvyDVO prodDetailDlvyDVO);
+	public List<ProdDetailDlvyDVO> getProdDetailDlvyList(String ordCode);
+
 	
 }

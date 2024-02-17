@@ -20,7 +20,7 @@ public class MatOrderVO {
 	private String matOrManager;
 	private int matOrCount;
 	private String matOrName;
-	private String matOrState;
+	private Integer matOrState;
 	private String matName;
 	
 	

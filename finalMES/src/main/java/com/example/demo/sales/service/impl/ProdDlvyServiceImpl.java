@@ -62,9 +62,9 @@ public class ProdDlvyServiceImpl implements ProdDlvyService {
 	}
 
 	@Override
-	public List<ProdDetailDlvyDVO> getProdDetailDlvyList(ProdDetailDlvyDVO prodDetailDlvyDVO) {
+	public List<ProdDetailDlvyDVO> getProdDetailDlvyList(String outCode) {
 		// TODO Auto-generated method stub
-		return null;
+		return prodDlvyMapper.prodDetailDlvyList(outCode);
 	}
 
 	
