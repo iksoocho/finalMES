@@ -18,6 +18,8 @@ public class MatInputVO {
 	private String matCount; // 총재고량
 	// join
 	
+	
+	private int matOrCount;
 	private int matInsCount;
 	private int matInsGoodCount;
 	private String matName;
