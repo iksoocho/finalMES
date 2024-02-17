@@ -16,6 +16,7 @@ import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.service.ProdDlvyService;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.delivery.DlvyCompositeVO;
+import com.example.demo.sales.vo.delivery.ProdDetailDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
@@ -130,5 +131,12 @@ public class SalesController {
 		model.addAttribute("orderList", orderList);
 		return "sales/inOutManage";
 	}
-
+	
+	// 출고 상세 목록 By ordCode
+	@GetMapping("/prodDetailDlvyList/{ordCode}")
+	@ResponseBody
+	public List<ProdDetailDlvyDVO> getprodDetailDlvyList(@PathVariable String ordCode){
+		List<ProdDetailDlvyDVO> prodDetailDlvyList = prodDlvyService.getProdDetailDlvyList(ordCode);
+		return prodDetailDlvyList;
+	}
 }

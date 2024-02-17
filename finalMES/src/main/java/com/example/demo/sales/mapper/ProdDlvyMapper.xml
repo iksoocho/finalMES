@@ -39,7 +39,7 @@
 	
 	<!-- 출고서 조회 -->
 	<select id="prodDlvyList" resultType="ProdDlvyDVO">
-		SELECT outl.out_code, outl.out_date, outl.out_manager, find_codename(outl.out_state) AS out_state, bus.business_name
+		SELECT outl.out_code, outl.out_date, outl.out_manager, find_codename(outl.out_state) AS out_state, bus.business_name, ordl.ord_code
 		FROM out_list outl
 		LEFT JOIN ord_list ordl ON(outl.ord_code = ordl.ord_code)
 		LEFT JOIN business bus ON(ordl.business_code = bus.business_code)
@@ -48,14 +48,15 @@
 	
 	<!-- 출고 상세 조회 -->
 	<select id="prodDetailDlvyList" resultType="ProdDetailDlvyDVO">
-		SELECT prod.prod_code, prod.prod_name, prod_unit, prodl.prod_lot_code, prodl.prod_count, outdl.out_count, prod.prod_price, 
-           		(prod.prod_price * outdl.out_count) AS out_ttl_price,
-           		orddl.ord_code
+		SELECT prod.prod_code, prod.prod_name, prod.prod_unit, prodl.prod_lot_code, prodl.prod_count, outdl.out_count, prod.prod_price, 
+           (prod.prod_price * outdl.out_count) AS out_ttl_price,
+           outdl.out_d_date,
+           find_codename(outdl.out_d_state) AS out_d_state
 		FROM out_d_list outdl 
 		LEFT JOIN ord_d_list orddl ON(orddl.ord_d_code = outdl.ord_d_code)
 		LEFT JOIN product prod ON(prod.prod_code = orddl.prod_code)
 		LEFT JOIN prod_lot prodl ON(prodl.prod_lot_code = outdl.prod_lot_code)
-		WHERE orddl.ord_code = #{ordCode}
+		WHERE outdl.out_code = #{outCode}
 	</select>
 </mapper>
  
