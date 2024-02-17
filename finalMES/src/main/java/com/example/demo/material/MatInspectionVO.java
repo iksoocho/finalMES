@@ -2,6 +2,8 @@ package com.example.demo.material;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -12,6 +14,7 @@ public class MatInspectionVO {
 	private int matInsGood;		// 합격량
 	private int matInsBad;		// 불량
 	private String matNote;		// 비고
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date matInsDate;	// 자재검사일자
 	
 	private String matName;
