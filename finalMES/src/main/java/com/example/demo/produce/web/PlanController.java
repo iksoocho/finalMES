@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.produce.InsCompositeVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanInsDVO;
@@ -176,6 +177,11 @@ public class PlanController {
 		return msg;
 	}
 	
+	/**
+	 * 
+	 * @param insCompositeVO
+	 * @return
+	 */
 	@PutMapping("/insDUpdate")
 	@ResponseBody
 	public String updateInsDetail(@RequestBody InsCompositeVO insCompositeVO) {
@@ -184,5 +190,11 @@ public class PlanController {
 		msg = "상세 지시가 수정 되었습니다.";
 		return msg;
 				
+	}
+	
+	@GetMapping("matUseList")
+	@ResponseBody
+	public List<MatUseVO> getMatUseList(@RequestParam String dinsCode){
+		return planService.getMatUseList(dinsCode);
 	}
 }

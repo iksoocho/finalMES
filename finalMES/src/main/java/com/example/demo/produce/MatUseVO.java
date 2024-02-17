@@ -9,4 +9,6 @@ public class MatUseVO {
 	private String procCode;
 	private String dinsCode;
 	private int matTotalCon;
+	
+	private String matName;
 }
