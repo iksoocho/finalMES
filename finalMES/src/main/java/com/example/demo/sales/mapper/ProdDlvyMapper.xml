@@ -18,9 +18,8 @@
 	<!-- 출고서 자식 -->
 	<insert id="saveDetailDlvy" parameterType="ProdDetailDlvyVO">
 		INSERT INTO
-		OUT_D_LIST(out_d_code, out_code, prod_lot_code, ord_d_code, out_count)
-		VALUES(#{outDCode}, #{outCode}, #{prodLotCode}, #{ordDCode},
-		#{outCount})
+		OUT_D_LIST(out_d_code, out_code, prod_lot_code, ord_d_code, out_count, out_d_state, out_d_date)
+		VALUES(#{outDCode}, #{outCode}, #{prodLotCode}, #{ordDCode}, #{outCount}, #{outDState}, #{outDDate})
 	</insert>
 	
 	<!-- 출고등록시 재고량 계산 -->
