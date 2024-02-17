@@ -99,9 +99,9 @@ button {
 			</div>
 
 		<script th:inline="javascript">
-  
+  		// saveBtn 버튼에 이벤트 걸어서 클릭 시 함수 실행
    		document.getElementById('saveBtn').addEventListener("click", function() {
-          
+        // 입력필드의 name 값 받아와서 변수에 할당함
    		var facCode = document.getElementsByName("facCode")[0].value;
    		var facNotCode = document.getElementsByName("facNotCode")[0].value;
         var facName = document.getElementsByName("facName")[0].value;
@@ -110,13 +110,13 @@ button {
         var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
         var facNotSdate = document.getElementsByName("facNotSdate")[0].value;
         var facNotLdate = document.getElementsByName("facNotLdate")[0].value;
-        
+        // 조건걸기
         if (!facName) {
               alert("설비명을 입력해주세요.");
               return;
           }
         
-        
+        	   // 등록 할 값 객체로 
                var data = {
             	  facCode: facCode,
             	  facNotCode: facNotCode,
@@ -127,12 +127,12 @@ button {
                   facNotSdate: facNotSdate,
                   facNotLdate: facNotLdate
                };
-               
+               // fetch로 서버에 PUT 요청
                fetch("/updateFacNot", {
                  method: "PUT",
-                 body: JSON.stringify(data),
+                 body: JSON.stringify(data), // JSON 형식의 데이터를 전송
                  headers: {
-                     "Content-Type": "application/json"
+                     "Content-Type": "application/json"  // JSON 형식의 데이터임을 명시
                  }
              })
              .then(response => {
@@ -140,7 +140,7 @@ button {
                  if (response.ok) {
                      console.log(response);
                      alert("등록완료!");
-                     location.href = '/facNotop';  // 여기 경로로 가라
+                     location.href = '/facNotop';  // 여기 경로로 리디렉션
                  } else {
                      console.log(response);
                      alert("등록실패");
@@ -259,34 +259,36 @@ button {
    	      }
    	    });
    	    
-   	// 검색 기능 추가
-   	 function searchFunction() {
-   	     var input, filter, table, tr, td, i, j, txtValue;
-   	     input = document.getElementById("searchInput");
-   	     filter = input.value.toUpperCase();
-   	     table = document.getElementById("grid");
+      	// 검색 기능 추가
+   		function searchFunction() {
+   		    // 입력된 검색어 가져오기
+   		    var input, filter, table, tr, td, i, j, txtValue;
+   		    input = document.getElementById("searchInput");
+   		    // 대문자로변환하기
+   		    filter = input.value.toUpperCase();
+   		    // 테이블 확인
+   		    table = document.getElementById("grid");
 
-   	     tr = table.getElementsByTagName("tr");
-   	     for (i = 0; i < tr.length; i++) {
-   	         td = tr[i].getElementsByTagName("td");
-   	         for (j = 0; j < td.length; j++) {
-   	             txtValue = td[j].textContent || td[j].innerText;
-   	             if (txtValue.toUpperCase().indexOf(filter) > -1) {
-   	                 tr[i].style.display = "";
-   	                 break;
-   	             } else {
-   	                 tr[i].style.display = "none";
-   	             }
-   	         }
-   	     }
-   	 }
-
-   	
-
-
-
-
-
+   		    // 테이블 돌면서 확인
+   		    tr = table.getElementsByTagName("tr");
+   		    for (i = 0; i < tr.length; i++) {
+   		        // 각 행에서 셀을 가져오기
+   		        td = tr[i].getElementsByTagName("td");
+   		        // 행의 각 셀 돌면서 일치하는지 확인
+   		        for (j = 0; j < td.length; j++) {
+   		            // 셀의 내용을 가져오기
+   		            txtValue = td[j].textContent || td[j].innerText;
+   		            // 조건으로 검색어 있으면 가져오기
+   		            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+   		                tr[i].style.display = "";
+   		                break;
+   		            } else {
+   		                // 검색어 없으면 리스트 안보이게 display none 처리
+   		                tr[i].style.display = "none";
+   		            }
+   		        }
+   		    }
+   		}
 
 </script>
 	</section>
