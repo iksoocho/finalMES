@@ -13,4 +13,5 @@ public class DlvyCompositeVO {
 	public List<ProdDetailDlvyVO> prodDetailDlvyList;
 	private ProductLotDVO productLotDVO;
 	private OrderVO orderVO;
+	public ProdDetailDlvyVO prodDetailDlvyVO;
 }
