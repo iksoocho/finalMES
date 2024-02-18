@@ -1,13 +1,16 @@
 package com.example.demo.sales.web;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +20,7 @@ import com.example.demo.sales.service.ProdDlvyService;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.delivery.DlvyCompositeVO;
 import com.example.demo.sales.vo.delivery.ProdDetailDlvyDVO;
+import com.example.demo.sales.vo.delivery.ProdDetailUpdateDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
@@ -89,7 +93,7 @@ public class SalesController {
 		msg = "출고등록이 완료되었습니다";
 		return msg;
 	}
-	
+
 	// 출고서 리스트.
 	@GetMapping("/inOutList")
 	public String getProdDlvyList(Model model) {
@@ -126,17 +130,26 @@ public class SalesController {
 		// 출고전 주문서 리스트
 		orderVO.setOrdState("o2");
 		List<OrderVO> orderList = ordService.getOrderList(orderVO);
-		
+
 		model.addAttribute("businessList", businessList);
 		model.addAttribute("orderList", orderList);
 		return "sales/inOutManage";
 	}
-	
+
 	// 출고 상세 목록 By ordCode
 	@GetMapping("/prodDetailDlvyList/{ordCode}")
 	@ResponseBody
-	public List<ProdDetailDlvyDVO> getprodDetailDlvyList(@PathVariable String ordCode){
+	public List<ProdDetailDlvyDVO> getprodDetailDlvyList(@PathVariable String ordCode) {
 		List<ProdDetailDlvyDVO> prodDetailDlvyList = prodDlvyService.getProdDetailDlvyList(ordCode);
 		return prodDetailDlvyList;
+	}
+
+	// 출고 상세 날짜 업데이트 및 상태 자동업데이트
+	@PutMapping("/updateOutDDate")
+	@ResponseBody
+	public String updateOutDDate(@RequestBody List<ProdDetailUpdateDVO> prodDetailUpdateDVOList) {
+	    String msg = "날짜 및 상태 업데이트가 완료되었습니다";
+	    prodDlvyService.updateOutDDate(prodDetailUpdateDVOList);
+	    return msg;
 	}
 }

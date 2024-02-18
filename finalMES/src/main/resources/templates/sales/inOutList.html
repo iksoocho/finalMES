@@ -12,8 +12,10 @@
 			<h4>주문 조회</h4>
 			<h5 class="titleOne">목록</h5>
 			<div id="grid"></div>
-			<h5>상세</h5>
-			<div></div>
+			<h5 style="float: left;">상세</h5>
+			<div>
+				<button type="button" id="updateOutDDate" class="btn btn-primary" style="float: right; margin-bottom: 10px;">저장</button>
+			</div>
 			<div id="detailGrid"></div>
 		</div>
 		<script th:inline="javascript">
@@ -148,7 +150,14 @@
             scrollX: false,
             scrollY: false,
 	      	rowHeaders: ['rowNum','checkbox'],
-	      columns: [
+	      columns: [{
+	    	  header : '출고상세번호',
+	    	  name : 'outDCode',
+	    	  sortable: true,
+	          sortingType: 'desc',
+	    	  align: "center",
+	    	  width : 160,
+	      },
 	        {
 	          header: '품목코드',
 	          name: 'prodCode',
@@ -211,6 +220,12 @@
 		 		name : 'outDDate',
 		 		formatter : outDateFormatter,
 		 		align : 'center',
+		 		editor: {
+					type: 'datePicker',
+					options: {
+						format: 'yyyy-MM-dd'
+					}
+				}
 		 	},
 		 	{
 		 		header : '출고상태',
@@ -294,6 +309,45 @@
 		     // 배경색을 포함한 HTML 반환
 		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
 		 }
+		 document.querySelector('#updateOutDDate').addEventListener('click', function () {
+			    const checkedRows = detailGrid.getCheckedRows();
+
+			    if (checkedRows.length === 0) {
+			        alert('체크된 행이 없습니다.');
+			        return;
+			    }
+
+			    // 행 데이터를 모아서 배열에 담기
+			    const data = checkedRows.map(row => ({
+			        outDCode: row.outDCode,
+			        outDDate: row.outDDate,
+			        prodLotCode: row.prodLotCode,
+			        outCount : row.outCount
+			    }));
+
+			    fetch('/updateOutDDate', {
+			        method: 'PUT',
+			        headers: {
+			            'Content-Type': 'application/json',
+			        },
+			        body: JSON.stringify(data)
+			    })
+			    .then(response => {
+			        if (!response.ok) {
+			            throw new Error('Network response was not ok');
+			        }
+			        return response.text();
+			    })
+			    .then(data => {
+			        console.log('Success:', data);
+			        alert(data);
+			        location.href = '/inOutList';
+			    })
+			    .catch(error => {
+			        console.error('Error:', error);
+			    });
+			});
+		
 		</script>
 	</section>
 </body>

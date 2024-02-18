@@ -24,7 +24,7 @@ public class ProdDetailDlvyDVO {
 	private Date outDDate;
 	private String outDState;
 	private String outCode;
-	
+	private String outDCode;
 	
 	// JOIN
 	private String ordDCode;
