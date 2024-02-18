@@ -104,6 +104,13 @@ public class MaterialController {
 		model.addAttribute("matInsList", matInsList);
 		return "material/matInput";
 	}
+	
+	@GetMapping("matIns")
+	public String getInsList(Model model) {
+		List<MatInspectionVO> matInsList = materialService.getMatInsList();
+		model.addAttribute("matInsList", matInsList);
+		return "material/matIns";
+	}
 
 	/**
 	 * 
