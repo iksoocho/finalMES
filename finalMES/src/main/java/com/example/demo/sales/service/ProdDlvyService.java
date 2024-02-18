@@ -33,6 +33,8 @@ public interface ProdDlvyService {
 	// 출고 상세 날짜 업데이트 및 상태 자동 업데이트 재고량 업데이트
 
 	int updateOutDDate(List<ProdDetailUpdateDVO> prodDetailUpdateList);
+	
+	
 
 
 	
