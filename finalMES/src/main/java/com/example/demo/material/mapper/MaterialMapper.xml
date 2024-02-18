@@ -13,7 +13,7 @@
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
-		       moi.mat_or_due_date,
+		       mo.mat_or_due_date,
 		       mo.mat_or_manager
 		 FROM  mat_order      mo
 		 JOIN  business       b     ON mo.business_code = b.business_code
@@ -30,7 +30,7 @@
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
-		       moi.mat_or_due_date,
+		       mo.mat_or_due_date,
 		       mo.mat_or_manager,
 		       mo.mat_or_state
 		 FROM  mat_order           mo
@@ -43,18 +43,17 @@
 	
 	<!-- 발주 목록 쪽  -->
 	<select id="getMaterialOrdInfoList1" resultType="MatOrderInfoVO">
-		SELECT 
+		SELECT
 		    b.business_code,
 		    b.business_name,
 		    m.mat_code,
 		    m.mat_name
 		FROM 
 		    business b
-		JOIN 
+		 JOIN 
 		    mat_order mo ON b.business_code = mo.business_code
-		JOIN 
+		 JOIN 
 		    material m ON mo.mat_code = m.mat_code
-		WHERE m.mat_code = #{matCode}
 		GROUP BY 
 		    b.business_code, b.business_name, m.mat_code, m.mat_name
 	</select>
@@ -142,13 +141,14 @@
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
-		       moi.mat_or_due_date,
+		       mo.mat_or_due_date,
 		       mo.mat_or_manager,
 		       mo.mat_or_state,
 		       mi.mat_ins_date,
 		       mi.mat_ins_code,
 		       mi.mat_ins_good,
-		       mi.mat_ins_bad
+		       mi.mat_ins_bad,
+		       mi.mat_ins_count
 		FROM       mat_order      mo
 		LEFT JOIN  mat_inspection mi    ON mo.mat_or_code = mi.mat_or_code
 		LEFT JOIN  business       b     ON mo.business_code = b.business_code
@@ -171,7 +171,7 @@
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
-		       moi.mat_or_due_date,
+		       mo.mat_or_due_date,
 		       mo.mat_or_manager,
 		       mo.mat_or_state,
                mi.mat_ins_date,
@@ -219,7 +219,8 @@
              mat_or_manager,
              mat_or_count,
              mat_or_name,
-             mat_or_state
+             mat_or_state,
+             mat_or_due_date
              )
         VALUES 
         (
@@ -229,7 +230,8 @@
               #{matOrManager},
               #{matOrCount},
               #{matOrName},
-              0
+              0,
+              #{matOrDueDate}
         )
 	</insert>
 	
@@ -280,14 +282,17 @@
 				mat_ins_good,
 				mat_ins_bad,
 				mat_ins_date,
-				mat_or_code
+				mat_or_code,
+				mat_note
 				)
 			VALUES
 			(
+				#{matInsCount},
 				#{matInsGood},
 				#{matInsBad},
 				#{matInsDate},
-				#{matOrCode}
+				#{matOrCode},
+				#{matNote}
 			)
 	</insert>
 </mapper>
