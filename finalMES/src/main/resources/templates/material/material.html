@@ -23,7 +23,7 @@
 
 		<script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
-            let matList = [[${matList}]];
+	        let matList = [[${matList}]];
             let matGrid = new tui.Grid({
                 el: document.getElementById('matGrid'),
                 data: matList,
@@ -62,6 +62,49 @@
                     perPage: 5
                 }
             });
+            
+            
+            let lotmat= {};
+            
+            matGrid.on('click', function (ev) {
+                console.log('ev 이벤트 :', ev.columnName);
+                let columnName = ev.columnName;
+                if (columnName === 'matCode') {
+                    let rowKey = ev.rowKey;
+                    let rowData = matGrid.getRow(rowKey);
+                    console.log("rowData : ", rowData.matCode);
+					
+                    lotmat.matLotCode = rowData.matLotCode;
+                    console.log('lotmat.matLotCode '  , lotmat.matLotCode)
+                    lotmat.matCount = rowData.matCount;
+                    lotmat.matCode = rowData.matCode;
+                    lotmat.matName = rowData.matName;
+                    
+                    
+//                     let lotmat = {
+//                         matLotCode: rowData.matLotCode,
+//                         matCount: rowData.matCount,
+//                         matCode: rowData.matCode,
+//                         matName: rowData.matName
+//                     };
+
+                    if (rowData) {
+                        let matCode = rowData.matCode;
+                        fetch('/matLotList?matCode=' + matCode)
+                        .then(response => response.json())
+ 	                    .then(data => {
+								console.log("data : ", data);
+ 	                    		// 그리드 갱신
+ 	                    		busiGrid.resetData(data);
+//  	                    		busiGrid.prependRow(data);
+
+ 	                    })
+ 	                    .catch(err => {
+ 	                        console.error('Error:', err);
+ 	                    });
+ 	        		}
+ 	    		}});
+        	});
 
             let lotGrid = new tui.Grid({
                 el: document.getElementById('lotGrid'),
@@ -92,40 +135,7 @@
                 }
             });
 
-            matGrid.on('click', function (ev) {
-                console.log('ev 이벤트 :', ev.columnName);
-                let columnName = ev.columnName;
-                if (columnName === 'matCode') {
-                    let rowKey = ev.rowKey;
-                    let rowData = matGrid.getRow(rowKey);
-                    console.log("rowData : ", rowData.matCode);
-
-                    let lotmat = {
-                        matLotCode: rowData.matLotCode,
-                        matCount: rowData.matCount,
-                        matCode: rowData.matCode,
-                        matName: rowData.matName
-                    };
-
-                    if (rowData) {
-                        let matCode = rowData.matCode;
-                        fetch('/matLotList?matCode=' + matCode)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log("data :", data);
-                            lotGrid.resetData(data);
-                        })
-                        .catch(err => {
-                            console.error('Error:', err);
-                        });
- 	        		}
- 	    		}});
-        });
+            
       </script>
 	</section>
 </body>
