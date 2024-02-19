@@ -22,6 +22,7 @@ public class PlanVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date planDate;
 	private String planNote;
+	private String planState;
 	
 	
 }

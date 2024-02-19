@@ -14,6 +14,7 @@ public class FacInsVO {
 	private String facNotCode;
 	private String facCode;
 	private String facName;
+	private String facPerson;
 	private String facInsCheck;
 	private String facInsPerson;
 	private String facInsJud;

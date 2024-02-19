@@ -68,7 +68,6 @@
                             <th></th>
                             <th>설비코드</th>
                             <th>설비명</th>
-                            <th>설비상태</th>
                           </tr>
                         </thead>
                         <tbody id="changeFac">
@@ -85,7 +84,6 @@
                             </td>
                             <td th:text="${fac.facCode}"></td>
                             <td th:text="${fac.facName}"></td>
-                            <td th:text="${fac.facState}"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -475,7 +473,6 @@
         					</td>
         					<td>${fac.facCode}</td>
         					<td>${fac.facName}</td>
-        					<td>${fac.facState}</td>
         				`;
                         facTbody.appendChild(tr);
                       });
@@ -491,7 +488,7 @@
         	let progpasscount = document.querySelector('input[id="workCount"]').value;
         	let starttime = document.querySelector('input[id="workStart"]').name;
         	let endtime = document.querySelector('input[id="workEnd"]').name;
-        	let prodCode = '[[${prodCode}]]';
+        	let prodcode = '[[${prodCode}]]';
         	
         	console.log("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode);
 
@@ -503,7 +500,7 @@
         			progPassCount : progpasscount,
         			startTime : starttime,
         			endTime : endtime,
-        			prodCode : prodCode
+        			prodCode : prodcode
         	};
 
         	fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
@@ -556,6 +553,8 @@
 					}
         			
 					vo.progWorker = '[[${session.userName}]]';
+					
+					console.log('insert vo : ', vo);
 					
         			fetch('/workMidInsert', {
         				method: 'POST',

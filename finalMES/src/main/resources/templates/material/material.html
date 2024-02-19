@@ -3,102 +3,140 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout}">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>자재 관리^^</title>
-
 </head>
 <body>
 	<section layout:fragment="content">
-
-
-		<div id="matGrid" class="container">
-			<h3>자재 전체 재고</h3>
+		<div class="row">
+			<div class="col-7">
+				<div id="matGrid" class="container">
+					<h3>자재 전체 재고</h3>
+				</div>
+			</div>
+			<div class="col-5">
+				<div id="lotGrid" class="container">
+					<h3>LOT 별 자재 재고</h3>
+				</div>
+			</div>
 		</div>
-		
-		<div id="lotGrid" class="container">
-			<h3>LOT 별 자재 재고</h3>
-		</div>
-
-
 
 		<script th:inline="javascript">
-		let matList = [[${matList}]]
-		
-		 const matGrid = new tui.Grid({
+        document.addEventListener('DOMContentLoaded', function () {
+	        let matList = [[${matList}]];
+            let matGrid = new tui.Grid({
+                el: document.getElementById('matGrid'),
+                data: matList,
+                scrollX: false,
+                scrollY: false,
+                columns: [
+                    {
+                        header: '자재코드',
+                        name: 'matCode',
+                        align: 'center',
+                    },
+                    {
+                        header: '자재명',
+                        name: 'matName'
+                    },
+                    {
+                        header: '단위',
+                        name: 'matUnit'
+                    },
+                    {
+                        header: '규격',
+                        name: 'matStandard'
+                    },
+                    {
+                        header: '총재고량',
+                        name: 'matCount'
+                    },
+                    {
+                        header: '안전재고',
+                        name: 'matSafeStock'
+                    },
+                ],
+                rowHeaders: ['rowNum'],
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                }
+            });
+            
+            
+            let lotmat= {};
+            
+            matGrid.on('click', function (ev) {
+                console.log('ev 이벤트 :', ev.columnName);
+                let columnName = ev.columnName;
+                if (columnName === 'matCode') {
+                    let rowKey = ev.rowKey;
+                    let rowData = matGrid.getRow(rowKey);
+                    console.log("rowData : ", rowData.matCode);
+					
+                    lotmat.matLotCode = rowData.matLotCode;
+                    console.log('lotmat.matLotCode '  , lotmat.matLotCode)
+                    lotmat.matCount = rowData.matCount;
+                    lotmat.matCode = rowData.matCode;
+                    lotmat.matName = rowData.matName;
+                    
+                    
+//                     let lotmat = {
+//                         matLotCode: rowData.matLotCode,
+//                         matCount: rowData.matCount,
+//                         matCode: rowData.matCode,
+//                         matName: rowData.matName
+//                     };
 
-             el: document.getElementById('matGrid'),
-             data: matList, // 여기서 emps 데이터를 사용
-             scrollX: false,
-             scrollY: false,
- 	      columns: [
- 	        {
- 	          header: '자재코드',
- 	          name: 'matCode',
- 	          align: 'center',
- 	        },
- 	        {
- 	          header: '자재명',
- 	          name: 'matName'
- 	        },
- 	        {
- 	          header: '단위',
- 	          name: 'matUnit'
- 	        },
- 	        {
- 	          header: '규격',
- 	          name: 'matStandard'
- 	        },
- 	        {
- 	          header: '총재고량',
- 	          name: 'matCount'
- 	        },
- 	        {
- 	          header: '안전재고',
- 	          name: 'matSafeStock'
- 	        },
- 	      ],
- 	      rowHeaders: ['rowNum'],
-             pageOptions: {
-                 useClient: true,
-                 perPage: 5
-             }
- 	    });
-		
-		
-		
-		
-		
-		 const lotGrid = new tui.Grid({
+                    if (rowData) {
+                        let matCode = rowData.matCode;
+                        fetch('/matLotList?matCode=' + matCode)
+                        .then(response => response.json())
+ 	                    .then(data => {
+								console.log("data : ", data);
+ 	                    		// 그리드 갱신
+ 	                    		busiGrid.resetData(data);
+//  	                    		busiGrid.prependRow(data);
 
-             el: document.getElementById('lotGrid'),
-             
-             scrollX: false,
-             scrollY: false,
- 	      columns: [
- 	        {
- 	          header: '자재 LOT',
- 	          name: 'matCode'
- 	        },
- 	        {
- 	          header: '자재코드',
- 	          name: 'matName'
- 	        },
- 	        {
- 	          header: '자재명',
- 	          name: 'matCount'
- 	        },
- 	        {
- 	          header: 'LOT재고',
- 	          name: 'matSafeStock'
- 	        },
- 	      ],
- 	      rowHeaders: ['rowNum'],
-             pageOptions: {
-                 useClient: true,
-                 perPage: 5
-             }
- 	    });
-		</script>
+ 	                    })
+ 	                    .catch(err => {
+ 	                        console.error('Error:', err);
+ 	                    });
+ 	        		}
+ 	    		}});
+        	});
+
+            let lotGrid = new tui.Grid({
+                el: document.getElementById('lotGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [
+                    {
+                        header: '자재 LOT',
+                        name: 'matCode'
+                    },
+                    {
+                        header: '자재코드',
+                        name: 'matName'
+                    },
+                    {
+                        header: '자재명',
+                        name: 'matCount'
+                    },
+                    {
+                        header: 'LOT재고',
+                        name: 'matSafeStock'
+                    },
+                ],
+                rowHeaders: ['rowNum'],
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                }
+            });
+
+            
+      </script>
 	</section>
 </body>
 </html>

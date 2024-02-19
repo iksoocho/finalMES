@@ -57,7 +57,7 @@ public class ProdInsController {
 		ProdInsDetailVO vo = prodInsService.getCheckDetailList(dInsCode);
 		List<WorkLoadVO> load = prodInsService.getWorkPageLoadData(prodCode);
 		List<ProcessVO> proc = prodInsService.getProcData();
-		List<FacCateVO> fac = prodInsService.getFacSelect("proc01");
+		List<FacCateVO> fac = prodInsService.getFacSelect("PROC004");
 		List<ProdProgressJoinVO> prJoin = prodInsService.getProdProgress(dInsCode);
 		System.out.println(vo);
 		System.out.println(load);

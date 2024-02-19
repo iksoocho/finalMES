@@ -46,18 +46,18 @@
 	<!-- 발주 목록 쪽 거래처 -->
 	<select id="getMaterialOrdInfoList1" resultType="MatOrderInfoVO">
 		SELECT
-		b.business_code,
-		b.business_name,
-		m.mat_code,
-		m.mat_name
-		FROM
-		business b
-		JOIN
-		mat_order mo ON b.business_code = mo.business_code
-		JOIN
-		material m ON mo.mat_code = m.mat_code
+				b.business_code,
+				b.business_name,
+				m.mat_code,
+				m.mat_name
+				FROM
+				business b
+		LEFT JOIN
+				mat_order mo ON b.business_code = mo.business_code
+		LEFT JOIN
+				material m ON mo.mat_code = m.mat_code
 		GROUP BY
-		b.business_code, b.business_name, m.mat_code, m.mat_name
+				b.business_code, b.business_name, m.mat_code, m.mat_name
 	</select>
 
 	<!-- 발주 자재 관리 -->
@@ -100,12 +100,13 @@
 	<!-- 자재관리 -->
 	<select id="getOriginMaterialList1"
 		resultType="OriginMaterialVO">
-		SELECT m.mat_code,
-		m.mat_name,
-		m.mat_safe_stock,
-		m.mat_unit,
-		m.mat_standard,
-		ml.mat_count
+		SELECT DISTINCT 
+				m.mat_code,
+		        m.mat_name,
+		        m.mat_safe_stock,
+		        m.mat_unit,
+		        m.mat_standard,
+		        ml.mat_count
 		FROM material m
 		JOIN mat_lot ml ON m.mat_code = ml.mat_code
 	</select>
@@ -344,5 +345,15 @@
 		FROM mat_bad mb
 		RIGHT JOIN bad_material bm ON bm.bad_mat_code = bm.bad_mat_code
 	
+	</select>
+	
+	<select id="getMatOriginInfoList" resultType="OriginMaterialVO">
+		select m.mat_code,
+		        m.mat_name,
+		        ml.mat_lot_code,
+		        ml.mat_count
+		FROM material m
+		JOIN mat_lot  ml ON m.mat_code = ml.mat_code
+		
 	</select>
 </mapper>

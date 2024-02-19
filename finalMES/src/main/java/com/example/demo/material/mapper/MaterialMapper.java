@@ -68,6 +68,8 @@ public interface MaterialMapper {
 	
 	// 자재 입고 입고페이지 입고 인서트
 	public int matInputInsert(MatInputVO matInputVO);
+	
+	public List<OriginMaterialVO> getMatOriginInfoList();
 
 
 }
