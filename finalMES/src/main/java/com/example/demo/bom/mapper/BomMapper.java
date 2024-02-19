@@ -28,5 +28,5 @@ public interface BomMapper {
 	// bom delete
 	public int bomDelete(BomVO bomVO);
 	// bom update
-	public void bomUpdate(String bomCode);
+
 }

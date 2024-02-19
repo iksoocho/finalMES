@@ -161,7 +161,7 @@
 
 		<script th:inline="javascript">
 			let plan = [[${list}]];
-			let planGrid, planDGrid;
+			let planGrid, planDGrid , matUseGrid;
 			class NumberEditor {
 				constructor(props) {
 					const el = document.createElement('input');
@@ -393,10 +393,7 @@
 					],
 					// 여기에 다른 그리드 옵션을 추가할 수 있습니다
 					rowHeaders: [],
-					pageOptions: {
-						useClient: true,
-						perPage: 5
-					}
+					
 				});
 
 				console.log("planGrid", planGrid)

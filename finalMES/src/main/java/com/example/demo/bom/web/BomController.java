@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,15 +58,14 @@ public class BomController {
 		return bomService.getBomList(prodCode);
 	}
 	
-	@DeleteMapping("/bomDelete")
-	   @ResponseBody
-	   public String bomDelete(@RequestBody BomVO bomVO) {
-	      String msg;
-	      System.out.println("======================================");
-	      System.out.println(bomVO);
-	      bomService.bomDelete(bomVO);
-	      msg = "삭제완료";
-	      return msg;
-	   }
+	@ResponseBody
+	public String bomDelete(@RequestBody BomVO bomVO) {
+		String msg;
+		System.out.println("======================================");
+		System.out.println(bomVO);
+		bomService.bomDelete(bomVO);
+		msg = "삭제완료";
+		return msg;
+	}
 }
 

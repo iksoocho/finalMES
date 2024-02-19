@@ -13,7 +13,7 @@
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
-		       moi.mat_or_due_date,
+		       mo.mat_or_due_date,
 		       mo.mat_or_manager
 		 FROM  mat_order      mo
 		 JOIN  business       b     ON mo.business_code = b.business_code
@@ -30,7 +30,7 @@
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
-		       moi.mat_or_due_date,
+		       mo.mat_or_due_date,
 		       mo.mat_or_manager,
 		       mo.mat_or_state
 		 FROM  mat_order           mo
@@ -43,18 +43,17 @@
 	
 	<!-- 발주 목록 쪽  -->
 	<select id="getMaterialOrdInfoList1" resultType="MatOrderInfoVO">
-		SELECT 
+		SELECT
 		    b.business_code,
 		    b.business_name,
 		    m.mat_code,
 		    m.mat_name
 		FROM 
 		    business b
-		JOIN 
+		 JOIN 
 		    mat_order mo ON b.business_code = mo.business_code
-		JOIN 
+		 JOIN 
 		    material m ON mo.mat_code = m.mat_code
-		WHERE m.mat_code = #{matCode}
 		GROUP BY 
 		    b.business_code, b.business_name, m.mat_code, m.mat_name
 	</select>
@@ -132,17 +131,31 @@
 	
 	<!-- 입고 관리 -->
 	<select id="getInputList" resultType="MatInputVO">
-		SELECT l.mat_code, 
-       		   m.mat_name, 
-       		   l.mat_lot_code, 
-               l.mat_ins_code,
-               i.mat_ins_count,
-               i.mat_ins_good AS mat_ins_good_count, 
-               l.mat_input_date, 
-               l.mat_manager
-		FROM mat_lot          l
-		JOIN mat_inspection   i ON l.mat_ins_code = i.mat_ins_code
-		JOIN material m ON    l.mat_code = m.mat_code
+		SELECT mo.mat_or_code,
+		       mo.mat_or_name, 
+		       mo.mat_code, 
+		       m.mat_name,
+		       m.mat_unit,
+		       m.mat_standard,
+		       b.business_code,
+		       b.business_name,
+		       mo.mat_or_count,
+		       mo.mat_or_date,
+		       mo.mat_or_due_date,
+		       mo.mat_or_manager,
+		       mo.mat_or_state,
+		       mi.mat_ins_date,
+		       mi.mat_ins_code,
+		       mi.mat_ins_good,
+		       mi.mat_ins_bad,
+		       mi.mat_ins_count
+		FROM       mat_order      mo
+		LEFT JOIN  mat_inspection mi    ON mo.mat_or_code = mi.mat_or_code
+		LEFT JOIN  business       b     ON mo.business_code = b.business_code
+		LEFT JOIN  mat_order_info moi   ON mo.mat_or_code = moi.mat_or_code
+		JOIN       material       m     ON mo.mat_code = m.mat_code
+		WHERE      mi.mat_ins_code IS NOT NULL
+		ORDER BY   mo.mat_or_code DESC
 		
 	</select>
 	
@@ -158,10 +171,13 @@
 		       b.business_name,
 		       mo.mat_or_count,
 		       mo.mat_or_date,
-		       moi.mat_or_due_date,
+		       mo.mat_or_due_date,
 		       mo.mat_or_manager,
 		       mo.mat_or_state,
-               mi.mat_ins_date
+               mi.mat_ins_date,
+               mi.mat_ins_code,
+               mi.mat_ins_good,
+               mi.mat_ins_bad
 		 FROM       mat_order      mo
          LEFT JOIN  mat_inspection mi    ON mo.mat_or_code = mi.mat_or_code
 		 LEFT JOIN  business       b     ON mo.business_code = b.business_code
@@ -202,7 +218,9 @@
              mat_or_date,
              mat_or_manager,
              mat_or_count,
-             mat_or_name
+             mat_or_name,
+             mat_or_state,
+             mat_or_due_date
              )
         VALUES 
         (
@@ -211,7 +229,9 @@
               #{matOrDate},
               #{matOrManager},
               #{matOrCount},
-              #{matOrName} 
+              #{matOrName},
+              0,
+              #{matOrDueDate}
         )
 	</insert>
 	
@@ -222,13 +242,15 @@
 				mat_code,
 				mat_ori_count,
 				mat_or_due_date
+			
 				)
 			VALUES
 			(
 				#{matOrInfoCode},
 				#{matCode},
 				#{matOriCount},
-				#{matOrDueDate}			
+				#{matOrDueDate}		
+							
 			)
 	
 	</insert>
@@ -250,21 +272,27 @@
 	
 	<!-- 입고 페이지 검수 인서트 -->
 	<insert id="insertMatIns" parameterType="MatInspectionVO">
-		<selectKey keyProperty="matOrCode" resultType="String"
+		<selectKey keyProperty="matInsCode" resultType="string"
 			order="BEFORE">
 			SELECT 'MATINS' || LPAD(mat_ins_code_seq.nextval, 3, 0) FROM DUAL
 		</selectKey>
 		INSERT INTO mat_inspection
 				(
+				mat_ins_count,
 				mat_ins_good,
 				mat_ins_bad,
-				mat_ins_date
+				mat_ins_date,
+				mat_or_code,
+				mat_note
 				)
 			VALUES
 			(
+				#{matInsCount},
 				#{matInsGood},
 				#{matInsBad},
-				#{matInsDate}
+				#{matInsDate},
+				#{matOrCode},
+				#{matNote}
 			)
 	</insert>
 </mapper>

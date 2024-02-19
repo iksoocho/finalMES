@@ -149,6 +149,7 @@
 
 				<div class="mt-4">
 					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planDUpdate">저장</button>
+					<h5>상세 지시</h5>
 					<div id="planDGrid"></div>
 					<!-- <table class="table table-hover" id="planDetailTable">
 						<thead>
@@ -181,12 +182,20 @@
 						</tbody>
 					</table> -->
 				</div>
+				<br>
+				<br>
+				<br>
 				<!-- <br>
 				<br>
 				<div id="grid">
 					<button class="btn btn-secondary"
 						style="float: right; margin: 8px 5px;">저장</button>
 				</div> -->
+				<div class="mt-4">
+					
+					<h5>자재 소모량</h5>
+					<div id="matUseGrid"></div>
+				</div>
 
 			</div>
 		</div>
@@ -194,7 +203,7 @@
 
 		<script th:inline="javascript">
 			let plan = [[${list}]];
-			let planGrid, planDGrid, modalPlan;
+			let planGrid, planDGrid, matUseGrid;
 			class NumberEditor {
 				constructor(props) {
 					const el = document.createElement('input');
@@ -425,14 +434,61 @@
 					],
 					// 여기에 다른 그리드 옵션을 추가할 수 있습니다
 					rowHeaders: [],
-					pageOptions: {
-						useClient: true,
-						perPage: 5
-					}
+					
 				});
 
 				console.log("planGrid", planGrid)
+				
+				
+				planDGrid.on('click', function (ev) {
+					console.log(ev.columnName);
+					var columnName = ev.columnName;
+					if (columnName === 'dinsCode') {
+						var rowKey = ev.rowKey;
+						var rowData = planDGrid.getRow(rowKey);
 
+						if (rowData) {
+							var dinsCode = rowData.dinsCode;
+
+							// planCode를 사용하여 상세 데이터 요청
+							fetch('/matUseList?dinsCode=' + dinsCode)
+								.then(response => response.json())
+								.then(data => {
+									console.log(data);
+									// 상세 그리드에 데이터 표시
+									// grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
+									matUseGrid.resetData(data);
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						}
+					}
+				});
+				
+				matUseGrid = new tui.Grid({
+					el: document.getElementById('matUseGrid'), // 그리드 요소 ID가 맞는지 확인하세요
+					scrollX: false,
+					scrollY: false,
+
+					columns: [
+						// 데이터 구조에 따라 컬럼을 정의하세요
+						{name: 'matUseCode', header: '소모 자재 코드'},
+						{name: 'dinsCode', header: '상세 지시 코드'},
+
+						{name: 'matCode', header: '자재 코드'},
+						{name: 'matName', header: '자재 이름'},
+						{name: 'procCode', header: '공정 코드'},
+						{name: 'matTotalCon', header: '소모량'},
+						
+					],
+					// 여기에 다른 그리드 옵션을 추가할 수 있습니다
+					rowHeaders: [],
+					
+				});
+				
+				
+				
 			});
 			
 			
@@ -656,20 +712,20 @@
 
 				let insDetailData = [];
 
-				for (var i = 4; i < newInsDetailRows.length; i++) {
+				for (var i = (newInsDetailRows.length)/2 +1 ; i < newInsDetailRows.length; i++) {
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newInsDetailRows[i]);
 					
-					obj.insCode = target.find('td:eq(0)').text();
+					obj.insCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
-					obj.prodCode = target.find('td:eq(1)').text();
+					obj.prodCode = target.find('td:eq(2)').text();
 					console.log("prodCode : " + obj.prodCode);
 
-					obj.dinsSdate = target.find('td:eq(2)').text();
+					obj.dinsSdate = target.find('td:eq(3)').text();
 					console.log("dinsSdate : " + obj.dinsSdate);
-					obj.dinsEdate = target.find('td:eq(3)').text();
-					obj.dinsCount = target.find('td:eq(5)').text();
+					obj.dinsEdate = target.find('td:eq(4)').text();
+					obj.dinsCount = target.find('td:eq(6)').text();
 					console.log("dinsCount : " + obj.dinsCount);
 					insDetailData.push(obj);
 

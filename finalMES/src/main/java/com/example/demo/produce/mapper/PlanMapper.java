@@ -2,6 +2,8 @@ package com.example.demo.produce.mapper;
 
 import java.util.List;
 
+import com.example.demo.bom.BomVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanInsDVO;
 import com.example.demo.produce.PlanInsVO;
@@ -53,6 +55,16 @@ public interface PlanMapper {
 	public void deleteInsInfo(String insCode);
 	
 	public void updateInsDInfo(PlanInsDVO planInsDVO);
+	
+	//prod_code 로 bom 조회
+	public List<BomVO> selectBomByProd(String prodCode);
+	
+	//mat_use insert
+	public void insertMatUse(MatUseVO matUseVO);
+	
+	//mat_ues list
+	public List<MatUseVO> selectMatUseList(String dinsCode);
+	
 
 
 }

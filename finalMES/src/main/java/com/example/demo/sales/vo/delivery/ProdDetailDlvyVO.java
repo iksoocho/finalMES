@@ -9,4 +9,5 @@ public class ProdDetailDlvyVO {
 	private String prodLotCode;
 	private String ordDCode;
 	private int outCount;
+	private String outDState;
 }
