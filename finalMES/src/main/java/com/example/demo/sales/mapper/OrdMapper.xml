@@ -123,5 +123,10 @@
 		ORDER BY pl.prod_lot_code
 	</select>
 	
+	<select id="getEmployeeList" resultType="EmployeeVO">
+		SELECT user_code, user_name, user_phone
+		FROM employee
+		WHERE dept_code = 'dept003'
+	</select>
 
 </mapper>
