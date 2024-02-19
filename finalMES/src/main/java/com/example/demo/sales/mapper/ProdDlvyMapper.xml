@@ -67,5 +67,37 @@
 		WHERE out_d_code = #{outDCode}
 	</update>
 	
+	<update id="updateOutState" parameterType="String">
+		UPDATE out_list
+		SET out_state = 
+    		CASE
+    
+        		WHEN NOT EXISTS (
+            		SELECT 1
+            		FROM out_d_list
+            		WHERE out_code = #{outCode}
+            		AND out_d_state != 'dlvyD1'
+        		)
+        		THEN 'dlvy2'
+        
+        		WHEN EXISTS (
+            		SELECT 1
+            		FROM out_d_list
+            		WHERE out_code = #{outCode}
+            		AND out_d_state = 'dlvyD1'
+        		)
+        		THEN 'dlvy3'
+        		
+        		WHEN NOT EXISTS (
+            		SELECT 1
+            		FROM out_d_list
+            		WHERE out_code = #{outCode}
+            		AND out_d_state != 'dlvyD2'
+        		)
+        		THEN 'dlvy4'
+    		END
+		WHERE out_code = #{outCode}
+	</update>
+	
 </mapper>
  

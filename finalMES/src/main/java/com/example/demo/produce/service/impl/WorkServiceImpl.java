@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.WorkMidRegistVO;
+import com.example.demo.produce.WorkResultVO;
 import com.example.demo.produce.mapper.WorkMapper;
 import com.example.demo.produce.service.WorkService;
 
@@ -43,6 +44,15 @@ public class WorkServiceImpl implements WorkService {
 			return 1;
 		}else {
 			return -1;
+		}
+	}
+
+	@Override
+	public void insertWorkResult(List<WorkResultVO> list) {
+		for(int i=0; i<list.size(); i++) {
+			WorkResultVO workResult = list.get(i);
+	        workMapper.insertWorkResult(workResult);
+	        System.out.println("등록성공");
 		}
 	}
 

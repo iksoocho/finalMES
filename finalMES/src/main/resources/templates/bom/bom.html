@@ -604,7 +604,6 @@
             performAction();
          });
 
-
          //plan detail update
          document.querySelector('#bomUpdate').addEventListener('click', function () {
             const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
@@ -641,7 +640,6 @@
                method: 'put',
                headers: {
                   'Content-Type': 'application/json',
-
                },
                body: JSON.stringify(data)
             })
@@ -662,6 +660,7 @@
          });
       </script>
    </section>
+
 
 </body>
 

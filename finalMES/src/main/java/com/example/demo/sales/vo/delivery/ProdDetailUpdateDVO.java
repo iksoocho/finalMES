@@ -13,4 +13,5 @@ public class ProdDetailUpdateDVO {
 	private String outDCode;
 	private String prodLotCode;
 	private int outCount;
+	private String outCode;
 }

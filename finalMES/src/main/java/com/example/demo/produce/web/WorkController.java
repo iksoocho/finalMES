@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.WorkMidRegistVO;
+import com.example.demo.produce.WorkResultVO;
 import com.example.demo.produce.service.WorkService;
 
 import lombok.extern.log4j.Log4j2;
@@ -65,6 +66,15 @@ public class WorkController {
 	@ResponseBody
 	public List<WorkMidRegistVO> checkWorkMidRegist(@RequestParam String dinsCode, @RequestParam String procCode){
 		return workService.checkWorkMidRegist(dinsCode, procCode);
+	}
+	
+	@PostMapping("/workResultInsert")
+	@ResponseBody
+	public String insertWorkResult(@RequestBody List<WorkResultVO> list) {
+		String msg;
+		workService.insertWorkResult(list);
+		msg = "작업최종등록이 완료되었습니다.";
+        return msg;
 	}
 
 }
