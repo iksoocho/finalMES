@@ -72,6 +72,8 @@ public interface MaterialService {
 	// 자재 입고 입고페이지 입고 인서트
 	public MatInputVO matInputInsert(MatInputVO matInputVO);
 	
+	public List<OriginMaterialVO> getMatOriginInfoList(String matCode);
+	
 	
 	
 	
