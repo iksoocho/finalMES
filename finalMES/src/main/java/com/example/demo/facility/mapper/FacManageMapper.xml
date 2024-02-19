@@ -40,7 +40,8 @@
 		<!-- fi.fac_ins_sel, -->
 		fi.fac_ins_nexd,
 		fn.fac_not_situation,
-		fm.fac_name
+		fm.fac_name,
+		fm.fac_person
 		FROM
 		fac_ins fi
 		INNER
