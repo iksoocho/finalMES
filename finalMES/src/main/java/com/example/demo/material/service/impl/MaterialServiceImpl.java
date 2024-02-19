@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.material.BadMatVO;
 import com.example.demo.material.MatInputVO;
 import com.example.demo.material.MatInspectionVO;
 import com.example.demo.material.MatOrderCompositeVO;
@@ -173,8 +174,23 @@ public class MaterialServiceImpl implements MaterialService {
 	 */
 	@Override
 	public MatInspectionVO insertMatIns(MatInspectionVO matInspectionVO) {
+		materialMapper.insertMatIns(matInspectionVO);
+		return matInspectionVO;
+	}
+
+	@Override
+	public MatInputVO matInputInsert(MatInputVO matInputVO) {
+		materialMapper.matInputInsert(matInputVO);
+		return matInputVO;
+	}
+	
+	/**
+	 * @param 자재 검수 불량명 선택 리스트 모달처리
+	 */
+	@Override
+	public List<BadMatVO> getBadMatList() {
 		// TODO Auto-generated method stub
-		return null;
+		return materialMapper.getBadMatList();
 	}
 
 

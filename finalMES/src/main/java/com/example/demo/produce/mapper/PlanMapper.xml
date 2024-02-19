@@ -77,6 +77,7 @@
 	</insert>
 
 	<insert id="insertPlanDInfo" parameterType="PlanDVO">
+	
 		INSERT INTO
 		PROD_D_PLAN(PLAN_CODE, PROD_CODE, D_PLAN_COUNT, D_PLAN_START_DATE,
 		D_PLAN_END_DATE)
@@ -161,10 +162,14 @@
 	</insert>
 
 	<insert id="insertPlanDInsInfo" parameterType="PlanInsDVO">
+		<selectKey keyProperty="dinsCode" resultType="string" order="BEFORE">
+			SELECT
+				'D_INS'||LPAD(d_ins_code_seq.NEXTVAL,3,0) FROM DUAL
+		</selectKey>
 		INSERT INTO
-		PROD_D_INS(INS_CODE, PROD_CODE, D_INS_COUNT, D_INS_SDATE,
+		PROD_D_INS(D_INS_CODE,INS_CODE, PROD_CODE, D_INS_COUNT, D_INS_SDATE,
 		D_INS_EDATE )
-		VALUES(#{insCode},#{prodCode},#{dinsCount},#{dinsSdate},#{dinsEdate})
+		VALUES(#{dinsCode},#{insCode},#{prodCode},#{dinsCount},#{dinsSdate},#{dinsEdate})
 	</insert>
 	
 	<update id="updatePlanStateZero" parameterType="String">
@@ -203,6 +208,13 @@
 		values(#{matCode}, #{procCode}, #{dinsCode}, #{matTotalCon})
 		
 	</insert>
+	
+	<select id="selectMatUseList" resultType="MatUseVO">
+		select ms.*, m.mat_name 
+		from mat_use ms
+		join material m on ms.mat_code = m.mat_code
+		where d_ins_code = #{dinsCode}
+	</select>
 	
 	
 </mapper>

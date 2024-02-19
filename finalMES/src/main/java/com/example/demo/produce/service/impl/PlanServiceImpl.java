@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.produce.InsCompositeVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanInsDVO;
@@ -148,7 +149,7 @@ public class PlanServiceImpl implements PlanService{
             String prodCode = insCompositeVO.getPlanInsDList().get(i).getProdCode();
             String dinsCode = insCompositeVO.getPlanInsDList().get(i).getDinsCode();
             int dinsCount = insCompositeVO.getPlanInsDList().get(i).getDinsCount();
-            System.out.println("prodCode : " + prodCode);
+            System.out.println("dinsCode : " + dinsCode);
             planMapper.selectBomByProd(prodCode);
             
             System.out.println("bomList : " + planMapper.selectBomByProd(prodCode));
@@ -157,7 +158,12 @@ public class PlanServiceImpl implements PlanService{
             	String procCode = planMapper.selectBomByProd(prodCode).get(j).getProcCode();
             	int matCount = Integer.parseInt(planMapper.selectBomByProd(prodCode).get(j).getBomMatCount());
             	int matTotalCon = dinsCount * matCount;
-            	System.out.println("matTotalCon : " + matTotalCon);
+            	MatUseVO vo = new MatUseVO();
+            	vo.setDinsCode(dinsCode);
+            	vo.setMatCode(matCode);
+            	vo.setProcCode(procCode);
+            	vo.setMatTotalCon(matTotalCon);
+            	planMapper.insertMatUse(vo);
             }
         }
         
@@ -180,6 +186,12 @@ public class PlanServiceImpl implements PlanService{
             System.out.println("수정성공");
         }
 		
+	}
+
+	@Override
+	public List<MatUseVO> getMatUseList(String dinsCode) {
+		
+		return planMapper.selectMatUseList(dinsCode);
 	}
 
 	

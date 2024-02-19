@@ -2,6 +2,7 @@ package com.example.demo.material.mapper;
 
 import java.util.List;
 
+import com.example.demo.material.BadMatVO;
 import com.example.demo.material.MatInputVO;
 import com.example.demo.material.MatInspectionVO;
 import com.example.demo.material.MatOrderInfoVO;
@@ -60,8 +61,13 @@ public interface MaterialMapper {
 	
 	
 	
-	// 자재 입고 페이지
+	// 자재 입고 페이지 검수 인서트
 	public int insertMatIns(MatInspectionVO matInspectionVO);
+	// 불량명 선택해서 넘기기 리스트
+	public List<BadMatVO> getBadMatList();
+	
+	// 자재 입고 입고페이지 입고 인서트
+	public int matInputInsert(MatInputVO matInputVO);
 
 
 }

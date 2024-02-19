@@ -62,6 +62,9 @@ public interface PlanMapper {
 	//mat_use insert
 	public void insertMatUse(MatUseVO matUseVO);
 	
+	//mat_ues list
+	public List<MatUseVO> selectMatUseList(String dinsCode);
+	
 
 
 }

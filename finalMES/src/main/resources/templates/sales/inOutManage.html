@@ -456,17 +456,6 @@ button {
 					name : 'ordDCode',
 					align : 'center',
 				},
-				{
-					header : '출고일자',
-					name : '',
-					align : 'center',
-					editor: {
-						type: 'datePicker',
-						options: {
-							format: 'yyyy-MM-dd',
-						}
-					}
-				},
 					{
 					header : '완제품 LOT 번호',
 					name : 'prodLotCode',
@@ -807,11 +796,9 @@ button {
 					console.log(target.find('td'))
 					obj.ordDCode = target.find('td:eq(0)').text();
 					console.log("주문상세번호 : " + obj.ordDCode);
-					obj.outDDate = target.find('td:eq(1)').text();
-					console.log("출고일자: " + obj.outDDate)
-					obj.prodLotCode = target.find('td:eq(2)').text();
+					obj.prodLotCode = target.find('td:eq(1)').text();
 					console.log("제품LOT번호 : " + obj.prodLotCode);
-					obj.outCount = target.find('td:eq(3)').text();
+					obj.outCount = target.find('td:eq(2)').text();
 					console.log("출고수량 : " + obj.outCount)
 					obj.outDState = "dlvyD1";
 					outDetailData.push(obj);

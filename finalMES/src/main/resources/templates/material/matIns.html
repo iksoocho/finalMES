@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://uicdn.toast.com/grid/latest/grid.js"></script>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/grid.css">
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<title>자재 검사</title>
+
+<style>
+/* 검색 입력란 스타일 */
+#searchOrder {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 14px;
+}
+
+/* 테이블 스타일 */
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table td {
+	padding: 5px;
+}
+
+table tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 600px;
+}
+
+.close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<section layout:fragment="content">
+
+		<!-- Modal -->
+		<!-- ManagerListModal -->
+<!-- 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" -->
+<!-- 			data-bs-keyboard="false" tabindex="-1" -->
+<!-- 			aria-labelledby="staticBackdropLabel" aria-hidden="true"> -->
+<!-- 			<div class="modal-dialog"> -->
+<!-- 				<div class="modal-content"> -->
+<!-- 					<div class="modal-header" style="background-color: #0d6efd;"> -->
+<!-- 						<h1 class="modal-title fs-5" id="staticBackdropLabel" -->
+<!-- 							style="font-weight: bold">거래처 목록</h1> -->
+<!-- 						<button type="button" class="btn-close" data-bs-dismiss="modal" -->
+<!-- 							aria-label="Close"></button> -->
+<!-- 					</div> -->
+
+<!-- 					<div class="modal-body"> -->
+
+<!-- 						<table> -->
+<!-- 							<thead style="text-align: center;"> -->
+<!-- 								<tr> -->
+<!-- 									<th>거래처코드</th> -->
+<!-- 									<th>거래처명</th> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 							<tbody style="text-align: center;"> -->
+<!-- 								<tr th:each="badMat : ${badMatList}" -->
+<!-- 									th:data-businessCode="${business.businessCode}" -->
+<!-- 									th:data-businessManagerPhone="${business.businessManagerPhone}" -->
+<!-- 									data-bs-dismiss="modal" onclick="updateInputFields(this)"> -->
+<!-- 									<td th:text="${business.businessCode}"></td> -->
+<!-- 									<td th:text="${business.businessName}"></td> -->
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+<!-- 						</table> -->
+<!-- 					</div> -->
+<!-- 					<div class="modal-footer" style="background-color: #0d6efd;"> -->
+<!-- 						<button type="button" class="btn btn-secondary" -->
+<!-- 							data-bs-dismiss="modal">닫기</button> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+
+
+
+
+		<div class="container">
+			<div>
+				<h2>자재 검사</h2>
+			</div>
+
+			<div class="search-container">
+				<table>
+					<tr>
+						<td><input type="text" id="searchOrder" placeholder="검색...">
+							<button type="button" class="btn btn-primary"
+								onclick="searchFunction()">검색</button></td>
+						<!-- 수정된 부분: oninput 이벤트 제거 -->
+
+					</tr>
+				</table>
+			</div>
+
+			<h3>검수 목록</h3>
+			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
+			<!-- 				data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
+			<!-- 				주문서 조회</button> -->
+			<button type="button" class="btn btn-outline-primary custom-style"
+				id="orderInsert">저장</button>
+
+			<div id="insGrid"></div>
+
+
+		</div>
+
+		<script th:inline="javascript">      
+                		let insList = [[${matInsList}]]
+                		console.log(insList);
+
+                		const insGrid = new tui.Grid({
+                	           el: document.getElementById('insGrid'),
+                	           data: insList,
+                	           scrollX: false,
+                	           scrollY: false,
+                		      columns: [
+                		    	{
+                			      header: '자제검수코드',
+                			      name: 'matInsCode'
+                			    },
+                		        {
+                		          header: '발주코드',
+                		          name: 'matOrCode'
+                		        },
+                		        {
+                		          header: '자재명',
+                		          name: 'matName'
+                		        },
+                		        {
+                		          header: '발주량',
+                		          name: 'matOrCount'
+                		        },
+                		        {
+                				  header: '합격량',
+                				  name: 'matInsGood',
+                				  editor: 'text'
+                				},
+                		        {
+                				  header: '불합격량',
+                				  name: 'matInsBad',
+                				  editor: 'text'
+                				},
+                				{
+                		            header: '검수일자',
+                		            name: 'matInsDate',
+                		            formatter: formatDate,
+                		            editor: {
+                		                type: 'datePicker',
+                		                options: {
+                		                    format: 'yyyy-MM-dd'
+                		                },
+                		                disable: (value) => {
+                		                    // value가 비어있으면(disabled라면) true 반환하여 비활성화
+                		                    return !value;
+                		                }
+                		            }
+                		        },
+                		        {
+                  		          header: '불량명',
+                  		          name: 'matNote',
+                  		        },
+                		      ],
+                		      rowHeaders: ['rowNum', 'checkbox'],
+                	           pageOptions: {
+                	               useClient: true,
+                	               perPage: 10
+                	           }
+                		    });
+
+   
+
+                			let newCheckRows = []
+
+                			insGrid.on('check', (ev) => {
+        	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
+        	        		    newCheckRows = insGrid.getCheckedRows();
+        	        		    console.log(newCheckRows);
+        	        		});
+                			
+                			
+	
+
+        				// ================ matIns insert ==================
+        				document.querySelector('#orderInsert').addEventListener('click', function() {
+        				    let name = [[${session.userName}]];
+
+        				    const insCheckRows = newCheckRows;
+        				    console.log('잘 들고오네요...',insCheckRows[0]);
+
+
+
+
+
+
+        // 				    // 수정된 행의 데이터 가져오기
+        // 				    const newData = ckeckGrid.getModifiedRows().createdRows;
+        // 				    console.log("newData :" ,newData);
+
+
+
+
+
+
+        				    if (insCheckRows.length === 0) {
+        				        console.log('추가된 데이터가 없습니다.');
+        				        return;
+        				    }
+
+
+        				    // 데이터를 객체로 생성
+        				    let data = {};
+
+        // 			        data.matInsCode = insCheckRows[0].matInsCode;
+        			        data.matOrCode = insCheckRows[0].matOrCode;
+        			        
+        			        console.log("data.matInsCount : ", data.matInsCount);
+        // 			        data.matName = insCheckRows[0].matName;
+        // 			        data.matUnit = insCheckRows[0].matUnit;
+        // 			        data.matStandard = insCheckRows[0].matStandard;
+        // 			        data.businessName = insCheckRows[0].businessName;
+        // 			        data.matOrCount = insCheckRows[0].matOrCount;
+        			        data.matInsGood = insCheckRows[0].matInsGood;
+        			        data.matInsBad = insCheckRows[0].matInsBad;
+        			        data.matInsDate = insCheckRows[0].matInsDate;
+        			        data.matManager = name;
+
+        				    console.log('전송할 데이터:', data);
+
+        				    // AJAX 요청
+        				    fetch('/MatInsInsert', {
+        				        method: 'POST',
+        				        headers: {
+        				            'Content-Type': 'application/json'
+        				        },
+        				        body: JSON.stringify(data)
+        				    })
+        				    .then(response => {
+        				        if (!response.ok) {
+        				            throw new Error('Network response was not ok');
+        				        }
+        				        return response.text();
+        				    })
+        				    .then(data => {
+        				        console.log('Success:', data);
+        				        alert(data);
+        				        location.href = '/matIns'; // 성공적으로 처리된 후 리디렉트
+        				    })
+        				    .catch(error => {
+        				        console.error('Error:', error);
+        				    });
+        				});
+
+                		// 날짜 형식 지정 함수
+                     	function formatDate({ value }) {
+                     	    if (value) {
+                     	        let date = new Date(value);
+                     	        let year = date.getFullYear();
+                     	        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                     	        let day = date.getDate().toString().padStart(2, '0');
+                     	        return `${year}-${month}-${day}`;
+                     	    }
+                     	    return '';
+                     	}
+                		
+                		
+            			
+            	        // 검색
+						function searchFunction() {
+						  let input, filter, table, tr, td, i, j, txtValue;
+						
+						  input = document.getElementById("searchOrder");
+						  filter = input.value.toUpperCase();
+						  table = document.getElementById("insGrid");
+						
+						  const header = table.getElementsByTagName("thead")[0];
+						  tr = table.getElementsByTagName("tr");
+						
+						  for (i = 0; i < tr.length; i++) {
+						    td = tr[i].getElementsByTagName("td");
+						    let found = false;
+						    let display = '';
+						
+						    for (j = 0; j < td.length; j++) {
+						      txtValue = td[j].textContent || td[j].innerText;
+						      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						        found = true;
+						        break;
+						      }
+						    }
+						
+						    if (found) {
+						      display = '';
+						      if (header) {
+						        header.style.display = '';
+						      }
+						    } else {
+						      display = 'none';
+						      if (header) {
+						        header.style.display = 'table-header-group';
+						      }
+						    }
+						
+						    tr[i].style.display = display;
+						  }
+						}
+                		
+            	        
+            	        
+// 				        // 검색
+// 				        function searchFunction() {	
+// 				             let input, filter, table, tr, td, i, j, txtValue;
+// 				     	     input = document.getElementById("searchOrder");
+// 				     	     filter = input.value.toUpperCase();
+// 				     	     table = document.getElementById("ordGrid");
+
+// 				     	     tr = table.getElementsByTagName("tr");
+// 				     	     for (i = 0; i < tr.length; i++) {
+// 				     	         td = tr[i].getElementsByTagName("td");
+// 				     	         for (j = 0; j < td.length; j++) {
+// 				     	             txtValue = td[j].textContent || td[j].innerText;
+// 				     	             if (txtValue.toUpperCase().indexOf(filter) > -1) {
+// 				     	                 tr[i].style.display = "";
+// 				     	                 break;
+// 				     	             } else {
+// 				     	                 tr[i].style.display = "none";
+// 				     	             }
+// 				     	         }
+// 				     	     }
+// 				     	 }
+
+
+
+						
+					// 그리드에서 불량명 열 클릭 시 모달 창 띄우기
+						insGrid.on('click', (ev) => {
+						  const columnName = ev.columnName;
+						  if (columnName === 'matNote') {
+						    const rowKey = ev.rowKey;
+						
+						    // 서버에서 데이터 가져오기
+						    fetch('/' + rowKey)
+						      .then(response => response.json())
+						      .then(data => {
+						        const rowData = data; // 가져온 데이터를 rowData에 할당
+						
+						        // 모달 창 생성
+						        const modal = document.createElement('div');
+						        modal.id = 'myModal';
+						        modal.className = 'modal';
+						
+						        // 모달 내용 영역 생성
+						        const modalContent = document.createElement('div');
+						        modalContent.className = 'modal-content';
+						
+						        // 모달 닫기 버튼 생성
+						        const closeBtn = document.createElement('span');
+						        closeBtn.className = 'close';
+						        closeBtn.textContent = '×';
+						
+						        // 불량명 표시 영역 생성
+						        const matNoteContent = document.createElement('p');
+						        matNoteContent.textContent = rowData.matNote;
+						
+						        // 모달 내용에 요소들 추가
+						        modalContent.appendChild(closeBtn);
+						        modalContent.appendChild(matNoteContent);
+						        modal.appendChild(modalContent);
+						
+						        // body 요소에 모달 창 추가
+						        document.body.appendChild(modal);
+						
+						        // 모달 닫기 버튼 클릭 이벤트 처리
+						        closeBtn.addEventListener('click', () => {
+						          modal.style.display = 'none';
+						        });
+						
+						        // 모달 창의 바깥 영역 클릭 시 모달 닫기
+						        window.addEventListener('click', (ev) => {
+						          if (ev.target === modal) {
+						            modal.style.display = 'none';
+						          }
+						        });
+						
+						        // 모달 창 표시
+						        modal.style.display = 'block';
+						      });
+						  }
+						});
+						
+					
+						
+
+
+               	
+      </script>
+	</section>
+</body>
+</html>

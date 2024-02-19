@@ -24,7 +24,7 @@ public interface OrdService {
 
 	List<OrderVO> getOrderList(OrderVO orderVO);
 
-	List<OrderDetailDVO> getOrderDetailList(String ordCode);
+	List<OrderDetailDVO> getOrderDetailList(String outCode);
 	
 	List<ProductLotVO> getProductLotList(String prodCode);
 

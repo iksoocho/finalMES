@@ -3,8 +3,11 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout}">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>입고 관리^^</title>
+<script src="https://uicdn.toast.com/grid/latest/grid.js"></script>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/grid.css">
 </head>
 <style>
 .custom-style {
@@ -13,6 +16,16 @@
 </style>
 <body>
 	<section layout:fragment="content">
+		<h2>입고관리</h2>
+		<!-- 모달을 위한 HTML 요소 -->
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<div id="modalContent"></div>
+			</div>
+		</div>
+
+
 		<!-- Modal -->
 		<div class="modal fade modal-lg" id="staticBackdrop"
 			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -27,9 +40,6 @@
 					</div>
 					<div class="modal-body">
 						<h3>발주 주문서</h3>
-
-
-
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
@@ -40,189 +50,258 @@
 			</div>
 		</div>
 
-
 		<div class="container">
-			<h3>검수 목록</h3>
-			<button type="button" class="btn btn-outline-primary custom-style"
-				data-bs-toggle="modal" data-bs-target="#staticBackdrop">주문서
-				조회</button>
-			<button type="button" class="btn btn-outline-primary custom-style"
-				id="orderInsert">저장</button>
+			<h3>검수 완료 목록</h3>
+			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
+			<!-- 				data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
+			<!-- 				주문서 조회</button> -->
+			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
+			<!-- 				id="orderInsert">저장</button> -->
 
 			<div id="ckeckGrid"></div>
 
 			<h3>입고목록</h3>
+			<button type="button" class="btn btn-outline-primary custom-style"
+				id="orderInsert">저장</button>
 			<div id="inputGrid"></div>
 			<!-- Button trigger modal -->
-
 		</div>
 
 		<script th:inline="javascript">
-		let matInputList = [[${matInputList}]]
-		console.log(matInputList)
-		 const inputGrid = new tui.Grid({
+		
+						// 입고 그리드
+                		let matInputList = [[${matInputList}]]
+                		console.log(matInputList)
+                		 const inputGrid = new tui.Grid({
 
-           el: document.getElementById('inputGrid'),
-           data: matInputList, // 여기서 emps 데이터를 사용
-           scrollX: false,
-           scrollY: false,
-	      columns: [
-	        {
-	          header: 'LOT코드',
-	          name: 'matLotCode'
-	        },
-	        {
-	          header: '자재코드',
-	          name: 'matCode'
-	        },
-	        {
-	          header: '자재명',
-	          name: 'matName'
-	        },
-	        {
-		      header: '자재 검사코드',
-		      name: 'matInsCode'
-		    },
-	        {
-			  header: '검사량',
-			  name: 'matInsCount'
-			},
-	        {
-			  header: '입고량',
-			  name: 'matInsGoodCount'
-			},
-	        {
-			  header: '입고일',
-			  name: 'matInputDate',
-  		      formatter : function dateFormatter(params) {
-  		    	  const date = new Date(params.value);
-  		    	  const isoDate = date.toISOString().split('T')[0];
-  		    	  return isoDate;
-  		    	}
-			},
-	        {
-			  header: '담당자',
-			  name: 'matManager'
-			},
-	      ],
-	      rowHeaders: ['rowNum'],
-           pageOptions: {
-               useClient: true,
-               perPage: 5
-           }
-	    });
-		
-	
-		let ckeckList = [[${matInsList}]]
-		console.log(ckeckList);
-		
-		const ckeckGrid = new tui.Grid({
-	           el: document.getElementById('ckeckGrid'),
-	           data: ckeckList,
-	           scrollX: false,
-	           scrollY: false,
-		      columns: [
-		    	{
-			      header: '자제검수코드',
-			      name: 'matInsCode'
-			    },
-		        {
-		          header: '발주코드',
-		          name: 'matOrCode'
-		        },
-		        {
-		          header: '자재명',
-		          name: 'matName'
-		        },
-		        {
-			      header: '단위',
-			      name: 'matUnit'
-			    },
-		        {
-				  header: '규격',
-				  name: 'matStandard'
-				},
-		        {
-				  header: '거래처',
-				  name: 'businessName'
-				},
-		        {
-		          header: '발주량',
-		          name: 'matOrCount'
-		        },
-		        {
-				  header: '합격량',
-				  name: 'matInsGood', 
-				  editor: 'text'
-				},
-		        {
-				  header: '불합격량',
-				  name: 'matInsBad',
-				  editor: 'text'
-				},
-				{
-				  header: '검수일자',
-				  name: 'matInsDate',
-					editor: {
-						type: 'datePicker',
-						options: {
-							format: 'yyyy-MM-dd'
-						}
- 	            }},
-		      ],
-		      rowHeaders: ['rowNum', 'checkbox'],
-	           pageOptions: {
-	               useClient: true,
-	               perPage: 5
-	           }
-		    });
-		
-		// ================ matIns isnert ==================
-// 		document.querySelector('#orderInsert').addEventListener('click', function() {
-//         let name = [[${session.userName}]]
-//         const newData = ckeckGrid.getModifiedRows().createdRows;
-//         console.log(newData);
-        
-//         console.log('추가된 데이터 :' , newData);
-//         let data = {};
-        
-//         data.matInsCode = newData[0].matInsCode;
-//         data.matOrCode = newData[0].matOrCode;
-//         data.matName = newData[0].matName;
-//         data.matUnit = newData[0].matUnit;
-//         data.matStandard = newData[0].matStandard;
-//         data.businessName = newData[0].businessName;
-//         data.matOrCount = newData[0].matOrCount;
-//         data.matInsGood = newData[0].matInsGood;
-//         data.matInsBad = newData[0].matInsBad;
-//         data.matInsDate = newData[0].matInsDate;
-        
-//         console.log(data);
-        // AJAX 요청
-//         fetch('/', {
-//         	method: 'POST',
-//         	headers: {
-//         		'Content-Type': 'application/json',
+                           el: document.getElementById('inputGrid'),
+                           data: matInputList, // 여기서 emps 데이터를 사용
+                           scrollX: false,
+                           scrollY: false,
+                	      columns: [
+                	        {
+                	          header: 'LOT코드',
+                	          name: 'matLotCode'
+                	        },
+                	        {
+                	          header: '자재코드',
+                	          name: 'matCode'
+                	        },
+                	        {
+                	          header: '자재명',
+                	          name: 'matName'
+                	        },
+                	        {
+                	          header: '단위',
+                	          name: 'matUnit'
+                	        },
+                	        {
+                	          header: '규격',
+                	          name: 'matStandard'
+                	        },
+                	        {
+                	          header: '거래처',
+                	          name: 'businessName'
+                	        },
+                	        {
+                			  header: '입고일',
+                			  name: 'matInputDate',
+                			  formatter: formatDate,
+                			  editor: {
+          		                type: 'datePicker',
+          		                options: {
+          		                    format: 'yyyy-MM-dd'
+          		                }
+                			  }
+        				    },
+                	        {
+                			  header: '입고량',
+                			  name: 'matInsGood'
+                			},
+                	        {
+                		      header: '자재 검사코드',
+                		      name: 'matInsCode'
+                		    },
+                	        {
+                			  header: '담당자',
+                			  name: 'matManager'
+                			},
+                	      ],
+                	      rowHeaders: ['rowNum','checkbox'],
+                           pageOptions: {
+                               useClient: true,
+                               perPage: 5
+                           }
+                	    });
+						
+						
+						
+            			let newInpuRows = []
 
-//         	},
-//         	body: JSON.stringify(data)
-//         })
-//         .then(response =>{
-//         	if (!response.ok) {
-// 				throw new Error('Network response was not ok');
-// 			}
-// 			return response.text();
-//         })
-//         .then(data => {
-//         	console.log('Success:', data);
-// 			alert(data);
-// 			location.href = '/'; // 성공적으로 처리된 후 리디렉트
-//         })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-//         .catch(error => {
-//         	console.error('Error:', error);
-//         });
-        
-	</script>
+            			inputGrid.on('check', (ev) => {
+    	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
+    	        		    newInpuRows = inputGrid.getCheckedRows();
+    	        		    console.log(newInpuRows);
+    	        		});
+                		
+            			
+        				// ================ matIns insert ==================
+        				document.querySelector('#orderInsert').addEventListener('click', function() {
+        				    let name = [[${session.userName}]];
+
+        				    const inputRows = newInpuRows;
+        				    console.log('잘 들고오네요...',inputRows[0].matInputDate);
+
+
+
+
+
+        				    if (inputRows.length === 0) {
+        				        console.log('추가된 데이터가 없습니다.');
+        				        return;
+        				    }
+
+
+        				    // 데이터를 객체로 생성
+        				    let data = {};
+
+        			        data.matLotCode = inputRows[0].matLotCode;
+        			        console.log("data.matLotCode : ", data.matLotCode);
+        			        data.matInputDate = inputRows[0].matInputDate;
+        			        console.log(" data.matInputDate : ",  data.matInputDate);
+        			        data.matCode = inputRows[0].matCode;
+        			        data.matInsGood = inputRows[0].matInsGood;
+        			        data.matInputCount = inputRows[0].matInputCount;
+        			        data.matOutCount = inputRows[0].matOutCount;
+        			        data.matCount = inputRows[0].matCount;
+        			        data.matManager = name;
+
+        				    console.log('전송할 데이터:', data);
+
+        				    // AJAX 요청
+        				    fetch('/matInputInsert', {
+        				        method: 'POST',
+        				        headers: {
+        				            'Content-Type': 'application/json'
+        				        },
+        				        body: JSON.stringify(data)
+        				    })
+        				    .then(response => {
+        				        if (!response.ok) {
+        				            throw new Error('Network response was not ok');
+        				        }
+        				        return response.text();
+        				    })
+        				    .then(data => {
+        				        console.log('Success:', data);
+        				        alert(data);
+        				        location.href = '/matInput'; // 성공적으로 처리된 후 리디렉트
+        				    })
+        				    .catch(error => {
+        				        console.error('Error:', error);
+        				    });
+        				});
+                		
+                		
+                		
+                		
+                		
+                		
+                		
+                		// 검수그리드
+                		let ckeckList = [[${matInsList}]]
+                		console.log(ckeckList);
+
+                		const ckeckGrid = new tui.Grid({
+                	           el: document.getElementById('ckeckGrid'),
+                	           data: ckeckList,
+                	           scrollX: false,
+                	           scrollY: false,
+                		      columns: [
+                		    	{
+                			      header: '자제검수코드',
+                			      name: 'matInsCode'
+                			    },
+                		        {
+                		          header: '발주코드',
+                		          name: 'matOrCode'
+                		        },
+                		        {
+                		          header: '자재명',
+                		          name: 'matName'
+                		        },
+                		        {
+                		          header: '단위',
+                		          name: 'matUnit'
+                		        },
+                		        {
+                		          header: '규격',
+                		          name: 'matStandard'
+                		        },
+                		        {
+                		          header: '거래처명',
+                		          name: 'businessName'
+                		        },
+                		        {
+                		          header: '발주량',
+                		          name: 'matOrCount'
+                		        },
+                		        {
+                				  header: '합격량',
+                				  name: 'matInsGood',
+                				  editor: 'text'
+                				},
+                		        {
+                				  header: '불합격량',
+                				  name: 'matInsBad',
+                				  editor: 'text'
+                				},
+                		        {
+                    		      header: '불량내용',
+                    		      name: 'matNote',
+                    		    },
+                				{
+                		            header: '검수일자',
+                		            name: 'matInsDate',
+                		            formatter: formatDate,
+                		            editor: {
+                		                type: 'datePicker',
+                		                options: {
+                		                    format: 'yyyy-MM-dd'
+                		                },
+                		                disable: (value) => {
+                		                    // value가 비어있으면(disabled라면) true 반환하여 비활성화
+                		                    return !value;
+                		                }
+                		            }
+                		        },
+                		      ],
+                		      rowHeaders: ['rowNum'],
+                	           pageOptions: {
+                	               useClient: true,
+                	               perPage: 5
+                	           }
+                		    });
+
+   
+
+
+                		// 날짜 형식 지정 함수
+                     	function formatDate({ value }) {
+                     	    if (value) {
+                     	        let date = new Date(value);
+                     	        let year = date.getFullYear();
+                     	        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                     	        let day = date.getDate().toString().padStart(2, '0');
+                     	        return `${year}-${month}-${day}`;
+                     	    }
+                     	    return '';
+                     	}
+                		
+ 
+
+               	
+      </script>
 	</section>
 </body>
 </html>

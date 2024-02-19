@@ -49,7 +49,7 @@ public class WebSecurityConfig {
 		http.csrf().disable();
 		http
 			.authorizeHttpRequests((requests) -> requests
-				//.antMatchers("/**").permitAll()
+				.antMatchers("/image/**").permitAll()
 				.antMatchers("/planManage").hasAnyRole("ADMIN")
 				.anyRequest().authenticated()
 				

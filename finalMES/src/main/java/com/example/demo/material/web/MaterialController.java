@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.material.BadMatVO;
 import com.example.demo.material.MatInputVO;
 import com.example.demo.material.MatInspectionVO;
 import com.example.demo.material.MatOrderCompositeVO;
@@ -104,6 +105,29 @@ public class MaterialController {
 		model.addAttribute("matInsList", matInsList);
 		return "material/matInput";
 	}
+	
+	/**
+	 * 
+	 * @param 검수페이지
+	 * @return
+	 */
+	@GetMapping("matIns")
+	public String getInsList(Model model) {
+		List<BadMatVO> badMatList = materialService.getBadMatList();
+		List<MatInspectionVO> matInsList = materialService.getMatInsList();
+		model.addAttribute("badMatList", badMatList);
+		model.addAttribute("matInsList", matInsList);
+		return "material/matIns";
+	}
+	
+	/**
+	 * 
+	 * @return 검수 불량명 뿌려주는 기능
+	 */
+    @GetMapping("/getBadMatList")
+    public List<BadMatVO> getBadMatList() {
+        return materialService.getBadMatList();
+    }
 
 	/**
 	 * 
@@ -188,6 +212,28 @@ public class MaterialController {
 		return msg;
 	}
 	
+	/**
+	 * @param 입고 전 검수 하는 곳
+	 * @return 검수 인서트
+	 */
+	@PostMapping("/MatInsInsert")
+	@ResponseBody
+	public String MatInsInsert(@RequestBody MatInspectionVO matInspectionVO) {
+		String msg;
+		materialService.insertMatIns(matInspectionVO);
+		msg = "검사가 완료되었습니다";
+		return msg;
+	}
+	
+	@PostMapping("matInputInsert")
+	@ResponseBody
+	public String matInputInsert(@RequestBody MatInputVO matInputVO) {
+		String msg;
+		materialService.matInputInsert(matInputVO);
+		msg = "입고가 완료되었습니다";
+		return msg;
+		
+	}
 
 		
 	

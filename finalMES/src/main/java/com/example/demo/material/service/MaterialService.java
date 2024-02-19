@@ -2,6 +2,7 @@ package com.example.demo.material.service;
 
 import java.util.List;
 
+import com.example.demo.material.BadMatVO;
 import com.example.demo.material.MatInputVO;
 import com.example.demo.material.MatInspectionVO;
 import com.example.demo.material.MatOrderCompositeVO;
@@ -63,11 +64,13 @@ public interface MaterialService {
 	
 	
 	
-	// 자재 입고 페이지
+	// 자재 입고 페이지 검수 인서트
 	public MatInspectionVO insertMatIns(MatInspectionVO matInspectionVO);
+	public List<BadMatVO> getBadMatList();
 	
 	
-	
+	// 자재 입고 입고페이지 입고 인서트
+	public MatInputVO matInputInsert(MatInputVO matInputVO);
 	
 	
 	
