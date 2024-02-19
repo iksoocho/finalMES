@@ -232,15 +232,6 @@
 		 		name : 'outDState',
 		 		align : 'center',
 		 		formatter : getOutDStatus,
-		 		editor: {
-		 		      type: 'checkbox',
-		 		      options: {
-		 		        listItems: [
-		 		          { text: '대기중', value: '대기중', data: 'dlvyD1'},
-		 		          { text: '출고완료', value: '출고완료' , data: 'dlvyD2'},
-		 		        ]
-		 		     }
-		 		 }        
 		 	}
 		  
 	      ],
@@ -270,7 +261,6 @@
 		
 		// 출고 상세 상태 포매터
 		 function getOutDStatus(value, row) {
-		     console.log(value.value); // 값 확인용 로그
 		     let statusText, bgColor;
 
 		     // 주문 상태에 따라 원하는 문자열과 배경색 설정
@@ -289,7 +279,7 @@
 		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
 		 }
 		
-		// 출고 상세 상태 포매터
+		// 출고 상태 포매터
 		 function getOutStatus(value, row) {
 		     console.log(value.value); // 값 확인용 로그
 		     let statusText, bgColor;
@@ -300,10 +290,15 @@
 		        	 statusText = '등록완료';
 		             bgColor = 'green'; // 등록완료에 대한 배경색 설정
 		             break;
-		         case "출고완료":
-		        	 statusText = '출고완료';
-		             bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+		         case "처리중":
+		        	 statusText = '처리중';
+		             bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
 		             break;
+		         case "출고 완료":
+		             statusText = "출고 완료";
+		             bgColor = 'red';
+		             break;
+		         
 		     }
 
 		     // 배경색을 포함한 HTML 반환
@@ -320,6 +315,7 @@
 			    // 행 데이터를 모아서 배열에 담기
 			    const data = checkedRows.map(row => ({
 			        outDCode: row.outDCode,
+			        outCode: row.outDCode.substring(0, row.outDCode.lastIndexOf("-")),
 			        outDDate: row.outDDate,
 			        prodLotCode: row.prodLotCode,
 			        outCount : row.outCount

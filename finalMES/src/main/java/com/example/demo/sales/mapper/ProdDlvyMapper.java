@@ -28,4 +28,6 @@ public interface ProdDlvyMapper {
 	
 	public List<ProdDetailDlvyDVO> prodDetailDlvyList(String outCode); // 제품출고서 상세 조회
 	
+	public void updateOutState(String outCode); // 업데이트 실행시 출고서 상태업데이트 .
+	
 }

@@ -35,6 +35,7 @@ public interface ProdDlvyService {
 	int updateOutDDate(List<ProdDetailUpdateDVO> prodDetailUpdateList);
 	
 	
+	
 
 
 	
