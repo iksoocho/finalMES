@@ -104,6 +104,13 @@ public class MaterialController {
 		model.addAttribute("matInsList", matInsList);
 		return "material/matInput";
 	}
+	
+	@GetMapping("matIns")
+	public String getInsList(Model model) {
+		List<MatInspectionVO> matInsList = materialService.getMatInsList();
+		model.addAttribute("matInsList", matInsList);
+		return "material/matIns";
+	}
 
 	/**
 	 * 
@@ -188,6 +195,18 @@ public class MaterialController {
 		return msg;
 	}
 	
+	/**
+	 * @param 입고 전 검수 하는 곳
+	 * @return 검수 인서트
+	 */
+	@PostMapping("/MatInsInsert")
+	@ResponseBody
+	public String MatInsInsert(@RequestBody MatInspectionVO matInspectionVO) {
+		String msg;
+		materialService.insertMatIns(matInspectionVO);
+		msg = "검사가 완료되었습니다";
+		return msg;
+	}
 
 		
 	

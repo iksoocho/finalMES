@@ -61,4 +61,17 @@ public interface MaterialService {
 	//삭제
 	public void deleteMatOrder(MatOrderCompositeVO matOrderCompositeVO);
 	
+	
+	
+	// 자재 입고 페이지
+	public MatInspectionVO insertMatIns(MatInspectionVO matInspectionVO);
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

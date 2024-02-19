@@ -57,6 +57,11 @@ public interface MaterialMapper {
 	
 	//삭제
 	public void deleteMatOrder(String matOrCode);
+	
+	
+	
+	// 자재 입고 페이지
+	public int insertMatIns(MatInspectionVO matInspectionVO);
 
 
 }

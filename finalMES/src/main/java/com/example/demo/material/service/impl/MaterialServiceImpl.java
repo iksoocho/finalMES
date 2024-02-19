@@ -165,6 +165,17 @@ public class MaterialServiceImpl implements MaterialService {
 		// TODO Auto-generated method stub
 		return materialMapper.getMatInsList();
 	}
+	
+	
+	/**
+	 *  @param 자재 입고 페이지
+	 *  @param 자재 검수 인서트
+	 */
+	@Override
+	public MatInspectionVO insertMatIns(MatInspectionVO matInspectionVO) {
+		materialMapper.insertMatIns(matInspectionVO);
+		return matInspectionVO;
+	}
 
 
 

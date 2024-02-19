@@ -404,6 +404,11 @@ button {
 					sortable: true,
 				    sortingType: 'desc',
 				},
+				{
+					header : '납기일자',
+					name : 'dlvyDate',
+					align : 'center',
+				},
 					{
 					header : '품목명',
 					name : 'prodName',
@@ -647,6 +652,7 @@ button {
 			     	// 여기서 ordDCode 추출
 			        var ordDCode = $(row).data('ordDCode');
 			     	console.log('추출한 주문상세번호 ', ordDCode)
+			     	
 			        // 이미 그리드에 존재하는지 확인
 			        var existingRow = mainGrid.getData().find(function (dataRow) {
 			            return dataRow.prodLotCode === prodLotCode;
@@ -787,14 +793,14 @@ button {
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(tr);
-
+					console.log(target.find('td'))
 					obj.ordDCode = target.find('td:eq(0)').text();
 					console.log("주문상세번호 : " + obj.ordDCode);
 					obj.prodLotCode = target.find('td:eq(1)').text();
 					console.log("제품LOT번호 : " + obj.prodLotCode);
-					obj.outCount = target.find('td:eq(3)').text();
+					obj.outCount = target.find('td:eq(2)').text();
 					console.log("출고수량 : " + obj.outCount)
-					
+					obj.outDState = "dlvyD1";
 					outDetailData.push(obj);
 						    
 				});
@@ -802,7 +808,6 @@ button {
 				data.prodDlvyVO = outObj;
 				data.prodDetailDlvyList = outDetailData;
 				data.orderVO = ordCode;
-				
 				
 
 						// AJAX 요청으로 서버에 데이터 전송

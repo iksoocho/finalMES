@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.produce.InsCompositeVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.PlanCompositeVO;
 import com.example.demo.produce.PlanDVO;
 import com.example.demo.produce.PlanInsDVO;
@@ -131,6 +132,7 @@ public class PlanServiceImpl implements PlanService{
 	}
 
 	@Override
+	@Transactional
 	public void insertInsWithDetail(InsCompositeVO insCompositeVO) {
 		planMapper.updatePlanStateZero(insCompositeVO.getPlanVO().getPlanCode());
 		
@@ -143,7 +145,29 @@ public class PlanServiceImpl implements PlanService{
         	insCompositeVO.getPlanInsDList().get(i).setInsCode(insCompositeVO.getPlanInsVO().getInsCode()); // prod_d_plan의 각 항목에 planCode 설정
             planMapper.insertPlanDInsInfo(insCompositeVO.getPlanInsDList().get(i)); // prod_d_plan에 데이터 삽입
             System.out.println("등록성공");
+            
+            String prodCode = insCompositeVO.getPlanInsDList().get(i).getProdCode();
+            String dinsCode = insCompositeVO.getPlanInsDList().get(i).getDinsCode();
+            int dinsCount = insCompositeVO.getPlanInsDList().get(i).getDinsCount();
+            System.out.println("dinsCode : " + dinsCode);
+            planMapper.selectBomByProd(prodCode);
+            
+            System.out.println("bomList : " + planMapper.selectBomByProd(prodCode));
+            for(int j = 0; j < planMapper.selectBomByProd(prodCode).size(); j++) {
+            	String matCode = planMapper.selectBomByProd(prodCode).get(j).getMatCode();
+            	String procCode = planMapper.selectBomByProd(prodCode).get(j).getProcCode();
+            	int matCount = Integer.parseInt(planMapper.selectBomByProd(prodCode).get(j).getBomMatCount());
+            	int matTotalCon = dinsCount * matCount;
+            	MatUseVO vo = new MatUseVO();
+            	vo.setDinsCode(dinsCode);
+            	vo.setMatCode(matCode);
+            	vo.setProcCode(procCode);
+            	vo.setMatTotalCon(matTotalCon);
+            	planMapper.insertMatUse(vo);
+            }
         }
+        
+        
 		
 	}
 
@@ -162,6 +186,12 @@ public class PlanServiceImpl implements PlanService{
             System.out.println("수정성공");
         }
 		
+	}
+
+	@Override
+	public List<MatUseVO> getMatUseList(String dinsCode) {
+		
+		return planMapper.selectMatUseList(dinsCode);
 	}
 
 	

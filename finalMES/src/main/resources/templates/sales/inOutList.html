@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+</style>
+<body>
+	<section layout:fragment="content">
+		<div class="containerOne">
+			<h4>주문 조회</h4>
+			<h5 class="titleOne">목록</h5>
+			<div id="grid"></div>
+			<h5 style="float: left;">상세</h5>
+			<div>
+				<button type="button" id="updateOutDDate" class="btn btn-primary" style="float: right; margin-bottom: 10px;">저장</button>
+			</div>
+			<div id="detailGrid"></div>
+		</div>
+		<script th:inline="javascript">
+		let prodDlvyList = [[${prodDlvyList}]]
+		let grid = tui.Grid;
+		grid.applyTheme('clean', {
+			  row: {
+			    hover: {
+			      background: '#d4e9f2'
+			    }
+			  }
+			});
+		
+		 	 grid = new tui.Grid({
+             el: document.getElementById('grid'),
+             data: prodDlvyList, 
+             scrollX: false,
+             scrollY: false,
+             
+              
+ 	      columns: [
+ 	        {
+ 	          	header: '출고서번호',
+ 	         	name: 'outCode',
+ 	          	sortable: true,
+ 	          	sortingType: 'desc',
+ 	         	align: "center",
+ 	        },
+ 	        {
+ 	        	header : '주문서번호',
+ 	        	name : 'ordCode',
+ 	        	sortable: true,
+ 	 	        sortingType: 'desc',
+ 	 	        align: "center",
+ 	        },
+ 	        {
+ 	          	header: '상태',
+ 	          	name: 'outState',
+	          	align: "center",
+	          	formatter : getOutStatus,
+ 	        },
+ 	        {
+ 	          	header: '거래처',
+ 	          	name: 'businessName',
+ 	          	sortable: true,
+ 	 	      	sortingType: 'desc',
+ 	 	      	align: "center",
+ 	        },
+ 	        {
+ 	          	header: '등록일',
+ 	          	name: 'outDate',
+ 	          	sortable: true,
+	          	sortingType: 'desc',
+	          	align: "center",
+ 	          	formatter: outDateFormatter
+ 	        },
+ 	       {
+ 	 	      	header: '담당자',
+ 	 	      	name: 'outManager',
+ 	 	      	sortable: true,
+ 	 	      	sortingType: 'desc',
+ 	 	      	align: "center",
+ 	 	    },
+ 	      ],
+ 	      rowHeaders: ['rowNum','checkbox'],
+             pageOptions: {
+                 useClient: true,
+                 perPage: 5
+             },
+             
+ 	    });
+		 	 
+		 	
+		 	 
+		 // 행 클릭이벤트
+		 grid.on('click', (ev) => {
+			 console.log(ev.columnName);
+		     let columnName = ev.columnName;
+		     if (columnName === 'outCode'){
+		    	 let rowKey = ev.rowKey;
+		    	 console.log(rowKey);
+		    	 let rowData = grid.getRow(rowKey);
+		    	 console.log(rowData);
+		   	 
+		     if (rowData) {
+		    	 let outCode = rowData.outCode;
+		         
+		     
+		        
+		 // 서버에 해당 주문에 대한 상세 목록을 요청
+		    	 fetch('/prodDetailDlvyList/' + outCode)
+		    	    .then(response => {
+		    	        if (!response.ok) {
+		    	            throw new Error('Network response was not ok');
+		    	        }
+		    	        return response.json();
+		    	    })
+		    	    .then(prodDetailDlvyList => {
+		    	        console.log(prodDetailDlvyList);
+		    	        // 주문 상세 목록 그리드 갱신
+		    	        detailGrid.resetData(prodDetailDlvyList);
+		    	    })
+		    	    .catch(error => console.error('상세 목록을 불러오는 도중 에러 발생:', error));    
+		};
+		 };
+		 });
+		 
+		 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		let prodDetailDlvyList = [[${prodDetailDlvyList}]]
+		let detailGrid = tui.Grid;
+		detailGrid.applyTheme('clean', {
+			  row: {
+			    hover: {
+			      background: '#d4e9f2'
+			    }
+			  }
+			});
+		detailGrid = new tui.Grid({
+            el: document.getElementById('detailGrid'),
+            data: prodDetailDlvyList, 
+            scrollX: false,
+            scrollY: false,
+	      	rowHeaders: ['rowNum','checkbox'],
+	      columns: [{
+	    	  header : '출고상세번호',
+	    	  name : 'outDCode',
+	    	  sortable: true,
+	          sortingType: 'desc',
+	    	  align: "center",
+	    	  width : 160,
+	      },
+	        {
+	          header: '품목코드',
+	          name: 'prodCode',
+	          sortable: true,
+	          sortingType: 'desc',
+	          align: "center",
+	        },
+	        {
+	          header: '품목명',
+	          name: 'prodName',
+	          sortable: true,
+	          sortingType: 'desc',
+	          align: "center",
+	        },
+	        {
+	          header: '단위',
+	          name: 'prodUnit',
+	          sortable: true,
+	 	      sortingType: 'desc',
+	 	      align: "center",
+	        },
+	        {
+	          header: '제품 LOT 번호',
+	          name: 'prodLotCode',
+	          sortable: true,
+	          sortingType: 'desc',
+	          align: "center",
+	        },
+	       {
+	 	      header: '현재고',
+	 	      name: 'prodCount',
+	 	      sortable: true,
+	 	      sortingType: 'desc',
+	 	      align: "right",
+	 	    },
+	 	  {
+	 	 	  header: '출고수량',
+	 	 	  name: 'outCount',
+	 	 	  sortable: true,
+	          sortingType: 'desc',
+	          align: 'right',
+	 	 	  
+	 	 	},
+	 	  {
+		 	  header: '단가',
+		 	  name: 'prodPrice',
+		 	  sortable: true,
+		      sortingType: 'desc',
+		      formatter : formatTotalTtlPrice,
+		      align: 'right',
+		 	},
+		 	{
+		 		header : '총금액',
+		 		name : 'outTtlPrice',
+		 		align : 'right',
+		 		formatter : formatTotalTtlPrice,
+		 	},
+		 	{
+		 		header : '출고날짜',
+		 		name : 'outDDate',
+		 		formatter : outDateFormatter,
+		 		align : 'center',
+		 		editor: {
+					type: 'datePicker',
+					options: {
+						format: 'yyyy-MM-dd'
+					}
+				}
+		 	},
+		 	{
+		 		header : '출고상태',
+		 		name : 'outDState',
+		 		align : 'center',
+		 		formatter : getOutDStatus,
+		 		editor: {
+		 		      type: 'checkbox',
+		 		      options: {
+		 		        listItems: [
+		 		          { text: '대기중', value: '대기중', data: 'dlvyD1'},
+		 		          { text: '출고완료', value: '출고완료' , data: 'dlvyD2'},
+		 		        ]
+		 		     }
+		 		 }        
+		 	}
+		  
+	      ],
+	      
+           
+	    });
+		
+		// 날짜 포맷 함수
+		function outDateFormatter({value}) {
+            if (value) {
+                var date = new Date(value);
+                var year = date.getFullYear();
+                var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                var day = date.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            return '';
+        }
+		
+		// 총금액 포맷터 함수
+		function formatTotalTtlPrice({ value }) {
+		    if (value) {
+		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		    }
+		    return '';
+		}
+		
+		// 출고 상세 상태 포매터
+		 function getOutDStatus(value, row) {
+		     console.log(value.value); // 값 확인용 로그
+		     let statusText, bgColor;
+
+		     // 주문 상태에 따라 원하는 문자열과 배경색 설정
+		     switch (value.value) {
+		         case "대기중":
+		        	 statusText = '대기중';
+		             bgColor = 'yellow'; // 등록완료에 대한 배경색 설정
+		             break;
+		         case "출고완료":
+		        	 statusText = '출고완료';
+		             bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+		             break;
+		     }
+
+		     // 배경색을 포함한 HTML 반환
+		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+		 }
+		
+		// 출고 상세 상태 포매터
+		 function getOutStatus(value, row) {
+		     console.log(value.value); // 값 확인용 로그
+		     let statusText, bgColor;
+
+		     // 주문 상태에 따라 원하는 문자열과 배경색 설정
+		     switch (value.value) {
+		         case "등록완료":
+		        	 statusText = '등록완료';
+		             bgColor = 'green'; // 등록완료에 대한 배경색 설정
+		             break;
+		         case "출고완료":
+		        	 statusText = '출고완료';
+		             bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+		             break;
+		     }
+
+		     // 배경색을 포함한 HTML 반환
+		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+		 }
+		 document.querySelector('#updateOutDDate').addEventListener('click', function () {
+			    const checkedRows = detailGrid.getCheckedRows();
+
+			    if (checkedRows.length === 0) {
+			        alert('체크된 행이 없습니다.');
+			        return;
+			    }
+
+			    // 행 데이터를 모아서 배열에 담기
+			    const data = checkedRows.map(row => ({
+			        outDCode: row.outDCode,
+			        outDDate: row.outDDate,
+			        prodLotCode: row.prodLotCode,
+			        outCount : row.outCount
+			    }));
+
+			    fetch('/updateOutDDate', {
+			        method: 'PUT',
+			        headers: {
+			            'Content-Type': 'application/json',
+			        },
+			        body: JSON.stringify(data)
+			    })
+			    .then(response => {
+			        if (!response.ok) {
+			            throw new Error('Network response was not ok');
+			        }
+			        return response.text();
+			    })
+			    .then(data => {
+			        console.log('Success:', data);
+			        alert(data);
+			        location.href = '/inOutList';
+			    })
+			    .catch(error => {
+			        console.error('Error:', error);
+			    });
+			});
+		
+		</script>
+	</section>
+</body>
+</html>
