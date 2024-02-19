@@ -163,7 +163,6 @@ button {
 				<br> <br>
 				<div id="grid" class="container"></div>
 			</div>
-
 		</div>
 
 		<!-- 공정명모달 -->
@@ -241,11 +240,16 @@ button {
 							data-dismiss="modal">닫기</button>
 					</div>
 				</div>
+				
 			</div>
+			
 		</div>
-
+		
 
 		<script th:inline="javascript">
+		
+		
+
 	
 	 // 모달의 데이터 받아서 input 창에 뿌리기
 	 function updateInputFields1(Element) {
@@ -371,11 +375,12 @@ button {
 	
 	
 	// tui.Grid 인스턴스를 생성
+	let list = [[${list}]];
 	const grid = new tui.Grid({
 	    // 그리드를 표시할 DOM 요소 지정
 	    el: document.getElementById('grid'),
 	    // 그리드에 표시할 데이터를 설정 / facList 사용
-	    data: facList,
+	    data: list,
 	    // 그리드의 스크롤 여부 설정
 	    scrollX: false,
 	    scrollY: false,
@@ -390,7 +395,7 @@ button {
 	            header: '설비명',
 	            name: 'facName',
 	            align: 'center'
-	        }, 
+	        },
 	        {
 	            header: '공정라인',
 	            name: 'procName',
