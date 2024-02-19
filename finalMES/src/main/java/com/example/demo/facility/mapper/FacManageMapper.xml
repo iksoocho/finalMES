@@ -72,9 +72,9 @@
 
 	<insert id="insertFacNot" parameterType="FacNotopVO">
 		INSERT INTO fac_notop
-		(fac_code, notop_code)
+		(fac_code, notop_code, fac_not_reason)
 		VALUES
-		(#{facCode}, 'notop_03')
+		(#{facCode}, 'notop_03', '설비등록으로 인한 대기중')
 	</insert>
 
 	<update id="updateFacNot" parameterType="FacNotopVO">
