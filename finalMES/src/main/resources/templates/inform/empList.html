@@ -8,9 +8,16 @@
 </head>
 
 <body>
-	<section layout:fragment="content">
+	<section layout:fragment="content" class="m-5">
 		<h2>사원 관리</h2>
+		<br>
 		<div>
+		
+		<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
+					<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
+				
+			
 			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="empInsert">저장</button>
 			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
 		</div>
@@ -137,7 +144,36 @@
 			//grid.on('afterChange', onAfterChange);
 
 
+		// 검색 기능 추가
+    	function searchFunction() {
+    	    // 입력된 검색어 가져오기
+    	    var input, filter, table, tr, td, i, j, txtValue;
+    	    input = document.getElementById("searchInput");
+    	    // 대문자로변환하기
+    	    filter = input.value.toUpperCase();
+    	    // 테이블 확인
+    	    table = document.getElementById("grid");
 
+    	    // 테이블 돌면서 확인
+    	    tr = table.getElementsByTagName("tr");
+    	    for (i = 0; i < tr.length; i++) {
+    	        // 각 행에서 셀을 가져오기
+    	        td = tr[i].getElementsByTagName("td");
+    	        // 행의 각 셀 돌면서 일치하는지 확인
+    	        for (j = 0; j < td.length; j++) {
+    	            // 셀의 내용을 가져오기
+    	            txtValue = td[j].textContent || td[j].innerText;
+    	            // 조건으로 검색어 있으면 가져오기
+    	            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    	                tr[i].style.display = "";
+    	                break;
+    	            } else {
+    	                // 검색어 없으면 리스트 안보이게 display none 처리
+    	                tr[i].style.display = "none";
+    	            }
+    	        }
+    	    }
+    	}
 
 		</script>
 		<script>
