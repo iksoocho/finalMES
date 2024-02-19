@@ -4,9 +4,16 @@
 
 	<!-- plan list -->
 	<select id="selectPlanList" resultType="PlanVO">
-		SELECT *
+		SELECT 
+			plan_code,
+			ord_code,
+			plan_title,
+			plan_person,
+			plan_date,
+			plan_note,
+			find_codename(plan_state) plan_state
 		FROM PROD_PLAN
-		WHERE PLAN_STATE = 'p1'
+		<!--WHERE PLAN_STATE = 'p1'-->
 		ORDER BY PLAN_CODE DESC
 	</select>
 
