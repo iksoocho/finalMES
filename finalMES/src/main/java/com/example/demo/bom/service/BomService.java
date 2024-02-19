@@ -21,5 +21,7 @@ public interface BomService {
 	//bom list 
 	public List<BomVO> getBomList(String prodCode);
 	// bom delete
-	public int bomDelete(BomVO bomVO);
+	public void bomDelete(BomVO bomVO);
+	// bom update
+	public void bomUpdate(List<BomVO> bomList);
 }

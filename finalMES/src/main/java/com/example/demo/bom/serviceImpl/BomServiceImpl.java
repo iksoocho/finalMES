@@ -50,11 +50,18 @@ public class BomServiceImpl implements BomService{
 		return bomMapper.getBomList(prodCode);
 	}
 
-	   @Override
-	   public int bomDelete(BomVO bomVO) {
-	      return bomMapper.bomDelete(bomVO);
+	@Override
+	public void bomDelete(BomVO bomVO) {
+	   bomMapper.bomDelete(bomVO);
 	      
 	   }
+
+	@Override
+	public void bomUpdate(List<BomVO> bomList) {
+		for(int i = 0; i < bomList.size(); i++) {
+			bomMapper.bomUpdate(bomList.get(i));
+		}
+	}
 
 	
 }

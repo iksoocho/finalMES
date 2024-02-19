@@ -12,6 +12,7 @@ public class BomVO {
 	private int bomNum;
 	private String prodCode;
 	private String procCode;
+	
 	private String matCode;
 	private String bomMatCount;
 	
