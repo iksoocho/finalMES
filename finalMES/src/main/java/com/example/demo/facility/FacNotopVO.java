@@ -12,7 +12,7 @@ import lombok.Data;
 public class FacNotopVO {
     private String facNotCode;
     private String facCode;
-    //private String facPerson;
+    private String facPerson;
     //private String notopCode;
     //private String businessCode;
     //private String notopContent;

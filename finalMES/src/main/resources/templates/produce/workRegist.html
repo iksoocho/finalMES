@@ -555,6 +555,8 @@
 						vo.progState = 1;
 					}
         			
+					vo.progWorker = '[[${session.userName}]]';
+					
         			fetch('/workMidInsert', {
         				method: 'POST',
         	            headers: {

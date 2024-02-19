@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.sales.mapper.OrdMapper;
 import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.vo.business.BusinessListVO;
+import com.example.demo.sales.vo.employee.EmployeeVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
@@ -106,5 +107,11 @@ public class OrdServiceImpl implements OrdService {
 	public List<ProductLotVO> getProductLotList(String prodCode) {
 		// TODO Auto-generated method stub
 		return ordMapper.getProductLotList(prodCode);
+	}
+
+	@Override
+	public List<EmployeeVO> getEmployeeList() {
+		// TODO Auto-generated method stub
+		return ordMapper.getEmployeeList();
 	}
 }
