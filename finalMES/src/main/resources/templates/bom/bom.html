@@ -610,7 +610,7 @@
 
 
 			//plan detail update
-			document.querySelector('#planDUpdate').addEventListener('click', function () {
+			document.querySelector('#bomUpdate').addEventListener('click', function () {
 				const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
 				if (newDetail === null) {
 					alert("저장 할 내용이 없습니다.")
@@ -664,6 +664,8 @@
 					.catch(error => {
 						console.error('Error:', error);
 					});
+				});
+				
 		</script>
 	</section>
 

@@ -9,6 +9,7 @@ import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdProgressJoinVO;
 import com.example.demo.produce.WorkLoadVO;
 import com.example.demo.produce.WorkMidRegistVO;
+import com.example.demo.produce.WorkResultVO;
 
 public interface WorkMapper {
 	public List<WorkLoadVO> getLoadData(String prodCode);
@@ -18,5 +19,6 @@ public interface WorkMapper {
 	public List<WorkMidRegistVO> checkWorkMidRegist(@Param("dinsCode") String dinsCode, @Param("procCode") String procCode);
 	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO);
 	public List<ProdProgressJoinVO> getProdProgress(@Param("dinsCode") String dinsCode);
+	public int insertWorkResult(WorkResultVO workResultVO);
 	
 }

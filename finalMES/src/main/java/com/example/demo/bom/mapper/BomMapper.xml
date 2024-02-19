@@ -42,9 +42,9 @@
 	</select>
 	
 	<delete id="bomDelete" parameterType="BomVO">
-		DELETE FROM bom_material
-		WHERE bom_code = #{bomCode} AND bom_num = #{bomNum}
-	</delete>
+      DELETE FROM bom_material
+      WHERE bom_code = #{bomCode} AND bom_num = #{bomNum}
+   </delete>
 	
 	<update id="bomUpdate" parameterType="BomVO">
 		UPDATE bom_material
