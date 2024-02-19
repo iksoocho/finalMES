@@ -503,9 +503,8 @@
         			progPassCount : progpasscount,
         			startTime : starttime,
         			endTime : endtime,
-        			prodCode : prodCode
+        			prodCode : prodCode,
         	};
-        	
 
         	fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
         	.then((response) => response.json())
@@ -513,8 +512,6 @@
         		console.log('조회결과 : ', data);
 
         		console.log('vo : ', vo);
-        		
-        		
 
         		if(data.length != 0){
         			alert("이미 데이터가 존재");
@@ -524,7 +521,10 @@
 	        		
 	        		if(data[0].progInsCount == (data[0].progPassCount + parseInt(vo.progPassCount))){
 	        			vo.progState = 3;
+		            }else{
+		            	vo.progState = data[0].progState;
 		            }
+	        		console.log('상태추가 : ', vo);
         			
         			fetch('/workMidUpdate', {
         				method : 'put',
@@ -555,7 +555,7 @@
 						vo.progState = 1;
 					}
         			
-        			
+					vo.progWorker = '[[${session.userName}]]';
         			fetch('/workMidInsert', {
         				method: 'POST',
         	            headers: {
@@ -576,7 +576,9 @@
         			.catch(error => {
         	            console.error('Error:', error);
         	        });
-        		}
+        		} //else끝
+        		
+        		
         	});
         }
         
@@ -589,6 +591,31 @@
         		return;
         	}
         }
+        
+        function resultInsert(obj){
+        	fetch('/workResultInsert', {
+				method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	            },
+	            body: JSON.stringify(obj)
+			})
+			.then(response => {
+				if (!response.ok) {
+	                throw new Error('Network response was not ok');
+	            }
+	            return response.text();
+			})
+			.then(data => {
+				console.log('Success:', data);
+	            alert(data);
+			})
+			.catch(error => {
+	            console.error('Error:', error);
+	        });
+        }
+        
+        
       </script>
     </section>
   </body>

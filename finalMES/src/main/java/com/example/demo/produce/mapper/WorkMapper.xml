@@ -63,6 +63,7 @@
 		    , prog_state
 		    , start_time
 		    , end_time
+		    , prog_worker
 		)
 		VALUES(
 		    #{dInsCode}
@@ -77,6 +78,7 @@
 		    , #{progState}
 		    , TO_TIMESTAMP(#{startTime}, 'YY-MM-DD HH24:MI')
 		    , TO_TIMESTAMP(#{endTime}, 'YY-MM-DD HH24:MI')
+		    , #{progWorker}
 		)
 	</insert>
 	
@@ -96,9 +98,32 @@
 			prog_bad_count = (#{progBadCount} + prog_bad_count)
 			, prog_pass_count = (#{progPassCount} + prog_pass_count)
 			, end_time = TO_TIMESTAMP(#{endTime}, 'YY-MM-DD HH24:MI')
-			, prog_state = NVL(#{progState}, prog_state)
+			, prog_state = #{progState}
 		WHERE prog_code= #{progCode}
 	</update>
+	
+	<insert id="insertWorkResult" parameterType="WorkResultVO">
+		INSERT INTO prod_result(
+			proc_code
+			, d_ins_code
+			, result_worker
+			, result_s_time
+			, result_e_time
+			, result_work_count
+			, result_bad_count
+			, result_pass_count
+			, result_state) 
+		VALUES(
+			#{procCode}
+			, #{dInsCode}
+			, #{resultWorker}
+			,TO_TIMESTAMP(#{resultSTime}, 'YY-MM-DD HH24:MI')
+			,TO_TIMESTAMP(#{resultETime}, 'YY-MM-DD HH24:MI')
+			, #{resultWorkCount}
+			, #{resultBadCount}
+			, #{resultPassCount}
+			, 0 )
+	</insert>
 
 
 </mapper>
