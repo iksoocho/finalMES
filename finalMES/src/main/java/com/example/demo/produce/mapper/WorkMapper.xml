@@ -63,6 +63,7 @@
 		    , prog_state
 		    , start_time
 		    , end_time
+		    , prog_worker
 		)
 		VALUES(
 		    #{dInsCode}
@@ -77,6 +78,7 @@
 		    , #{progState}
 		    , TO_TIMESTAMP(#{startTime}, 'YY-MM-DD HH24:MI')
 		    , TO_TIMESTAMP(#{endTime}, 'YY-MM-DD HH24:MI')
+		    , #{progWorker}
 		)
 	</insert>
 	
