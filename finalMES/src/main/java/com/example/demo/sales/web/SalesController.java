@@ -23,6 +23,7 @@ import com.example.demo.sales.vo.delivery.ProdDetailDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDetailUpdateDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
+import com.example.demo.sales.vo.employee.EmployeeVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
@@ -68,6 +69,8 @@ public class SalesController {
 	public String getBusinessList(Model model) {
 		List<BusinessListVO> businessList = ordService.getBusinessList();
 		List<ProductListVO> productList = ordService.getProductList();
+		List<EmployeeVO> employeeList = ordService.getEmployeeList();
+		model.addAttribute("employeeList", employeeList);
 		model.addAttribute("businessList", businessList);
 		model.addAttribute("productList", productList);
 		return "sales/orderInsert";

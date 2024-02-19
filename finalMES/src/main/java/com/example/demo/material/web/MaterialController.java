@@ -90,6 +90,17 @@ public class MaterialController {
 		model.addAttribute("matList", matList);
 		return "material/material";
 	}
+	
+	/**
+	 * 
+	 * @param matCode
+	 * @return 자재 lot 그리드로 불러오기
+	 */
+	@GetMapping("/matLotList")
+	@ResponseBody
+	public List<OriginMaterialVO> getMatOriginInfoList(@RequestParam String matCode) {
+		return materialService.getMatOriginInfoList(matCode);
+	}
 
 	/**
 	 * 
@@ -225,6 +236,12 @@ public class MaterialController {
 		return msg;
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param matInputVO
+	 * @return mat lot  인서트 하는것 
+	 */
 	@PostMapping("matInputInsert")
 	@ResponseBody
 	public String matInputInsert(@RequestBody MatInputVO matInputVO) {

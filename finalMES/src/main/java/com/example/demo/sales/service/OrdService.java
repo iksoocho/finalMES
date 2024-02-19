@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.sales.vo.business.BusinessListVO;
+import com.example.demo.sales.vo.employee.EmployeeVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderVO;
@@ -29,6 +30,8 @@ public interface OrdService {
 	List<ProductLotVO> getProductLotList(String prodCode);
 
 	List<BusinessListVO> getBusinessList(); // 거래처 목록
+	
+	List<EmployeeVO> getEmployeeList(); // 직원 목록
 
 	OrderVO getOrderCode(String businessCode); // 거래처에 대한 가장 최근 주문서 불러오기
 
