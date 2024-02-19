@@ -12,7 +12,7 @@ public class MaterialVO {
 	// LOT 테이블
 	private String matLotCode;
 	private String matCode;
-	private String matInspectionCode;
+	private String matInsCode;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date matInputDate;
 	private int matInputCount;
@@ -20,13 +20,6 @@ public class MaterialVO {
 	private int matCount;
 	private String matManager;
 	private String matName;
-//	private String matOrCode;
-//	private String matOrName;
-//	private String busineesName;
-//	private String matOrCount;
-//	private Date matOrDate;
-//	private Date matOrDueDate;
-//	private String matOrManager;
 	
 
 	

@@ -75,38 +75,50 @@ table tr:nth-child(even) {
 <body>
 	<section layout:fragment="content">
 
-		<!-- 모달을 표시할 요소 -->
-		<div id="myModal" class="modal">
-			<div class="modal-content">
-				<span class="close">x</span>
-				<p id="matNoteContent"></p>
-			</div>
-		</div>
-
-
 		<!-- Modal -->
-		<div class="modal fade modal-lg" id="staticBackdrop"
-			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">Modal
-							title</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<h3>발주 주문서</h3>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Understood</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<!-- ManagerListModal -->
+<!-- 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" -->
+<!-- 			data-bs-keyboard="false" tabindex="-1" -->
+<!-- 			aria-labelledby="staticBackdropLabel" aria-hidden="true"> -->
+<!-- 			<div class="modal-dialog"> -->
+<!-- 				<div class="modal-content"> -->
+<!-- 					<div class="modal-header" style="background-color: #0d6efd;"> -->
+<!-- 						<h1 class="modal-title fs-5" id="staticBackdropLabel" -->
+<!-- 							style="font-weight: bold">거래처 목록</h1> -->
+<!-- 						<button type="button" class="btn-close" data-bs-dismiss="modal" -->
+<!-- 							aria-label="Close"></button> -->
+<!-- 					</div> -->
+
+<!-- 					<div class="modal-body"> -->
+
+<!-- 						<table> -->
+<!-- 							<thead style="text-align: center;"> -->
+<!-- 								<tr> -->
+<!-- 									<th>거래처코드</th> -->
+<!-- 									<th>거래처명</th> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 							<tbody style="text-align: center;"> -->
+<!-- 								<tr th:each="badMat : ${badMatList}" -->
+<!-- 									th:data-businessCode="${business.businessCode}" -->
+<!-- 									th:data-businessManagerPhone="${business.businessManagerPhone}" -->
+<!-- 									data-bs-dismiss="modal" onclick="updateInputFields(this)"> -->
+<!-- 									<td th:text="${business.businessCode}"></td> -->
+<!-- 									<td th:text="${business.businessName}"></td> -->
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+<!-- 						</table> -->
+<!-- 					</div> -->
+<!-- 					<div class="modal-footer" style="background-color: #0d6efd;"> -->
+<!-- 						<button type="button" class="btn btn-secondary" -->
+<!-- 							data-bs-dismiss="modal">닫기</button> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+
+
+
 
 		<div class="container">
 			<div>
@@ -126,9 +138,9 @@ table tr:nth-child(even) {
 			</div>
 
 			<h3>검수 목록</h3>
-			<button type="button" class="btn btn-outline-primary custom-style"
-				data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-				주문서 조회</button>
+			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
+			<!-- 				data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
+			<!-- 				주문서 조회</button> -->
 			<button type="button" class="btn btn-outline-primary custom-style"
 				id="orderInsert">저장</button>
 
@@ -163,11 +175,6 @@ table tr:nth-child(even) {
                 		          header: '발주량',
                 		          name: 'matOrCount'
                 		        },
-                		        {
-                				  header: '검사량',
-                				  name: 'matInsCount',
-                				  editor: 'text'
-                				},
                 		        {
                 				  header: '합격량',
                 				  name: 'matInsGood',
@@ -250,7 +257,7 @@ table tr:nth-child(even) {
 
         // 			        data.matInsCode = insCheckRows[0].matInsCode;
         			        data.matOrCode = insCheckRows[0].matOrCode;
-        			        data.matInsCount = insCheckRows[0].matInsCount;
+        			        
         			        console.log("data.matInsCount : ", data.matInsCount);
         // 			        data.matName = insCheckRows[0].matName;
         // 			        data.matUnit = insCheckRows[0].matUnit;
@@ -369,13 +376,14 @@ table tr:nth-child(even) {
 
 
 						
+					// 그리드에서 불량명 열 클릭 시 모달 창 띄우기
 						insGrid.on('click', (ev) => {
 						  const columnName = ev.columnName;
 						  if (columnName === 'matNote') {
 						    const rowKey = ev.rowKey;
 						
 						    // 서버에서 데이터 가져오기
-						    fetch('/api/getData?id=' + rowKey)
+						    fetch('/' + rowKey)
 						      .then(response => response.json())
 						      .then(data => {
 						        const rowData = data; // 가져온 데이터를 rowData에 할당
