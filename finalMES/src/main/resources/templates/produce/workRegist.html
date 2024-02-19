@@ -222,7 +222,7 @@
                     value=0
                     aria-label="workCount"
                     id="workCount"
-                    th:max="${vo.dInsCount}"
+                    th:max=${vo.dInsCount}
                     th:min=0
                   />
                 </div>
@@ -293,7 +293,8 @@
                         class="form-control form-control-lg text-center"
                         aria-label="badCount"
                         id="badCount"
-                        value="0"
+                        value=0
+                        min=0
                         readonly
                       />
                     </div>
@@ -353,6 +354,7 @@
                today = yy + '-' + mm + '-' + dd;
 
                document.getElementById('WorkDate').value = today;
+               console.log('순서 최대값 : ', [[${#lists.size(prJoin)}]]);
            });
 
           	// 작업시작 버튼 클릭 시
@@ -435,6 +437,7 @@
 
           		document.getElementById('selectedFacCode').value = selectFac.id;
           		document.getElementById('selectedFacCode').name = selectFac.name;
+          		
 
           		let facSelectModal = document.getElementById('facSelect');
                      let modal = bootstrap.Modal.getInstance(facSelectModal);
@@ -578,6 +581,8 @@
         	        });
         		} //else끝
         		
+        		let seqMax = [[${#lists.size(prJoin)}]];
+        		//if(data.) 조건주고 컨트롤러에 쿼리문 추가
         		
         	});
         }
