@@ -60,12 +60,14 @@ public class BomController {
 	}
 	
 	@DeleteMapping("/bomDelete")
-	@ResponseBody
-	public String bomDelete(@RequestBody BomVO bomVO) {
-		String msg;
-		bomService.bomDelete(bomVO);
-		msg = "삭제완료";
-		return msg;
-	}
+	   @ResponseBody
+	   public String bomDelete(@RequestBody BomVO bomVO) {
+	      String msg;
+	      System.out.println("======================================");
+	      System.out.println(bomVO);
+	      bomService.bomDelete(bomVO);
+	      msg = "삭제완료";
+	      return msg;
+	   }
 }
 

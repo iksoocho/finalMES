@@ -51,9 +51,9 @@ public class BomServiceImpl implements BomService{
 	}
 
 	@Override
-	public void bomDelete(BomVO bomVO) {
-		bomMapper.bomDelete(null);
-		
+	public int bomDelete(BomVO bomVO) {
+	   return bomMapper.bomDelete(bomVO);
+	      
 	}
 
 	

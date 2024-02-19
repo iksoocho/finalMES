@@ -41,9 +41,11 @@
 		where bom.prod_code = #{prodCode}
 	</select>
 	
-	<delete id="bomDelete" parameterType="String">
-		DELETE FROM bom_material
-		WHERE bom_code = #{bomCode}
-	</delete>
+	<delete id="bomDelete" parameterType="BomVO">
+      DELETE FROM bom_material
+      WHERE bom_code = #{bomCode} AND bom_num = #{bomNum}
+   </delete>
+	
+
 	
 </mapper>
