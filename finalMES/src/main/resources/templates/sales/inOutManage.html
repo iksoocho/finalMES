@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
@@ -203,13 +204,13 @@ button {
 					</tr>
 					<tr>
 						<th class="red">담당자</th>
-						<td class="serch"><input type="text" readonly> <input type="text" id="outManager" name="outManager">
+						<td class="serch"><input type="text" id="selectedUserCode" readonly> <input type="text" id="selectedUserName" name="outManager">
 
-							<button type="button" class="btn btn-primary">
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropEmployee">
 								<p>검색</p>
 							</button></td>
 						<th>담당자 연락처</th>
-						<td><input class="readInput" type="text" readonly></td>
+						<td><input class="readInput" id="selectedUserPhone" type="text" readonly></td>
 						<td colspan="2"></td>
 					</tr>
 					<tr class="space"></tr>
@@ -242,7 +243,40 @@ button {
 
 		<div id="outGrid" class="containerTwo"></div>
 
+		<!-- 거래처 모달 -->
+		<div class="modal fade" id="staticBackdropEmployee" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">담당자 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
 
+					<div class="modal-body">
+
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>담당자 코드</th>
+									<th>담당자 이름</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<tr th:each="employee : ${employeeList}" th:data-userCode="${employee.userCode}" th:data-userName="${employee.userName}" th:data-userPhone="${employee.userPhone}"
+									data-bs-dismiss="modal" onclick="updateInputFieldsTwo(this)">
+									<td th:text="${employee.userCode}"></td>
+									<td th:text="${employee.userName}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer" style="background-color: #0d6efd;">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<!-- 거래처 모달 -->
 		<div class="modal fade" id="staticBackdropBusiness" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -513,6 +547,22 @@ button {
 
 			}
 			
+			function updateInputFieldsTwo(liElement) {
+				// 클릭한 <li> 요소에서 데이터 속성을 가져옴
+				var userCode = liElement.getAttribute('data-userCode');
+				var userName = liElement.getAttribute('data-userName');
+				var userPhone = liElement.getAttribute('data-userPhone');
+				
+				// 전화번호 형식 변경
+				var formattedUserPhone = userPhone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+
+				// 입력 필드의 값 설정
+				document.getElementById('selectedUserCode').value = userCode;
+				document.getElementById('selectedUserName').value = userName;
+				document.getElementById('selectedUserPhone').value = formattedUserPhone;
+
+			}
+			
 			function formatDate(dateString) {
 			    // dateString을 Date 객체로 변환
 			    var date = new Date(dateString);
@@ -777,7 +827,7 @@ button {
 				outObj.outCode = document.getElementById('outCode').value;
 				outObj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerText;
 				outObj.outDate = document.getElementById('registrationDate').value;
-				outObj.outManager = document.getElementById('outManager').value;
+				outObj.outManager = document.getElementById('selectedUserName').value;
 				outObj.outState = document.getElementById('outState').value;
 		        
 				ordCode.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerText;

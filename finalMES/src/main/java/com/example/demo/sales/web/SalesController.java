@@ -133,7 +133,8 @@ public class SalesController {
 		// 출고전 주문서 리스트
 		orderVO.setOrdState("o2");
 		List<OrderVO> orderList = ordService.getOrderList(orderVO);
-
+		List<EmployeeVO> employeeList = ordService.getEmployeeList();
+		model.addAttribute("employeeList", employeeList);
 		model.addAttribute("businessList", businessList);
 		model.addAttribute("orderList", orderList);
 		return "sales/inOutManage";

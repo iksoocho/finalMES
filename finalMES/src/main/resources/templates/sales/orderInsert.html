@@ -186,23 +186,19 @@ button {
 	
 	function updateInputFieldsTwo(liElement) {
 		// 클릭한 <li> 요소에서 데이터 속성을 가져옴
-		var businessCode = liElement.getAttribute('data-businessCode');
-		var businessName = liElement.getAttribute('data-businessName');
-		var businessManager = liElement.getAttribute('data-businessManager');
-		var businessManagerPhone = liElement
-				.getAttribute('data-businessManagerPhone');
+		var userCode = liElement.getAttribute('data-userCode');
+		var userName = liElement.getAttribute('data-userName');
+		var userPhone = liElement.getAttribute('data-userPhone');
+		
+		// 전화번호 형식 변경
+		var formattedUserPhone = userPhone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
 
 		// 입력 필드의 값 설정
-		document.getElementById('selectedBusinessCode').value = businessCode;
-		document.getElementById('selectedBusinessName').value = businessName;
-		document.getElementById('selectedBusinessManager').value = businessManager;
-		document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
+		document.getElementById('selectedUserCode').value = userCode;
+		document.getElementById('selectedUserName').value = userName;
+		document.getElementById('selectedUserPhone').value = formattedUserPhone;
 
 	}
-	/* function selectBusiness(liElement) {
-		// 거래처를 선택한 후 모달을 닫기 위한 코드
-		updateInputFields(liElement);
-	} */
 
 	// 페이지 로드 시에 호출되는 함수
 	document.addEventListener('DOMContentLoaded', function() {
@@ -395,7 +391,7 @@ button {
 	        ordDate: document.getElementById('registrationDate').value,
 	        businessCode: document.getElementById('selectedBusinessCode').value,
 	        ordState: document.getElementById('ordState').value,
-	        ordManager: document.getElementById('ordManager').value,
+	        ordManager: document.getElementById('selectedUserName').value,
 	        ordNote: document.getElementById('ordNote').value,
 	        // 나머지 필드들도 수집
 	        // 주문 상세 리스트 정보 수집
@@ -526,13 +522,13 @@ button {
 					</tr>
 					<tr>
 						<th class="red">담당자</th>
-						<td class="serch"><input type="text" readonly> <input type="text" id="ordManager" name="ordManager">
+						<td class="serch"><input type="text" id="selectedUserCode" name="userCode" readonly> <input type="text" id="selectedUserName" name="ordManage">
 
 							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropTwo">
 								<p>검색</p>
 							</button></td>
 						<th>담당자 연락처</th>
-						<td><input class="readInput" type="text" readonly></td>
+						<td><input class="readInput" type="text" id="selectedUserPhone" name="userPhone" readonly></td>
 						<td colspan="2"></td>
 					</tr>
 					<tr class="space"></tr>
@@ -723,7 +719,7 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="employee : ${employeeList}" th:data-businessCode="${employee.userCode}" th:data-businessName="${employee.userName}" th:data-businessManager="${employee.userPhone}" data-bs-dismiss="modal" onclick="updateInputFieldsTwo(this)">
+								<tr th:each="employee : ${employeeList}" th:data-userCode="${employee.userCode}" th:data-userName="${employee.userName}" th:data-userPhone="${employee.userPhone}" data-bs-dismiss="modal" onclick="updateInputFieldsTwo(this)">
 									<td th:text="${employee.userCode}"></td>
 									<td th:text="${employee.userName}"></td>
 								</tr>
