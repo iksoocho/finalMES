@@ -19,6 +19,6 @@ public interface WorkMapper {
 	public List<WorkMidRegistVO> checkWorkMidRegist(@Param("dinsCode") String dinsCode, @Param("procCode") String procCode);
 	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO);
 	public List<ProdProgressJoinVO> getProdProgress(@Param("dinsCode") String dinsCode);
-	public int insertWorkResult(WorkResultVO workResultVO);
+	public int insertWorkResult(@Param("dinsCode") String dinsCode);
 	
 }

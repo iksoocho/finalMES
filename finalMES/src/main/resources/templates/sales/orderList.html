@@ -4,7 +4,6 @@
 <style>
 .containerOne {
 	margin: 50px;
-	
 }
 
 .tui-grid-row-header-checkbox {
@@ -33,9 +32,17 @@
 		<div class="containerOne">
 			<h4>주문 조회</h4>
 			<h5 class="titleOne">목록</h5>
-			<div class="ttlContainer">
-				<small class="totalOrdCount"> 총 주문 수: <span th:text="${orderList.size()}"></span>
+				<small class="totalOrdCount" style="margin-right: 20px;"> (총 주문 수: <span th:text="${orderList.size()}"></span>)
 				</small>
+			<div class="ttlContainer">
+				<div>
+				<!-- 추가된 부분 -->
+					<label for="startDate"></label> <input type="date" id="startDate" name="startDate"> <label for="endDate"> ~ </label> <input
+						type="date" id="endDate" name="endDate"
+					>
+					<button type="button" id="updateOrderState" style="float: right;">저장</button>
+					<button type="button" id="searchByDate" style="float: right;">검색</button>
+				</div>
 			</div>
 			<div id="grid"></div>
 			<h5>상세</h5>
@@ -72,12 +79,49 @@
  	          header: '상태',
  	          name: 'ordState',
 	          align: "center",
- 	          formatter: getOrdStatus,
- 	          filter: {
- 	            type: 'text',
- 	            showApplyBtn: true,
- 	            showClearBtn: true
- 	          }
+ 	          editor: {
+					type: 'select',
+					options: {
+						listItems: [
+							{text: '등록완료', value: 'o2'},
+							{text: '처리중', value: 'o3'},
+							{text: '출고대기', value: 'o4'},
+							{text: '출고중', value: 'o5'},
+							{text: '종결', value: 'o6'},
+						]
+					}
+				},
+				formatter: function ({ value }) {
+			        let statusText, bgColor;
+
+			        switch (value) {
+			            case 'o2':
+			                statusText = '등록완료';
+			                bgColor = 'green'; // 등록완료에 대한 배경색 설정
+			                break;
+			            case 'o3':
+			                statusText = '처리중';
+			                bgColor = 'yellow'; // 처리중에 대한 배경색 설정
+			                break;
+			            case 'o4':
+			                statusText = '출고대기';
+			                bgColor = 'yellow'; // 종결에 대한 배경색 설정
+			                break;
+			            case 'o5':
+			            	statusText = '출고중';
+			            	bgColor = 'yellow';
+			            	break;
+			            case 'o6':
+			            	statusText = '종결';
+			            	bgColor = 'red';
+			            	break;
+			            default:
+			                statusText = value;
+			                bgColor = 'gray'; // 기본 배경색
+			        }
+			     // 선택된 항목에 대해서만 배경색 적용
+			        return `<div style="background-color: ${bgColor};">${statusText}</div>`;
+			    }
  	        },
  	        {
  	          header: '거래처',
@@ -111,7 +155,8 @@
  	 	 	},
  	 	 	{	header: '비고',
  	 	 		name:'ordNote',
- 	 	 		align: 'center'
+ 	 	 		align: 'center',
+ 	 	 		editor: 'text',
  	 	 	},
  	      ],
  	      rowHeaders: ['rowNum','checkbox'],
@@ -122,88 +167,6 @@
              
  	    });
 		 
-		 // 행 클릭이벤트
-		 grid.on('click', (ev) => {
-			 console.log(ev.columnName);
-		     let columnName = ev.columnName;
-		     if (columnName === 'ordCode'){
-		    	 let rowKey = ev.rowKey;
-		    	 console.log(rowKey);
-		    	 let rowData = grid.getRow(rowKey);
-		    	 console.log(rowData);
-		   	 
-		     if (rowData) {
-		    	 let ordCode = rowData.ordCode;
-		         
-		     
-		        
-		 // 서버에 해당 주문에 대한 상세 목록을 요청
-		    	 fetch('/orderDetailList/' + ordCode)
-		    	    .then(response => {
-		    	        if (!response.ok) {
-		    	            throw new Error('Network response was not ok');
-		    	        }
-		    	        return response.json();
-		    	    })
-		    	    .then(orderDetailList => {
-		    	        console.log(orderDetailList);
-		    	        // 주문 상세 목록 그리드 갱신
-		    	        detailGrid.resetData(orderDetailList);
-		    	    })
-		    	    .catch(error => console.error('상세 목록을 불러오는 도중 에러 발생:', error));    
-		};
-		 };
-		 });
-		 
-		 
-		// 주문 상태 포매터
-		 function getOrdStatus(value, row) {
-		     console.log(value); // 값 확인용 로그
-		     let statusText, bgColor;
-
-		     // 주문 상태에 따라 원하는 문자열과 배경색 설정
-		     switch (value.value) {
-		         case "o2":
-		             statusText = '등록완료';
-		             bgColor = 'green'; // 등록완료에 대한 배경색 설정
-		             break;
-		         case "o3":
-		             statusText = '처리중';
-		             bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
-		             break;
-		         case "o4":
-		        	 statusText = '주문완료';
-		        	 bgColor = 'blue' 
-		             break;
-		     }
-
-		     // 배경색을 포함한 HTML 반환
-		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
-		 }
-		
-		
-		
-		// 총금액 포맷터 함수
-		function formatTotalTtlPrice({ value }) {
-		    if (value) {
-		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-		    }
-		    return '';
-		}
-		
-		function ordDateFormatter({value}) {
-            if (value) {
-                var date = new Date(value);
-                var year = date.getFullYear();
-                var month = (date.getMonth() + 1).toString().padStart(2, '0');
-                var day = date.getDate().toString().padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            }
-            return '';
-        }
-		
-		
-		
 		let orderDetailList = [[${orderDetailList}]]
 		let detailGrid = tui.Grid;
 		detailGrid.applyTheme('clean', {
@@ -274,11 +237,145 @@
 		      formatter: formatTotalTtlPrice
 		 	  
 		 	},
-		  
 	      ],
-	      
-           
+	      rowHeaders: ['rowNum','checkbox'],
+          pageOptions: {
+              useClient: true,
+              perPage: 5
+          },
 	    });
+		
+		// 행 클릭이벤트
+		 grid.on('click', (ev) => {
+			 console.log(ev.columnName);
+		     let columnName = ev.columnName;
+		     if (columnName === 'ordCode'){
+		    	 let rowKey = ev.rowKey;
+		    	 console.log(rowKey);
+		    	 let rowData = grid.getRow(rowKey);
+		    	 console.log(rowData);
+		   	 
+		     if (rowData) {
+		    	 let ordCode = rowData.ordCode;
+		         
+		     
+		        
+		 // 서버에 해당 주문에 대한 상세 목록을 요청
+		    	 fetch('/orderDetailList/' + ordCode)
+		    	    .then(response => {
+		    	        if (!response.ok) {
+		    	            throw new Error('Network response was not ok');
+		    	        }
+		    	        return response.json();
+		    	    })
+		    	    .then(orderDetailList => {
+		    	        console.log(orderDetailList);
+		    	        // 주문 상세 목록 그리드 갱신
+		    	        detailGrid.resetData(orderDetailList);
+		    	    })
+		    	    .catch(error => console.error('상세 목록을 불러오는 도중 에러 발생:', error));
+		     };
+		     };
+		 });
+		 
+		
+		
+		
+		
+		// 총금액 포맷터 함수
+		function formatTotalTtlPrice({ value }) {
+		    if (value) {
+		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		    }
+		    return '';
+		}
+		
+		function ordDateFormatter({value}) {
+           if (value) {
+               var date = new Date(value);
+               var year = date.getFullYear();
+               var month = (date.getMonth() + 1).toString().padStart(2, '0');
+               var day = date.getDate().toString().padStart(2, '0');
+               return `${year}-${month}-${day}`;
+           }
+           return '';
+       }
+		
+		
+		document.querySelector('#searchByDate').addEventListener('click', function(){
+			const startDate = document.getElementById('startDate').value;
+	        const endDate = document.getElementById('endDate').value;
+	        
+	        let data = {
+	                startDate: startDate,
+	                endDate: endDate
+	            };
+	            
+	            console.log(data);
+	        
+	        fetch('/orderListByDateRange', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify(data)
+		    })
+		    .then(response => {
+		        if (!response.ok) {
+		            throw new Error('Network response was not ok');
+		        }
+		        return response.json();
+		    })
+		    .then(data => {
+		        console.log('Success:', data);
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		    });
+		})
+		
+		
+		document.querySelector('#updateOrderState').addEventListener('click', function () {
+		    const checkedRows = grid.getCheckedRows();
+
+		    if (checkedRows.length === 0) {
+		        alert('체크된 행이 없습니다.');
+		        return;
+		    }
+
+		    const newData = checkedRows.map(row => ({
+		        ordCode: row.ordCode,
+		        ordState: row.ordState,
+		        ordNote: row.ordNote
+		    }));
+		    
+		    let data = {};
+			data.ordCode = newData[0].ordCode;
+			data.ordState = newData[0].ordState;
+			data.ordNote = newData[0].ordNote;
+
+		    fetch('/updateOrderState', {
+		        method: 'PUT',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify(data)
+		    })
+		    .then(response => {
+		        if (!response.ok) {
+		            throw new Error('Network response was not ok');
+		        }
+		        return response.text();
+		    })
+		    .then(data => {
+		        console.log('Success:', data);
+		        alert(data);
+		        location.href = '/orderList';
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		    });
+		});
 		</script>
 	</section>
 </body>

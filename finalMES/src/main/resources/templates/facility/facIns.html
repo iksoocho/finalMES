@@ -1,227 +1,287 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-   xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet"
-   href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script
-   src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script
-   src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <title>설비비점검관리</title>
 <style>
 #layoutSidenav_content {
-   margin-top: 20px;
+	margin-top: 20px;
 }
 
 table {
-   width: 100%;
-   border-collapse: collapse;
-   margin-bottom: 20px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
 }
 
 input[type="text"], input[type="date"] {
-   width: 200px;
-   box-sizing: border-box;
+	width: 200px;
+	box-sizing: border-box;
 }
 
 label {
-   display: block;
-   margin-bottom: 5px;
+	display: block;
+	margin-bottom: 5px;
 }
 
 input[type="checkbox"] {
-   margin-right: 5px;
+	margin-right: 5px;
 }
 
 button {
-   margin-right: 5px;
+	margin-right: 5px;
 }
 
-#myModal3 {
-   text-align: center;
+/* 모달 스타일 */
+.modal-dialog {
+	max-width: 800px;
+}
+
+.modal-content {
+	border-radius: 10px;
+}
+
+.modal-header {
+	background-color: #007bff;
+	color: white;
+	border-radius: 10px 10px 0 0;
+}
+
+.modal-body {
+	padding: 20px;
+}
+
+.modal-footer {
+	border-radius: 0 0 10px 10px;
+}
+
+.modal-title {
+	font-size: 24px;
+}
+
+.table th, .table td {
+	text-align: center;
+}
+
+.modal-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.modal-table th, .modal-table td {
+	padding: 10px;
+	border-bottom: 1px solid #dee2e6;
+}
+
+.modal-table th {
+	background-color: #f8f9fa;
+}
+
+.modal-table tbody tr:hover {
+	background-color: #f2f2f2;
 }
 </style>
 </head>
 <body>
 
-   <section layout:fragment="content">
-      <h1>설비점검관리</h1>
+	<section layout:fragment="content">
+		<h1>설비점검관리</h1>
 
-      <div class="container">
+		<div class="container">
 
-         <div class="col">
-            <br> <br>
-            <table class="table">
-               <thead>
-                  <tr>
-                     <th>점검코드</th>
-                     <th colspan="2"><input type="text" id="facInsCode"
-                        name="facInsCode" required readonly></th>
-                     <th>설비코드</th>
-                     <th colspan="2"><input type="text" id="facCode"
-                        name="facCode" required></th>
-                     <th>설비명</th>
-                     <th colspan="2"><input type="text" id="facName"
-                        name="facName" th:data-facCode="${facCode}" required></th>
+			<div class="col">
+				<br> <br>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>점검코드</th>
+							<th colspan="2"><input type="text" id="facInsCode"
+								name="facInsCode" required readonly></th>
+							<th>설비코드</th>
+							<th colspan="2"><input type="text" id="facCode"
+								name="facCode" required></th>
+							<th>설비명</th>
+							<th colspan="2"><input type="text" id="facName"
+								name="facName" th:data-facCode="${facCode}" required></th>
 
-                  </tr>
-                  <tr>
-                     <th>점검사항</th>
-                     <th colspan="2"><input type="text" id="facInsCheck"
-                        name="facInsCheck"></th>
-                     <!-- <th>판정</th>
+						</tr>
+						<tr>
+							<th>점검사항</th>
+							<th colspan="2"><input type="text" id="facInsCheck"
+								name="facInsCheck"></th>
+							<!-- <th>판정</th>
                      <th colspan="2"><input type="text" id="facInsJud"
                         name="facInsJud"></th> -->
-                     <th>담당자</th>
-                     <th colspan="2"><input type="text" id="facInsPerson"
-                        name="facInsPerson" th:value="${username}" required></th>
-                  </tr>
-                  <tr>
-                  <tr>
-                     <th style="vertical-align: middle;">판정</th>
-                     <td colspan="2" style="vertical-align: middle;"><label
-                        style="margin-right: 10px;"> <input type="radio"
-                           id="facInsJud1" name="facInsJud" value="적합"> 적합
-                     </label> <label> <input type="radio" id="facInsJud2"
-                           name="facInsJud" value="부적합"> 부적합
-                     </label></td>
-                  </tr>
-               </thead>
-            </table>
-            <input type="hidden" id="facNotCode" name="facNotCode" required>
-            <input type="hidden" id="facNotSituation" name="facNotSituation"
-               required>
-            <div class="text-center">
-            <button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-            <button type="button" id="insertBtn" class="btn btn-outline-success">등록</button>
-            <button type="button" id="selectBtn" class="btn btn-outline-success"
-               data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
-            <input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
-            </div>
-            <br> <br> <br>
-            <div id="grid" class="container"></div>
-         </div>
-      </div>
+							<th>담당자</th>
+							<th colspan="2"><input type="text" id="facInsPerson"
+								name="facInsPerson" th:value="${username}" required></th>
+						</tr>
+						<tr>
+						<tr>
+							<th style="vertical-align: middle;">판정</th>
+							<td colspan="2" style="vertical-align: middle;"><label
+								style="margin-right: 10px;"> <input type="radio"
+									id="facInsJud1" name="facInsJud" value="적합"> 적합
+							</label> <label> <input type="radio" id="facInsJud2"
+									name="facInsJud" value="부적합"> 부적합
+							</label></td>
+						</tr>
+					</thead>
+				</table>
+				<input type="hidden" id="facNotCode" name="facNotCode" required>
+				<input type="hidden" id="facNotSituation" name="facNotSituation"
+					required>
+				<div class="text-center">
+					<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+					<button type="button" id="insertBtn"
+						class="btn btn-outline-success">등록</button>
+					<button type="button" id="selectBtn"
+						class="btn btn-outline-success" data-bs-toggle="modal"
+						data-bs-target="#staticBackdropOne">조회</button>
+					<button type="button" class="btn btn-outline-primary"
+						onclick="downloadCSV()">Excel</button>
+					<input type="text" id="searchInput" oninput="searchFunction()"
+						placeholder="검색...">
+				</div>
+				<br> <br> <br>
+				<div id="grid" class="container"></div>
+			</div>
+		</div>
 
 
 
 
 
-      <div class="modal fade modal-xl" id="staticBackdropOne"
-         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-         <div class="modal-dialog modal-dialog-scrollable">
-            <!-- modal-dialog 클래스에 modal-dialog-scrollable 클래스 추가 -->
-            <div class="modal-content">
-               <div class="modal-header" style="background-color: #0d6efd;">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel"
-                     style="font-weight: bold">설비목록</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"
-                     aria-label="Close"></button>
-               </div>
+		<div class="modal fade modal-xl" id="staticBackdropOne"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<!-- modal-dialog 클래스에 modal-dialog-scrollable 클래스 추가 -->
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">설비목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
 
-               <div class="modal-body" style="overflow-y: hidden;">
-                  <!-- overflow-y 속성 추가 -->
-                  <table>
-                     <thead style="text-align: center;">
-                        <tr>
-                           <th>설비코드</th>
-                           <th>설비명</th>
-                           <!-- <th>담당자</th> -->
-                           <th>비가동등록사유</th>
-                           <th>상태</th>
-                        </tr>
-                     </thead>
-                     <tbody style="text-align: center;">
-                        <!-- 컨트롤러에서 봐야함 -->
-                        <tr th:each="NotIns : ${Inslist}"
-                           th:data-facNotCode="${NotIns.facNotCode}"
-                           th:data-facCode="${NotIns.facCode}"
-                           th:data-facName="${NotIns.facName}"
-                           th:data-facNotPerson="${NotIns.facNotPerson}"
-                           th:data-facNotReason="${NotIns.facNotReason}"
-                           th:data-facNotSituation="${NotIns.facNotSituation}"
-                           data-bs-dismiss="modal"
-                           th:onclick="'displaySelectedFacNotIns(this)'">
-                           <td th:text="${NotIns.facCode}"></td>
-                           <td th:text="${NotIns.facName}"></td>
-                           <td th:text="${NotIns.facNotPerson}"></td>
-                           <td th:text="${NotIns.facNotReason}"></td>
-                           <td th:text="${NotIns.facNotSituation}"></td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </div>
-               <div class="modal-footer" style="background-color: #0d6efd;">
-                  <button type="button" class="btn btn-secondary"
-                     data-bs-dismiss="modal">닫기</button>
-               </div>
-            </div>
-         </div>
-      </div>
+					<div class="modal-body" style="overflow-y: hidden;">
+						<!-- overflow-y 속성 추가 -->
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>설비코드</th>
+									<th>설비명</th>
+									<!-- <th>담당자</th> -->
+									<th>비가동등록사유</th>
+									<th>상태</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<!-- 컨트롤러에서 봐야함 -->
+								<tr th:each="NotIns : ${Inslist}"
+									th:data-facNotCode="${NotIns.facNotCode}"
+									th:data-facCode="${NotIns.facCode}"
+									th:data-facName="${NotIns.facName}"
+									th:data-facNotPerson="${NotIns.facNotPerson}"
+									th:data-facNotReason="${NotIns.facNotReason}"
+									th:data-facNotSituation="${NotIns.facNotSituation}"
+									data-bs-dismiss="modal"
+									th:onclick="'displaySelectedFacNotIns(this)'">
+									<td th:text="${NotIns.facCode}"></td>
+									<td th:text="${NotIns.facName}"></td>
+									<td th:text="${NotIns.facNotPerson}"></td>
+									<td th:text="${NotIns.facNotReason}"></td>
+									<td th:text="${NotIns.facNotSituation}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer" style="background-color: #0d6efd;">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
-      <script th:inline="javascript">
+		<script th:inline="javascript">
          
-       // saveBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 실행 
-         document.getElementById('saveBtn').addEventListener("click", function() {
-           // 각각의 변수에 특정 이름을 가진 요소의 값을 할당 인덱스 0에 있는 요소의 값을 가져옴
-            var facInsCode = document.getElementsByName("facInsCode")[0].value;
-            var facNotCode = document.getElementsByName("facNotCode")[0].value;
-            var facCode = document.getElementsByName("facCode")[0].value;
-            var facName = document.getElementsByName("facName")[0].value;
-            var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
-            var facInsCheck = document.getElementsByName("facInsCheck")[0].value;
-            var facInsJud = document.getElementsByName("facInsJud")[0].value;
-            var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
-            
-         // 조건
-            if (!facName) {
-                alert("설비명을 입력해주세요.");
-                return;
-            }
-         
-         // 데이터 객체에 위에서 가져온 값들 넣기
-            var data = {
-                facInsCode: facInsCode,
-                facNotCode: facNotCode,
-                facCode: facCode,
-                facName: facName,
-                facCode: facCode,
-                facInsPerson: facInsPerson,
-                facInsCheck: facInsCheck,
-                facInsJud: facInsJud,
-                facNotSituation: facNotSituation
-            };
-            
-            // fac_ins update
-            // fatch를 통해 서버에 PUT 통신 요청
-            fetch("/updateFacIns", {
-                method: "PUT",
-                body: JSON.stringify(data),   // 데이터 JSON 형식으로 문자열 변환
-                headers: {
-                    "Content-Type": "application/json"  // 타입이 JSON 형식이다
-                }
-            })
-            .then(response => {
-               console.log(response.status);
-                if (response.ok) {
-                    console.log(response);
-                    alert("등록완료!");
-                    location.href = '/facIns';  // 여기 경로로 리디렉션
-                } else {
-                    console.log(response);
-                    alert("등록실패");
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                alert(오류);
-            });
-        });
+        // saveBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 실행 
+		document.getElementById('saveBtn').addEventListener("click", function() {
+    // 각각의 변수에 특정 이름을 가진 요소의 값을 할당 인덱스 0에 있는 요소의 값을 가져옴
+		    var facInsCode = document.getElementsByName("facInsCode")[0].value;
+		    var facNotCode = document.getElementsByName("facNotCode")[0].value;
+		    var facCode = document.getElementsByName("facCode")[0].value;
+		    var facName = document.getElementsByName("facName")[0].value;
+		    var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
+		    var facInsCheck = document.getElementsByName("facInsCheck")[0].value;
+		    var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
+		    var facInsJud;
+
+		    // 판정 값을 가져오기
+		    var facInsJudElements = document.getElementsByName("facInsJud");
+		    for (var i = 0; i < facInsJudElements.length; i++) {
+		        if (facInsJudElements[i].checked) {
+		            facInsJud = facInsJudElements[i].value;
+		            break;
+		        }
+		    }
+		
+		    // 조건
+		    if (!facName) {
+		        alert("설비명을 입력해주세요.");
+		        return;
+		    }
+
+    		// 데이터 객체에 위에서 가져온 값들 넣기
+		    var data = {
+		        facInsCode: facInsCode,
+		        facNotCode: facNotCode,
+		        facCode: facCode,
+		        facName: facName,
+		        facInsPerson: facInsPerson,
+		        facInsCheck: facInsCheck,
+		        facInsJud: facInsJud,
+		        facNotSituation: facNotSituation
+		        
+		    };
+
+			    // fac_ins update
+			    // fatch를 통해 서버에 PUT 통신 요청
+			    fetch("/updateFacIns", {
+			        method: "PUT",
+			        body: JSON.stringify(data),   // 데이터 JSON 형식으로 문자열 변환
+			        headers: {
+			            "Content-Type": "application/json"  // 타입이 JSON 형식이다
+			        }
+			    })
+			    .then(response => {
+			        console.log(response.status);
+			        if (response.ok) {
+			            console.log(response);
+			            alert("수정완료!");
+			            location.href = '/facIns';  // 여기 경로로 리디렉션
+			        } else {
+			            console.log(response);
+			            alert("수정실패");
+			        }
+			    })
+			    .catch(error => {
+			        console.log(error);
+			        alert("오류");
+			    });
+			});
+
         
          
          // facIns Insert
@@ -242,6 +302,7 @@ button {
                     alert("설비명과 담당자를 입력해주세요.");
                     return;
                 }
+
             // data 객체에 위에서 받아온 값 넣기
                 var data = {
                     facInsCode: facInsCode,
@@ -333,11 +394,24 @@ button {
                     align: 'center'
                 },
                 {
-                    header: '상태',
-                    name: 'facNotSituation',
-                    align: 'center'
-                },
-               
+         	          header: '상태',
+         	          name: 'facNotSituation',
+         	          formatter: function(value) {
+         	            var numericValue = +value.value;
+
+         	            if (numericValue === 0) {
+         	              return '🟡';
+         	            } else if (numericValue === 1) {
+         	              return '🟢';
+         	            } else if (numericValue === 2) {
+         	              return '🔴';
+         	            } else {
+         	              return '알 수 없는 상태';
+         	            }
+         	          },
+         	          align: 'center'
+         	        }
+              
             ],
             rowHeaders: ['rowNum'],
             // 페이지네이션
@@ -447,8 +521,41 @@ button {
                }
            }
        }
+       
+       
+       // 엑셀 다운로드
+       function downloadCSV() {
+           const gridData = grid.getData(); // 그리드에서 데이터 가져오기
+           const header = ['점검코드', '설비명', '설비코드', '점검사항', '담당자', '판정', '점검일', '차기점검일', '상태']; // 헤더 생성
+           const csvRows = [header.join(',')]; // 헤더를 CSV 형식으로 변환하여 첫 번째 행으로 설정
+
+           // 데이터 생성
+           gridData.forEach(row => {
+               const values = Object.values(row);
+               const formattedRow = values.map(value => {
+                   if (value instanceof Date) {
+                       // 날짜의 경우 ISO 형식으로 변환
+                       return value.toISOString().split('T')[0];
+                   } else {
+                       return value;
+                   }
+               });
+               csvRows.push(formattedRow.join(','));
+           });
+
+           // CSV 내용 생성
+           const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+           const encodedUri = encodeURI(csvContent); // URI 인코딩
+
+           // 다운로드 링크 생성 및 클릭
+           const link = document.createElement('a');
+           link.setAttribute('href', encodedUri);
+           link.setAttribute('download', 'data.csv');
+           document.body.appendChild(link);
+           link.click();
+       }
         
     </script>
-   </section>
+	</section>
 </body>
 </html>

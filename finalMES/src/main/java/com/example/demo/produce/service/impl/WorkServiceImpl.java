@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.WorkMidRegistVO;
-import com.example.demo.produce.WorkResultVO;
 import com.example.demo.produce.mapper.WorkMapper;
 import com.example.demo.produce.service.WorkService;
 
@@ -23,6 +23,7 @@ public class WorkServiceImpl implements WorkService {
 	}
 
 	@Override
+	@Transactional
 	public int insertWorkMidRegist(WorkMidRegistVO workMidRegistVO) {
 		int result = workMapper.insertWorkMidRegist(workMidRegistVO);
 		if(result == 1) {
@@ -38,6 +39,7 @@ public class WorkServiceImpl implements WorkService {
 	}
 
 	@Override
+	@Transactional
 	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO) {
 		int result = workMapper.updateWorkMidRegist(workMidRegistVO);
 		if(result == 1) {
@@ -48,11 +50,17 @@ public class WorkServiceImpl implements WorkService {
 	}
 
 	@Override
-	public void insertWorkResult(List<WorkResultVO> list) {
-		for(int i=0; i<list.size(); i++) {
-			WorkResultVO workResult = list.get(i);
-	        workMapper.insertWorkResult(workResult);
-	        System.out.println("등록성공");
+	public int insertWorkResult(String dinsCode) {
+        int result = workMapper.insertWorkResult(dinsCode);
+        System.out.println("=====================IMPL result insert==========================");
+        System.out.println(dinsCode);
+        System.out.println("=================================================================");
+        if(result > 0) {
+        	System.out.println("공정실적등록성공");
+			return 1;
+		}else {
+			System.out.println("공정실적등록실패");
+			return -1;
 		}
 	}
 

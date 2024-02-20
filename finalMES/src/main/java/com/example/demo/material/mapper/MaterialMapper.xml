@@ -7,15 +7,15 @@
 	<!-- 발주 -->
 	<select id="getMaterialOrderList" resultType="MatOrderVO">
 		SELECT
-		mo.mat_or_code,
-		mo.mat_or_name,
-		mo.mat_code,
-		b.business_code,
-		b.business_name,
-		mo.mat_or_count,
-		mo.mat_or_date,
-		mo.mat_or_due_date,
-		mo.mat_or_manager
+				mo.mat_or_code,
+				mo.mat_or_name,
+				mo.mat_code,
+				b.business_code,
+				b.business_name,
+				mo.mat_or_count,
+				mo.mat_or_date,
+				mo.mat_or_due_date,
+				mo.mat_or_manager
 		FROM mat_order mo
 		JOIN business b ON mo.business_code = b.business_code
 		JOIN mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
@@ -24,17 +24,17 @@
 	<!-- 발주상세 -->
 	<select id="getMaterialOrdInfoList" resultType="MatOrderInfoVO">
 		SELECT
-		mo.mat_or_code,
-		mo.mat_or_name,
-		mo.mat_code,
-		m.mat_name,
-		b.business_code,
-		b.business_name,
-		mo.mat_or_count,
-		mo.mat_or_date,
-		mo.mat_or_due_date,
-		mo.mat_or_manager,
-		mo.mat_or_state
+				mo.mat_or_code,
+				mo.mat_or_name,
+				mo.mat_code,
+				m.mat_name,
+				b.business_code,
+				b.business_name,
+				mo.mat_or_count,
+				mo.mat_or_date,
+				mo.mat_or_due_date,
+				mo.mat_or_manager,
+				mo.mat_or_state
 		FROM mat_order mo
 		LEFT JOIN business b ON mo.business_code = b.business_code
 		LEFT JOIN mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
@@ -46,24 +46,22 @@
 	<!-- 발주 목록 쪽 거래처 -->
 	<select id="getMaterialOrdInfoList1" resultType="MatOrderInfoVO">
 		SELECT
-				b.business_code,
-				b.business_name,
-				m.mat_code,
-				m.mat_name
-				FROM
-				business b
-		LEFT JOIN
-				mat_order mo ON b.business_code = mo.business_code
-		LEFT JOIN
-				material m ON mo.mat_code = m.mat_code
-		GROUP BY
-				b.business_code, b.business_name, m.mat_code, m.mat_name
+			b.business_code,
+			b.business_name,
+			MIN(m.mat_code) AS matCode,
+			MIN(m.mat_name) AS matName
+		FROM business b
+		LEFT JOIN mat_order mo ON b.business_code = mo.business_code
+		LEFT JOIN material m ON mo.mat_code = m.mat_code
+		WHERE b.business_code IN ('B001','A001','A002','A003')
+		GROUP BY b.business_code, b.business_name
 	</select>
 
 	<!-- 발주 자재 관리 -->
 	<select id="getOriginMaterialList" resultType="OriginMaterialVO">
 		SELECT *
-		FROM material ORDER BY mat_code DESC
+		FROM
+		material ORDER BY mat_code DESC
 
 
 	</select>
@@ -100,72 +98,69 @@
 	<!-- 자재관리 -->
 	<select id="getOriginMaterialList1"
 		resultType="OriginMaterialVO">
-		SELECT DISTINCT 
+		SELECT DISTINCT
 				m.mat_code,
-		        m.mat_name,
-		        m.mat_safe_stock,
-		        m.mat_unit,
-		        m.mat_standard,
-		        ml.mat_count
+				m.mat_name,
+				m.mat_safe_stock,
+				m.mat_unit,
+				m.mat_standard,
+				(SELECT SUM(mat_ins_good) FROM mat_lot WHERE
+				mat_code = 'MAT004' GROUP BY
+				mat_code ) AS matCount2,
+				mi.mat_ins_good as matCount
 		FROM material m
 		JOIN mat_lot ml ON m.mat_code = ml.mat_code
+		LEFT JOIN mat_inspection mi ON ml.mat_ins_code = mi.mat_ins_code
+		ORDER BY m.mat_code ASC
 	</select>
 
 	<!-- 출고 관리 -->
 	<select id="getOutputList" resultType="MatOutputVO">
 		SELECT
-		MO.mat_out_code,
-		MO.business_code,
-		B.business_name,
-		ML.mat_manager,
-		M.mat_name,
-		ML.mat_lot_code,
-		ML.mat_count,
-		MO.mat_out_count,
-		MO.mat_out_date
-		FROM
-		mat_output MO
-		JOIN
-		mat_lot ML ON MO.mat_lot_code=ML.mat_lot_code
-		JOIN
-		business B ON MO.business_code = B.business_code
-		JOIN
-		material M ON ML.mat_code=M.mat_code
+				MO.mat_out_code,
+				MO.business_code,
+				B.business_name,
+				ML.mat_manager,
+				M.mat_name,
+				ML.mat_lot_code,
+				ML.mat_count,
+				MO.mat_out_count,
+				MO.mat_out_date
+		FROM mat_output MO
+		JOIN mat_lot ML ON MO.mat_lot_code=ML.mat_lot_code
+		JOIN business B ON MO.business_code = B.business_code
+		JOIN material M ON ML.mat_code=M.mat_code
 	</select>
 
-	<!-- 입고 관리 -->
+	<!-- 입고 목록 관리 -->
 	<select id="getInputList" resultType="MatInputVO">
 		SELECT mo.mat_or_code,
-		mo.mat_or_name,
-		mo.mat_code,
-		m.mat_name,
-		m.mat_unit,
-		m.mat_standard,
-		b.business_code,
-		b.business_name,
-		mo.mat_or_count,
-		mo.mat_or_date,
-		mo.mat_or_due_date,
-		mo.mat_or_manager,
-		mo.mat_or_state,
-		mi.mat_ins_date,
-		mi.mat_ins_code,
-		mi.mat_ins_good,
-		mi.mat_ins_bad,
-		mi.mat_ins_count,
-        ml.mat_lot_code,
-        ml.mat_input_date
+				mo.mat_or_name,
+				mo.mat_code,
+				m.mat_name,
+				m.mat_unit,
+				m.mat_standard,
+				b.business_code,
+				b.business_name,
+				mo.mat_or_count,
+				mo.mat_or_date,
+				mo.mat_or_due_date,
+				mo.mat_or_manager,
+				mo.mat_or_state,
+				mi.mat_ins_date,
+				mi.mat_ins_code,
+				mi.mat_ins_good,
+				mi.mat_ins_bad,
+				ml.mat_lot_code,
+				ml.mat_input_date,
+				ml.mat_input_count
 		FROM mat_order mo
-		LEFT JOIN mat_inspection mi ON mo.mat_or_code =
-		mi.mat_or_code
-		LEFT JOIN business b ON mo.business_code =
-		b.business_code
-		LEFT JOIN mat_order_info moi ON mo.mat_or_code =
-		moi.mat_or_code
+		LEFT JOIN mat_inspection mi ON mo.mat_or_code = mi.mat_or_code
+		LEFT JOIN business b ON mo.business_code = b.business_code
+		LEFT JOIN mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
 		JOIN material m ON mo.mat_code = m.mat_code
-        LEFT JOIN mat_lot ml ON m.mat_code = ml.mat_code
-		WHERE
-		mi.mat_ins_code IS NOT NULL
+		LEFT JOIN mat_lot ml ON m.mat_code = ml.mat_code
+		WHERE mi.mat_ins_code IS NOT NULL
 		ORDER BY ml.mat_lot_code DESC
 
 	</select>
@@ -173,22 +168,23 @@
 	<!-- 입고 검수 -->
 	<select id="getMatInsList" resultType="MatInspectionVO">
 		SELECT mo.mat_or_code,
-		mo.mat_or_name,
-		mo.mat_code,
-		m.mat_name,
-		m.mat_unit,
-		m.mat_standard,
-		b.business_code,
-		b.business_name,
-		mo.mat_or_count,
-		mo.mat_or_date,
-		mo.mat_or_due_date,
-		mo.mat_or_manager,
-		mo.mat_or_state,
-		mi.mat_ins_date,
-		mi.mat_ins_code,
-		mi.mat_ins_good,
-		mi.mat_ins_bad
+				mo.mat_or_name,
+				mo.mat_code,
+				m.mat_name,
+				m.mat_unit,
+				m.mat_standard,
+				b.business_code,
+				b.business_name,
+				mo.mat_or_count,
+				mo.mat_or_date,
+				mo.mat_or_due_date,
+				mo.mat_or_manager,
+				mo.mat_or_state,
+				mi.mat_ins_date,
+				mi.mat_ins_count,
+				mi.mat_ins_code,
+				mi.mat_ins_good,
+				mi.mat_ins_bad
 		FROM mat_order mo
 		LEFT JOIN mat_inspection mi ON mo.mat_or_code = mi.mat_or_code
 		LEFT JOIN business b ON mo.business_code = b.business_code
@@ -200,51 +196,46 @@
 	<!-- 반품 관리 -->
 	<select id="getReturnList" resultType="MatReturnVO">
 		SELECT MR.mat_re_code,
-		B.business_name,
-		M.mat_code,
-		M.mat_name,
-		ML.mat_lot_code,
-		ML.mat_count,
-		MR.mat_re_count,
-		MR.mat_re_content,
-		MR.mat_re_start_date,
-		MR.mat_re_manager,
-		MR.mat_re_state
+				B.business_name,
+				M.mat_code,
+				M.mat_name,
+				ML.mat_lot_code,
+				ML.mat_count,
+				MR.mat_re_count,
+				MR.mat_re_content,
+				MR.mat_re_start_date,
+				MR.mat_re_manager,
+				MR.mat_re_state
 		FROM mat_return MR
-		JOIN business B ON MR.business_code =
-		B.business_code
+		JOIN business B ON
+		MR.business_code = B.business_code
 		JOIN mat_lot ML ON MR.mat_lot_code = ML.mat_lot_code
 		JOIN material M ON ML.mat_code = M.mat_code
 	</select>
 
 	<!-- 발주 등록 -->
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
-		<selectKey keyProperty="matOrCode" resultType="String"
-			order="BEFORE">
-			SELECT 'MATORD' || LPAD(mat_or_code_seq.nextval, 3, 0) FROM
-			DUAL
-		</selectKey>
 		INSERT INTO mat_order
 		(
-		mat_code,
-		business_code,
-		mat_or_date,
-		mat_or_manager,
-		mat_or_count,
-		mat_or_name,
-		mat_or_state,
-		mat_or_due_date
+			mat_code,
+			business_code,
+			mat_or_date,
+			mat_or_manager,
+			mat_or_count,
+			mat_or_name,
+			mat_or_state,
+			mat_or_due_date
 		)
 		VALUES
 		(
-		#{matCode},
-		#{businessCode},
-		#{matOrDate},
-		#{matOrManager},
-		#{matOrCount},
-		#{matOrName},
-		0,
-		#{matOrDueDate}
+			#{matCode},
+			#{businessCode},
+			#{matOrDate},
+			#{matOrManager},
+			#{matOrCount},
+			#{matOrName},
+			0,
+			#{matOrDueDate}
 		)
 	</insert>
 
@@ -252,18 +243,18 @@
 		INSERT INTO
 		mat_order_info
 		(
-		mat_or_info_code,
-		mat_code,
-		mat_ori_count,
-		mat_or_due_date
+			mat_or_info_code,
+			mat_code,
+			mat_ori_count,
+			mat_or_due_date
 
 		)
 		VALUES
 		(
-		#{matOrInfoCode},
-		#{matCode},
-		#{matOriCount},
-		#{matOrDueDate}
+			#{matOrInfoCode},
+			#{matCode},
+			#{matOriCount},
+			#{matOrDueDate}
 
 		)
 
@@ -286,74 +277,88 @@
 	</delete>
 
 
-	<!-- 입고 페이지 검수 인서트 -->
+<!-- 	입고 페이지 검수 인서트 -->
 	<insert id="insertMatIns" parameterType="MatInspectionVO">
-		<selectKey keyProperty="matInsCode" resultType="string"
-			order="BEFORE">
-			SELECT 'MATINS' || LPAD(mat_ins_code_seq.nextval, 3, 0) FROM
-			DUAL
-		</selectKey>
+		
 		INSERT INTO mat_inspection
 		(
-		mat_ins_good,
-		mat_ins_bad,
-		mat_ins_date,
-		mat_or_code,
-		mat_note
+			mat_ins_count,
+			mat_ins_good,
+			mat_ins_bad,
+			mat_ins_date,
+			mat_or_code,
+			mat_note
 		)
 		VALUES
 		(
-		#{matInsGood},
-		#{matInsBad},
-		#{matInsDate},
-		#{matOrCode},
-		#{matNote}
+			#{matInsCount},
+			#{matInsGood},
+			#{matInsBad},
+			#{matInsDate},
+			#{matOrCode},
+			#{matNote}
 		)
 	</insert>
 
+
+<!-- 	<insert id="insertMatIns" parameterType="MatInspectionVO"> -->
+<!-- 		{ call -->
+<!-- 		insert_mat_inspection( -->
+<!-- 		#{matInsCount, jdbcType=INTEGER}, -->
+<!-- 		#{matInsBad, -->
+<!-- 		jdbcType=INTEGER}, -->
+<!-- 		#{matInsDate, jdbcType=DATE}, -->
+<!-- 		#{matOrCode, -->
+<!-- 		jdbcType=VARCHAR}, -->
+<!-- 		#{matNote, jdbcType=VARCHAR} -->
+<!-- 		) } -->
+<!-- 	</insert> -->
+
+
 	<!-- 입고 페이지 입고 인서트 -->
 	<insert id="matInputInsert" parameterType="MatInputVO">
-		<selectKey keyProperty="matLotCode" resultType="string"
-			order="BEFORE">
-			SELECT 'MATLOT' || LPAD(mat_lot_code_seq.nextval, 3, 0) FROM
-			DUAL
-		</selectKey>
+
 		INSERT INTO mat_lot
-			(
+		(
+			mat_ins_code,
 			mat_input_date,
 			mat_manager,
 			mat_code,
 			mat_input_count,
 			mat_out_count,
 			mat_count
-			)
+		)
 		VALUES
-			(
+		(
+			#{matInsCode},
 			#{matInputDate},
 			#{matManager},
 			#{matCode},
 			#{matInputCount},
 			#{matOutCount},
 			#{matCount}
-			)
+		)
 	</insert>
-	
+
 	<select id="getBadMatList" parameterType="BadMatVO">
-		SELECT  mb.mat_bad_code,
-		        bm.bad_mat_code,
-		        bm.bad_mat_name
+		SELECT mb.mat_bad_code,
+				bm.bad_mat_code,
+				bm.bad_mat_name
 		FROM mat_bad mb
 		RIGHT JOIN bad_material bm ON bm.bad_mat_code = bm.bad_mat_code
-	
+
 	</select>
-	
+
+	<!-- LOT 별 자재재고 -->
 	<select id="getMatOriginInfoList" resultType="OriginMaterialVO">
-		select m.mat_code,
-		        m.mat_name,
-		        ml.mat_lot_code,
-		        ml.mat_count
-		FROM material m
-		JOIN mat_lot  ml ON m.mat_code = ml.mat_code
-		
+		SELECT ml.mat_lot_code,
+		        mi.mat_ins_good as matCount,
+		        m.mat_code,
+		        m.mat_name
+		FROM mat_inspection mi
+		JOIN mat_lot ml ON mi.mat_ins_code = ml.mat_ins_code
+		JOIN material m ON ml.mat_code = m.mat_code
+		JOIN mat_order mo ON m.mat_code = mo.mat_code
+		WHERE mo.mat_code = #{matCode}
 	</select>
 </mapper>

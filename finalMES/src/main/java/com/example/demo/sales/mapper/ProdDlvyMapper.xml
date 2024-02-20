@@ -33,7 +33,7 @@
 	<!-- 출고등록시 주문서 상태 변경 -->
 	<update id="updateOrderState" parameterType="OrderVO">
     	UPDATE ord_list
-    	SET ord_state = 'o3'
+    	SET ord_state = 'o5'
     	WHERE ord_code = #{ordCode}
 	</update>
 	

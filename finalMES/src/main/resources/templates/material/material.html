@@ -5,22 +5,72 @@
 <head>
 <meta charset="UTF-8" />
 <title>자재 관리^^</title>
+<style>
+button {
+	float: right;
+	margin-right: 5px;
+	margin-bottom: 10px;
+}
+
+table {
+	border-collapse: collapse;
+	width: 20%; /* 크기를 조정합니다 */
+}
+
+th {
+	background-color: #f2f2f2;
+	color: #333;
+	font-weight: bold;
+	padding: 8px;
+	text-align: left;
+}
+
+td {
+	padding: 8px;
+	border-bottom: 1px solid #ddd;
+}
+
+input[type="text"] {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+	outline: none;
+	border-color: #4CAF50;
+}
+</style>
 </head>
 <body>
 	<section layout:fragment="content">
-		<div class="row">
-			<div class="col-7">
-				<div id="matGrid" class="container">
-					<h3>자재 전체 재고</h3>
-				</div>
+		<div class="container">
+			<div>
+				<table>
+					<tr>
+						<th><input type="text" id="searchOrder"
+							oninput="searchFunction()" placeholder="검색..."></th>
+					</tr>
+				</table>
+
 			</div>
-			<div class="col-5">
-				<div id="lotGrid" class="container">
-					<h3>LOT 별 자재 재고</h3>
+
+
+			<div class="row">
+				<div class="col-7">
+					<div id="matGrid" class="container">
+						<h3>자재 전체 재고</h3>
+					</div>
+				</div>
+				<div class="col-5">
+					<div id="lotGrid" class="container">
+						<h3>LOT 별 자재 재고</h3>
+					</div>
 				</div>
 			</div>
 		</div>
-
 		<script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
 	        let matList = [[${matList}]];
@@ -34,6 +84,7 @@
                         header: '자재코드',
                         name: 'matCode',
                         align: 'center',
+                        sortable: true, sortingType: 'desc' 
                     },
                     {
                         header: '자재명',
@@ -46,6 +97,10 @@
                     {
                         header: '규격',
                         name: 'matStandard'
+                    },
+                    {
+                        header: '업데이트재고량',
+                        name: 'matCount2'
                     },
                     {
                         header: '총재고량',
@@ -80,13 +135,6 @@
                     lotmat.matCode = rowData.matCode;
                     lotmat.matName = rowData.matName;
                     
-                    
-//                     let lotmat = {
-//                         matLotCode: rowData.matLotCode,
-//                         matCount: rowData.matCount,
-//                         matCode: rowData.matCode,
-//                         matName: rowData.matName
-//                     };
 
                     if (rowData) {
                         let matCode = rowData.matCode;
@@ -95,8 +143,7 @@
  	                    .then(data => {
 								console.log("data : ", data);
  	                    		// 그리드 갱신
- 	                    		busiGrid.resetData(data);
-//  	                    		busiGrid.prependRow(data);
+ 	                    		lotGrid.resetData(data);
 
  	                    })
  	                    .catch(err => {
@@ -113,19 +160,19 @@
                 columns: [
                     {
                         header: '자재 LOT',
-                        name: 'matCode'
+                        name: 'matLotCode'
                     },
                     {
                         header: '자재코드',
-                        name: 'matName'
+                        name: 'matCode'
                     },
                     {
                         header: '자재명',
-                        name: 'matCount'
+                        name: 'matName'
                     },
                     {
-                        header: 'LOT재고',
-                        name: 'matSafeStock'
+                        header: '재고',
+                        name: 'matCount'
                     },
                 ],
                 rowHeaders: ['rowNum'],
@@ -134,6 +181,29 @@
                     perPage: 5
                 }
             });
+            
+            
+            // 검색
+            function searchFunction() {	
+                 let input, filter, table, tr, td, i, j, txtValue;
+         	     input = document.getElementById("searchOrder");
+         	     filter = input.value.toUpperCase();
+         	     table = document.getElementById("ordGrid");
+
+         	     tr = table.getElementsByTagName("tr");
+         	     for (i = 0; i < tr.length; i++) {
+         	         td = tr[i].getElementsByTagName("td");
+         	         for (j = 0; j < td.length; j++) {
+         	             txtValue = td[j].textContent || td[j].innerText;
+         	             if (txtValue.toUpperCase().indexOf(filter) > -1) {
+         	                 tr[i].style.display = "";
+         	                 break;
+         	             } else {
+         	                 tr[i].style.display = "none";
+         	             }
+         	         }
+         	     }
+         	 }
 
             
       </script>

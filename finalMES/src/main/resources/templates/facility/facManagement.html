@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+   xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -11,84 +11,84 @@
 <style>
 /* 기존 스타일 유지 */
 #layoutSidenav_content {
-	margin-top: 20px;
+   margin-top: 20px;
 }
 
 table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-bottom: 20px;
+   width: 100%;
+   border-collapse: collapse;
+   margin-bottom: 20px;
 }
 
 input[type="text"], input[type="date"] {
-	width: 200px;
-	box-sizing: border-box;
+   width: 200px;
+   box-sizing: border-box;
 }
 
 label {
-	display: block;
-	margin-bottom: 5px;
+   display: block;
+   margin-bottom: 5px;
 }
 
 input[type="checkbox"] {
-	margin-right: 5px;
+   margin-right: 5px;
 }
 
 button {
-	margin-right: 5px;
+   margin-right: 5px;
 }
 
 #myModal3 {
-	text-align: center;
+   text-align: center;
 }
 
 /* 모달 스타일 */
 .modal-dialog {
-	max-width: 800px;
+   max-width: 800px;
 }
 
 .modal-content {
-	border-radius: 10px;
+   border-radius: 10px;
 }
 
 .modal-header {
-	background-color: #007bff;
-	color: white;
-	border-radius: 10px 10px 0 0;
+   background-color: #007bff;
+   color: white;
+   border-radius: 10px 10px 0 0;
 }
 
 .modal-body {
-	padding: 20px;
+   padding: 20px;
 }
 
 .modal-footer {
-	border-radius: 0 0 10px 10px;
+   border-radius: 0 0 10px 10px;
 }
 
 .modal-title {
-	font-size: 24px;
+   font-size: 24px;
 }
 
 .table th, .table td {
-	text-align: center;
+   text-align: center;
 }
 
 .modal-table {
-	width: 100%;
-	border-collapse: collapse;
+   width: 100%;
+   border-collapse: collapse;
 }
 
 .modal-table th, .modal-table td {
-	padding: 10px;
-	border-bottom: 1px solid #dee2e6;
+   padding: 10px;
+   border-bottom: 1px solid #dee2e6;
 }
 
 .modal-table th {
-	background-color: #f8f9fa;
+   background-color: #f8f9fa;
 }
 
 .modal-table tbody tr:hover {
-	background-color: #f2f2f2;
+   background-color: #f2f2f2;
 }
 
 /* 모달 창 외부를 클릭하여 닫을 수 있도록 */
@@ -98,267 +98,265 @@ button {
 </style>
 </head>
 <body>
-	<section layout:fragment="content">
-		<div class="container">
-			<h2>설비관리</h2>
-			<br>
-				<div class="container">
-					<table class="table">
-						<tbody>
-							<tr>
-								<th>설비명 *</th>
-								<td colspan="2"><input type="text" id="facName"
-									name="facName" required></td>
-								<th>최고온도 *</th>
-								<td colspan="2"><input type="text" id="facHig" name="facHig"
-									required></td>
-							</tr>
-							<tr>
-								<th>최저온도 *</th>
-								<td colspan="2"><input type="text" id="facLow" name="facLow"
-									required></td>
-								<th>입고일 *</th>
-								<td colspan="2"><input type="date" id="facDate"
-									name="facDate" required></td>
-							</tr>
-							<tr>
-								<th>공정명 *</th>
-								<td colspan="2"><input type="text" id="procName"
-									name="procName" required data-toggle="modal"
-									data-target="#myModal2"></td>
-	
-								<th>공정코드 *</th>
-								<td colspan="2"><input type="text" id="procCode"
-									name="procCode" required></td>
-	
-							</tr>
-							<tr>
-								<th>거래처 *</th>
-								<td colspan="2"><input type="text" id="businessCode"
-									name="businessCode" required data-toggle="modal"
-									data-target="#myModal4"></td>
-								<th>담당자 *</th>
-								<td colspan="2"><input type="text" id="facPerson"
-									name="facPerson" th:value="${username}" required></td>
-							</tr>
-							<tr>
-								<th>점검주기 선택</th>
-								<td><select id="facInscycle" name="facInscycle">
-										<option value="선택">선택</option>
-										<option value="매일">매일</option>
-										<option value="매주">매주</option>
-										<option value="매월">매월(30일)</option>
-								</select></td>
-							</tr>
-						</tbody>
-					</table>
-				<br>
-				<div class="text-center">
-					<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-					<button type="button" class="btn btn-outline-primary"
-						onclick="downloadCSV()">엑셀 다운로드</button>
-					<input type="text" id="searchInput" oninput="searchFunction()"
-						placeholder="검색...">
-				</div>
-				<br> <br>
-				<div id="grid" class="container"></div>
-			</div>
-		</div>
+   <section layout:fragment="content">
+      <div class="container">
+         <h2>설비관리</h2>
+         <br>
+            <div class="container">
+               <table class="table">
+                  <tbody>
+                     <tr>
+                        <th>설비명</th>
+                        <td colspan="2"><input type="text" id="facName"
+                           name="facName" required></td>
+                        <th>최고온도</th>
+                        <td colspan="2"><input type="text" id="facHig" name="facHig"
+                           required></td>
+                     </tr>
+                     <tr>
+                        <th>최저온도</th>
+                        <td colspan="2"><input type="text" id="facLow" name="facLow"
+                           required></td>
+                        <th>입고일</th>
+                        <td colspan="2"><input type="date" id="facDate"
+                           name="facDate" required></td>
+                     </tr>
+                     <tr>
+                        <th>공정명</th>
+                        <td colspan="2"><input type="text" id="procName"
+                           name="procName" required data-toggle="modal"
+                           data-target="#myModal2"></td>
+   
+                        <th>공정코드</th>
+                        <td colspan="2"><input type="text" id="procCode"
+                           name="procCode" required></td>
+   
+                     </tr>
+                     <tr>
+                        <th>거래처</th>
+                        <td colspan="2"><input type="text" id="businessName"
+                           name="businessName" required data-toggle="modal"
+                           data-target="#myModal4"></td>
+                        <th>담당자</th>
+                        <td colspan="2"><input type="text" id="facPerson"
+                           name="facPerson" th:value="${username}" required></td>
+                     </tr>
+                     <tr>
+                        <th>점검주기 선택</th>
+                        <td><select id="facInscycle" name="facInscycle">
+                              <option value="선택">선택</option>
+                              <option value="매일">매일</option>
+                              <option value="매주">매주</option>
+                              <option value="매월">매월(30일)</option>
+                        </select></td>
+                     </tr>
+                  </tbody>
+               </table>
+               <input type="hidden" id="businessCode" name="businessCode" value="">
+            <br>
+            <div class="text-center">
+               <button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+               <button type="button" class="btn btn-outline-primary"
+                  onclick="downloadCSV()">Excel</button>
+               <input type="text" id="searchInput" oninput="searchFunction()"
+                  placeholder="검색...">
+            </div>
+            <br> <br>
+            <div id="grid" class="container"></div>
+         </div>
+      </div>
 
-		<!-- 공정명모달 -->
-		<div class="modal" id="myModal2">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<!-- 모달 헤더 -->
-					<div class="modal-header">
-						<h4 class="modal-title">공정명</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					<div class="modal-body">
-						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>공정명</th>
-									<th>공정코드</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="fac: ${proList}">
-									<td th:text="${facStat.count}"></td>
-									<td th:text="${fac.procName}"
-										th:data-procCode="${fac.procCode}"
-										th:data-procName="${fac.procName}"
-										onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
-									<td th:text="${fac.procCode}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">닫기</button>
-					</div>
-				</div>
-			</div>
-		</div>
+      <!-- 공정명모달 -->
+      <div class="modal" id="myModal2">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <!-- 모달 헤더 -->
+               <div class="modal-header">
+                  <h4 class="modal-title">공정명</h4>
+                  <button type="button" class="close" data-dismiss="modal" >&times;</button>
+               </div>
+               <div class="modal-body">
+                  <!-- 모달 내용 데이터로 받아와야함 설비명 -->
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th>No.</th>
+                           <th>공정명</th>
+                           <th>공정코드</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each="fac: ${proList}">
+                           <td th:text="${facStat.count}"></td>
+                           <td th:text="${fac.procName}"
+                              th:data-procCode="${fac.procCode}"
+                              th:data-procName="${fac.procName}"
+                              onclick="updateInputFields1(this)" data-bs-dismiss="modal"></td>
+                           <td th:text="${fac.procCode}"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary"
+                     data-dismiss="modal">닫기</button>
+               </div>
+            </div>
+         </div>
+      </div>
 
-		<!-- 거래처모달 -->
-		<div class="modal" id="myModal4">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<!-- 모달 헤더 -->
-					<div class="modal-header">
-						<h4 class="modal-title">거래처</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
-					<div class="modal-body">
-						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>거래처명</th>
-									<th>거레처코드</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="fac: ${busiList}">
-									<td th:text="${facStat.count}"></td>
-									<td th:text="${fac.businessName}"
-										th:data-businessCode="${fac.businessCode}"
-										th:data-businessName="${fac.businessName}"
-										onclick="updateInputFields3(this)" data-bs-dismiss="modal"></td>
-									<td th:text="${fac.businessCode}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">닫기</button>
-					</div>
-				</div>
-				
-			</div>
-			
-		</div>
-		
+      <!-- 거래처모달 -->
+      <div class="modal" id="myModal4">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <!-- 모달 헤더 -->
+               <div class="modal-header">
+                  <h4 class="modal-title">거래처</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+               </div>
+               <div class="modal-body">
+                  <!-- 모달 내용 데이터로 받아와야함 설비명 -->
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th>No.</th>
+                           <th>거래처명</th>
+                           <th>거래처코드</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each="fac: ${busiList}">
+                           <td th:text="${facStat.count}"></td>
+                           <td th:text="${fac.businessName}"
+                              th:data-businessCode="${fac.businessCode}"
+                              th:data-businessName="${fac.businessName}"
+                              onclick="updateInputFields3(this)" data-bs-dismiss="modal"></td>
+                           <td th:text="${fac.businessCode}"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary"
+                     data-dismiss="modal">닫기</button>
+               </div>
+            </div>
+            
+         </div>
+         
+      </div>
+      
 
-		<script th:inline="javascript">
-		
-		
+      <script th:inline="javascript">
+   
+    // 모달의 데이터 받아서 input 창에 뿌리기
+    function updateInputFields1(Element) {
+         // 클릭한 <td> 요소에서 데이터 속성을 가져옴
+         var procCode = Element.getAttribute('data-procCode');
+         var procName = Element.getAttribute('data-procName');
 
-	
-	 // 모달의 데이터 받아서 input 창에 뿌리기
-	 function updateInputFields1(Element) {
-	      // 클릭한 <td> 요소에서 데이터 속성을 가져옴
-	      var procCode = Element.getAttribute('data-procCode');
-	      var procName = Element.getAttribute('data-procName');
+         // 입력 필드의 값 설정
+         document.getElementById('procCode').value = procCode;
+         document.getElementById('procName').value = procName;
+         
+      }
+    
+    function updateInputFields3(Element) {
+          var businessName = Element.getAttribute('data-businessName');
+          var businessCode = Element.getAttribute('data-businessCode');
+          
+          document.getElementById('businessCode').value = businessCode;
+          document.getElementById('businessName').value = businessName;
+      }
 
-	      // 입력 필드의 값 설정
-	      document.getElementById('procCode').value = procCode;
-	      document.getElementById('procName').value = procName;
-	      
-	   }
-	 
-	 function updateInputFields3(Element) {
-	      var businessCode = Element.getAttribute('data-businessCode');
-	      var businessName = Element.getAttribute('data-businessName');
-	      
-	      document.getElementById('businessCode').value = businessCode;
-	      document.getElementById('businessName').value = businessName;
-	   }
+   
+   // 등록
+   // saveBtn 에 이벤트 걸어서 클릭 시 함수 실행 하기
+   document.getElementById('saveBtn').addEventListener("click", function() {
+        // 저장할 객체 초기화 시킴
+         let data = {};   
+        // 입력필드의 name 값 받아와서 각 변수에 할당시킴
+        var procCode = document.getElementsByName("procCode")[0].value;
+        var businessCode = document.getElementsByName("businessCode")[0].value;
+        var facName = document.getElementsByName("facName")[0].value;
+        var facHig = document.getElementsByName("facHig")[0].value;
+        var facLow = document.getElementsByName("facLow")[0].value;
+        var facDate = document.getElementsByName("facDate")[0].value;
+        var facInscycle = document.getElementsByName("facInscycle")[0].value;
+        var facPerson = document.getElementsByName("facPerson")[0].value;
+        
+          // 등록 시 유효성검사
+          if (!facName) {
+              alert("설비명을 입력해주세요.");
+              return;
+          }
+          
+          if (!procName) {
+              alert("공정명을 입력해주세요.");
+              return;
+          }
 
-	
-	// 등록
-	// saveBtn 에 이벤트 걸어서 클릭 시 함수 실행 하기
-	document.getElementById('saveBtn').addEventListener("click", function() {
-		  // 저장할 객체 초기화 시킴
-	      let data = {};	
-		  // 입력필드의 name 값 받아와서 각 변수에 할당시킴
-		  var procCode = document.getElementsByName("procCode")[0].value;
-		  var businessCode = document.getElementsByName("businessCode")[0].value;
-		  var facName = document.getElementsByName("facName")[0].value;
-		  var facHig = document.getElementsByName("facHig")[0].value;
-		  var facLow = document.getElementsByName("facLow")[0].value;
-		  var facDate = document.getElementsByName("facDate")[0].value;
-		  var facInscycle = document.getElementsByName("facInscycle")[0].value;
-		  var facPerson = document.getElementsByName("facPerson")[0].value;
-		  
-		    // 등록 시 유효성검사
-		    if (!facName) {
-		        alert("설비명을 입력해주세요.");
-		        return;
-		    }
-		    
-		    if (!procName) {
-		        alert("공정명을 입력해주세요.");
-		        return;
-		    }
+          if (!procCode) {
+              alert("공정코드를 입력해주세요.");
+              return;
+          }
+          
+          if (!facPerson) {
+              alert("담당자를 입력해주세요.");
+              return;
+          }
 
-		    if (!procCode) {
-		        alert("공정코드를 입력해주세요.");
-		        return;
-		    }
-		    
-		    if (!facPerson) {
-		        alert("담당자를 입력해주세요.");
-		        return;
-		    }
-
-		    if (!businessCode) {
-		        alert("거래처를 입력해주세요.");
-		        return;
-		    }
-	    		// 등록할 데이터 객체로 구성하기
-	            var facData = {
-	            	procCode: procCode,
-	            	businessCode: businessCode,
-	                facName: facName,
-	                facHig: facHig,
-	                facLow: facLow,
-	                facDate: facDate,
-	                facInscycle: facInscycle,
-	                facPerson: facPerson,
-	            
-	            };
-	    		// 추가 데이터 객체 초기화
-	            var notData = {};
-	         	// 전송할 데이터 객체에 등록 및 추가 데이터를 할당
-	            data.facManageVO = facData;
-	            data.facNotopVO = notData;
-	            
-	            // fetch POST 서버로 데이터 전송시키기
-	            fetch("/insrtFacAndNot", {
-			        method: "POST",
-			        body: JSON.stringify(data), // 요청한 데이터 지정 data 객체를 JSON 문자열로 변환하여 전송
-			        headers: {
-			            "Content-Type": "application/json"  // JSON 형식임을 확인
-			        }
-			    })
-	            // 응답처리
-			    .then(response => {
-			        if(!response.ok){
-			        	throw new Error("반응 없음")
-			        }
-			        return response.text();
-			    })
-			    .then(data => {
-			    	alert(data);
-			    	// 페이지 리디렉션
-			    	location.href = "/facManagement"
-			    })
-			    .catch(error => {
-			        console.log(error);
-			        alert("오류");
-			    });
-			});
-	
-	
-	// 엑셀 다운로드
-	function downloadCSV() {
+          if (!businessCode) {
+              alert("거래처를 입력해주세요.");
+              return;
+          }
+             // 등록할 데이터 객체로 구성하기
+               var facData = {
+                  procCode: procCode,
+                  businessCode: businessCode,
+                   facName: facName,
+                   facHig: facHig,
+                   facLow: facLow,
+                   facDate: facDate,
+                   facInscycle: facInscycle,
+                   facPerson: facPerson,
+               
+               };
+             // 추가 데이터 객체 초기화
+               var notData = {};
+               // 전송할 데이터 객체에 등록 및 추가 데이터를 할당
+               data.facManageVO = facData;
+               data.facNotopVO = notData;
+               
+               // fetch POST 서버로 데이터 전송시키기
+               fetch("/insrtFacAndNot", {
+                 method: "POST",
+                 body: JSON.stringify(data), // 요청한 데이터 지정 data 객체를 JSON 문자열로 변환하여 전송
+                 headers: {
+                     "Content-Type": "application/json"  // JSON 형식임을 확인
+                 }
+             })
+               // 응답처리
+             .then(response => {
+                 if(!response.ok){
+                    throw new Error("반응 없음")
+                 }
+                 return response.text();
+             })
+             .then(data => {
+                alert(data);
+                // 페이지 리디렉션
+                location.href = "/facManagement"
+             })
+             .catch(error => {
+                 console.log(error);
+                 alert("오류");
+             });
+         });
+   
+   
+   // 엑셀 다운로드
+/*    function downloadCSV() {
         const gridData = grid.getData(); // 그리드에서 데이터 가져오기
         const header = Object.keys(gridData[0]).join(','); // 헤더 생성
         const csv = gridData.map(row => Object.values(row).join(',')).join('\n'); // 데이터 생성
@@ -371,103 +369,140 @@ button {
         link.setAttribute('download', 'data.csv');
         document.body.appendChild(link);
         link.click();
+    } */
+    
+    // 엑셀 다운로드
+    function downloadCSV() {
+        const gridData = grid.getData(); // 그리드에서 데이터 가져오기
+        const header = ['설비코드', '설비명', '공정라인', '담당자', '입고일', '점검주기']; // 헤더 생성
+        const csvRows = [header.join(',')]; // 헤더를 CSV 형식으로 변환하여 첫 번째 행으로 설정
+
+        // 데이터 생성
+        gridData.forEach(row => {
+            const values = Object.values(row);
+            const formattedRow = values.map(value => {
+                if (value instanceof Date) {
+                    // 날짜의 경우 ISO 형식으로 변환
+                    return value.toISOString().split('T')[0];
+                } else {
+                    return value;
+                }
+            });
+            csvRows.push(formattedRow.join(','));
+        });
+
+        // CSV 내용 생성
+        const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+        const encodedUri = encodeURI(csvContent); // URI 인코딩
+
+        // 다운로드 링크 생성 및 클릭
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'data.csv');
+        document.body.appendChild(link);
+        link.click();
     }
-	
-	
-	// tui.Grid 인스턴스를 생성
-	let list = [[${list}]];
-	const grid = new tui.Grid({
-	    // 그리드를 표시할 DOM 요소 지정
-	    el: document.getElementById('grid'),
-	    // 그리드에 표시할 데이터를 설정 / facList 사용
-	    data: list,
-	    // 그리드의 스크롤 여부 설정
-	    scrollX: false,
-	    scrollY: false,
-	    // 각 컬럼 설정
-	    columns: [ 
-	        {
-	            header: '설비코드', // 열의 헤더 텍스트입니다.
-	            name: 'facCode', // 열의 데이터 속성 이름입니다.
-	            align: 'center' // 열의 텍스트 정렬 방식입니다.
-	        }, 
-	        {
-	            header: '설비명',
-	            name: 'facName',
-	            align: 'center'
-	        },
-	        {
-	            header: '공정라인',
-	            name: 'procName',
-	            align: 'center'
-	        }, 
-	        {
-	            header: '담당자',
-	            name: 'facPerson',
-	            align: 'center'
-	        }, 
-	        {
-	            header: '입고일',
-	            name: 'facDate',
-	            // 날짜 변환하기
-	            formatter: function dateFormatter(params) {
-	                const date = new Date(params.value);
-	                const isoDate = date.toISOString().split('T')[0];
-	                return isoDate;
-	            },
-	            align: 'center'
-	        },
-	        {
-	            header: '점검주기',
-	            name: 'facInscycle',
-	            align: 'center'
-	        } 
-	    ],
-	    // 각 열의 헤더 설정하기
-	    rowHeaders: ['rowNum'],
-	    // 페이지네이션 설정
-	    pageOptions: {
-	        // 클라이언트에서 페이지네이션 여부 설정
-	        useClient: true,
-	        // 한 페이지에 보여줄 행 개수 설정
-	        perPage: 5
-	    }
-	});
 
-	
-	// 검색 기능 추가
-	function searchFunction() {
-	    // 입력된 검색어 가져오기
-	    var input, filter, table, tr, td, i, j, txtValue;
-	    input = document.getElementById("searchInput");
-	    // 대문자로변환하기
-	    filter = input.value.toUpperCase();
-	    // 테이블 확인
-	    table = document.getElementById("grid");
 
-	    // 테이블 돌면서 확인
-	    tr = table.getElementsByTagName("tr");
-	    for (i = 0; i < tr.length; i++) {
-	        // 각 행에서 셀을 가져오기
-	        td = tr[i].getElementsByTagName("td");
-	        // 행의 각 셀 돌면서 일치하는지 확인
-	        for (j = 0; j < td.length; j++) {
-	            // 셀의 내용을 가져오기
-	            txtValue = td[j].textContent || td[j].innerText;
-	            // 조건으로 검색어 있으면 가져오기
-	            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-	                tr[i].style.display = "";
-	                break;
-	            } else {
-	                // 검색어 없으면 리스트 안보이게 display none 처리
-	                tr[i].style.display = "none";
-	            }
-	        }
-	    }
-	}
+
+
+
+   
+   
+   // tui.Grid 인스턴스를 생성
+   let list = [[${list}]];
+   const grid = new tui.Grid({
+       // 그리드를 표시할 DOM 요소 지정
+       el: document.getElementById('grid'),
+       // 그리드에 표시할 데이터를 설정 / facList 사용
+       data: list,
+       // 그리드의 스크롤 여부 설정
+       scrollX: false,
+       scrollY: false,
+       // 각 컬럼 설정
+       columns: [ 
+           {
+               header: '설비코드', // 열의 헤더 텍스트입니다.
+               name: 'facCode', // 열의 데이터 속성 이름입니다.
+               align: 'center' // 열의 텍스트 정렬 방식입니다.
+           }, 
+           {
+               header: '설비명',
+               name: 'facName',
+               align: 'center'
+           },
+           {
+               header: '공정라인',
+               name: 'procName',
+               align: 'center'
+           }, 
+           {
+               header: '담당자',
+               name: 'facPerson',
+               align: 'center'
+           }, 
+           {
+               header: '입고일',
+               name: 'facDate',
+               // 날짜 변환하기
+               formatter: function dateFormatter(params) {
+                   const date = new Date(params.value);
+                   const isoDate = date.toISOString().split('T')[0];
+                   return isoDate;
+               },
+               align: 'center'
+           },
+           {
+               header: '점검주기',
+               name: 'facInscycle',
+               align: 'center'
+           } 
+       ],
+       // 각 열의 헤더 설정하기
+       rowHeaders: ['rowNum'],
+       // 페이지네이션 설정
+       pageOptions: {
+           // 클라이언트에서 페이지네이션 여부 설정
+           useClient: true,
+           // 한 페이지에 보여줄 행 개수 설정
+           perPage: 5
+       }
+   });
+
+   
+   // 검색 기능 추가
+   function searchFunction() {
+       // 입력된 검색어 가져오기
+       var input, filter, table, tr, td, i, j, txtValue;
+       input = document.getElementById("searchInput");
+       // 대문자로변환하기
+       filter = input.value.toUpperCase();
+       // 테이블 확인
+       table = document.getElementById("grid");
+
+       // 테이블 돌면서 확인
+       tr = table.getElementsByTagName("tr");
+       for (i = 0; i < tr.length; i++) {
+           // 각 행에서 셀을 가져오기
+           td = tr[i].getElementsByTagName("td");
+           // 행의 각 셀 돌면서 일치하는지 확인
+           for (j = 0; j < td.length; j++) {
+               // 셀의 내용을 가져오기
+               txtValue = td[j].textContent || td[j].innerText;
+               // 조건으로 검색어 있으면 가져오기
+               if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                   tr[i].style.display = "";
+                   break;
+               } else {
+                   // 검색어 없으면 리스트 안보이게 display none 처리
+                   tr[i].style.display = "none";
+               }
+           }
+       }
+   }
 
 
 </script>
-	</section>
+   </section>
 </body>
 </html>

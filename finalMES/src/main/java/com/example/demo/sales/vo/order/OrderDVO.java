@@ -21,6 +21,10 @@ public class OrderDVO {
 	private String ordState;
 	private String ordStateNm;
 	private String ordNote;
+	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	private Date startDate;
+	@DateTimeFormat(pattern = "yyyy/MM/dd")
+    private Date endDate;
 	private int totalTtlPrice;
 	private List<OrderDetailVO> orderDetails;
 	public void addOrderDetail(OrderDetailVO orderDetail) {

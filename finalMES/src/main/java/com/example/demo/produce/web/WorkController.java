@@ -35,7 +35,9 @@ public class WorkController {
 	@PostMapping("/workMidInsert")
 	@ResponseBody
 	public String insertWorkMid(@RequestBody WorkMidRegistVO workMidVO) {
+		System.out.println("==========================midinsert==============================");
 		System.out.println(workMidVO);
+		System.out.println("=================================================================");
 		int result = workService.insertWorkMidRegist(workMidVO);
 		String msg;
 		if(result == 1) {
@@ -50,7 +52,9 @@ public class WorkController {
 	@PutMapping("/workMidUpdate")
 	@ResponseBody
 	public String updateWorkMid(@RequestBody WorkMidRegistVO workMidVO) {
+		System.out.println("==========================midupdate==============================");
 		System.out.println(workMidVO);
+		System.out.println("=================================================================");
 		int result = workService.updateWorkMidRegist(workMidVO);
 		String msg;
 		if(result == 1) {
@@ -70,10 +74,17 @@ public class WorkController {
 	
 	@PostMapping("/workResultInsert")
 	@ResponseBody
-	public String insertWorkResult(@RequestBody List<WorkResultVO> list) {
+	public String insertWorkResult(@RequestBody String dinsCode) {
+		System.out.println("=======================co.resultinsert===========================");
+		System.out.println(dinsCode);
+		System.out.println("=================================================================");
+		int result = workService.insertWorkResult(dinsCode);
 		String msg;
-		workService.insertWorkResult(list);
-		msg = "작업최종등록이 완료되었습니다.";
+		if(result == 1) {
+			msg = "공정실적 등록성공";
+		}else {
+			msg = "공정실적 등록실패";
+		}
         return msg;
 	}
 

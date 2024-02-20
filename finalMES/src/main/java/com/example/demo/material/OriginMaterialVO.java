@@ -23,6 +23,13 @@ public class OriginMaterialVO {
 	
 	// LOT 테이블 꺼 
 	private String matCount;
+	private String matLotCode;
+	private String matLotCount;
+	private String matInsGood;
+	
+	
+	private String matCount2;
+	
 	
 	private int matOrCount;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
