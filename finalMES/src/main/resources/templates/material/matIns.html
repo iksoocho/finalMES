@@ -237,23 +237,27 @@ table tr:nth-child(even) {
         				    const insCheckRows = newCheckRows;
         				    console.log('잘 들고오네요...',insCheckRows[0]);
 
-
+        				    if (insCheckRows.length === 0) {
+        				        console.log('추가된 데이터가 없습니다.');
+        				        return;
+        				    }
 							
         				    
-//         			        for (const data of insCheckRows) {
-//         	                    if (!data.matInsCount || isNaN(data.matInsCount) || Number(data.matInsCount) <= 0) {
-//         	                        alert("검사량을 확인해주세요.");
-//         	                        return;
-//         	                    }
+        			        for (const data of insCheckRows) {
+        	                    if (!data.matInsCount > 0) {
+        	                        alert("검사량을 확인해주세요.");
+        	                        return;
+        	                        
+        	                    }
+        	                    if (!data.matInsGood || isNaN(data.matInsGood) || Number(data.matInsGood) <= 0) {
+        	                        alert("합격량을 확인해주세요.");
+        	                        return;
+        	                    }
+        	                    if()
         	                    
-//         	                }
+        	                }
         			        
-//         			        for(const data of insCheckRows){
-//         	                    if (!data.matInsGood || isNaN(data.matInsGood) || Number(data.matInsGood) <= 0) {
-//         	                        alert("합격량을 확인해주세요.");
-//         	                        return;
-//         	                    }
-//         			        }
+        			        
         			        
         			    
         			        
@@ -261,10 +265,7 @@ table tr:nth-child(even) {
         			        
         			        
 
-        				    if (insCheckRows.length === 0) {
-        				        console.log('추가된 데이터가 없습니다.');
-        				        return;
-        				    }
+        				 
 
 
         				    // 데이터를 객체로 생성

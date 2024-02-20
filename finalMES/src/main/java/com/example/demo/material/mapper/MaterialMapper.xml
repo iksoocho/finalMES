@@ -106,8 +106,13 @@
 			    (SELECT SUM(mat_input_count) FROM mat_lot WHERE mat_code = m.mat_code) AS matCount2,
 			    ml.mat_input_count
 			FROM material m 
-			JOIN mat_lot ml ON m.mat_code = ml.mat_code
-			LEFT JOIN mat_inspection mi ON ml.mat_ins_code = mi.mat_ins_code
+			JOIN (
+			    SELECT
+			        mat_code,
+			        MAX(mat_input_count) AS mat_input_count
+			    FROM mat_lot
+			    GROUP BY mat_code
+			) ml ON m.mat_code = ml.mat_code
 			ORDER BY m.mat_code ASC
 	</select>
 
