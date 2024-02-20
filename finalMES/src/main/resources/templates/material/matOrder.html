@@ -271,32 +271,32 @@ input[type="text"]:focus {
                          	        }
                          	    });
                          	    
-                         	   function getOutStatus(value, row) {
-                       			console.log(value.value); // 값 확인용 로그
-                       			let statusText, bgColor;
 
-                       			// 주문 상태에 따라 원하는 문자열과 배경색 설정
-                       			switch (value.value) {
-                       				case "발주완료":
-                       					statusText = '발주 완료';
-                       					bgColor = 'green'; // 등록완료에 대한 배경색 설정
-                       					break;
-                       				case "발주대기":
-                       					statusText = '발주 대기';
-                       					bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
-                       					break;
-                       				case "":
-                       				case undefined:
-                       				case null:
-                       					statusText = '알수없음';
-                       					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
-                       					break;
 
-                       			}
-                       			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
-                       		};
+                           	   function getOutStatus(value, row) {
+                         			console.log("value.value :",  value.value); // 값 확인용 로그
+                         			let statusText, bgColor;
 
-                         	    
+                         			// 주문 상태에 따라 원하는 문자열과 배경색 설정
+                         			switch (value.value) {
+                         				case "발주완료":
+                         					statusText = '발주 완료';
+                         					bgColor = 'green'; // 등록완료에 대한 배경색 설정
+                         					break;
+                         				case "발주대기":
+                         					statusText = '발주 대기';
+                         					bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
+                         					break;
+                         				case "":
+                         				case undefined:
+                         				case null:
+                         					statusText = '알수없음';
+                         					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+                         					break;
+
+                         			}
+                         			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+                         		};
                          	    
 
                          	    let ordList = [[${mList}]]
@@ -333,9 +333,7 @@ input[type="text"]:focus {
                          	               header: '발주상태',
                          	               name: 'matOrState',
                          	               align: "center",
-                         	               formatter: getOutStatus,
-                         	               
-                         	               
+                         	               formatter: getOutStatus
                          	           },
                          	            {
                          	               header: '삭제',
@@ -366,28 +364,7 @@ input[type="text"]:focus {
                          	    return '';
                          	}
 
-                         	// 발주 상태 형식 지정 함수
-  						function getMatOrderStatus(value, row) {
-                         		console.log("value :" ,value);
-						    let statusText, backgroundColor;
-						
-						    switch (value.value) {
-						        case "0":
-						            statusText = '발주완료';
-						            backgroundColor = 'gray';
-						            break;
-						        case "1":
-						            statusText = '입고완료';
-						            backgroundColor = 'red';
-						            break;
-						        default:
-						            statusText = '발주대기';
-						            backgroundColor = 'yellowgreen';
-						            break;
-						    }
-						
-						    return `<div style="background-color: ${backgroundColor}; ">${statusText}</div>`;
-						}
+ 
                         
 //                         function getMatOrderName(value, row){
 //                         	let statusText, backgroundColor;
@@ -431,27 +408,20 @@ input[type="text"]:focus {
 					  if (!data.matOrCount || isNaN(data.matOrCount) || Number(data.matOrCount) <= 0) {
 	                        alert("발주량을 확인해주세요.");
 	                        return;
-	                   }
+	                  }
 	                   // 다른 필드에 대한 유효성 검사도 여기에 추가할 수 있습니다.  
-					    let matOrDate = new Date(data.matOrDate);
-		                if (isNaN(matOrDate.getTime())) {
-		                    alert("유효하지 않은 발주일입니다 다시 지정해 주세요");
-		                    return;
-		                }
+					  let matOrDate = new Date(data.matOrDate);
+		              if (isNaN(matOrDate.getTime())) {
+		                  alert("유효하지 않은 발주일입니다 다시 지정해 주세요");
+		                  return;
+		              }
+		              let matOrDueDate = new Date(data.matOrDueDate);
+		              if(isNaN(matOrDueDate.getTime())){
+		            	  alert("납기일을 선택해 주세요");
+		            	  return;
+		              }
 					  
 					}
-	                
-	                
-
-
-	                
-	                
-	                
-		               
-	                	
-// 	                }
-	                
-
 	                
 
                  	console.log('추가된 행의 데이터:' , newData);
@@ -475,36 +445,36 @@ input[type="text"]:focus {
 
         			console.log(data);
         			// AJAX 요청으로 서버에 데이터 전송
-        	  fetch('/matOrderInsert', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.text();
-    })
-    .then(data => {
-        console.log('Success:', data);
-        alert(data);
-        location.href = '/matOrder'; // 성공적으로 처리된 후 리디렉트
-        
-        // 발주가 추가된 후에 행을 비활성화
-        ordGrid.getModifiedRows().createdRows.forEach(row => {
-            // 비활성화할 발주 행의 rowKey를 가져옴
-            const rowKey = row.rowKey;
-            // 비활성화
-            ordGrid.deactivateRow(rowKey);
-        });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
+		        	  fetch('/matOrderInsert', {
+					        method: 'POST',
+					        headers: {
+					            'Content-Type': 'application/json',
+					        },
+					        body: JSON.stringify(data),
+					    })
+					    .then(response => {
+					        if (!response.ok) {
+					            throw new Error('Network response was not ok');
+					        }
+					        return response.text();
+					    })
+					    .then(data => {
+					        console.log('Success:', data);
+					        alert(data);
+					        location.href = '/matOrder'; // 성공적으로 처리된 후 리디렉트
+					        
+					        // 발주가 추가된 후에 행을 비활성화
+					        ordGrid.getModifiedRows().createdRows.forEach(row => {
+					            // 비활성화할 발주 행의 rowKey를 가져옴
+					            const rowKey = row.rowKey;
+					            // 비활성화
+					            ordGrid.deactivateRow(rowKey);
+					        });
+					    })
+					    .catch(error => {
+					        console.error('Error:', error);
+					    });
+					});
 
 
         		//plan detail update
@@ -649,6 +619,7 @@ input[type="text"]:focus {
 		    pdfMake.createPdf(docDefinition).download('data.pdf');
 		}
         
+
         
       </script>
 	</section>
