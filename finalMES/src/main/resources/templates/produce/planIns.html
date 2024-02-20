@@ -202,8 +202,10 @@
 
 		<script th:inline="javascript">
 		function getOutStatus(value, row) {
-			console.log(value.value); // 값 확인용 로그
+			console.log("value : " ,value.value); // 값 확인용 로그
 			let statusText, bgColor;
+			
+			
 
 			// 주문 상태에 따라 원하는 문자열과 배경색 설정
 			switch (value.value) {
@@ -219,7 +221,7 @@
 				case undefined:
 				case null:
 					statusText = '등록 중';
-					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+					bgColor = 'red'; 
 					break;
 
 			}

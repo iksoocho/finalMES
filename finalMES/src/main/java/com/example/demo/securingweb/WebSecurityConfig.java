@@ -50,7 +50,7 @@ public class WebSecurityConfig {
 		http
 			.authorizeHttpRequests((requests) -> requests
 				.antMatchers("/image/**").permitAll()
-				.antMatchers("/planManage").hasAnyRole("ADMIN")
+				.antMatchers("/empList","/matList","/prodList","/badMatList","/procList","/bom").hasAnyRole("ADMIN")
 				.anyRequest().authenticated()
 				
 			)
