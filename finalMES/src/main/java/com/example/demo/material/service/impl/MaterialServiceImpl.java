@@ -192,11 +192,11 @@ public class MaterialServiceImpl implements MaterialService {
 		// TODO Auto-generated method stub
 		return materialMapper.getBadMatList();
 	}
-
+	
 	@Override
 	public List<OriginMaterialVO> getMatOriginInfoList(String matCode) {
 		// TODO Auto-generated method stub
-		return null;
+		return materialMapper.getMatOriginInfoList(matCode);
 	}
 
 
