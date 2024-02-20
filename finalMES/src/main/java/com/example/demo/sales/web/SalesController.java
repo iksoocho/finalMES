@@ -169,12 +169,21 @@ public class SalesController {
 	
 	@PostMapping("/orderListByDateRange")
 	@ResponseBody
-	public List<OrderVO> getOrderListByDateRange(@RequestBody OrderDateDVO orderDateDVO) {
+	public List<OrderDVO> getOrderListByDateRange(@RequestBody OrderDateDVO orderDateDVO) {
 	    // orderService를 사용해서 주문 목록을 가져옴
 		System.out.println("입력데이터확인 : " + orderDateDVO);
-	    List<OrderVO> orderList = ordService.getOrderListByDateRange(orderDateDVO);
+	    List<OrderDVO> orderList = ordService.getOrderListByDateRange(orderDateDVO);
 	    System.out.println("데이타 확인:" + orderList);
 	    
 	    return orderList;
+	}
+	
+	@PostMapping("/orderListByOrdState/{ordState}")
+	@ResponseBody
+	public List<OrderDVO> getOrderListByOrdState(@PathVariable String ordState){
+		System.out.println("입력데이터확인 : " + ordState);
+		List<OrderDVO> orderList = ordService.getOrderListByOrdState(ordState);
+		System.out.println("데이타 확인:" + orderList);
+		return orderList;
 	}
 }

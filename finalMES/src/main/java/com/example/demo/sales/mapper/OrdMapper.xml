@@ -136,9 +136,41 @@
 	</update>
 	
 	<!-- 기간을 이용한 주문 목록 조회 -->
-    <select id="getOrderListByDateRange" resultType="OrderVO" parameterType="OrderDateDVO">
-    	SELECT *
-    	FROM ord_list
+    <select id="getOrderListByDateRange" resultType="OrderDVO" parameterType="OrderDateDVO">
+    	SELECT
+				ord.ord_code,
+				find_codename(ord.ord_state) ord_state_nm,
+				ord_state,
+				business.business_name,
+				business.business_code,
+				business.business_manager,
+				business.business_manager_phone,
+				ord.ord_date,
+				ord.ord_manager,
+				(select SUM(ord_d.ttl_price)from ord_d_list ord_d where ord.ord_code = ord_d.ord_code ) AS total_ttl_price,
+				ord.ord_note
+
+		FROM 	ord_list ord
+		LEFT JOIN 	business business ON ord.business_code = business.business_code
     	WHERE ord_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+	</select>
+	
+	<select id="getOrderListByOrdState" resultType="OrderDVO" parameterType="String"> 
+		SELECT
+				ord.ord_code,
+				find_codename(ord.ord_state) ord_state_nm,
+				ord_state,
+				business.business_name,
+				business.business_code,
+				business.business_manager,
+				business.business_manager_phone,
+				ord.ord_date,
+				ord.ord_manager,
+				(select SUM(ord_d.ttl_price)from ord_d_list ord_d where ord.ord_code = ord_d.ord_code ) AS total_ttl_price,
+				ord.ord_note
+
+		FROM 	ord_list ord
+		LEFT JOIN 	business business ON ord.business_code = business.business_code
+		WHERE ord_state = #{ordState}
 	</select>
 </mapper>

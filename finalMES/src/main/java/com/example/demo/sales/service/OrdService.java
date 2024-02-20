@@ -46,6 +46,9 @@ public interface OrdService {
 	void updateOrderState(OrderStateDVO orderStateDVO);
 	
 	// 기간을 이용한 주문 목록 조회
-    List<OrderVO> getOrderListByDateRange(OrderDateDVO orderDateDVO);
+    List<OrderDVO> getOrderListByDateRange(OrderDateDVO orderDateDVO);
+    
+    // 상태 기반 목록
+    List<OrderDVO> getOrderListByOrdState(String ordState);
 
 }

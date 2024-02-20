@@ -32,14 +32,19 @@
 		<div class="containerOne">
 			<h4>주문 조회</h4>
 			<h5 class="titleOne">목록</h5>
-				<small class="totalOrdCount" style="margin-right: 20px;"> (총 주문 수: <span th:text="${orderList.size()}"></span>)
-				</small>
+			<small class="totalOrdCount" style="margin-right: 20px;"> (총 주문 수: <span th:text="${orderList.size()}"></span>)
+			</small>
 			<div class="ttlContainer">
 				<div>
-				<!-- 추가된 부분 -->
-					<label for="startDate"></label> <input type="date" id="startDate" name="startDate"> <label for="endDate"> ~ </label> <input
-						type="date" id="endDate" name="endDate"
-					>
+						<select id="orderStatus">
+							<option value="" selected>상태</option>
+							<option value="o2">등록완료</option>
+							<option value="o3">처리중</option>
+							<option value="o4">출고대기</option>
+							<option value="o5">출고중</option>
+							<option value="o6">종결</option>
+						</select>
+					<label for="startDate"></label> <input type="date" id="startDate" name="startDate"> <label for="endDate"> ~ </label> <input type="date" id="endDate" name="endDate">
 					<button type="button" id="updateOrderState" style="float: right;">저장</button>
 					<button type="button" id="searchByDate" style="float: right;">검색</button>
 				</div>
@@ -301,7 +306,45 @@
            return '';
        }
 		
+		// 상태 기반 검색
+		document.querySelector('#orderStatus').addEventListener('change', function(){
+			const ordState = document.getElementById('orderStatus').value;
+	        
+			if (ordState === '') {
+		        // 만약 상태가 0이면 모든 주문서 출력을 위해 서버에게 빈 문자열을 전송
+		        data = {
+		            ordState: ''
+		        };
+		    } else {
+		        // 그 외에는 선택된 상태에 대한 목록을 가져오기 위해 상태 값을 전송
+		        data = {
+		            ordState: ordState
+		        };
+		    }
+	        
+	        fetch('/orderListByOrdState/' + ordState, {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify(data)
+		    })
+		    .then(response => {
+		        if (!response.ok) {
+		            throw new Error('Network response was not ok');
+		        }
+		        return response.json();
+		    })
+		    .then(data => {
+		        console.log('Success:', data);
+		        grid.resetData(data);
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		    });
+		})
 		
+		// 날짜 기반 검색
 		document.querySelector('#searchByDate').addEventListener('click', function(){
 			const startDate = document.getElementById('startDate').value;
 	        const endDate = document.getElementById('endDate').value;
@@ -335,7 +378,7 @@
 		    });
 		})
 		
-		
+		// 상태 및 비고 업데이트
 		document.querySelector('#updateOrderState').addEventListener('click', function () {
 		    const checkedRows = grid.getCheckedRows();
 

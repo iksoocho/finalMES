@@ -46,6 +46,9 @@ public interface OrdMapper {
 	public void updateOrderState(OrderStateDVO orderStateDVO);
 	
 	 // 기간을 이용한 주문 목록 조회
-    List<OrderVO> getOrderListByDateRange(OrderDateDVO	orderDateDVO);
+    List<OrderDVO> getOrderListByDateRange(OrderDateDVO	orderDateDVO);
+    
+    // 상태에 따른 목록조회
+    List<OrderDVO> getOrderListByOrdState(String ordState);
 	
 }

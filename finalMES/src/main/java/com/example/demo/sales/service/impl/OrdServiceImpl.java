@@ -126,9 +126,15 @@ public class OrdServiceImpl implements OrdService {
 	}
 
 	@Override
-	public List<OrderVO> getOrderListByDateRange(OrderDateDVO orderDateDVO) {
+	public List<OrderDVO> getOrderListByDateRange(OrderDateDVO orderDateDVO) {
 		// TODO Auto-generated method stub
 		return ordMapper.getOrderListByDateRange(orderDateDVO);
+	}
+
+	@Override
+	public List<OrderDVO> getOrderListByOrdState(String ordState) {
+		// TODO Auto-generated method stub
+		return ordMapper.getOrderListByOrdState(ordState);
 	}
 
 }
