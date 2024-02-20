@@ -14,7 +14,7 @@ public class FacManageVO {
 	private String facName;
 	private String notopCode;
 	private String notopContent;
-	private int facNotSituation;
+	private String facNotSituation;
 	private String facNotCode;
 	private int facHig;
 	private int facLow;

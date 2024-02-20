@@ -87,5 +87,31 @@ public class WorkController {
 		}
         return msg;
 	}
+	
+	@PutMapping("/insStateUpdate")
+	@ResponseBody
+	public void updateInsState(@RequestBody String dinsCode) {
+		int result = workService.updateProdInsState(dinsCode);
+		String msg;
+		if(result == 1) {
+			msg = "CONTROL 생산지시 상태변경 성공";
+		}else {
+			msg = "CONTROL 생산지시 상태변경 실패";
+		}
+		System.out.println(msg);
+	}
+	
+	@PutMapping("/ordStateUpdate")
+	@ResponseBody
+	public void updateOrdState(@RequestBody String dinsCode) {
+		int result = workService.updateOrdListState(dinsCode);
+		String msg;
+		if(result == 1) {
+			msg = "CONTROL 주문서 상태변경 성공";
+		}else {
+			msg = "CONTROL 주문서 상태변경 실패";
+		}
+		System.out.println(msg);
+	}
 
 }

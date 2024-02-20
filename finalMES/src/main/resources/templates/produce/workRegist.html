@@ -364,9 +364,29 @@
           	  let hours = currentTime.getHours();
           	  let minutes = currentTime.getMinutes();
           	  let startTime = document.querySelector('input[id="workStart"]');
+          	  let dinscode = '[[${vo.dInsCode}]]';
           	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
           	  startTime.value = formatTime(hours, minutes);
           	  startTime.name = formatFullTime(currentTime);
+	          	fetch('/insStateUpdate', {
+					method : 'put',
+					headers : {
+						'Content-Type' : 'application/json',
+					},
+					body : dinscode
+				})
+				.then(response => {
+					if(!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.text();
+				})
+				.then(data => {
+					console.log('생산지시상태변경성공 : ', data);
+				})
+				.catch(error => {
+					console.log('Error : ', error);
+				});
           	});
 
           	// 작업종료 버튼 클릭 시

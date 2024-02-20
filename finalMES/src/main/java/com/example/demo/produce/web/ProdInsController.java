@@ -54,6 +54,7 @@ public class ProdInsController {
 	
 	@GetMapping("workRegist")
 	public String workRegist(@RequestParam String dInsCode, @RequestParam String prodCode, Model model) {
+		System.out.println("dinsCode : " + dInsCode);
 		ProdInsDetailVO vo = prodInsService.getCheckDetailList(dInsCode);
 		List<WorkLoadVO> load = prodInsService.getWorkPageLoadData(prodCode);
 		List<ProcessVO> proc = prodInsService.getProcData();

@@ -10,6 +10,7 @@
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <title>설비비가동등록</title>
 <style>
 #layoutSidenav_content {
@@ -80,9 +81,9 @@ button {
 								name="facCode" required style="display: none;"></td>
 							<th>설비상태</th>
 							<td><select id="facNotSituation" name="facNotSituation">
-									<option value="0">대기</option>
-									<option value="1">가동</option>
-									<option value="2">비가동</option>
+									<option value="f1">대기</option>
+									<option value="f2">가동</option>
+									<option value="f3">비가동</option>
 							</select></td>
 						</tr>
 						<tr>
@@ -99,6 +100,37 @@ button {
 			</div>
 
 		<script th:inline="javascript">
+		
+		
+		function getOutStatus(value, row) {
+			console.log(value.value); // 값 확인용 로그
+			let statusText, bgColor;
+
+			// 주문 상태에 따라 원하는 문자열과 배경색 설정
+			switch (value.value) {
+				case "가동대기":
+					statusText = '🟡';
+					
+					break;
+				case "가동중":
+					statusText = '🟢';
+					
+					break;
+				case "비가동":
+					statusText = '🔴';
+					
+					break;
+				case "":
+				case undefined:
+				case null:
+					statusText = '알수 없는 상태';
+					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+					break;
+
+			}
+			return `<div>${statusText}</div>`;
+		};
+		
   		// saveBtn 버튼에 이벤트 걸어서 클릭 시 함수 실행
    		document.getElementById('saveBtn').addEventListener("click", function() {
         // 입력필드의 name 값 받아와서 변수에 할당함
@@ -110,11 +142,15 @@ button {
         var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
         var facNotSdate = document.getElementsByName("facNotSdate")[0].value;
         var facNotLdate = document.getElementsByName("facNotLdate")[0].value;
-        // 조건걸기
+        
+        
         if (!facName) {
-              alert("설비명을 입력해주세요.");
-              return;
-          }
+        	Swal.fire({
+            icon: 'error',
+            text: '설비명을 입력해주세요.'
+        });
+        return;
+    	}
         
         	   // 등록 할 값 객체로 
                var data = {
@@ -249,19 +285,7 @@ button {
    	        {
    	          header: '상태',
    	          name: 'facNotSituation',
-   	          formatter: function(value) {
-   	            var numericValue = +value.value;
-
-   	            if (numericValue === 0) {
-   	              return '🟡';
-   	            } else if (numericValue === 1) {
-   	              return '🟢';
-   	            } else if (numericValue === 2) {
-   	              return '🔴';
-   	            } else {
-   	              return '알 수 없는 상태';
-   	            }
-   	          },
+   	          formatter: getOutStatus,
    	          align: 'center'
    	        }
    	      ],
