@@ -49,7 +49,7 @@ button {
 
 	<section layout:fragment="content">
 		<h1>설비수리관리</h1>
-
+		<div class="container">
 		<div id="layoutSidenav_content" class="container text-center">
 
 			<div class="col">
@@ -63,9 +63,6 @@ button {
 							<th>설비코드</th>
 							<th colspan="2"><input type="text" id="facCode"
 								name="facCode" required readonly></th>
-							
-
-							
 						</tr>
 						<tr>
 							<th>수리사항</th>
@@ -103,6 +100,7 @@ button {
 				<br> <br> <br>
 				<div id="grid" class="container"></div>
 			</div>
+		</div>
 		</div>
 
 		<div class="modal fade modal-xl" id="staticBackdropOne"
@@ -250,9 +248,10 @@ button {
         	    var facRepCode = document.getElementsByName("facRepCode")[0].value;
         	    var facNotCode = document.getElementsByName("facNotCode")[0].value;
         	    var facCode = document.getElementsByName("facCode")[0].value;
+        	    
         	    var facName = document.getElementsByName("facName")[0].value;
         	    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
-        	    var facRepPerson = document.getElementsByName("facRepRepairs")[0].value;
+        	    /* var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value; */
         	    var facRepContent = document.getElementsByName("facRepContent")[0].value;
         	    var facRepDate = document.getElementsByName("facRepDate")[0].value;
 				
@@ -267,6 +266,8 @@ button {
         	        facRepContent: facRepContent,
         	        facRepDate: facRepDate,
         	    };
+        	    console.log(data);
+        	    console.log(data.facCode);
 
         	    // JSON.stringify() 함수를 사용하여 JSON 형식으로 데이터를 변환
         	    var jsonData = JSON.stringify(data);
@@ -295,6 +296,19 @@ button {
         	        alert("등록에 실패했습니다.");
         	    });
         	});
+       // 업데이트 후 해당 행을 숨기는 함수
+          function hideRowAfterUpdate() {
+              const facRepCode = document.getElementsByName("facRepCode")[0].value; // 업데이트된 수리코드 가져오기
+              const rows = document.querySelectorAll('#grid tbody tr'); // 리스트의 각 행 선택
+
+              // 각 행을 순회하면서 업데이트된 수리코드와 일치하는 행을 찾아 숨기기
+              rows.forEach(row => {
+                  const rowFacRepCode = row.querySelector('td:nth-child(1)').textContent.trim(); // 각 행의 수리코드 가져오기
+                  if (rowFacRepCode === facRepCode) { // 업데이트된 수리코드와 일치하는 경우
+                      row.style.display = 'none'; // 해당 행 숨기기
+                  }
+              });
+          }
 
          	
 
