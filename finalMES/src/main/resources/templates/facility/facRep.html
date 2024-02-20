@@ -10,6 +10,7 @@
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <title>설비수리관리</title>
 <style>
 #layoutSidenav_content {
@@ -43,6 +44,7 @@ button {
 #myModal3 {
 	text-align: center;
 }
+
 </style>
 </head>
 <body>
@@ -50,57 +52,61 @@ button {
 	<section layout:fragment="content">
 		<h1>설비수리관리</h1>
 		<div class="container">
-		<div id="layoutSidenav_content" class="container text-center">
+			<div id="layoutSidenav_content" class="container text-center">
 
-			<div class="col">
-				<br> <br>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>수리코드</th>
-							<th colspan="2"><input type="text" id="facRepCode"
-								name="facRepCode" required readonly></th>
-							<th>설비코드</th>
-							<th colspan="2"><input type="text" id="facCode"
-								name="facCode" required readonly></th>
-						</tr>
-						<tr>
-							<th>수리사항</th>
-							<th colspan="2"><input type="text" id="facRepRepairs"
-								name="facRepRepairs"></th>
-							<th>설비명</th>
-							<th colspan="2"><input type="text" id="facName"
-							 name="facName" th:data-facCode="${facCode}" required readonly>
-						</tr>
-						<tr>
-							<th>등록일자</th>
-							<th colspan="2"><input type="date" id="facRepDate"
-								name="facRepDate" required></th>
-							<th>담당자</th>
-							<th colspan="2"><input type="text" id="facRepPerson"
-								name="facRepPerson" th:value="${username}" required></th>
-						</tr>
-						<tr>
-							<th>수리내용</th>
-							<td colspan="2"><textarea rows="10" cols="30"
-									id="facRepContent" name="facRepContent"></textarea>
-						</tr>
-					</thead>
-				</table>
-				<input type="hidden" id="facNotCode" name="facNotCode" value="">
-				<input type="hidden" id="facNotSituation" name="facNotSituation"
-					required>
-				<div class="text-center">
-				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-				<button type="button" id="insertBtn" class="btn btn-outline-success">등록</button>
-				<button type="button" id="selectBtn" class="btn btn-outline-success"
-					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
-				<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
+				<div class="col">
+					<br> <br>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>수리코드</th>
+								<th colspan="2"><input type="text" id="facRepCode"
+									name="facRepCode" required readonly></th>
+								<th>설비코드</th>
+								<th colspan="2"><input type="text" id="facCode"
+									name="facCode" required readonly></th>
+							</tr>
+							<tr>
+								<th>수리사항</th>
+								<th colspan="2"><input type="text" id="facRepRepairs"
+									name="facRepRepairs"></th>
+								<th>설비명</th>
+								<th colspan="2"><input type="text" id="facName"
+									name="facName" th:data-facCode="${facCode}" required readonly>
+							</tr>
+							<tr>
+								<th>등록일자</th>
+								<th colspan="2"><input type="date" id="facRepDate"
+									name="facRepDate" required></th>
+								<th>담당자</th>
+								<th colspan="2"><input type="text" id="facRepPerson"
+									name="facRepPerson" th:value="${username}" required></th>
+							</tr>
+							<tr>
+								<th>수리내용</th>
+								<td colspan="2"><textarea rows="3" id="facRepContent"
+									name="facRepContent" style="resize: none; width: 100%;"></textarea>
+								</td>
+							</tr>
+						</thead>
+					</table>
+					<input type="hidden" id="facNotCode" name="facNotCode" value="">
+					<input type="hidden" id="facNotSituation" name="facNotSituation"
+						required>
+					<div class="text-center">
+						<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+						<button type="button" id="insertBtn"
+							class="btn btn-outline-success">등록</button>
+						<button type="button" id="selectBtn"
+							class="btn btn-outline-success" data-bs-toggle="modal"
+							data-bs-target="#staticBackdropOne">조회</button>
+						<input type="text" id="searchInput" oninput="searchFunction()"
+							placeholder="검색...">
+					</div>
+					<br> <br> <br>
+					<div id="grid" class="container"></div>
 				</div>
-				<br> <br> <br>
-				<div id="grid" class="container"></div>
 			</div>
-		</div>
 		</div>
 
 		<div class="modal fade modal-xl" id="staticBackdropOne"
@@ -127,20 +133,18 @@ button {
 									<th>상태</th>
 								</tr>
 							</thead>
-							
+
 							<tbody style="text-align: center;">
 								<tr th:each="NotIns : ${Replist}"
 									th:data-facNotCode="${NotIns.facNotCode}"
 									th:data-facCode="${NotIns.facCode}"
 									th:data-facName="${NotIns.facName}"
-									
 									th:data-facNotReason="${NotIns.facNotReason}"
 									th:data-facNotSituation="${NotIns.facNotSituation}"
 									data-bs-dismiss="modal"
 									th:onclick="'displaySelectedFacNotIns(this)'">
 									<td th:text="${NotIns.facCode}"></td>
 									<td th:text="${NotIns.facName}"></td>
-									
 									<td th:text="${NotIns.facNotReason}"></td>
 									<td th:text="${NotIns.facNotSituation}"></td>
 								</tr>
@@ -157,16 +161,42 @@ button {
 
 
 		<script th:inline="javascript">
+		
+		function getOutStatus(value, row) {
+			console.log(value.value); // 값 확인용 로그
+			let statusText, bgColor;
+
+			// 주문 상태에 따라 원하는 문자열과 배경색 설정
+			switch (value.value) {
+				case "가동대기":
+					statusText = '🟡';
+					
+					break;
+				case "가동중":
+					statusText = '🟢';
+					
+					break;
+				case "비가동":
+					statusText = '🔴';
+					
+					break;
+				case "":
+				case undefined:
+				case null:
+					statusText = '알수 없는 상태';
+					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+					break;
+
+			}
+			return `<div>${statusText}</div>`;
+		};
         
 		// saveBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 호출
 		document.getElementById('saveBtn').addEventListener("click", function() {
 		    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
 		    
-		    // 수리사항의 길이가 15를 초과하는지 확인
-		    if (facRepRepairs.length > 15) {
-		        alert("수리사항은 15글자 이하로 입력해주세요.");
-		        return;
-		    }
+		    
+		   
 
 		    // 수리사항이 비어있는지 확인
 		    if (!facRepRepairs.trim()) {
@@ -232,18 +262,14 @@ button {
           document.getElementById('insertBtn').addEventListener("click", function() {
         	    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
         	    
-        	    // 수리사항의 길이가 15를 초과하는지 확인
-        	    if (facRepRepairs.length > 15) {
-        	        alert("수리사항은 15글자 이하로 입력해주세요.");
-        	        return;
-        	    }
-
-        	    // 수리사항이 비어있는지 확인
-        	    if (!facRepRepairs.trim()) {
-        	        alert("수리사항을 입력해주세요.");
-        	        return;
-        	    }
-
+        	    if (!facName) {
+    	        	Swal.fire({
+    	            icon: 'error',
+    	            text: '설비명을 입력해주세요.'
+    	        });
+    	        return;
+    	    	}
+    	
         	    // 입력필드의 name 값 받아와서 각 변수에 할당
         	    var facRepCode = document.getElementsByName("facRepCode")[0].value;
         	    var facNotCode = document.getElementsByName("facNotCode")[0].value;
@@ -360,19 +386,7 @@ button {
                 {
          	          header: '상태',
          	          name: 'facNotSituation',
-         	          formatter: function(value) {
-         	            var numericValue = +value.value;
-
-         	            if (numericValue === 0) {
-         	              return '🟡';
-         	            } else if (numericValue === 1) {
-         	              return '🟢';
-         	            } else if (numericValue === 2) {
-         	              return '🔴';
-         	            } else {
-         	              return '알 수 없는 상태';
-         	            }
-         	          },
+         	          formatter: getOutStatus,
          	          align: 'center'
          	        }
        

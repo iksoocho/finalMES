@@ -20,5 +20,5 @@ public class FacRepVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date facRepDate;
-	private int facNotSituation;
+	private String facNotSituation;
 }
