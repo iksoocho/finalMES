@@ -34,10 +34,9 @@
 				mo.mat_or_date,
 				mo.mat_or_due_date,
 				mo.mat_or_manager,
-				mo.mat_or_state
+				find_codename(mo.mat_or_state) mat_or_state
 		FROM mat_order mo
 		LEFT JOIN business b ON mo.business_code = b.business_code
-		LEFT JOIN mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
 		JOIN material m ON mo.mat_code=m.mat_code
 		ORDER BY mat_or_code DESC
 
@@ -98,20 +97,18 @@
 	<!-- 자재관리 -->
 	<select id="getOriginMaterialList1"
 		resultType="OriginMaterialVO">
-		SELECT DISTINCT
-				m.mat_code,
-				m.mat_name,
-				m.mat_safe_stock,
-				m.mat_unit,
-				m.mat_standard,
-				(SELECT SUM(mat_ins_good) FROM mat_lot WHERE
-				mat_code = 'MAT004' GROUP BY
-				mat_code ) AS matCount2,
-				mi.mat_ins_good as matCount
-		FROM material m
-		JOIN mat_lot ml ON m.mat_code = ml.mat_code
-		LEFT JOIN mat_inspection mi ON ml.mat_ins_code = mi.mat_ins_code
-		ORDER BY m.mat_code ASC
+			SELECT DISTINCT
+			    m.mat_code,
+			    m.mat_name,
+			    m.mat_safe_stock,
+			    m.mat_unit,
+			    m.mat_standard,
+			    (SELECT SUM(mat_input_count) FROM mat_lot WHERE mat_code = m.mat_code) AS matCount2,
+			    ml.mat_input_count
+			FROM material m 
+			JOIN mat_lot ml ON m.mat_code = ml.mat_code
+			LEFT JOIN mat_inspection mi ON ml.mat_ins_code = mi.mat_ins_code
+			ORDER BY m.mat_code ASC
 	</select>
 
 	<!-- 출고 관리 -->
@@ -148,20 +145,19 @@
 				mo.mat_or_manager,
 				mo.mat_or_state,
 				mi.mat_ins_date,
+				mi.mat_ins_count,
 				mi.mat_ins_code,
 				mi.mat_ins_good,
 				mi.mat_ins_bad,
-				ml.mat_lot_code,
-				ml.mat_input_date,
-				ml.mat_input_count
+                ml.mat_lot_code,
+                ml.mat_input_date,
+                ml.mat_input_count
 		FROM mat_order mo
 		LEFT JOIN mat_inspection mi ON mo.mat_or_code = mi.mat_or_code
 		LEFT JOIN business b ON mo.business_code = b.business_code
-		LEFT JOIN mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
-		JOIN material m ON mo.mat_code = m.mat_code
-		LEFT JOIN mat_lot ml ON m.mat_code = ml.mat_code
-		WHERE mi.mat_ins_code IS NOT NULL
-		ORDER BY ml.mat_lot_code DESC
+		LEFT JOIN material m ON mo.mat_code = m.mat_code
+        LEFT JOIN mat_lot ml ON mi.mat_ins_code = ml.mat_ins_code
+        ORDER BY ml.mat_lot_code DESC
 
 	</select>
 
@@ -188,7 +184,6 @@
 		FROM mat_order mo
 		LEFT JOIN mat_inspection mi ON mo.mat_or_code = mi.mat_or_code
 		LEFT JOIN business b ON mo.business_code = b.business_code
-		LEFT JOIN mat_order_info moi ON mo.mat_or_code = moi.mat_or_code
 		JOIN material m ON mo.mat_code = m.mat_code
 		ORDER BY mat_or_code DESC
 	</select>
@@ -351,14 +346,12 @@
 
 	<!-- LOT 별 자재재고 -->
 	<select id="getMatOriginInfoList" resultType="OriginMaterialVO">
-		SELECT ml.mat_lot_code,
-		        mi.mat_ins_good as matCount,
-		        m.mat_code,
-		        m.mat_name
-		FROM mat_inspection mi
-		JOIN mat_lot ml ON mi.mat_ins_code = ml.mat_ins_code
-		JOIN material m ON ml.mat_code = m.mat_code
-		JOIN mat_order mo ON m.mat_code = mo.mat_code
-		WHERE mo.mat_code = #{matCode}
+        SELECT ml.mat_lot_code,
+                ml.mat_input_count,
+                m.mat_code,
+                m.mat_name
+        FROM mat_lot ml
+        JOIN material m ON ml.mat_code = m.mat_code
+		WHERE m.mat_code = #{matCode}
 	</select>
 </mapper>

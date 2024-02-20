@@ -24,7 +24,7 @@ public class FacNotopVO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date facNotLdate;
     private String facNotPerson;
-    private int facNotSituation;
+    private String facNotSituation;
     private String facNotReason;
     //@DateTimeFormat(pattern = "yyyy-MM-dd")
     //private Date facDate;

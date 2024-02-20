@@ -20,7 +20,15 @@
 
 	<select id="getfacNotList" resultType="FacNotopVO">
 		SELECT fm.fac_name, 
-		       fn.*
+		       fn.fac_not_code,
+		       fn.fac_code,
+		       fn.notop_code,
+		       fn.fac_not_sdate,
+		       fn.fac_not_ldate,
+		       fn.fac_not_reason,
+		       fn.fac_not_person,
+		       find_codename(fn.fac_not_situation) fac_not_situation
+		       
 		       
 		  FROM fac_manage fm
 		  JOIN fac_notop fn ON fm.fac_code = fn.fac_code
@@ -39,7 +47,8 @@
 		fi.fac_ins_date,
 		<!-- fi.fac_ins_sel, -->
 		fi.fac_ins_nexd,
-		fn.fac_not_situation,
+		find_codename(fn.fac_not_situation) fac_not_situation,
+		<!-- fn.fac_not_situation, -->
 		fm.fac_name,
 		fm.fac_person
 		FROM
@@ -143,11 +152,10 @@
 	<update id="updateFacInsSi" parameterType="String">
 		UPDATE fac_notop
 		SET
-		fac_not_situation = 0
+		fac_not_situation = 'f1'
 		WHERE fac_not_code = #{facNotCode}
 	</update>
-
-
+	
 	<!-- 수리관리 -->
 	<select id="getfacRepList" resultType="FacRepVO">
 		SELECT fr.fac_rep_code,
@@ -158,7 +166,7 @@
 		fr.fac_rep_content,
 		fr.fac_rep_date,
 		fn.fac_not_code,
-		fn.fac_not_situation
+		find_codename(fn.fac_not_situation) fac_not_situation
 		FROM fac_rep fr
 		JOIN fac_manage fm ON fr.fac_code =
 		fm.fac_code
@@ -209,7 +217,7 @@
 	<update id="updateFacRepNot" parameterType="String">
 		UPDATE fac_notop
 		SET
-		fac_not_situation = 0
+		fac_not_situation = 'f1'
 		WHERE fac_not_code = #{facNotCode}
 	</update>
 </mapper>

@@ -25,5 +25,5 @@ public class FacInsVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date facInsNexd;
-	private int facNotSituation;
+	private String facNotSituation;
 }

@@ -57,9 +57,40 @@ public class WorkServiceImpl implements WorkService {
         System.out.println("=================================================================");
         if(result > 0) {
         	System.out.println("공정실적등록성공");
-			return 1;
+        	int ordResult = workMapper.updateOrdListState(dinsCode);
+    		if(ordResult > 0) {
+            	System.out.println("IMPL 주문서 상태변경 성공");
+    			return 1;
+    		}else {
+    			System.out.println("IMPL 주문서 상태변경 실패");
+    			return -1;
+    		}
 		}else {
 			System.out.println("공정실적등록실패");
+			return -1;
+		}
+	}
+
+	@Override
+	public int updateProdInsState(String dinsCode) {
+		int result = workMapper.updateProdInsState(dinsCode);
+		if(result > 0) {
+        	System.out.println("IMPL 생산지시 상태변경 성공");
+			return 1;
+		}else {
+			System.out.println("IMPL 생산지시 상태변경 실패");
+			return -1;
+		}
+	}
+
+	@Override
+	public int updateOrdListState(String dinsCode) {
+		int ordResult = workMapper.updateOrdListState(dinsCode);
+		if(ordResult > 0) {
+        	System.out.println("IMPL 주문서 상태변경 성공");
+			return 1;
+		}else {
+			System.out.println("IMPL 주문서 상태변경 실패");
 			return -1;
 		}
 	}
