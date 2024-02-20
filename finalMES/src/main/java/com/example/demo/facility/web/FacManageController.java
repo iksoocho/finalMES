@@ -181,9 +181,11 @@ public class FacManageController {
 	// insert
 	@PostMapping("/insertFacRep")
 	@ResponseBody
-	public String insertFacRep(FacRepVO facRepVO) {
+	public String insertFacRep(@RequestBody FacRepVO facRepVO) {
 		String msg;
 		facManageService.insertFacRep(facRepVO);
+		System.out.println("=========================");
+		System.out.println(facRepVO);
 		msg = "등록성공";
 		return msg;
 	}

@@ -18,6 +18,7 @@ public class MatInputVO {
 	private String matCount; // 총재고량
 	// join
 	
+	private String matOrManager;
 	private String matOutCount;
 	private String matUnit;
 	private String matStandard;

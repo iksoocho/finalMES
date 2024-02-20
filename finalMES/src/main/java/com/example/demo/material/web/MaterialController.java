@@ -242,7 +242,7 @@ public class MaterialController {
 	 * @param matInputVO
 	 * @return mat lot  인서트 하는것 
 	 */
-	@PostMapping("matInputInsert")
+	@PostMapping("/matInputInsert")
 	@ResponseBody
 	public String matInputInsert(@RequestBody MatInputVO matInputVO) {
 		String msg;

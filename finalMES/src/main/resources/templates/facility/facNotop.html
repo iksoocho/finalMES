@@ -90,7 +90,7 @@ button {
 				</table>
 				<div class="text-center">
 				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-				<button type="button" class="btn btn-outline-primary" onclick="downloadCSV()">엑셀 다운로드</button>
+				<button type="button" class="btn btn-outline-primary" onclick="downloadCSV()">Excel</button>
 				<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
 				</div>
 				<br> <br> <br>
@@ -152,7 +152,7 @@ button {
              });
          });
    		
-   		// 엑셀다운로드
+   	/* 	// 엑셀다운로드
    		function downloadCSV() {
         const gridData = grid.getData(); // 그리드에서 데이터 가져오기
         const header = Object.keys(gridData[0]).join(','); // 헤더 생성
@@ -166,7 +166,48 @@ button {
         link.setAttribute('download', 'data.csv');
         document.body.appendChild(link);
         link.click();
+    } */
+    
+    function downloadCSV() {
+        const gridData = grid.getData(); // 그리드에서 데이터 가져오기
+        // 헤더 생성
+        const header = [
+        	'비가동코드',
+        	'설비코드',
+        	'비가동등록사유',
+        	'설비명',
+        	'담당자',
+        	'상태'
+        ]; 
+        const csvRows = [header.join(',')]; // 헤더를 CSV 형식으로 변환하여 첫 번째 행으로 설정
+
+        // 데이터 생성
+        gridData.forEach(row => {
+            const formattedRow = [
+            	row.facNotCode,
+                row.facCode,
+                row.facNotReason,
+                row.facName,
+                row.facNotPerson,
+   				row.facNotSituation
+                
+            ];
+            csvRows.push(formattedRow.join(','));
+        });
+
+        // CSV 내용 생성
+        const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+        const encodedUri = encodeURI(csvContent); // URI 인코딩
+
+        // 다운로드 링크 생성 및 클릭
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'data.csv');
+        document.body.appendChild(link);
+        link.click();
     }
+
+
    		
    		
    

@@ -9,4 +9,5 @@ public class WorkLoadVO {
 	private String flowCode;
 	private String procCode;
 	private String procName;
+	private int procSeq;
 }
