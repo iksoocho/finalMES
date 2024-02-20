@@ -167,7 +167,297 @@ button {
 	padding-right: 32px;
 }
 </style>
-<script>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="containerOne">
+			<h4>주문 관리</h4>
+			<div class="containerTwo">
+				<h5>주문서정보</h5>
+				<button class="btn btn-primary" onclick="resetForm()">초기화</button>
+				<button class="btn btn-primary" onclick="saveOrder()">등록</button>
+				<table class="orderInfoOne">
+					<tr>
+						<th>주문서번호</th>
+						<td><input class="readInput" type="text" id="ordCode" name="ordCode" placeholder="시스템 자동발번" readonly></td>
+						<th>등록일</th>
+						<td><input type="date" id="registrationDate" name="ordDate" readonly></td>
+						<th>주문서상태</th>
+						<td><select id="ordState" name="ordState">
+								<option value="o1" selected>등록전
+								<option value="o2" disabled>등록완료
+								<option value="o3" disabled>처리중
+								<option value="o4" disabled>종결
+						</select></td>
+					</tr>
+					<tr>
+						<th class="red">담당자</th>
+						<td class="serch"><input type="text" id="selectedUserCode" name="userCode" placeholder="사원번호" readonly> <input type="text"
+							id="selectedUserName" name="ordManage" placeholder="담당자이름" readonly
+						>
+
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropTwo">
+								<p>검색</p>
+							</button></td>
+						<th>담당자 연락처</th>
+						<td><input class="readInput" type="text" id="selectedUserPhone" name="userPhone" readonly></td>
+						<td colspan="2"></td>
+					</tr>
+					<tr class="space"></tr>
+					<tr>
+						<th class="red">거래처</th>
+						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" placeholder="거래처코드" readonly> <input type="text"
+							id="selectedBusinessName" placeholder="거래처담당자" readonly
+						>
+							<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+								<p>검색</p>
+							</button></td>
+						<th>거래처 담당자</th>
+						<td><input class="readInput" type="text" id="selectedBusinessManager" readonly></td>
+						<th>거래처 연락처</th>
+						<td><input class="readInput" type="text" id="selectedBusinessManagerPhone" readonly></td>
+					</tr>
+					<tr>
+						<th>납기일자</th>
+						<td><input type="date" id="dlvyDate"></td>
+						<th>비고</th>
+						<td><input type="text" name="ordNote" id="ordNote"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="containerThree">
+				<h5 class="subTitle">상세정보</h5>
+				<div id="selectedProduct"></div>
+				<button class="btn btn-primary" onclick="deleteSelectedRows()">삭제</button>
+				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropOne">추가</button>
+
+				<table class="moreInfo" id="productTable">
+					<thead>
+						<tr>
+							<th rowspan="2" style="width: 50px;"></th>
+							<th rowspan="2" style="width: 50px;"><input type="checkbox"></th>
+							<th colspan="2" style="width: 300px;">품목정보</th>
+							<th rowspan="2" style="width: 400px;">납기일자</th>
+							<th colspan="3" style="width: 300px;">금액정보</th>
+							<th rowspan="2">비고</th>
+						</tr>
+
+
+						<tr>
+							<th style="width: 300px;">품목명</th>
+							<th style="width: 100px;">단위</th>
+							<th style="width: 150px">수량</th>
+							<th style="width: 150px;">단가</th>
+							<th style="width: 200px;">총금액</th>
+						</tr>
+					</thead>
+					<tbody id="productTableBody">
+						<!-- 6개의 빈 데이터 행 -->
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr class="initially-hidden">
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td class="unitPrice">&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr class="total">
+							<td></td>
+							<td colspan="4">합계</td>
+							<td class="numberOne"></td>
+							<td class="numberTwo"></td>
+							<td class="numberThree"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="9" class="ttlCount">총건수: 0</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+
+
+		<!-- Modal -->
+		<!-- BusinessListModal -->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">거래처 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>거래처코드</th>
+									<th>거래처명</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}"
+									th:data-businessManager="${business.businessManager}" th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal"
+									onclick="updateInputFields(this)"
+								>
+									<td th:text="${business.businessCode}"></td>
+									<td th:text="${business.businessName}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer" style="background-color: #0d6efd;">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<!-- BusinessListModal -->
+		<div class="modal fade" id="staticBackdropTwo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">담당자 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>담당자 코드</th>
+									<th>담당자 이름</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<tr th:each="employee : ${employeeList}" th:data-userCode="${employee.userCode}" th:data-userName="${employee.userName}"
+									th:data-userPhone="${employee.userPhone}" data-bs-dismiss="modal" onclick="updateInputFieldsTwo(this)"
+								>
+									<td th:text="${employee.userCode}"></td>
+									<td th:text="${employee.userName}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer" style="background-color: #0d6efd;">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<!-- ProductListModal -->
+		<div class="modal fade modal-xl" id="staticBackdropOne" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">품목 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>상품 코드</th>
+									<th>상품 이름</th>
+									<th>상품 단위</th>
+									<th>상품 가격</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<tr th:each="prod : ${productList}" th:data-prodCode="${prod.prodCode}" th:data-prodName="${prod.prodName}"
+									th:data-prodUnit="${prod.prodUnit}" th:data-prodPrice="${prod.prodPrice}" data-bs-dismiss="modal" th:onclick="'displaySelectedProduct(this)'"
+								>
+									<td th:text="${prod.prodCode}"></td>
+									<td th:text="${prod.prodName}"></td>
+									<td th:text="${prod.prodUnit}"></td>
+									<td th:text="${prod.prodPrice}"></td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+					<div class="modal-footer" style="background-color: #0d6efd;">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
 	function updateInputFields(liElement) {
 		// 클릭한 <li> 요소에서 데이터 속성을 가져옴
 		var businessCode = liElement.getAttribute('data-businessCode');
@@ -244,9 +534,7 @@ button {
 		cellProdName.innerHTML = prodName;
 		cellProdUnit.innerHTML = prodUnit;
 		cellDlvyDate.innerHTML = '<input type="date" name="dlvyDate" id="dlvyDate_' + rowCount + '" value="' + dlvyDate + '">';
-		cellOrdCount.innerHTML = '<input type="number" id="ordCount_'
-				+ rowCount + '" name="ordCount" value="' + quantity
-				+ '" oninput="updateTotalPrice(' + rowCount + ')">';
+		cellOrdCount.innerHTML = '<input type="number" id="ordCount_' + rowCount + '" name="ordCount" value="' + quantity + '" oninput="updateTotalPrice(' + rowCount + ')">';
 		cellUnitPrice.innerHTML = unitPrice;
 
 		ttlPrice = ttlPrice || 0;
@@ -393,10 +681,32 @@ button {
 	        ordState: document.getElementById('ordState').value,
 	        ordManager: document.getElementById('selectedUserName').value,
 	        ordNote: document.getElementById('ordNote').value,
+	        dlvyDate: document.getElementById('dlvyDate').value,
+	        
 	        // 나머지 필드들도 수집
 	        // 주문 상세 리스트 정보 수집
 	        orderDetails: []
 	    };
+	    
+	    orderData.ordNote = document.getElementById('ordNote').value || '-';
+	    
+	 	// 유효성 검사 추가(2024-02-20)
+    	if(orderData.ordManager === ''){
+    		alert("출고담당자를 선택해주세요")
+    		return;
+    	}
+     	
+    	if(orderData.businessCode === ''){
+    		alert("거래처를 선택해주세요.")
+    		return;
+    	}
+    	
+    	if(orderData.dlvyDate === ''){
+			alert("납기일자를 선택해주세요.")
+			return;
+		}
+    	
+    	
 
 	   // 테이블의 행을 가져옴
 	    var tbody = document.getElementById('productTableBody');
@@ -422,9 +732,27 @@ button {
 	                ttlPrice: ttlPrice
 	                // 다른 필요한 필드들 추가
 	            });
+	            if(dlvyDate = ''){
+	            	alert("납기일자를 선택해주세요.")
+	            	return;
+	            }
+	            
+	            if(ordCount === '0'){
+	            	alert("수량을 입력해주세요.");
+	            	return;
+	            } else if(ordCount < '0'){
+	            	alert("올바른 수량을 입력해주세요.")
+	            	return;
+	            }
 	        }
 	    }
-
+	    
+	    if (orderData.orderDetails.length === 0) {
+    	    alert("상세정보를 추가해주세요.");
+    	    return;
+    	}
+	    
+	 	
 	    // 서버에 주문서 정보 전송
 	    fetch('/saveOrder', {
 	        method: 'POST',
@@ -433,23 +761,25 @@ button {
 	        },
 	        body: JSON.stringify(orderData),
 	    })
-	    .then(response => response.json())
+	    .then(response => response.text())
 	    .then(data => {
 	        // 서버로부터 받은 응답에 대한 처리
 	        console.log('Success:', data);
-	        // TODO: 성공 시 필요한 로직 추가
+	        alert("저장되었습니다.");
+		    location.href= '/orderInsert';
 	    })
 	    .catch((error) => {
 	        // 오류 처리
 	        console.error('Error:', error);
-	        // TODO: 실패 시 필요한 로직 추가
 	    });
 	}
 	
 	function resetForm() {
 	    // 주문서번호를 제외한 입력 필드 초기화
+	    document.getElementById('selectedUserPhone').value = '';
+	    document.getElementById('selectedUserCode').value = '';
 	    document.getElementById('registrationDate').value = getCurrentDate();
-	    document.getElementById('ordManager').value = '';
+	    document.getElementById('selectedUserName').value = '';
 	    document.getElementById('dlvyDate').value = '';
 	    document.getElementById('ordNote').value = '';
 	    document.getElementById('selectedBusinessCode').value = '';
@@ -484,294 +814,49 @@ button {
 	    for (var j = 0; j < 9; j++) {
 	        var cell = newRow.insertCell(j);
 
-	        if (j === 1) {
-	            // 두 번째 셀에는 체크박스 추가
-	            cell.innerHTML = '<input type="checkbox">';
-	        } else if (j === 6) {
-	            // 여섯 번째 셀에는 단가 입력 필드 추가
+	        if (j === 6) {
+	        	// 여섯 번째 셀에는 단가 입력 필드 추가
 	            cell.classList.add('unitPrice');
 	        } else {
-	            // 나머지 셀에는 빈 공백 추가
+	        	// 나머지 셀에는 빈 공백 추가
 	            cell.innerHTML = '&nbsp;';
-	        }
+	        } 
+	            
+	        
 	    }
 	}
+	
+	function deleteSelectedRows() {
+	    // Get the table body
+	    var tbody = document.getElementById('productTableBody');
+	    
+	    // Get all rows in the table
+	    var rows = tbody.getElementsByTagName('tr');
+
+	    // Create an array to store rows that will be deleted
+	    var rowsToDelete = [];
+
+	    // Iterate over the rows to find the checked ones
+	    for (var i = 0; i < rows.length; i++) {
+	        var checkbox = rows[i].cells[1].querySelector('input[type="checkbox"]');
+	        
+	        // Check if the checkbox is checked
+	        if (checkbox && checkbox.checked) {
+	            // Add the row to the array for deletion
+	            rowsToDelete.push(rows[i]);
+	        }
+	    }
+
+	    // Iterate over the rows to delete
+	    rowsToDelete.forEach(function(row) {
+	        tbody.removeChild(row);
+	    });
+
+	    // Recalculate total sum and count after deleting rows
+	    updateTotalSum();
+	    updateTotalCount();
+	}
 </script>
-</head>
-<body>
-	<section layout:fragment="content">
-		<div class="containerOne">
-			<h4>주문 관리</h4>
-			<div class="containerTwo">
-				<h5>주문서정보</h5>
-				<button class="btn btn-primary" onclick="resetForm()">초기화</button>
-				<button class="btn btn-primary" onclick="saveOrder()">등록</button>
-				<table class="orderInfoOne">
-					<tr>
-						<th>주문서번호</th>
-						<td><input class="readInput" type="text" id="ordCode" name="ordCode" placeholder="시스템 자동발번" readonly></td>
-						<th>등록일</th>
-						<td><input type="date" id="registrationDate" name="ordDate" readonly></td>
-						<th>주문서상태</th>
-						<td><select id="ordState" name="ordState">
-								<option value="o1" selected>등록전
-								<option value="o2" disabled>등록완료
-								<option value="o3" disabled>처리중
-								<option value="o4" disabled>종결
-						</select></td>
-					</tr>
-					<tr>
-						<th class="red">담당자</th>
-						<td class="serch"><input type="text" id="selectedUserCode" name="userCode" readonly> <input type="text" id="selectedUserName" name="ordManage">
-
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropTwo">
-								<p>검색</p>
-							</button></td>
-						<th>담당자 연락처</th>
-						<td><input class="readInput" type="text" id="selectedUserPhone" name="userPhone" readonly></td>
-						<td colspan="2"></td>
-					</tr>
-					<tr class="space"></tr>
-					<tr>
-						<th class="red">거래처</th>
-						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text" id="selectedBusinessName" readonly>
-							<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-								<p>검색</p>
-							</button></td>
-						<th>거래처 담당자</th>
-						<td><input class="readInput" type="text" id="selectedBusinessManager" readonly></td>
-						<th>거래처 연락처</th>
-						<td><input class="readInput" type="text" id="selectedBusinessManagerPhone" readonly></td>
-					</tr>
-					<tr>
-						<th>납기일자</th>
-						<td><input type="date" id="dlvyDate"></td>
-						<th>비고</th>
-						<td><input type="text" name="ordNote" id="ordNote"></td>
-					</tr>
-				</table>
-			</div>
-			<div class="containerThree">
-				<h5 class="subTitle">상세정보</h5>
-				<div id="selectedProduct"></div>
-				<button class="btn btn-primary">삭제</button>
-				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropOne">추가</button>
-
-				<table class="moreInfo" id="productTable">
-					<thead>
-						<tr>
-							<th rowspan="2" style="width: 50px;"></th>
-							<th rowspan="2" style="width: 50px;"><input type="checkbox"></th>
-							<th colspan="2" style="width: 300px;">품목정보</th>
-							<th rowspan="2" style="width: 400px;">납기일자</th>
-							<th colspan="3" style="width: 300px;">금액정보</th>
-							<th rowspan="2">비고</th>
-						</tr>
-
-
-						<tr>
-							<th style="width: 300px;">품목명</th>
-							<th style="width: 100px;">단위</th>
-							<th style="width: 150px">수량</th>
-							<th style="width: 150px;">단가</th>
-							<th style="width: 200px;">총금액</th>
-						</tr>
-					</thead>
-					<tbody id="productTableBody">
-						<!-- 6개의 빈 데이터 행 -->
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td class="unitPrice">&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td class="unitPrice">&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td class="unitPrice">&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td class="unitPrice">&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td class="unitPrice">&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr class="initially-hidden">
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td class="unitPrice">&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-					</tbody>
-					<tfoot>
-						<tr class="total">
-							<td></td>
-							<td colspan="4">합계</td>
-							<td class="numberOne"></td>
-							<td class="numberTwo"></td>
-							<td class="numberThree"></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td colspan="9" class="ttlCount">총건수: 0</td>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
-		</div>
-
-
-		<!-- Modal -->
-		<!-- BusinessListModal -->
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header" style="background-color: #0d6efd;">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">거래처 목록</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-
-					<div class="modal-body">
-
-						<table>
-							<thead style="text-align: center;">
-								<tr>
-									<th>거래처코드</th>
-									<th>거래처명</th>
-								</tr>
-							</thead>
-							<tbody style="text-align: center;">
-								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}" th:data-businessManager="${business.businessManager}"
-									th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal" onclick="updateInputFields(this)">
-									<td th:text="${business.businessCode}"></td>
-									<td th:text="${business.businessName}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer" style="background-color: #0d6efd;">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- Modal -->
-		<!-- BusinessListModal -->
-		<div class="modal fade" id="staticBackdropTwo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header" style="background-color: #0d6efd;">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">담당자 목록</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-
-					<div class="modal-body">
-
-						<table>
-							<thead style="text-align: center;">
-								<tr>
-									<th>담당자 코드</th>
-									<th>담당자 이름</th>
-								</tr>
-							</thead>
-							<tbody style="text-align: center;">
-								<tr th:each="employee : ${employeeList}" th:data-userCode="${employee.userCode}" th:data-userName="${employee.userName}" th:data-userPhone="${employee.userPhone}" data-bs-dismiss="modal" onclick="updateInputFieldsTwo(this)">
-									<td th:text="${employee.userCode}"></td>
-									<td th:text="${employee.userName}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer" style="background-color: #0d6efd;">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Modal -->
-		<!-- ProductListModal -->
-		<div class="modal fade modal-xl" id="staticBackdropOne" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header" style="background-color: #0d6efd;">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel" style="font-weight: bold">품목 목록</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-
-					<div class="modal-body">
-						<table>
-							<thead style="text-align: center;">
-								<tr>
-									<th>상품 코드</th>
-									<th>상품 이름</th>
-									<th>상품 단위</th>
-									<th>상품 가격</th>
-								</tr>
-							</thead>
-							<tbody style="text-align: center;">
-								<tr th:each="prod : ${productList}" th:data-prodCode="${prod.prodCode}" th:data-prodName="${prod.prodName}" th:data-prodUnit="${prod.prodUnit}" th:data-prodPrice="${prod.prodPrice}"
-									data-bs-dismiss="modal" th:onclick="'displaySelectedProduct(this)'">
-									<td th:text="${prod.prodCode}"></td>
-									<td th:text="${prod.prodName}"></td>
-									<td th:text="${prod.prodUnit}"></td>
-									<td th:text="${prod.prodPrice}"></td>
-								</tr>
-							</tbody>
-						</table>
-
-					</div>
-					<div class="modal-footer" style="background-color: #0d6efd;">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-
-					</div>
-				</div>
-			</div>
-		</div>
 	</section>
 </html>
 

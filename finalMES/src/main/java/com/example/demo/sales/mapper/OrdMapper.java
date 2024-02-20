@@ -1,5 +1,6 @@
 package com.example.demo.sales.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -7,8 +8,10 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.employee.EmployeeVO;
+import com.example.demo.sales.vo.order.OrderDVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
+import com.example.demo.sales.vo.order.OrderStateDVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
 import com.example.demo.sales.vo.product.ProductLotVO;
@@ -38,5 +41,10 @@ public interface OrdMapper {
 	public List<ProductListVO> getProductList(); // 품목리스트 조회
 
 	public List<OrderVO> getOrderWithDetails(OrderVO orderVO);
-
+	
+	public void updateOrderState(OrderStateDVO orderStateDVO);
+	
+	 // 기간을 이용한 주문 목록 조회
+    List<OrderVO> getOrderListByDateRange(OrderDVO	OrderDVO);
+	
 }

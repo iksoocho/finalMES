@@ -1,5 +1,6 @@
 package com.example.demo.sales.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import com.example.demo.sales.mapper.OrdMapper;
 import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.employee.EmployeeVO;
+import com.example.demo.sales.vo.order.OrderDVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
+import com.example.demo.sales.vo.order.OrderStateDVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
 import com.example.demo.sales.vo.product.ProductLotVO;
@@ -113,5 +116,17 @@ public class OrdServiceImpl implements OrdService {
 	public List<EmployeeVO> getEmployeeList() {
 		// TODO Auto-generated method stub
 		return ordMapper.getEmployeeList();
+	}
+
+	@Override
+	public void updateOrderState(OrderStateDVO orderStateDVO) {
+		// TODO Auto-generated method stub
+		ordMapper.updateOrderState(orderStateDVO);
+	}
+
+	@Override
+	public List<OrderVO> getOrderListByDateRange(OrderDVO orderDVO) {
+		// TODO Auto-generated method stub
+		return ordMapper.getOrderListByDateRange(orderDVO);
 	}
 }

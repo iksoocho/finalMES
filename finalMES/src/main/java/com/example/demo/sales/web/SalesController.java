@@ -24,8 +24,10 @@ import com.example.demo.sales.vo.delivery.ProdDetailUpdateDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 import com.example.demo.sales.vo.employee.EmployeeVO;
+import com.example.demo.sales.vo.order.OrderDVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
+import com.example.demo.sales.vo.order.OrderStateDVO;
 import com.example.demo.sales.vo.order.OrderVO;
 import com.example.demo.sales.vo.product.ProductListVO;
 import com.example.demo.sales.vo.product.ProductLotVO;
@@ -77,14 +79,13 @@ public class SalesController {
 	}
 
 	@PostMapping("/saveOrder")
-	public String saveOrder(@RequestBody OrderVO order) {
+	@ResponseBody
+	public String saveOrder(@RequestBody OrderVO OrderVO) {
 		// OrderVO에는 주문서 정보가 담겨있을 것으로 가정합니다.
-
+		String msg = "주문서 등록이 완료되었습니다";
 		// 주문서 등록 로직 수행
-		ordService.saveOrder(order);
-
-		// 등록 후에 주문서 목록 페이지로 리다이렉션
-		return "redirect:/orderList"; // "/orderList"로 리다이렉션하도록 설정
+		ordService.saveOrder(OrderVO);
+		return msg;
 	}
 
 	// 출고서등록.
@@ -131,7 +132,7 @@ public class SalesController {
 	public String getInOutList(Model model, OrderVO orderVO) {
 		List<BusinessListVO> businessList = ordService.getBusinessList();
 		// 출고전 주문서 리스트
-		orderVO.setOrdState("o2");
+		orderVO.setOrdState("o4");
 		List<OrderVO> orderList = ordService.getOrderList(orderVO);
 		List<EmployeeVO> employeeList = ordService.getEmployeeList();
 		model.addAttribute("employeeList", employeeList);
@@ -155,5 +156,22 @@ public class SalesController {
 	    String msg = "날짜 및 상태 업데이트가 완료되었습니다";
 	    prodDlvyService.updateOutDDate(prodDetailUpdateDVOList);
 	    return msg;
+	}
+	
+	@PutMapping("/updateOrderState")
+	@ResponseBody
+	public String updateOrderState(@RequestBody OrderStateDVO orderStateDVO) {
+		String msg = "상태 업데이트가 완료되었습니다.";
+		ordService.updateOrderState(orderStateDVO);
+		return msg;
+	}
+	
+	@PostMapping("/orderListByDateRange")
+	public List<OrderVO> getOrderListByDateRange(OrderDVO orderDVO) {
+	    System.out.println("데이타 확인:" + orderDVO);
+	    // orderService를 사용해서 주문 목록을 가져옴
+	    List<OrderVO> orderList = ordService.getOrderListByDateRange(orderDVO);
+	    
+	    return orderList;
 	}
 }

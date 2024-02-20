@@ -128,5 +128,17 @@
 		FROM employee
 		WHERE dept_code = 'dept003'
 	</select>
-
+	
+	<update id="updateOrderState" parameterType="OrderStateDVO">
+		UPDATE ord_list
+		SET ord_state = #{ordState}, ord_note = #{ordNote}
+		WHERE ord_code = #{ordCode}
+	</update>
+	
+	<!-- 기간을 이용한 주문 목록 조회 -->
+    <select id="getOrderListByDateRange" resultType="OrderDVO">
+    	SELECT *
+    	FROM ord_list
+    	WHERE ord_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+	</select>
 </mapper>
