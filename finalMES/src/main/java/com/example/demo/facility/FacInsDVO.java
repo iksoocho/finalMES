@@ -20,7 +20,7 @@ public class FacInsDVO {
 	private String facInsSel;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date facInsNexd;
-	private int facNotSituation;
+	private String facNotSituation;
 	private String facNotPerson;
 	private String facNotReason;
 }

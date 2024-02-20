@@ -10,6 +10,7 @@
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <title>설비비점검관리</title>
 <style>
 #layoutSidenav_content {
@@ -215,72 +216,134 @@ button {
 
 
 		<script th:inline="javascript">
+		
+		function getOutStatus(value, row) {
+			console.log(value.value); // 값 확인용 로그
+			let statusText, bgColor;
+
+			// 주문 상태에 따라 원하는 문자열과 배경색 설정
+			switch (value.value) {
+				case "가동대기":
+					statusText = '🟡';
+					
+					break;
+				case "가동중":
+					statusText = '🟢';
+					
+					break;
+				case "비가동":
+					statusText = '🔴';
+					
+					break;
+				case "":
+				case undefined:
+				case null:
+					statusText = '알수 없는 상태';
+					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+					break;
+
+			}
+			return `<div>${statusText}</div>`;
+		};
          
         // saveBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 실행 
-		document.getElementById('saveBtn').addEventListener("click", function() {
+		// saveBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 실행 
+document.getElementById('saveBtn').addEventListener("click", function() {
     // 각각의 변수에 특정 이름을 가진 요소의 값을 할당 인덱스 0에 있는 요소의 값을 가져옴
-		    var facInsCode = document.getElementsByName("facInsCode")[0].value;
-		    var facNotCode = document.getElementsByName("facNotCode")[0].value;
-		    var facCode = document.getElementsByName("facCode")[0].value;
-		    var facName = document.getElementsByName("facName")[0].value;
-		    var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
-		    var facInsCheck = document.getElementsByName("facInsCheck")[0].value;
-		    var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
-		    var facInsJud;
+    var facInsCode = document.getElementsByName("facInsCode")[0].value;
+    var facNotCode = document.getElementsByName("facNotCode")[0].value;
+    var facCode = document.getElementsByName("facCode")[0].value;
+    var facName = document.getElementsByName("facName")[0].value;
+    var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
+    var facInsCheck = document.getElementsByName("facInsCheck")[0].value;
+    var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
+    var facInsJud;
 
-		    // 판정 값을 가져오기
-		    var facInsJudElements = document.getElementsByName("facInsJud");
-		    for (var i = 0; i < facInsJudElements.length; i++) {
-		        if (facInsJudElements[i].checked) {
-		            facInsJud = facInsJudElements[i].value;
-		            break;
-		        }
-		    }
-		
-		    // 조건
-		    if (!facName) {
-		        alert("설비명을 입력해주세요.");
-		        return;
-		    }
+    // 판정 값을 가져오기
+    var facInsJudElements = document.getElementsByName("facInsJud");
+    for (var i = 0; i < facInsJudElements.length; i++) {
+        if (facInsJudElements[i].checked) {
+            facInsJud = facInsJudElements[i].value;
+            break;
+        }
+    }
 
-    		// 데이터 객체에 위에서 가져온 값들 넣기
-		    var data = {
-		        facInsCode: facInsCode,
-		        facNotCode: facNotCode,
-		        facCode: facCode,
-		        facName: facName,
-		        facInsPerson: facInsPerson,
-		        facInsCheck: facInsCheck,
-		        facInsJud: facInsJud,
-		        facNotSituation: facNotSituation
-		        
-		    };
+    if (!facName) {
+        Swal.fire({
+            icon: 'error',
+            text: '설비명을 입력해주세요.'
+        });
+        return;
+    }
 
-			    // fac_ins update
-			    // fatch를 통해 서버에 PUT 통신 요청
-			    fetch("/updateFacIns", {
-			        method: "PUT",
-			        body: JSON.stringify(data),   // 데이터 JSON 형식으로 문자열 변환
-			        headers: {
-			            "Content-Type": "application/json"  // 타입이 JSON 형식이다
-			        }
-			    })
-			    .then(response => {
-			        console.log(response.status);
-			        if (response.ok) {
-			            console.log(response);
-			            alert("수정완료!");
-			            location.href = '/facIns';  // 여기 경로로 리디렉션
-			        } else {
-			            console.log(response);
-			            alert("수정실패");
-			        }
-			    })
-			    .catch(error => {
-			        console.log(error);
-			        alert("오류");
-			    });
-			});
+    // 데이터 객체에 위에서 가져온 값들 넣기
+    var data = {
+        facInsCode: facInsCode,
+        facNotCode: facNotCode,
+        facCode: facCode,
+        facName: facName,
+        facInsPerson: facInsPerson,
+        facInsCheck: facInsCheck,
+        facInsJud: facInsJud,
+        facNotSituation: facNotSituation
+    };
+
+    // fac_ins update
+    // fatch를 통해 서버에 PUT 통신 요청
+    fetch("/updateFacIns", {
+        method: "PUT",
+        body: JSON.stringify(data),   // 데이터 JSON 형식으로 문자열 변환
+        headers: {
+            "Content-Type": "application/json"  // 타입이 JSON 형식이다
+        }
+    })
+    .then(response => {
+        console.log(response.status);
+        if (response.ok) {
+            console.log(response);
+            alert("수정완료!");
+            location.href = '/facIns';  // 여기 경로로 리디렉션
+        } else {
+            console.log(response);
+            alert("수정실패");
+        }
+    })
+    .catch(error => {
+        console.log(error);
+        alert("오류");
+    });
+
+    // 판정이 부적합일 때 상태도 업데이트
+    if (facInsJud === '부적합') {
+        // 상태 업데이트를 위한 데이터 객체 생성
+        var statusData = {
+            facNotCode: facNotCode,
+            facNotSituation: 2
+        };
+
+        // 상태 업데이트 요청
+        fetch("/updateStatus", {
+            method: "PUT",
+            body: JSON.stringify(statusData),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(response);
+                // 성공적으로 업데이트되었을 때 작업 수행
+            } else {
+                console.log(response);
+                // 업데이트 실패 처리
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // 오류 발생 시 처리
+        });
+    }
+});
 
         
          
@@ -297,12 +360,14 @@ button {
                 var facInsJud = document.getElementsByName("facInsJud")[0].value;
 
                 
-            // 조건
-                if (!facName || !facInsPerson) {
-                    alert("설비명과 담당자를 입력해주세요.");
-                    return;
-                }
-
+                if (!facName) {
+    	        	Swal.fire({
+    	            icon: 'error',
+    	            text: '설비명을 입력해주세요.'
+    	        });
+    	        return;
+    	    	}
+    		    
             // data 객체에 위에서 받아온 값 넣기
                 var data = {
                     facInsCode: facInsCode,
@@ -396,19 +461,7 @@ button {
                 {
          	          header: '상태',
          	          name: 'facNotSituation',
-         	          formatter: function(value) {
-         	            var numericValue = +value.value;
-
-         	            if (numericValue === 0) {
-         	              return '🟡';
-         	            } else if (numericValue === 1) {
-         	              return '🟢';
-         	            } else if (numericValue === 2) {
-         	              return '🔴';
-         	            } else {
-         	              return '알 수 없는 상태';
-         	            }
-         	          },
+         	          formatter: getOutStatus,
          	          align: 'center'
          	        }
               
