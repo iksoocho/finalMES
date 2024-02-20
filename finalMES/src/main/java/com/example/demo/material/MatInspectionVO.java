@@ -31,26 +31,26 @@ public class MatInspectionVO {
 	
 	
 	
-	public void insertMatInspection(MatInspectionVO matInspectionVO) {
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "username", "password");
-            CallableStatement cs = conn.prepareCall("{call insert_mat_inspection(?, ?, ?, ?, ?)}");
-            
-            // 매개변수 설정
-            cs.setInt(1, matInspectionVO.getMatInsCount());
-            cs.setInt(2, matInspectionVO.getMatInsBad());
-            cs.setDate(3, new java.sql.Date(matInspectionVO.getMatInsDate().getTime()));
-            cs.setString(4, matInspectionVO.getMatOrCode());
-            cs.setString(5, matInspectionVO.getMatNote());
-
-            // 프로시저 실행
-            cs.execute();
-
-            // Connection과 Statement를 닫습니다.
-            cs.close();
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//	public void insertMatInspection(MatInspectionVO matInspectionVO) {
+//        try {
+//            Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "username", "password");
+//            CallableStatement cs = conn.prepareCall("{call insert_mat_inspection(?, ?, ?, ?, ?)}");
+//            
+//            // 매개변수 설정
+//            cs.setInt(1, matInspectionVO.getMatInsCount());
+//            cs.setInt(2, matInspectionVO.getMatInsBad());
+//            cs.setDate(3, new java.sql.Date(matInspectionVO.getMatInsDate().getTime()));
+//            cs.setString(4, matInspectionVO.getMatOrCode());
+//            cs.setString(5, matInspectionVO.getMatNote());
+//
+//            // 프로시저 실행
+//            cs.execute();
+//
+//            // Connection과 Statement를 닫습니다.
+//            cs.close();
+//            conn.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

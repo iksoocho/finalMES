@@ -111,6 +111,7 @@
 		FROM material m
 		JOIN mat_lot ml ON m.mat_code = ml.mat_code
 		LEFT JOIN mat_inspection mi ON ml.mat_ins_code = mi.mat_ins_code
+		ORDER BY m.mat_code ASC
 	</select>
 
 	<!-- 출고 관리 -->
@@ -151,7 +152,8 @@
 				mi.mat_ins_good,
 				mi.mat_ins_bad,
 				ml.mat_lot_code,
-				ml.mat_input_date
+				ml.mat_input_date,
+				ml.mat_input_count
 		FROM mat_order mo
 		LEFT JOIN mat_inspection mi ON mo.mat_or_code = mi.mat_or_code
 		LEFT JOIN business b ON mo.business_code = b.business_code
@@ -213,11 +215,6 @@
 
 	<!-- 발주 등록 -->
 	<insert id="insertMatOrder" parameterType="MatOrderVO">
-		<selectKey keyProperty="matOrCode" resultType="String"
-			order="BEFORE">
-			SELECT 'MATORD' || LPAD(mat_or_code_seq.nextval, 3, 0) FROM
-			DUAL
-		</selectKey>
 		INSERT INTO mat_order
 		(
 			mat_code,
@@ -320,7 +317,7 @@
 
 	<!-- 입고 페이지 입고 인서트 -->
 	<insert id="matInputInsert" parameterType="MatInputVO">
-		
+
 		INSERT INTO mat_lot
 		(
 			mat_ins_code,
@@ -354,16 +351,14 @@
 
 	<!-- LOT 별 자재재고 -->
 	<select id="getMatOriginInfoList" resultType="OriginMaterialVO">
-		SELECT m.mat_code,
-				m.mat_name,
-				ml.mat_lot_code,
-				mi.mat_ins_good as matCount
-		FROM material m
-		JOIN mat_lot ml ON m.mat_code = ml.mat_code
-		JOIN mat_inspection mi ON ml.mat_ins_code = mi.mat_ins_code
-		WHERE m.mat_code = #{matCode}
-
-
-
+		SELECT ml.mat_lot_code,
+		        mi.mat_ins_good as matCount,
+		        m.mat_code,
+		        m.mat_name
+		FROM mat_inspection mi
+		JOIN mat_lot ml ON mi.mat_ins_code = ml.mat_ins_code
+		JOIN material m ON ml.mat_code = m.mat_code
+		JOIN mat_order mo ON m.mat_code = mo.mat_code
+		WHERE mo.mat_code = #{matCode}
 	</select>
 </mapper>

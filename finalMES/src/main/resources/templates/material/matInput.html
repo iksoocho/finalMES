@@ -81,7 +81,7 @@
                 	      columns: [
                 	        {
                 	          header: 'LOT코드',
-                	          name: 'matLotCode'
+                	          name: 'matLotCode',sortable: true, sortingType: 'desc'
                 	        },
                 	        {
                 	          header: '자재코드',
@@ -89,7 +89,7 @@
                 	        },
                 	        {
                 	          header: '자재명',
-                	          name: 'matName'
+                	          name: 'matName', sortable: true, sortingType: 'desc'
                 	        },
                 	        {
                 	          header: '단위',
@@ -116,7 +116,8 @@
         				    },
                 	        {
                 			  header: '입고량',
-                			  name: 'matInsGood'
+                			  name: 'matInputCount',
+           	            	  editor : 'text'
                 			},
                 	        {
                 		      header: '자재검사코드',
@@ -220,7 +221,7 @@
                 		      columns: [
                 		    	{
                 			      header: '자제검수코드',
-                			      name: 'matInsCode'
+                			      name: 'matInsCode',sortable: true, sortingType: 'desc'
                 			    },
                 		        {
                 		          header: '발주코드',
