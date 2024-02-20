@@ -96,7 +96,7 @@ public class FacManageServiceImpl implements FacManageService {
 		String facNotCode = facInsVO.getFacNotCode();
 		if ("적합".equals(facInsJud)) {
 		    facManageMapper.updateFacInsSi(facNotCode);
-		}
+		} 
 		facManageMapper.updateFacIns(facInsVO);
 	}
 	

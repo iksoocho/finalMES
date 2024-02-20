@@ -412,8 +412,8 @@
           	    let badValue = document.querySelector('input[id="badCount"]');
           	    let count = parseInt(badValue.value);
           	    if(count > 0){
-           	    count -= 1;
-           	    badValue.value = count;
+	           	    count -= 1;
+	           	    badValue.value = count;
           	    }
           	}
 
@@ -423,12 +423,12 @@
           	    let maxValue = [[${vo.dInsCount}]];
           	    let count = parseInt(badValue.value);
           	    if(count < maxValue){
-           	    count += 1;
-           	    badValue.value = count;
+	           	    count += 1;
+	           	    badValue.value = count;
           	    }
           	}
 
-          	//설비추가
+		// 설비추가버튼
         function facSelect(){
           		const selectFac = document.querySelector('input[name="facSelect"]:checked');
           		if(!selectFac){
@@ -446,7 +446,7 @@
           	}
 
 
-
+		// 모달창 공정누르면 설비목록출력
         document.querySelectorAll(".proc-row").forEach((row) => {
                 row.addEventListener("click", function () {
                   const procCode = this.getAttribute("data-proc-code");
@@ -483,7 +483,9 @@
                     });
                 });
               });
-
+		
+		
+		// 작업등록버튼
         async function workSave(){
         	let dinscode = '[[${vo.dInsCode}]]';
         	let proccode = document.querySelector('input[id="hiddenProcCode"]').value;
@@ -602,16 +604,18 @@
        		
         }
         
+		// 등록취소버튼
         function workCancle(){
         	let starttime = document.querySelector('input[id="workStart"]').name;
         	if(starttime.length == 0){
         		location.href = '/planOrderList';
         	} else{
-        		alert("작업을 시작한 상태에서는 취소가 불가능합니다.");
+        		alert("작업중에는 취소가 불가능합니다.");
         		return;
         	}
         }
         
+		// 완료된작업 공정실적테이블로 insert
         function resultInsert(dInsCode){
         	console.log('실적테이블 입력을 위한 dInsCode : ', dInsCode);
         
