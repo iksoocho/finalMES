@@ -21,5 +21,6 @@ public interface WorkMapper {
 	public List<ProdProgressJoinVO> getProdProgress(@Param("dinsCode") String dinsCode);
 	public int insertWorkResult(@Param("dinsCode") String dinsCode);
 	public int updateProdInsState(@Param("dinsCode") String dinsCode);
+	public int updateOrdListState(@Param("dinsCode") String dinsCode);
 	
 }

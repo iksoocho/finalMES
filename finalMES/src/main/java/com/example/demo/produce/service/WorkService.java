@@ -12,4 +12,5 @@ public interface WorkService {
 	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO);
 	public int insertWorkResult(String dinsCode);
 	public int updateProdInsState(String dinsCode);
+	public int updateOrdListState(String dinsCode);
 }

@@ -135,6 +135,18 @@
 						FROM prod_d_ins 
 						WHERE d_ins_code=#{dInsCode})
 	</update>
+	
+	<update id="updateOrdListState" parameterType="String">
+		UPDATE ord_list 
+		SET ord_state='o4' 
+		WHERE ord_code=(SELECT ord_code 
+						FROM prod_plan 
+						WHERE plan_code=(SELECT plan_code 
+										FROM prod_instruction 
+										WHERE ins_code=(SELECT ins_code 
+														FROM prod_d_ins 
+														WHERE d_ins_code=#{dInsCode})))
+	</update>
 
 
 </mapper>

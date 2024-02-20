@@ -364,6 +364,7 @@
           	  let hours = currentTime.getHours();
           	  let minutes = currentTime.getMinutes();
           	  let startTime = document.querySelector('input[id="workStart"]');
+          	  let dinscode = '[[${vo.dInsCode}]]';
           	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
           	  startTime.value = formatTime(hours, minutes);
           	  startTime.name = formatFullTime(currentTime);
@@ -372,7 +373,7 @@
 					headers : {
 						'Content-Type' : 'application/json',
 					},
-					body : dInsCode
+					body : dinscode
 				})
 				.then(response => {
 					if(!response.ok) {
