@@ -77,45 +77,45 @@ table tr:nth-child(even) {
 
 		<!-- Modal -->
 		<!-- ManagerListModal -->
-<!-- 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" -->
-<!-- 			data-bs-keyboard="false" tabindex="-1" -->
-<!-- 			aria-labelledby="staticBackdropLabel" aria-hidden="true"> -->
-<!-- 			<div class="modal-dialog"> -->
-<!-- 				<div class="modal-content"> -->
-<!-- 					<div class="modal-header" style="background-color: #0d6efd;"> -->
-<!-- 						<h1 class="modal-title fs-5" id="staticBackdropLabel" -->
-<!-- 							style="font-weight: bold">거래처 목록</h1> -->
-<!-- 						<button type="button" class="btn-close" data-bs-dismiss="modal" -->
-<!-- 							aria-label="Close"></button> -->
-<!-- 					</div> -->
+		<!-- 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" -->
+		<!-- 			data-bs-keyboard="false" tabindex="-1" -->
+		<!-- 			aria-labelledby="staticBackdropLabel" aria-hidden="true"> -->
+		<!-- 			<div class="modal-dialog"> -->
+		<!-- 				<div class="modal-content"> -->
+		<!-- 					<div class="modal-header" style="background-color: #0d6efd;"> -->
+		<!-- 						<h1 class="modal-title fs-5" id="staticBackdropLabel" -->
+		<!-- 							style="font-weight: bold">거래처 목록</h1> -->
+		<!-- 						<button type="button" class="btn-close" data-bs-dismiss="modal" -->
+		<!-- 							aria-label="Close"></button> -->
+		<!-- 					</div> -->
 
-<!-- 					<div class="modal-body"> -->
+		<!-- 					<div class="modal-body"> -->
 
-<!-- 						<table> -->
-<!-- 							<thead style="text-align: center;"> -->
-<!-- 								<tr> -->
-<!-- 									<th>거래처코드</th> -->
-<!-- 									<th>거래처명</th> -->
-<!-- 								</tr> -->
-<!-- 							</thead> -->
-<!-- 							<tbody style="text-align: center;"> -->
-<!-- 								<tr th:each="badMat : ${badMatList}" -->
-<!-- 									th:data-businessCode="${business.businessCode}" -->
-<!-- 									th:data-businessManagerPhone="${business.businessManagerPhone}" -->
-<!-- 									data-bs-dismiss="modal" onclick="updateInputFields(this)"> -->
-<!-- 									<td th:text="${business.businessCode}"></td> -->
-<!-- 									<td th:text="${business.businessName}"></td> -->
-<!-- 								</tr> -->
-<!-- 							</tbody> -->
-<!-- 						</table> -->
-<!-- 					</div> -->
-<!-- 					<div class="modal-footer" style="background-color: #0d6efd;"> -->
-<!-- 						<button type="button" class="btn btn-secondary" -->
-<!-- 							data-bs-dismiss="modal">닫기</button> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
+		<!-- 						<table> -->
+		<!-- 							<thead style="text-align: center;"> -->
+		<!-- 								<tr> -->
+		<!-- 									<th>거래처코드</th> -->
+		<!-- 									<th>거래처명</th> -->
+		<!-- 								</tr> -->
+		<!-- 							</thead> -->
+		<!-- 							<tbody style="text-align: center;"> -->
+		<!-- 								<tr th:each="badMat : ${badMatList}" -->
+		<!-- 									th:data-businessCode="${business.businessCode}" -->
+		<!-- 									th:data-businessManagerPhone="${business.businessManagerPhone}" -->
+		<!-- 									data-bs-dismiss="modal" onclick="updateInputFields(this)"> -->
+		<!-- 									<td th:text="${business.businessCode}"></td> -->
+		<!-- 									<td th:text="${business.businessName}"></td> -->
+		<!-- 								</tr> -->
+		<!-- 							</tbody> -->
+		<!-- 						</table> -->
+		<!-- 					</div> -->
+		<!-- 					<div class="modal-footer" style="background-color: #0d6efd;"> -->
+		<!-- 						<button type="button" class="btn btn-secondary" -->
+		<!-- 							data-bs-dismiss="modal">닫기</button> -->
+		<!-- 					</div> -->
+		<!-- 				</div> -->
+		<!-- 			</div> -->
+		<!-- 		</div> -->
 
 
 
@@ -176,6 +176,11 @@ table tr:nth-child(even) {
                 		          name: 'matOrCount'
                 		        },
                 		        {
+                				  header: '검사량',
+                				  name: 'matInsCount',
+                				  editor: 'text'
+                				},
+                		        {
                 				  header: '합격량',
                 				  name: 'matInsGood',
                 				  editor: 'text'
@@ -233,7 +238,28 @@ table tr:nth-child(even) {
         				    console.log('잘 들고오네요...',insCheckRows[0]);
 
 
-
+							
+        				    
+//         			        for (const data of insCheckRows) {
+//         	                    if (!data.matInsCount || isNaN(data.matInsCount) || Number(data.matInsCount) <= 0) {
+//         	                        alert("검사량을 확인해주세요.");
+//         	                        return;
+//         	                    }
+        	                    
+//         	                }
+        			        
+//         			        for(const data of insCheckRows){
+//         	                    if (!data.matInsGood || isNaN(data.matInsGood) || Number(data.matInsGood) <= 0) {
+//         	                        alert("합격량을 확인해주세요.");
+//         	                        return;
+//         	                    }
+//         			        }
+        			        
+        			    
+        			        
+        			        
+        			        
+        			        
 
         				    if (insCheckRows.length === 0) {
         				        console.log('추가된 데이터가 없습니다.');
@@ -244,18 +270,12 @@ table tr:nth-child(even) {
         				    // 데이터를 객체로 생성
         				    let data = {};
 
-        // 			        data.matInsCode = insCheckRows[0].matInsCode;
         			        data.matOrCode = insCheckRows[0].matOrCode;
-        			        
-        			        console.log("data.matInsCount : ", data.matInsCount);
-        // 			        data.matName = insCheckRows[0].matName;
-        // 			        data.matUnit = insCheckRows[0].matUnit;
-        // 			        data.matStandard = insCheckRows[0].matStandard;
-        // 			        data.businessName = insCheckRows[0].businessName;
-        // 			        data.matOrCount = insCheckRows[0].matOrCount;
+        			        data.matInsCount = insCheckRows[0].matInsCount;
         			        data.matInsGood = insCheckRows[0].matInsGood;
         			        data.matInsBad = insCheckRows[0].matInsBad;
         			        data.matInsDate = insCheckRows[0].matInsDate;
+        			        
         			        data.matManager = name;
 
         				    console.log('전송할 데이터:', data);
@@ -284,6 +304,7 @@ table tr:nth-child(even) {
         				    });
         				});
 
+        				
                 		// 날짜 형식 지정 함수
                      	function formatDate({ value }) {
                      	    if (value) {

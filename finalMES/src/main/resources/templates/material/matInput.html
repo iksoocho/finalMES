@@ -119,12 +119,12 @@
                 			  name: 'matInsGood'
                 			},
                 	        {
-                		      header: '자재 검사코드',
+                		      header: '자재검사코드',
                 		      name: 'matInsCode'
                 		    },
                 	        {
                 			  header: '담당자',
-                			  name: 'matManager'
+                			  name: 'matOrManager'
                 			},
                 	      ],
                 	      rowHeaders: ['rowNum','checkbox'],
@@ -150,10 +150,9 @@
         				    let name = [[${session.userName}]];
 
         				    const inputRows = newInpuRows;
-        				    console.log('잘 들고오네요...',inputRows[0].matInputDate);
+        				    console.log('잘 들고오네요...',inputRows[0].matInsCode);
 
-
-
+							
 
 
         				    if (inputRows.length === 0) {
@@ -174,6 +173,7 @@
         			        data.matInputCount = inputRows[0].matInputCount;
         			        data.matOutCount = inputRows[0].matOutCount;
         			        data.matCount = inputRows[0].matCount;
+        			        data.matInsCode = inputRows[0].matInsCode;
         			        data.matManager = name;
 
         				    console.log('전송할 데이터:', data);

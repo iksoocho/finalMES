@@ -73,12 +73,6 @@ input[type="text"]:focus {
 							oninput="searchFunction()" placeholder="검색..."></th>
 					</tr>
 				</table>
-				<table>
-					<tr>
-						<th><input type="text" id="searchOrder"
-							oninput="searchFunction()" placeholder="검색..."></th>
-					</tr>
-				</table>
 
 			</div>
 
@@ -395,17 +389,33 @@ input[type="text"]:focus {
 	                // 데이터 유효성 검사
 					for (const data of newData) {
 					  if (!data.matOrName || data.matOrName.trim() === "") {
-					    console.log("발주명을 확인해주세요.");
+					    alert("발주명을 확인해주세요.");
 					    return;
 					  }
-					}
-	                for (const data of newData) {
-	                    if (!data.matOrCount || isNaN(data.matOrCount) || Number(data.matOrCount) <= 0) {
+					  if (!data.matOrCount || isNaN(data.matOrCount) || Number(data.matOrCount) <= 0) {
 	                        alert("발주량을 확인해주세요.");
 	                        return;
-	                    }
-	                    // 다른 필드에 대한 유효성 검사도 여기에 추가할 수 있습니다.
-	                }
+	                   }
+	                   // 다른 필드에 대한 유효성 검사도 여기에 추가할 수 있습니다.  
+					    let matOrDate = new Date(data.matOrDate);
+		                if (isNaN(matOrDate.getTime())) {
+		                    alert("유효하지 않은 발주일입니다 다시 지정해 주세요");
+		                    return;
+		                }
+					  
+					}
+	                
+	                
+
+
+	                
+	                
+	                
+		               
+	                	
+// 	                }
+	                
+
 	                
 
                  	console.log('추가된 행의 데이터:' , newData);
