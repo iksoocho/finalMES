@@ -12,5 +12,5 @@ public interface WorkService {
 	public int insertWorkMidRegist(WorkMidRegistVO workMidRegistVO);
 	public List<WorkMidRegistVO> checkWorkMidRegist(String dinsCode, String procCode);
 	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO);
-	public void insertWorkResult(List<WorkResultVO> list);
+	public int insertWorkResult(String dinsCode);
 }

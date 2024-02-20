@@ -355,6 +355,7 @@
 
                document.getElementById('WorkDate').value = today;
                console.log('순서 최대값 : ', [[${#lists.size(prJoin)}]]);
+               
            });
 
           	// 작업시작 버튼 클릭 시
@@ -483,7 +484,7 @@
                 });
               });
 
-        function workSave(){
+        async function workSave(){
         	let dinscode = '[[${vo.dInsCode}]]';
         	let proccode = document.querySelector('input[id="hiddenProcCode"]').value;
         	let proginscount = [[${vo.dInsCount}]];
@@ -492,6 +493,13 @@
         	let starttime = document.querySelector('input[id="workStart"]').name;
         	let endtime = document.querySelector('input[id="workEnd"]').name;
         	let prodcode = '[[${prodCode}]]';
+        	
+        	let lastProcCode = document.querySelector(".proc-row:last-child").getAttribute("data-proc-code");
+       		let selectProcCode = document.querySelector('input[id="hiddenProcCode"]').value;
+        	let saveState=0;
+        	
+        	console.log('마지막공정 : ', lastProcCode);
+       		console.log('선택한공정 : ', selectProcCode);
         	
         	console.log("checkWorkMid?dinsCode="+ dinscode +" &procCode=" + proccode);
 
@@ -506,7 +514,7 @@
         			prodCode : prodcode
         	};
 
-        	fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
+        	await fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
         	.then((response) => response.json())
         	.then((data) => {
         		console.log('조회결과 : ', data);
@@ -521,6 +529,7 @@
 	        		
 	        		if(data[0].progInsCount == (data[0].progPassCount + parseInt(vo.progPassCount))){
 	        			vo.progState = 3;
+	        			saveState = 3;
 		            }else{
 		            	vo.progState = data[0].progState;
 		            }
@@ -542,6 +551,10 @@
         			.then(data => {
         				console.log('Success : ', data);
         				alert(data);
+        				console.log('상태저장 : ', saveState);
+        	       		if(saveState == 3 && lastProcCode === selectProcCode){
+        	       			resultInsert(dinscode);
+        	       		}
         				/* location.href = '/planOrderList'; */
         			})
         			.catch(error => {
@@ -551,6 +564,7 @@
         		}else{
 					if(parseInt(vo.progPassCount) == vo.progInsCount){
 						vo.progState = 3;
+						saveState = 3;
 					} else{
 						vo.progState = 1;
 					}
@@ -575,16 +589,17 @@
         			.then(data => {
         				console.log('Success:', data);
         	            alert(data);
+        	            console.log('상태저장 : ', saveState);
+        	       		if(saveState == 3 && lastProcCode === selectProcCode){
+        	       			resultInsert(dinscode);
+        	       		}
         			})
         			.catch(error => {
         	            console.error('Error:', error);
         	        });
         		} //else끝
-        		
-        		let seqMax = [[${#lists.size(prJoin)}]];
-        		//if(data.) 조건주고 컨트롤러에 쿼리문 추가
-        		
         	});
+       		
         }
         
         function workCancle(){
@@ -597,13 +612,15 @@
         	}
         }
         
-        function resultInsert(obj){
+        function resultInsert(dInsCode){
+        	console.log('실적테이블 입력을 위한 dInsCode : ', dInsCode);
+        
         	fetch('/workResultInsert', {
 				method: 'POST',
 	            headers: {
 	                'Content-Type': 'application/json',
 	            },
-	            body: JSON.stringify(obj)
+	            body: dInsCode
 			})
 			.then(response => {
 				if (!response.ok) {
