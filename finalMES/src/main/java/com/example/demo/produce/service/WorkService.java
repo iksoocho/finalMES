@@ -2,10 +2,8 @@ package com.example.demo.produce.service;
 
 import java.util.List;
 
-
 import com.example.demo.produce.FacCateVO;
 import com.example.demo.produce.WorkMidRegistVO;
-import com.example.demo.produce.WorkResultVO;
 
 public interface WorkService {
 	public List<FacCateVO> getFacSelect(String procCode);
@@ -13,4 +11,5 @@ public interface WorkService {
 	public List<WorkMidRegistVO> checkWorkMidRegist(String dinsCode, String procCode);
 	public int updateWorkMidRegist(WorkMidRegistVO workMidRegistVO);
 	public int insertWorkResult(String dinsCode);
+	public int updateProdInsState(String dinsCode);
 }

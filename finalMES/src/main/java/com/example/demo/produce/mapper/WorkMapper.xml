@@ -128,5 +128,13 @@
 		WHERE d_ins_code = #{dInsCode}
 	</insert>
 
+	<update id="updateProdInsState" parameterType="String">
+		UPDATE prod_instruction 
+		SET ins_state='i2' 
+		WHERE ins_code=(SELECT ins_code 
+						FROM prod_d_ins 
+						WHERE d_ins_code=#{dInsCode})
+	</update>
+
 
 </mapper>

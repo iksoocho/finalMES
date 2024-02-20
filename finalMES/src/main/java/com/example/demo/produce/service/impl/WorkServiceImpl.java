@@ -64,4 +64,16 @@ public class WorkServiceImpl implements WorkService {
 		}
 	}
 
+	@Override
+	public int updateProdInsState(String dinsCode) {
+		int result = workMapper.updateProdInsState(dinsCode);
+		if(result > 0) {
+        	System.out.println("IMPL 생산지시 상태변경 성공");
+			return 1;
+		}else {
+			System.out.println("IMPL 생산지시 상태변경 실패");
+			return -1;
+		}
+	}
+
 }
