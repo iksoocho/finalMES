@@ -29,6 +29,7 @@ public class OriginMaterialVO {
 	
 	
 	private String matCount2;
+	private String matInputCount;
 	
 	
 	private int matOrCount;
