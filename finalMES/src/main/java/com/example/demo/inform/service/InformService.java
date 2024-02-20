@@ -23,23 +23,32 @@ public interface InformService {
 	
 	public boolean updatePass(@Param("userCode") String userCode, @Param("userPassword") String userPassword);
 	
+	public void updateResetPass(EmpVO empVO);
+	
+	public void deleteEmp(String userCode);
+	
 	//자재
 	public List<MatVO> getMatList();
 	public MatVO insertMatInfo(MatVO matVO);
+	public void deleteMat(String matCode);
+	
 	
 	
 	
 	//제품
 	public List<ProdVO> getProdList();
 	public ProdVO insertProdInfo(ProdVO prodVO);
+	public void deleteProd(String prodCode);
 	
 	
 	//공정
 	public List<ProcVO> getProcList();
 	public ProcVO insertProcInfo(ProcVO procVO);
+	public void deleteProc(String procCode);
 	
 	
 	//자재 불량
 	public List<BadMaterialVO> getBadMatList();
 	public BadMaterialVO insertBadMatInfo(BadMaterialVO badMatVO);
+	public void deleteBad(String badMatCode);
 }

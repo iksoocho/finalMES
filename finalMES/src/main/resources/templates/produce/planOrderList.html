@@ -7,12 +7,20 @@
   <head>
     <meta charset="UTF-8" />
     <title>생산지시목록</title>
+    
   </head>
   <body>
-    <section layout:fragment="content">
+    <section layout:fragment="content" class="m-5">
       <div class="container">
+      <h2>공정 실적 관리</h2>
+      	<div id="insGrid"></div>
+      	
+      	<div class="mt-4">
+			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="registerButton">작업 등록</button>
+			<div id="insDGrid"></div>
+		</div>
         <!-- ============================메인============================ -->
-        <h2>생산지시목록</h2>
+        <!-- <h2>생산지시목록</h2>
         <div>
           <div>
             <table class="table table-hover">
@@ -46,9 +54,9 @@
               </tbody>
             </table>
           </div>
-          <!-- ============================생산상세계획============================ -->
+          ============================생산상세계획============================
           <div class="mt-5">
-            <!-- <button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button> -->
+            <button class="btn btn-secondary" style="float: right; margin: 0 5px;">저장</button>
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -96,59 +104,203 @@
               작업 등록
             </button>
           </div>
-        </div>
+        </div> -->
       </div>
-      <script>
-        document.querySelectorAll(".ins-row").forEach((row) => {
-          row.addEventListener("click", function () {
-            const insCode = this.getAttribute("data-ins-code");
-            console.log("insCode : ", insCode);
-            fetch("planOrderDetail?insCode=" + insCode)
-              .then((response) => response.json())
-              .then((data) => {
-                const detailsTbody = document.getElementById("detailPlanOrder");
-                detailsTbody.innerHTML = ""; // 기존 내용 초기화
+      <script th:inline="javascript">
+      	let ins = [[${insList}]];
+		let insGrid, insDGrid;
 
-                // 상세 정보 리스트를 반복하여 tr 요소 생성 및 추가
-                data.forEach((detail) => {
-                  const tr = document.createElement("tr");
-                  const sDate = new Date(detail.dinsSdate);
-                  const eDate = new Date(detail.dinsEdate);
-                  const formatSdate = sDate.toLocaleDateString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  });
-                  const formatEdate = eDate.toLocaleDateString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  });
-                  console.log(detail);
-                  tr.innerHTML = `
-							<td>
-								<div class="form-check">
-								  <input class="form-check-input" type="radio" name="flexRadioDefault" id="${detail.dinsCode}" >
-								  <label class="form-check-label" for="${detail.dinsCode}"></label>
-								</div>
-							</td>
-							<td>${detail.insCode}</td>
-							<td id="${detail.prodCode}">${detail.prodCode}</td>
-							<td>${detail.dinsCount}</td>
-							<td>${formatSdate}</td>
-							<td>${formatEdate}</td>
-							<td>${detail.dinsNote}</td>
-						`;
-                  detailsTbody.appendChild(tr);
-                });
-              });
-          });
-        });
+		
+		
+		class RadioButtonRenderer {
+		    constructor(props) {
+		        const el = document.createElement('input');
+		        el.type = 'radio';
+		        el.name = 'myRadio'; // 동일한 name 속성을 사용하여 그룹화
+		        el.value = props.value;
 
+		        this.el = el;
+		    }
+
+		    getElement() {
+		        return this.el;
+		    }
+
+		    render(props) {
+		        this.el.checked = props.value === props.grid.getValue(props.rowKey, 'selectedValue');
+		    }
+		}
+		
+		
+		document.addEventListener('DOMContentLoaded', function () {
+			insGrid = new tui.Grid({
+				el: document.getElementById('insGrid'),
+				data: ins,
+				// 그리드 컬럼 설정
+				columns: [
+					
+					{header: '생산지시코드', name: 'insCode', align: "center", },
+					{header: '계획 코드', name: 'planCode'},
+					{
+						header: '지시 명',
+						name: 'insTitle',
+						editor: 'text', // 이 부분을 추가하여 텍스트 입력을 가능하게 함
+						className: 'insTitle',
+						background: '#014386'
+					},
+					{header: '담당자', name: 'insPerson', align: "center"},
+					{
+						header: '생산지시일자',
+						name: 'insDate',
+						align: "center",
+						formatter: function ({value}) {
+							if (value) {
+								var date = new Date(value);
+								var year = date.getFullYear();
+								var month = (date.getMonth() + 1).toString().padStart(2, '0');
+								var day = date.getDate().toString().padStart(2, '0');
+								return `${year}-${month}-${day}`;
+							}
+							return '';
+						}
+					},
+					
+					
+				],
+
+				rowHeaders: ['rowNum'],
+				pageOptions: {
+					useClient: true,
+					perPage: 5
+				}
+			});
+
+			insGrid.on('click', function (ev) {
+				console.log(ev.columnName);
+				var columnName = ev.columnName;
+				if (columnName === 'insCode') {
+					var rowKey = ev.rowKey;
+					var rowData = insGrid.getRow(rowKey);
+
+					if (rowData) {
+						var insCode = rowData.insCode;
+						
+
+						// planCode를 사용하여 상세 데이터 요청
+						fetch('/insDetail?insCode=' + insCode)
+							.then(response => response.json())
+							.then(data => {
+								console.log(data);
+								// 상세 그리드에 데이터 표시
+								// grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
+								insDGrid.resetData(data);
+							})
+							.catch(error => {
+								console.error('Error:', error);
+							});
+					}
+				}
+			});
+
+			insDGrid = new tui.Grid({
+				el: document.getElementById('insDGrid'), // 그리드 요소 ID가 맞는지 확인하세요
+				scrollX: false,
+				scrollY: false,
+
+				columns: [
+					// 데이터 구조에 따라 컬럼을 정의하세요
+					 {
+			            header: '선택',
+			            name: 'radioColumn',
+			            renderer: RadioButtonRenderer,
+			            width: 50,
+			            align: "center",
+			        },
+					{name: 'dinsCode', header: '상세 지시 코드' ,className: 'dinsCode'},
+					{name: 'insCode', header: '생산 지시 코드'},
+					{name: 'prodCode', header: '제품 코드'},
+					{
+						name: 'dinsSdate', header: '시작 일자',
+						className: 'start',
+						formatter: function ({value}) {
+							if (value) {
+								var date = new Date(value);
+								var year = date.getFullYear();
+								var month = (date.getMonth() + 1).toString().padStart(2, '0');
+								var day = date.getDate().toString().padStart(2, '0');
+								return `${year}-${month}-${day}`;
+							}
+							return '';
+						},
+						
+					},
+					{
+						name: 'dinsEdate', header: '종료 일자',
+						className: 'end',
+						formatter: function ({value}) {
+							if (value) {
+								var date = new Date(value);
+								var year = date.getFullYear();
+								var month = (date.getMonth() + 1).toString().padStart(2, '0');
+								var day = date.getDate().toString().padStart(2, '0');
+								return `${year}-${month}-${day}`;
+							}
+							return '';
+						},
+						
+					},
+					{name: 'dinsCount', header: '지시량', align: "center", },
+					
+				],
+				// 여기에 다른 그리드 옵션을 추가할 수 있습니다
+				rowHeaders: [],
+
+			});
+
+			
+
+		});
+		
+		document.getElementById('insDGrid').addEventListener('change', function(e) {
+		    if (e.target.type === 'radio') {
+		        // 선택된 라디오 버튼의 행 키 저장
+		        selectedRowKey = e.target.closest('td').getAttribute('data-row-key');
+		        console.log("selectedRowKey : ", selectedRowKey)
+		    }
+		});
+		
+		document.getElementById('registerButton').addEventListener('click', function() {
+		    // 선택된 행의 데이터가 있으면 서버로 전송
+		    if (selectedRowKey !== null) {
+		        const rowData = insDGrid.getRow(selectedRowKey);
+		        console.log("dinsdata : " , rowData.dinsCode)
+
+		        // AJAX를 사용하여 서버로 데이터 전송
+		        fetch('/workRegist', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		            },
+		            body: JSON.stringify(rowData)
+		        })
+		        .then(response => response.json())
+		        .then(data => {
+		            console.log('Success:', data);
+		        })
+		        .catch((error) => {
+		            console.error('Error:', error);
+		        });
+		    } else {
+		        alert('라디오 버튼을 선택해주세요.');
+		    }
+		});
+		
+		
+		
+		
+		
         // 작업 등록 버튼 클릭 이벤트 처리
-        document
-          .getElementById("registerButton")
-          .addEventListener("click", function () {
+        /* document.getElementById("registerButton").addEventListener("click", function () {
             // 선택된 라디오 버튼 가져오기
             const selectedRadio = document.querySelector(
               'input[name="flexRadioDefault"]:checked'
@@ -166,7 +318,7 @@
             } else {
               alert("작업등록을 할 상세생산지시를 선택해주세요.");
             }
-          });
+          }); */
       </script>
     </section>
   </body>

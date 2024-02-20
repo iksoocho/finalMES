@@ -4,7 +4,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>empList.html</title>
-
+	<style>
+		.tui-grid-row-odd .emp.userName,
+		.tui-grid-row-odd .emp.deptName,
+		.tui-grid-row-odd .emp.userEmail,
+		.tui-grid-row-odd .emp.userPhone,
+		.tui-grid-row-odd .emp.userAuthority
+		 {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+	</style>
 </head>
 
 <body>
@@ -25,7 +35,27 @@
 
 		<script th:inline="javascript">
 			function addRow() {
-				grid.prependRow({isNew: true});
+				 // 이미 'isNew'가 true인 행이 있는지 확인
+			    const existingNewRows = grid.findRows(row => row.isNew);
+
+			    // 새로운 행이 이미 존재하는 경우, 추가하지 않고 경고
+			    if (existingNewRows.length > 0) {
+			        alert("추가 중인 정보가 있습니다.")
+			        return; // 함수 종료
+			    }
+				
+				 const newRowData = {
+					        // 이 부분에 다른 셀 데이터를 추가할 수 있습니다
+					        // 예: name: 'New Name', age: 30, etc.
+					        _attributes: {
+					            className: {
+					                row: ['emp']  // 여기서 'your-custom-class'는 원하는 클래스 이름입니다
+					            }
+					        }, 
+					         isNew: true
+					    };
+				
+				grid.prependRow(newRowData);
 
 				// 마지막 행의 데이터를 콘솔에 출력
 				const lastRowId = grid.getRowCount() - 1;
@@ -53,7 +83,119 @@
 				// 필요한 경우, 여기에서 데이터 업데이트 로직을 구현할 수 있습니다.
 			}
 
+			class resetButtonRenderer {
+				constructor(props) {
+					const el = document.createElement('button');
+					el.textContent = '비밀번호 초기화';
+					el.addEventListener('click', () => {
 
+						const rowData = props.grid.getRow(props.rowKey);
+						const userCode = rowData.userCode;
+						console.log("userCode : " + userCode)
+						
+						
+						let data = {};
+						
+						let obj = {};
+
+						
+						
+
+						data.userCode = userCode;
+						
+
+						console.log("data : " + data);
+
+						fetch('/passReset', {
+							method: 'PUT',
+							headers: {
+								'Content-Type': 'application/json',
+
+							},
+							body: JSON.stringify(data)
+						})
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('Network response was not ok');
+								}
+								return response.text();
+							})
+							.then(data => {
+								console.log('Success:', data);
+								alert(data);
+								location.href = '/empList'; // 성공적으로 처리된 후 리디렉트
+							})
+							.catch(error => {
+								console.error('Error:', error);
+							});
+
+					});
+
+					this.el = el;
+				}
+
+				getElement() {
+					return this.el;
+				}
+			}
+			
+			
+			class DeleteButtonRenderer {
+				constructor(props) {
+					const el = document.createElement('button');
+					el.textContent = '삭제';
+					el.addEventListener('click', () => {
+
+						const rowData = props.grid.getRow(props.rowKey);
+						const userCode = rowData.userCode;
+						const insCode = rowData.insCode;
+						
+						let data = userCode;
+
+						console.log("data : " + data);
+						
+						if(confirm("사원정보를 삭제 하시겠습니까?")){
+							fetch('/empDelete', {
+								method: 'DELETE',
+								headers: {
+									'Content-Type': 'application/json',
+
+								},
+								body: data
+							})
+								.then(response => {
+									if (!response.ok) {
+										throw new Error('Network response was not ok');
+									}
+									return response.text();
+								})
+								.then(data => {
+									console.log('Success:', data);
+									
+									alert(data);
+									
+									
+									location.href = '/empList'; // 성공적으로 처리된 후 리디렉트
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						}else{
+							alert("삭제를 취소했습니다.");
+							return;
+						}
+						
+						
+
+					});
+
+					this.el = el;
+				}
+
+				getElement() {
+					return this.el;
+				}
+			}
 
 
 
@@ -75,11 +217,12 @@
 					{header: '사원 번호', name: 'userCode'},
 					{
 						header: '이름', name: 'userName',
-						editor: 'text'
+						editor: 'text', className : 'userName'
 
 					},
 					{
 						header: '부서명', name: 'deptName',
+						className : 'deptName',
 						editor: {
 							type: 'select',
 							options: {
@@ -108,8 +251,8 @@
 							return value;
 						}
 					},
-					{header: '이메일', name: 'userEmail', editor: 'text'},
-					{header: '연락처', name: 'userPhone', editor: 'text'},
+					{header: '이메일', name: 'userEmail', editor: 'text',className : 'userEmail',},
+					{header: '연락처', name: 'userPhone', editor: 'text',className : 'userPhone'},
 					{
 						header: '직급', name: 'userAuthority',
 						editor: {
@@ -121,6 +264,7 @@
 									// 추가적인 옵션...
 								] // 위에서 정의한 옵션 목록 사용
 							}
+							
 						},
 						formatter: function ({value}) {
 							if (value == 'admin') {
@@ -130,8 +274,26 @@
 								return '일반사원';
 							}
 							return value;
+						},
+						className : 'userAuthority'
+					},
+					
+					{
+						header: '비밀번호 초기화',
+						name: 'resetButton',
+						align: "center",
+						renderer: {
+							type: resetButtonRenderer
 						}
 					},
+					{
+						header: '삭제',
+						name: 'deleteButton',
+						align: "center",
+						renderer: {
+							type: DeleteButtonRenderer
+						}
+					}
 
 				],
 				rowHeaders: ['rowNum'],
@@ -198,6 +360,32 @@
 					alert("저장 할 데이터가 없습니다.");
 					return;
 				}
+				console.log("userName : ", newData[0].userName);
+				if(newData[0].userName == null){
+					alert("이름을 입력해 주세요.");
+					return;
+				}
+				if(newData[0].deptName == null){
+					alert("부서를 선택해 주세요.");
+					return;
+				}
+				if(newData[0].userEmail == null){
+					alert("이메일을 입력해 주세요.");
+					return;
+				}
+				if(newData[0].userEmail == null){
+					alert("이메일을 입력해 주세요.");
+					return;
+				}
+				if(newData[0].userPhone == null){
+					alert("연락처를 입력해 주세요.");
+					return;
+				}
+				if(newData[0].userAuthority == null){
+					alert("직급을 입력해 주세요.");
+					return;
+				}
+				
 				// 콘솔에 출력하거나 서버로 보낼 수 있습니다.
 				console.log('추가된 행의 데이터:', newData);
 

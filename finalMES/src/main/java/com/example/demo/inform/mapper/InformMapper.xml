@@ -42,6 +42,17 @@
 		WHERE user_code = #{userCode}
 	</update>
 	
+	<update id="updateResetPass" >
+		UPDATE employee
+		SET user_password = #{userPassword}
+		WHERE user_code = #{userCode}
+	</update>
+	
+	<delete id="deleteEmp" parameterType="String">
+		delete from employee
+		where user_code = #{userCode}
+	</delete>
+	
 	
 	<!-- 자재 -->
 	<select id="selectMatList" resultType="MatVO">
@@ -55,6 +66,11 @@
 		VALUES(#{matName}, #{matUnit}, #{matStandard}, #{matSafeStock})
 	</insert>
 	
+	<delete id="deleteMat">
+		delete from material
+		where mat_code = #{matCode}
+	</delete>
+	
 	
 	<!-- 제품 -->
 	<select id="selectProdList" resultType="ProdVO">
@@ -66,6 +82,11 @@
 		product(prod_name, prod_unit, prod_spec, prod_price)
 		VALUES(#{prodName}, #{prodUnit}, #{prodSpec}, #{prodPrice})
 	</insert>
+	
+	<delete id="deleteProd">
+		delete from product
+		where prod_code = #{prodCode}
+	</delete>
 	
 	
 	<!-- 공정 -->
@@ -79,6 +100,11 @@
 		values(#{procName}) 
 	</insert>
 	
+	<delete id="deleteProc">
+		delete from process
+		where proc_code = #{procCode}
+	</delete>
+	
 	
 	<!-- 자재 불량-->
 	<select id="selectBadMatList" resultType="BadMatVO">
@@ -91,7 +117,11 @@
 		insert into
 		bad_material(bad_mat_name, bad_mat_content)
 		values(#{badMatName}, #{badMatContent})
-		
 	</insert>
+	
+	<delete id="deleteBad">
+		delete from bad_material
+		where bad_mat_code = #{badMatCode}
+	</delete>
 	
 </mapper>

@@ -141,7 +141,7 @@ public class PlanController {
 	@GetMapping("planIns")
 	public String getPlanInsList(Model model) {
 		List<PlanInsVO> list = planService.getPlanInsList();
-		List<PlanVO> planList = planService.getPlanList();
+		List<PlanVO> planList = planService.getPlanP1();
 		
 		model.addAttribute("list", list);
 		model.addAttribute("planList", planList);

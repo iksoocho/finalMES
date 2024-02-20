@@ -116,6 +116,12 @@ public class PlanServiceImpl implements PlanService{
 		
 	}
 	
+	@Override
+	public List<PlanVO> getPlanP1() {
+		// TODO Auto-generated method stub
+		return planMapper.selectPlanP1();
+	}
+	
 	
 	
 	//생산 지시 
@@ -193,6 +199,8 @@ public class PlanServiceImpl implements PlanService{
 		
 		return planMapper.selectMatUseList(dinsCode);
 	}
+
+	
 
 	
 

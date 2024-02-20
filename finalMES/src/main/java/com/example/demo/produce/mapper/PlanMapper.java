@@ -28,6 +28,8 @@ public interface PlanMapper {
 	
 	public int updatePlanDInfo(PlanDVO planDVO);
 	
+	public List<PlanVO> selectPlanP1();
+	
 	//주문서 상태 수정
 	public void updateOrderStateZero(String ordCode);
 	public void updateOrderStateOne(String ordCode);

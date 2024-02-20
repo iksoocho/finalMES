@@ -4,28 +4,88 @@
 <head>
 	<meta charset="UTF-8">
 	<title>empList.html</title>
-
+	<style>
+		.tui-grid-row-odd .proc.procName
+		 {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+	</style>
 </head>
 
 <body>
 	<section layout:fragment="content" class="m-5">
-		<h2>제품 관리</h2>
+		<h2>공정 관리</h2>
 		<br>
 		<div>
+		<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
+					<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="procInsert">저장</button>
 			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
 		</div>
 		<div id="grid"></div>
 
 		<script th:inline="javascript">
-			function addRow() {
-				grid.prependRow({isNew: true});
+		// 검색 기능 추가
+    	function searchFunction() {
+    	    // 입력된 검색어 가져오기
+    	    var input, filter, table, tr, td, i, j, txtValue;
+    	    input = document.getElementById("searchInput");
+    	    // 대문자로변환하기
+    	    filter = input.value.toUpperCase();
+    	    // 테이블 확인
+    	    table = document.getElementById("grid");
 
-				// 마지막 행의 데이터를 콘솔에 출력
-				const lastRowId = grid.getRowCount() - 1;
-				const lastRowData = grid.getRow(lastRowId);
-				console.log('새로 추가된 행 데이터:', lastRowData);
-			}
+    	    // 테이블 돌면서 확인
+    	    tr = table.getElementsByTagName("tr");
+    	    for (i = 0; i < tr.length; i++) {
+    	        // 각 행에서 셀을 가져오기
+    	        td = tr[i].getElementsByTagName("td");
+    	        // 행의 각 셀 돌면서 일치하는지 확인
+    	        for (j = 0; j < td.length; j++) {
+    	            // 셀의 내용을 가져오기
+    	            txtValue = td[j].textContent || td[j].innerText;
+    	            // 조건으로 검색어 있으면 가져오기
+    	            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    	                tr[i].style.display = "";
+    	                break;
+    	            } else {
+    	                // 검색어 없으면 리스트 안보이게 display none 처리
+    	                tr[i].style.display = "none";
+    	            }
+    	        }
+    	    }
+    	}
+		
+		
+    	function addRow() {
+    		 // 이미 'isNew'가 true인 행이 있는지 확인
+		    const existingNewRows = grid.findRows(row => row.isNew);
+
+		    // 새로운 행이 이미 존재하는 경우, 추가하지 않고 경고
+		    if (existingNewRows.length > 0) {
+		        alert("추가 중인 정보가 있습니다.")
+		        return; // 함수 종료
+		    }
+			 const newRowData = {
+				        // 이 부분에 다른 셀 데이터를 추가할 수 있습니다
+				        // 예: name: 'New Name', age: 30, etc.
+				        _attributes: {
+				            className: {
+				                row: ['proc']  // 여기서 'your-custom-class'는 원하는 클래스 이름입니다
+				            }
+				        }, 
+				         isNew: true
+				    };
+			
+			grid.prependRow(newRowData);
+
+			// 마지막 행의 데이터를 콘솔에 출력
+			const lastRowId = grid.getRowCount() - 1;
+			const lastRowData = grid.getRow(lastRowId);
+			console.log('새로 추가된 행 데이터:', lastRowData);
+		}
 
 			function onBeforeChange(ev) {
 				const {rowKey} = ev.changes[0];
@@ -48,6 +108,62 @@
 			}
 
 
+			class DeleteButtonRenderer {
+				constructor(props) {
+					const el = document.createElement('button');
+					el.textContent = '삭제';
+					el.addEventListener('click', () => {
+
+						const rowData = props.grid.getRow(props.rowKey);
+						const procCode = rowData.procCode;
+						
+						
+						let data = procCode;
+
+						console.log("data : " + data);
+						
+						if(confirm("공정 정보를 삭제 하시겠습니까?")){
+							fetch('/procInfoDelete', {
+								method: 'DELETE',
+								headers: {
+									'Content-Type': 'application/json',
+
+								},
+								body: data
+							})
+								.then(response => {
+									if (!response.ok) {
+										throw new Error('Network response was not ok');
+									}
+									return response.text();
+								})
+								.then(data => {
+									console.log('Success:', data);
+									
+									alert(data);
+									
+									
+									location.href = '/procList'; // 성공적으로 처리된 후 리디렉트
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						}else{
+							alert("삭제를 취소했습니다.");
+							return;
+						}
+						
+						
+
+					});
+
+					this.el = el;
+				}
+
+				getElement() {
+					return this.el;
+				}
+			}
 
 
 
@@ -66,13 +182,14 @@
 				scrollX: false,
 				scrollY: false,
 				columns: [
-					{header: '공정 코드', name: 'procCode'},
+					{header: '공정 코드', name: 'procCode', align: "center",},
 					{
 						header: '공정 명', name: 'procName',
-						editor: 'text'
+						align: "center",
+						editor: 'text', className : 'procName'
 
 					},
-					{header: '등록일', name: 'procDate',
+					{header: '등록일', name: 'procDate',align: "center",
 						formatter: function ({value}) {
 							if (value) {
 								var date = new Date(value);
@@ -82,6 +199,14 @@
 								return `${year}-${month}-${day}`;
 							}
 							return '';
+						}
+					},
+					{
+						header: '삭제',
+						name: 'deleteButton',
+						align: "center",
+						renderer: {
+							type: DeleteButtonRenderer
 						}
 					}
 					
@@ -107,6 +232,10 @@
 				if (newData.length === 0) {
 					console.log('추가된 행이 없습니다.');
 					alert("저장 할 데이터가 없습니다.");
+					return;
+				}
+				if (newData[0].procName == null) {
+					alert("공정 명을 입력해 주세요.");
 					return;
 				}
 				// 콘솔에 출력하거나 서버로 보낼 수 있습니다.

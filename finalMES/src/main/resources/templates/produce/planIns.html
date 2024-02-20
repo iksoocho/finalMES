@@ -56,7 +56,7 @@
 </head>
 
 <body>
-	<section layout:fragment="content">
+	<section layout:fragment="content" class="m-5">
 		<div class="container">
 			<!-- ============================모달창============================ -->
 			<div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -201,6 +201,32 @@
 
 
 		<script th:inline="javascript">
+		function getOutStatus(value, row) {
+			console.log(value.value); // 값 확인용 로그
+			let statusText, bgColor;
+
+			// 주문 상태에 따라 원하는 문자열과 배경색 설정
+			switch (value.value) {
+				case "작업 등록":
+					statusText = '작업 등록';
+					bgColor = 'green'; // 등록완료에 대한 배경색 설정
+					break;
+				case "지시 등록":
+					statusText = '지시 등록';
+					bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
+					break;
+				case "":
+				case undefined:
+				case null:
+					statusText = '등록 중';
+					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+					break;
+
+			}
+			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+		};
+		
+		
 			let plan = [[${list}]];
 			let planGrid, planDGrid, matUseGrid;
 			class NumberEditor {
@@ -321,6 +347,13 @@
 							className: 'insNote'
 						},
 						{
+							header: '상태',
+							name: 'insState',
+							align: "center",
+							formatter: getOutStatus,
+
+						},
+						{
 							header: '삭제',
 							name: 'deleteButton',
 							align: "center",
@@ -376,7 +409,7 @@
 						{name: 'prodCode', header: '제품 코드'},
 						{
 							name: 'dinsSdate', header: '시작 일자',
-							className: 'dinsSdate',
+							
 							formatter: function ({value}) {
 								if (value) {
 									var date = new Date(value);
@@ -387,16 +420,11 @@
 								}
 								return '';
 							},
-							editor: {
-								type: 'datePicker',
-								options: {
-									format: 'yyyy-MM-dd'
-								}
-							}
+							
 						},
 						{
 							name: 'dinsEdate', header: '종료 일자',
-							className: 'dinsSdate',
+							
 							formatter: function ({value}) {
 								if (value) {
 									var date = new Date(value);
@@ -407,12 +435,7 @@
 								}
 								return '';
 							},
-							editor: {
-								type: 'datePicker',
-								options: {
-									format: 'yyyy-MM-dd'
-								}
-							}
+							
 						},
 						
 						{name: 'dplanCount', header: '계획량', align: "center", },
@@ -502,13 +525,23 @@
 			document.getElementById('addPlanBtn').addEventListener('click', function () {
 				let name = [[${session.userName}]];
 				console.log("name : ", name);
-				planDGrid.resetData([]);
+				
 				var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
 				if (!selectedRadio) {
 					alert('계획을 선택해주세요.');
 					return;
 				}
+				const existingRows = planGrid.getData();
+			    const isRowAlreadyAdded = existingRows.some(row => row.insState == null);
 
+			    // 이미 추가된 행이 있다면 경고 메시지 출력하고 함수 종료
+			    if (isRowAlreadyAdded) {
+			        alert('이미 추가된 행이 있습니다.');
+			        return;
+			    }
+			    
+			    planDGrid.resetData([]);
+			    
 				var planCode = selectedRadio.id;
 
 				// 주요 계획 테이블에 행 추가
@@ -548,6 +581,7 @@
 						ordCount: detail.ordCount, // 주문 수량
 						dplanCount: detail.dplanCount, // 계획량, 사용자 입력에 따라 설정
 						dlvyDate: detail.dlvyDate, // 납기 일자
+						dinsCount: detail.dplanCount,
 						_attributes: {
 
 							className: {
@@ -689,6 +723,10 @@
 					alert("저장 할 내용이 없습니다.")
 					return;
 				}
+				if (document.querySelector('td[data-column-name="insTitle"] div').innerHTML == '') {
+					alert("지시명을 입력해 주세요.")
+					return;
+				}
 
 				let data = {};
 				let insobj = {};
@@ -707,14 +745,23 @@
 				
 				planState.planCode = document.querySelector('td[data-column-name="planCode"] div').innerHTML;
 
+				let plancount;
+				let inscount;
+				
 				var newInsDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
 				let insDetailData = [];
 
 				for (var i = (newInsDetailRows.length)/2 +1 ; i < newInsDetailRows.length; i++) {
+					
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newInsDetailRows[i]);
+					
+					if (target.find('td:eq(6)').text() == '') {
+						alert("계획량을 입력해 주세요.")
+						return;
+					}
 					
 					obj.insCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
@@ -725,11 +772,22 @@
 					console.log("dinsSdate : " + obj.dinsSdate);
 					obj.dinsEdate = target.find('td:eq(4)').text();
 					obj.dinsCount = target.find('td:eq(6)').text();
+					
+					plancount = target.find('td:eq(5)').text();
 					console.log("dinsCount : " + obj.dinsCount);
+					if(plancount > parseInt(target.find('td:eq(6)').text())){
+						inscount = parseInt(target.find('td:eq(6)').text());
+					}
 					insDetailData.push(obj);
 
 				}
 				console.log("insDetailData : " + insDetailData);
+				
+				if(plancount > inscount){
+					alert(`최소 계획량은 ${plancount}개 입니다.`)
+					return;
+				}
+				
 				data.planInsVO = insobj;
 				data.planInsDList = insDetailData;
 				data.planVO = planState;
@@ -767,6 +825,9 @@
 
 			//ins detail update
 			document.querySelector('#planDUpdate').addEventListener('click', function () {
+				let plancount;
+				let inscount;
+				
 				const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
 				if (newDetail === null) {
 					alert("저장 할 내용이 없습니다.")
@@ -783,17 +844,35 @@
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
-					obj.dinsCode = target.find('td:eq(0)').text();
+					if (target.find('td:eq(6)').text() == '') {
+						alert("계획량을 입력해 주세요.")
+						return;
+					}
 					
+					obj.insCode = target.find('td:eq(1)').text();
+					console.log("prodCode : " + obj.prodCode);
+					obj.prodCode = target.find('td:eq(2)').text();
+					console.log("prodCode : " + obj.prodCode);
 
 					obj.dinsSdate = target.find('td:eq(3)').text();
-					console.log("dplanStartDate : " + obj.dinsSdate);
+					console.log("dinsSdate : " + obj.dinsSdate);
 					obj.dinsEdate = target.find('td:eq(4)').text();
 					obj.dinsCount = target.find('td:eq(6)').text();
-
+					
+					plancount = target.find('td:eq(5)').text();
+					console.log("dinsCount : " + obj.dinsCount);
+					if(plancount > parseInt(target.find('td:eq(6)').text())){
+						inscount = parseInt(target.find('td:eq(6)').text());
+					}
 					planDetailData.push(obj);
 
 				}
+				
+				if(plancount > inscount){
+					alert(`최소 계획량은 ${plancount}개 입니다.`)
+					return;
+				}
+				
 				data.planInsDList = planDetailData;
 				console.log(data);
 				// AJAX 요청으로 서버에 데이터 전송

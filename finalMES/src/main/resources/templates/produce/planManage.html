@@ -59,7 +59,7 @@
 </head>
 
 <body>
-	<section layout:fragment="content">
+	<section layout:fragment="content" class="m-5">
 		<div class="container">
 			<!-- ============================모달창============================ -->
 			<div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -197,6 +197,7 @@
 		<script th:inline="javascript">
 			let plan = [[${list}]];
 			let planGrid, planDGrid, matUseGrid;
+			let pState;
 
 			function getOutStatus(value, row) {
 				console.log(value.value); // 값 확인용 로그
@@ -256,6 +257,12 @@
 						const rowData = props.grid.getRow(props.rowKey);
 						const planCode = rowData.planCode;
 						const ordCode = rowData.ordCode;
+						const planState = rowData.planState;
+						
+						if(planState == '지시 등록'){
+							alert("생산 지시에 등록된 계획입니다.")
+							return;
+						}
 						console.log("planCode : " + planCode)
 						console.log("ordCode : " + ordCode)
 						let data = {};
@@ -270,28 +277,34 @@
 
 						console.log("data : " + data);
 
-						fetch('/planDelete', {
-							method: 'DELETE',
-							headers: {
-								'Content-Type': 'application/json',
+						if(confirm("생산 계획을 삭제 하시겠습니까?")){
+							fetch('/planDelete', {
+								method: 'DELETE',
+								headers: {
+									'Content-Type': 'application/json',
 
-							},
-							body: JSON.stringify(data)
-						})
-							.then(response => {
-								if (!response.ok) {
-									throw new Error('Network response was not ok');
-								}
-								return response.text();
+								},
+								body: JSON.stringify(data)
 							})
-							.then(data => {
-								console.log('Success:', data);
-								alert(data);
-								location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
-							})
-							.catch(error => {
-								console.error('Error:', error);
-							});
+								.then(response => {
+									if (!response.ok) {
+										throw new Error('Network response was not ok');
+									}
+									return response.text();
+								})
+								.then(data => {
+									console.log('Success:', data);
+									alert(data);
+									location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						}else{
+							alert("삭제를 취소 했습니다.");
+							return;
+						}
+						
 
 					});
 
@@ -368,6 +381,8 @@
 
 						if (rowData) {
 							var planCode = rowData.planCode;
+							pState = rowData.planState;
+							console.log("pState : " + pState)
 
 							// planCode를 사용하여 상세 데이터 요청
 							fetch('/planDetail?planCode=' + planCode)
@@ -481,7 +496,7 @@
 			document.getElementById('addPlanBtn').addEventListener('click', function () {
 				let name = [[${session.userName}]];
 				console.log("name : ", name);
-				planDGrid.resetData([]);
+				
 				var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
 				if (!selectedRadio) {
 					alert('주문을 선택해주세요.');
@@ -489,6 +504,18 @@
 				}
 
 				var ordCode = selectedRadio.id;
+				
+				// 이미 추가된 행이 있는지 확인
+			    const existingRows = planGrid.getData();
+			    const isRowAlreadyAdded = existingRows.some(row => row.planState == null);
+
+			    // 이미 추가된 행이 있다면 경고 메시지 출력하고 함수 종료
+			    if (isRowAlreadyAdded) {
+			        alert('이미 추가된 행이 있습니다.');
+			        return;
+			    }
+			    
+			    planDGrid.resetData([]);
 
 				// 주요 계획 테이블에 행 추가
 				var newRowData = {
@@ -525,7 +552,7 @@
 						end: '', // 종료 일자, 사용자 입력에 따라 설정
 						prodCount: detail.prodCount, // 현재 재고
 						ordCount: detail.ordCount, // 주문 수량
-						dplanCount: '', // 계획량, 사용자 입력에 따라 설정
+						dplanCount: detail.ordCount*1.1, // 계획량, 사용자 입력에 따라 설정
 						dlvyDate: detail.dlvyDate, // 납기 일자
 						_attributes: {
 
@@ -660,6 +687,10 @@
 					alert("저장 할 내용이 없습니다.")
 					return;
 				}
+				if (document.querySelector('td[data-column-name="planTitle"] div').innerHTML == '') {
+					alert("계획명을 입력해 주세요.")
+					return;
+				}
 
 				let data = {};
 				let planobj = {};
@@ -673,7 +704,14 @@
 				planobj.planDate = document.querySelector('td[data-column-name="planDate"] div').innerHTML;
 
 				ordState.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerHTML;
-
+				
+				let planDate = new Date(document.querySelector('td[data-column-name="planDate"] div').innerHTML);
+				let startDate;
+				let startDate2;
+				let endDate1;
+				let endDate2;
+				let ordcount;
+				let plancount;
 				var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
 
 				let planDetailData = [];
@@ -682,17 +720,72 @@
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
+					if (target.find('td:eq(2)').text() == '') {
+						alert("시작일을 입력해 주세요.")
+						return;
+					}
+					
+					if (target.find('td:eq(3)').text() == '') {
+						alert("종료일을 입력해 주세요.")
+						return;
+					}
+					if (target.find('td:eq(6)').text() == '') {
+						alert("계획량을 입력해 주세요.")
+						return;
+					}
+					
+					
 
 					obj.prodCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
 
 					obj.dplanStartDate = target.find('td:eq(2)').text();
-					console.log("dplanStartDate : " + obj.dplanStartDate);
+					
+					if(planDate > new Date(target.find('td:eq(2)').text())){
+						startDate = new Date(target.find('td:eq(2)').text());
+					}
+					startDate2 = new Date(target.find('td:eq(2)').text());
+					
 					obj.dplanEndDate = target.find('td:eq(3)').text();
+					
+					if(planDate > new Date(target.find('td:eq(3)').text())){
+						endDate1 = new Date(target.find('td:eq(3)').text());
+					}
+					
+					if(new Date(target.find('td:eq(2)').text()) > new Date(target.find('td:eq(3)').text())){
+						endDate2 = new Date(target.find('td:eq(3)').text());
+					}
+					console.log("st1, st2, end1, end2 : ", startDate, startDate2, endDate1, endDate2);
+					
+					ordcount = parseInt(target.find('td:eq(5)').text())*1.1;
+					
 					obj.dplanCount = target.find('td:eq(6)').text();
-
+					if(ordcount > parseInt(target.find('td:eq(6)').text())){
+						plancount = parseInt(target.find('td:eq(6)').text());
+					}
+		
 					planDetailData.push(obj);
 
+				}
+				
+				if(planDate > startDate){
+					alert("시작일은 계획일 보다 작을 수 없습니다.")
+					return;
+				}
+				
+				if(planDate > endDate1){
+					alert("종료일은 계획일 보다 작을 수 없습니다.")
+					return;
+				}
+				
+				if(startDate2 > endDate2){
+					alert("종료일은 시작일 보다 작을 수 없습니다.")
+					return;
+				}
+				
+				if(ordcount > plancount){
+					alert(`최소 계획량은 ${ordcount}개 입니다.`)
+					return;
 				}
 
 				data.planVO = planobj;
@@ -732,9 +825,22 @@
 
 			//plan detail update
 			document.querySelector('#planDUpdate').addEventListener('click', function () {
+				
+				let planDate = new Date(document.querySelector('td[data-column-name="planDate"] div').innerHTML);
+				let startDate;
+				let startDate2;
+				let endDate1;
+				let endDate2;
+				let ordcount;
+				let plancount;
+				
 				const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
 				if (newDetail === null) {
 					alert("저장 할 내용이 없습니다.")
+					return;
+				}
+				if(pState == '지시 등록'){
+					alert("생산 지시가 내려진 계획입니다.")
 					return;
 				}
 
@@ -748,18 +854,74 @@
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
-					obj.dplanCode = target.find('td:eq(0)').text();
+					if (target.find('td:eq(2)').text() == '') {
+						alert("시작일을 입력해 주세요.")
+						return;
+					}
+					
+					if (target.find('td:eq(3)').text() == '') {
+						alert("종료일을 입력해 주세요.")
+						return;
+					}
+					if (target.find('td:eq(6)').text() == '') {
+						alert("계획량을 입력해 주세요.")
+						return;
+					}
+					
+					
+
 					obj.prodCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
 
 					obj.dplanStartDate = target.find('td:eq(2)').text();
-					console.log("dplanStartDate : " + obj.dplanStartDate);
+					
+					if(planDate > new Date(target.find('td:eq(2)').text())){
+						startDate = new Date(target.find('td:eq(2)').text());
+					}
+					startDate2 = new Date(target.find('td:eq(2)').text());
+					
 					obj.dplanEndDate = target.find('td:eq(3)').text();
+					
+					if(planDate > new Date(target.find('td:eq(3)').text())){
+						endDate1 = new Date(target.find('td:eq(3)').text());
+					}
+					
+					if(new Date(target.find('td:eq(2)').text()) > new Date(target.find('td:eq(3)').text())){
+						endDate2 = new Date(target.find('td:eq(3)').text());
+					}
+					console.log("st1, st2, end1, end2 : ", startDate, startDate2, endDate1, endDate2);
+					
+					ordcount = parseInt(target.find('td:eq(5)').text())*1.1;
+					
 					obj.dplanCount = target.find('td:eq(6)').text();
+					if(ordcount > parseInt(target.find('td:eq(6)').text())){
+						plancount = parseInt(target.find('td:eq(6)').text());
+					}
 
 					planDetailData.push(obj);
 
 				}
+				
+				if(planDate > startDate){
+					alert("시작일은 계획일 보다 작을 수 없습니다.")
+					return;
+				}
+				
+				if(planDate > endDate1){
+					alert("종료일은 계획일 보다 작을 수 없습니다.")
+					return;
+				}
+				
+				if(startDate2 > endDate2){
+					alert("종료일은 시작일 보다 작을 수 없습니다.")
+					return;
+				}
+				
+				if(ordcount > plancount){
+					alert(`최소 계획량은 ${ordcount}개 입니다.`)
+					return;
+				}
+				
 				data.planDVOList = planDetailData;
 				console.log(data);
 				// AJAX 요청으로 서버에 데이터 전송

@@ -128,7 +128,14 @@
 	
 	<!-- plan list -->
 	<select id="selectPlanInsList" resultType="PlanInsVO">
-		SELECT *
+		SELECT 
+			ins_code,
+			ins_title,
+			ins_person,
+			ins_date,
+			ins_note,
+			plan_code,
+			find_codename(ins_state) ins_state
 		FROM PROD_INSTRUCTION
 		ORDER BY INS_CODE DESC
 	</select>
@@ -156,6 +163,20 @@
 		ORDER BY
 		    pdi.prod_code
 	
+	</select>
+	
+	<select id="selectPlanP1" resultType="PlanVO">
+		SELECT 
+			plan_code,
+			ord_code,
+			plan_title,
+			plan_person,
+			plan_date,
+			plan_note,
+			find_codename(plan_state) plan_state
+		FROM PROD_PLAN
+		WHERE PLAN_STATE = 'p1'
+		ORDER BY PLAN_CODE DESC
 	</select>
 	
 	<insert id="insertPlanInsInfo" parameterType="PlanInsVO">

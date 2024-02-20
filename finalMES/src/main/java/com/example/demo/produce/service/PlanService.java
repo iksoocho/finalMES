@@ -30,6 +30,8 @@ public interface PlanService {
 	
 	public void deleteplanInfo(PlanCompositeVO planCompositeVO);
 	
+	public List<PlanVO> getPlanP1();
+	
 	
 	//생산 지시
 	public List<PlanInsVO> getPlanInsList();

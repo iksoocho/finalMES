@@ -13,4 +13,5 @@ public class ProdInsVO {
 	private String insPerson;
 	private Date insDate;
 	private String insNote;
+	private String planCode;
 }
