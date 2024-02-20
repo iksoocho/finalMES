@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.employee.EmployeeVO;
 import com.example.demo.sales.vo.order.OrderDVO;
+import com.example.demo.sales.vo.order.OrderDateDVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderStateDVO;
@@ -45,6 +46,6 @@ public interface OrdService {
 	void updateOrderState(OrderStateDVO orderStateDVO);
 	
 	// 기간을 이용한 주문 목록 조회
-    List<OrderVO> getOrderListByDateRange(OrderDVO orderDVO);
+    List<OrderVO> getOrderListByDateRange(OrderDateDVO orderDateDVO);
 
 }

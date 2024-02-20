@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.employee.EmployeeVO;
 import com.example.demo.sales.vo.order.OrderDVO;
+import com.example.demo.sales.vo.order.OrderDateDVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderStateDVO;
@@ -45,6 +46,6 @@ public interface OrdMapper {
 	public void updateOrderState(OrderStateDVO orderStateDVO);
 	
 	 // 기간을 이용한 주문 목록 조회
-    List<OrderVO> getOrderListByDateRange(OrderDVO	OrderDVO);
+    List<OrderVO> getOrderListByDateRange(OrderDateDVO	orderDateDVO);
 	
 }

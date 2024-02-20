@@ -12,6 +12,7 @@ import com.example.demo.sales.service.OrdService;
 import com.example.demo.sales.vo.business.BusinessListVO;
 import com.example.demo.sales.vo.employee.EmployeeVO;
 import com.example.demo.sales.vo.order.OrderDVO;
+import com.example.demo.sales.vo.order.OrderDateDVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderStateDVO;
@@ -125,8 +126,9 @@ public class OrdServiceImpl implements OrdService {
 	}
 
 	@Override
-	public List<OrderVO> getOrderListByDateRange(OrderDVO orderDVO) {
+	public List<OrderVO> getOrderListByDateRange(OrderDateDVO orderDateDVO) {
 		// TODO Auto-generated method stub
-		return ordMapper.getOrderListByDateRange(orderDVO);
+		return ordMapper.getOrderListByDateRange(orderDateDVO);
 	}
+
 }

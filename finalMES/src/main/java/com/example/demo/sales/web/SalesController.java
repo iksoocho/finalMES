@@ -25,6 +25,7 @@ import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
 import com.example.demo.sales.vo.employee.EmployeeVO;
 import com.example.demo.sales.vo.order.OrderDVO;
+import com.example.demo.sales.vo.order.OrderDateDVO;
 import com.example.demo.sales.vo.order.OrderDetailDVO;
 import com.example.demo.sales.vo.order.OrderDetailVO;
 import com.example.demo.sales.vo.order.OrderStateDVO;
@@ -167,10 +168,12 @@ public class SalesController {
 	}
 	
 	@PostMapping("/orderListByDateRange")
-	public List<OrderVO> getOrderListByDateRange(OrderDVO orderDVO) {
-	    System.out.println("데이타 확인:" + orderDVO);
+	@ResponseBody
+	public List<OrderVO> getOrderListByDateRange(@RequestBody OrderDateDVO orderDateDVO) {
 	    // orderService를 사용해서 주문 목록을 가져옴
-	    List<OrderVO> orderList = ordService.getOrderListByDateRange(orderDVO);
+		System.out.println("입력데이터확인 : " + orderDateDVO);
+	    List<OrderVO> orderList = ordService.getOrderListByDateRange(orderDateDVO);
+	    System.out.println("데이타 확인:" + orderList);
 	    
 	    return orderList;
 	}

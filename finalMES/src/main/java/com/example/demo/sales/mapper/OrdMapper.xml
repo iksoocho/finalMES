@@ -136,7 +136,7 @@
 	</update>
 	
 	<!-- 기간을 이용한 주문 목록 조회 -->
-    <select id="getOrderListByDateRange" resultType="OrderDVO">
+    <select id="getOrderListByDateRange" resultType="OrderVO" parameterType="OrderDateDVO">
     	SELECT *
     	FROM ord_list
     	WHERE ord_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
