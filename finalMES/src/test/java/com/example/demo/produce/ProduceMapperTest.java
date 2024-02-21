@@ -26,9 +26,10 @@ public class ProduceMapperTest {
 	//재고소모테스트
 	@Test
 	public void useMat() {
-		int inputValue = 10000;
-		String inputMatCode = "MAT002";
+		int inputValue = 50000;
+		String inputMatCode = "MAT001";
 		int result = workMapper.updateMatLot(inputValue, inputMatCode);
+		System.out.println("result : " + result);
 		assertNotEquals(result, 0);
 	}
 	
