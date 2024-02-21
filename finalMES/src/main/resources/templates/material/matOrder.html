@@ -389,16 +389,6 @@ input[type="text"]:focus {
 
  
 
-                 
-             
-
-
-
-//         			function addRow(){
-
-//               			ordGrid.prependRow({isNew: true});
-//               		}
-
                     // =============== insert ===============
                     document.querySelector('#orderInsert').addEventListener('click', function() {
                     let name = [[${session.userName}]]
@@ -407,8 +397,6 @@ input[type="text"]:focus {
                     
                     console.log("newData[0].matOrName : " , newData)
                     
-        //          	const newOrder = document.querySelectorAll('.order')
-        //          	console.log(newOrder);
         
         		
 	                if(newData.length === 0 ){
@@ -603,13 +591,49 @@ input[type="text"]:focus {
         
     	// 엑셀 다운로드
     	function downloadCSV() {
-            const gridData = ordGrid.getData(); // 그리드에서 데이터 가져오기
-            const header = Object.keys(gridData[0]).join(','); // 헤더 생성
-            const csv = gridData.map(row => Object.values(row).join(',')).join('\n'); // 데이터 생성
-
-            const csvContent = `data:text/csv;charset=utf-8,${header}\n${csv}`; // CSV 내용 생성
-            const encodedUri = encodeURI(csvContent); // URI 인코딩
-
+    		const grids = [
+    			{ data : ordGrid.getData(),
+    			  header: ['발주코드','발주명','자재코드','거래처명','자재명','발주량','발주일','납기요청','담당자','발주상태'],
+    			  fields: ['matLotCode','matOrName','matCode','businessName','matOrCount','matOrDate','matOrDueDate','matOrManager','matOrState']
+    			},
+    			{ data: busiGrid.getData(),
+    		      header: ['거래처코드','거래처명'],
+    			  fields: ['businessCode','businessName']
+    			},
+    			{ data: matGrid.getData(),
+    		      header: ['자재코드','자재명','단위','규격','안전재고'],
+    			  fields: ['matCode','matName','matUnit','matStandard','matSafeStock']
+    			}
+    		];
+    		
+    		const fileName = '발주관리.csv'; // 엑셀파일이름
+    		const csvRows = [];
+    		
+    		grids.forEach((grid, index) => {
+    		
+    			if (index > 0){
+    				csvRows.push('');
+    				csvRows.push('');    				
+    			}
+    			csvRows.push(grid.header.join(','));
+    			
+    			grid.data.forEach(row => {
+    				const values = grid.fields.map(field => {
+    					const value = row[field] || '';
+    					console.log("field : ", field)
+    					if (field == 'matOrDate' || field == 'matOrDueDate'){
+    						return value.split('T')[0];
+    					} else {
+    						return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
+    					}
+    				});
+    				csvRows.push(values.join(','));
+    			});
+    		});
+    		
+    		const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+    		const encodedUri = encodeURI(csvContent);
+    		
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
             link.setAttribute('download', 'data.csv');

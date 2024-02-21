@@ -237,7 +237,8 @@
 		UPDATE mat_lot
 		SET
 		mat_input_count = #{matInputCount},
-		mat_input_date = #{matInputDate}
+		mat_input_date = #{matInputDate},
+		mat_count = #{matCount}
 		WHERE
 		mat_lot_code = #{matLotCode}
 	</update>
