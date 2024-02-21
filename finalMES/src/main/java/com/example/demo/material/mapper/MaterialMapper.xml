@@ -52,7 +52,7 @@
 		FROM business b
 		LEFT JOIN mat_order mo ON b.business_code = mo.business_code
 		LEFT JOIN material m ON mo.mat_code = m.mat_code
-		WHERE b.business_code IN ('B001','A001','A002','A003')
+		WHERE b.business_type IN ('b2')
 		GROUP BY b.business_code, b.business_name
 	</select>
 
@@ -60,7 +60,7 @@
 	<select id="getOriginMaterialList" resultType="OriginMaterialVO">
 		SELECT *
 		FROM
-		material ORDER BY mat_code DESC
+		material ORDER BY mat_code
 
 
 	</select>
@@ -234,7 +234,7 @@
 			#{matOrManager},
 			#{matOrCount},
 			#{matOrName},
-			0,
+			'mo1',
 			#{matOrDueDate}
 		)
 	</insert>
@@ -351,12 +351,14 @@
 
 	<!-- LOT 별 자재재고 -->
 	<select id="getMatOriginInfoList" resultType="OriginMaterialVO">
-        SELECT ml.mat_lot_code,
-                ml.mat_input_count,
-                m.mat_code,
-                m.mat_name
-        FROM mat_lot ml
-        JOIN material m ON ml.mat_code = m.mat_code
+		SELECT ml.mat_lot_code,
+		        ml.mat_input_count,
+		        ml.mat_input_date,
+		        m.mat_code,
+		        m.mat_name
+		FROM mat_lot ml
+		JOIN material m ON ml.mat_code = m.mat_code
 		WHERE m.mat_code = #{matCode}
+		ORDER BY ml.mat_input_date
 	</select>
 </mapper>

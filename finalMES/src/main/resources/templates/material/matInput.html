@@ -8,67 +8,59 @@
 <script src="https://uicdn.toast.com/grid/latest/grid.js"></script>
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/grid.css">
-</head>
+
 <style>
 .custom-style {
 	float: right;
 }
+
+input[type="text"] {
+	width: 20%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+	outline: none;
+	border-color: #4CAF50;
+}
+#excel {
+	float: left;
+}
 </style>
+</head>
 <body>
-	<section layout:fragment="content">
-		<h2>입고관리</h2>
-		<!-- 모달을 위한 HTML 요소 -->
-		<div id="myModal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<div id="modalContent"></div>
+	<section layout:fragment="content" class="m-5">
+		<div>
+			<h2>입고관리</h2>
+
+			<div>
+
+				<input type="text" id="searchOrder" oninput="searchFunction()"
+					placeholder="검색...">
 			</div>
-		</div>
+			<br>
 
 
-		<!-- Modal -->
-		<div class="modal fade modal-lg" id="staticBackdrop"
-			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">Modal
-							title</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<h3>발주 주문서</h3>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Understood</button>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		<div class="container">
 			<h3>검수 완료 목록</h3>
-			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
-			<!-- 				data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
-			<!-- 				주문서 조회</button> -->
-			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
-			<!-- 				id="orderInsert">저장</button> -->
 
 			<div id="ckeckGrid"></div>
 
 			<h3>입고목록</h3>
 			<button type="button" class="btn btn-outline-primary custom-style"
 				id="orderInsert">저장</button>
+			<button type="button" class="btn btn-outline-primary" id="excel"
+				onclick="downloadCSV()">EXCEL</button>
+			<br> <br>
+
+
 			<div id="inputGrid"></div>
-			<!-- Button trigger modal -->
 		</div>
 
 		<script th:inline="javascript">
-		
 						// 입고 그리드
                 		let matInputList = [[${matInputList}]]
                 		console.log(matInputList)
