@@ -92,6 +92,9 @@
 											<td th:text="${#dates.format(plan.planDate, 'yyyy-MM-dd')}"></td>
 											<td th:text="${plan.planNote}"></td>
 										</tr>
+										<tr th:unless="${planList.size() > 0}">
+											<td colspan="4" style="text-align: center; padding: 50px;">생산계획이 없습니다.</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -147,7 +150,8 @@
 				<!-- ============================생산상세계획============================ -->
 
 				<div class="mt-4">
-					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planDUpdate">저장</button>
+				<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="registerButton">작업 등록</button>
+					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planDUpdate">수정</button>
 					<h5>상세 지시</h5>
 					<div id="planDGrid"></div>
 					<!-- <table class="table table-hover" id="planDetailTable">
@@ -194,6 +198,7 @@
 					
 					<h5>자재 소모량</h5>
 					<div id="matUseGrid"></div>
+					<button type="button" class="btn btn-outline-primary" style="float: right; margin: 8px 5px;" onclick="downloadCSV()">Excel</button>
 				</div>
 
 			</div>
@@ -201,6 +206,25 @@
 
 
 		<script th:inline="javascript">
+		class RadioButtonRenderer {
+		    constructor(props) {
+		        const el = document.createElement('input');
+		        el.type = 'radio';
+		        el.name = 'myRadio'; // 동일한 name 속성을 사용하여 그룹화
+		        el.value = props.value;
+
+		        this.el = el;
+		    }
+
+		    getElement() {
+		        return this.el;
+		    }
+
+		    render(props) {
+		        this.el.checked = props.value === props.grid.getValue(props.rowKey, 'selectedValue');
+		    }
+		}
+		
 		function getOutStatus(value, row) {
 			console.log("value : " ,value.value); // 값 확인용 로그
 			let statusText, bgColor;
@@ -386,7 +410,7 @@
 							fetch('/insDetail?insCode=' + insCode)
 								.then(response => response.json())
 								.then(data => {
-									console.log(data);
+									
 									// 상세 그리드에 데이터 표시
 									// grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
 									planDGrid.resetData(data);
@@ -404,6 +428,13 @@
 					scrollY: false,
 
 					columns: [
+						{
+				            header: '선택',
+				            name: 'radioColumn',
+				            renderer: RadioButtonRenderer,
+				            width: 50,
+				            align: "center",
+				        },
 						// 데이터 구조에 따라 컬럼을 정의하세요
 						{name: 'dinsCode', header: '상세 지시 코드'},
 						{name: 'insCode', header: '생산 지시 코드'},
@@ -760,25 +791,25 @@
 					let obj = {};
 					let target = $(newInsDetailRows[i]);
 					
-					if (target.find('td:eq(6)').text() == '') {
+					if (target.find('td:eq(7)').text() == '') {
 						alert("계획량을 입력해 주세요.")
 						return;
 					}
 					
-					obj.insCode = target.find('td:eq(1)').text();
-					console.log("prodCode : " + obj.prodCode);
-					obj.prodCode = target.find('td:eq(2)').text();
+					obj.insCode = target.find('td:eq(2)').text();
+					
+					obj.prodCode = target.find('td:eq(3)').text();
 					console.log("prodCode : " + obj.prodCode);
 
-					obj.dinsSdate = target.find('td:eq(3)').text();
+					obj.dinsSdate = target.find('td:eq(4)').text();
 					console.log("dinsSdate : " + obj.dinsSdate);
-					obj.dinsEdate = target.find('td:eq(4)').text();
-					obj.dinsCount = target.find('td:eq(6)').text();
+					obj.dinsEdate = target.find('td:eq(5)').text();
+					obj.dinsCount = target.find('td:eq(7)').text();
 					
-					plancount = target.find('td:eq(5)').text();
+					plancount = target.find('td:eq(6)').text();
 					console.log("dinsCount : " + obj.dinsCount);
-					if(plancount > parseInt(target.find('td:eq(6)').text())){
-						inscount = parseInt(target.find('td:eq(6)').text());
+					if(plancount > parseInt(target.find('td:eq(7)').text())){
+						inscount = parseInt(target.find('td:eq(7)').text());
 					}
 					insDetailData.push(obj);
 
@@ -846,25 +877,25 @@
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
-					if (target.find('td:eq(6)').text() == '') {
+					if (target.find('td:eq(7)').text() == '') {
 						alert("계획량을 입력해 주세요.")
 						return;
 					}
 					
-					obj.insCode = target.find('td:eq(1)').text();
+					obj.insCode = target.find('td:eq(2)').text();
 					console.log("prodCode : " + obj.prodCode);
-					obj.prodCode = target.find('td:eq(2)').text();
+					obj.prodCode = target.find('td:eq(3)').text();
 					console.log("prodCode : " + obj.prodCode);
 
-					obj.dinsSdate = target.find('td:eq(3)').text();
+					obj.dinsSdate = target.find('td:eq(4)').text();
 					console.log("dinsSdate : " + obj.dinsSdate);
-					obj.dinsEdate = target.find('td:eq(4)').text();
-					obj.dinsCount = target.find('td:eq(6)').text();
+					obj.dinsEdate = target.find('td:eq(5)').text();
+					obj.dinsCount = target.find('td:eq(7)').text();
 					
-					plancount = target.find('td:eq(5)').text();
+					plancount = target.find('td:eq(6)').text();
 					console.log("dinsCount : " + obj.dinsCount);
-					if(plancount > parseInt(target.find('td:eq(6)').text())){
-						inscount = parseInt(target.find('td:eq(6)').text());
+					if(plancount > parseInt(target.find('td:eq(7)').text())){
+						inscount = parseInt(target.find('td:eq(7)').text());
 					}
 					planDetailData.push(obj);
 
@@ -902,6 +933,89 @@
 					});
 
 			});
+			
+			let selectedRowKey;
+			document.getElementById('planDGrid').addEventListener('change', function(e) {
+			    if (e.target.type === 'radio') {
+			        // 선택된 라디오 버튼의 행 키 저장
+			        selectedRowKey = e.target.closest('td').getAttribute('data-row-key');
+			        console.log("selectedRowKey : ", selectedRowKey)
+			    }
+			});
+			
+			document.getElementById('registerButton').addEventListener('click', function() {
+				if (selectedRowKey == null){
+					alert("선택된 지시가 없습니다.")
+				}
+			    // 선택된 행의 데이터가 있으면 서버로 전송
+			    if (selectedRowKey !== null) {
+					let data = {};
+			        const rowData = planDGrid.getRow(selectedRowKey);
+			        console.log("dinsdata : " , rowData.dinsCode)
+			        let dinsCode = rowData.dinsCode;
+			        let prodCode = rowData.prodCode;
+			        
+			         location.href = '/workRegist?dInsCode=' + dinsCode + '&prodCode=' + prodCode;
+					
+			        // AJAX를 사용하여 서버로 데이터 전송
+			        
+			    } else {
+			        alert('생산지시를 선택해주세요.');
+			    }
+			});
+			
+			
+			function downloadCSV() {
+			    const grids = [
+			    	 { data: planGrid.getData(), 
+			    	   header: ['생산 지시 코드', '생산 계획 코드', '지시 명', '담당자', '생산지시일자', '비고','상태'], 
+			    	   fields: ['insCode', 'planCode', 'insTitle', 'insPerson', 'insDate','insNote','insState']
+			    	 },
+			         { data: planDGrid.getData(), 
+			    	   header: ['상세 지시 코드', '생산 지시 코드', '제품 코드', '시작일자','종료일자', '계획량','지시량'], 
+			    	 fields: ['dinsCode', 'insCode', 'prodCode', 'dinsSdate', 'dinsEdate','dplanCount','dinsCount']
+			         },
+			    	 { data: matUseGrid.getData(), 
+				    	   header: ['소모 자재 코드', '생산 지시 코드', '자재코드', '자재이름','공정 코드', '소모량'], 
+				    	 fields: ['matUseCode', 'dinsCode', 'matCode', 'matName', 'procCode','matTotalCon']
+				         }
+			    	];
+			    const fileName = '생산지시.csv'; // 원하는 파일 이름으로 설정
+			    const csvRows = [];
+
+			    grids.forEach((grid, index) => {
+			        // 한글 헤더 추가
+			        if (index > 0) {
+			            csvRows.push('');
+			            csvRows.push('');
+			        }
+			        csvRows.push(grid.header.join(','));
+
+			        // 데이터 행 추가
+			        grid.data.forEach(row => {
+			            const values = grid.fields.map(field => {
+			            	
+			                const value = row[field] || '';
+			                console.log("field : ", field)
+			                 if (field == 'insDate' || field == 'dinsSdate' || field == 'dinsEdate') {
+			                    return value.split('T')[0];
+			                } else {
+			                    return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
+			                } 
+			            });
+			            csvRows.push(values.join(','));
+			        });
+			    });
+
+			    const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+			    const encodedUri = encodeURI(csvContent);
+
+			    const link = document.createElement('a');
+			    link.setAttribute('href', encodedUri);
+			    link.setAttribute('download', fileName);
+			    document.body.appendChild(link);
+			    link.click();
+			}
 
 		</script>
 	</section>
