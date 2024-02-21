@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.produce.FacCateVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.WorkMidRegistVO;
-import com.example.demo.produce.WorkResultVO;
 import com.example.demo.produce.service.WorkService;
 
 import lombok.extern.log4j.Log4j2;
@@ -38,6 +38,23 @@ public class WorkController {
 		System.out.println("==========================midinsert==============================");
 		System.out.println(workMidVO);
 		System.out.println("=================================================================");
+//		String dInsCode = workMidVO.getDInsCode();
+//		String procCode = workMidVO.getProcCode();
+		
+//		List<MatUseVO> vo = workService.checkMatUse(dInsCode, procCode);
+//		if(!vo.isEmpty()) {
+//			for (MatUseVO matUseVO : vo) {
+//		        int inputValue = matUseVO.getMatTotalCon();
+//		        String inputMatCode = matUseVO.getMatCode();
+//		        int result = workService.updateMatLot(inputValue, inputMatCode);
+//		        if(result == 1) {
+//					System.out.println("컨트롤러 - 자재소모 성공");
+//				}else {
+//					System.out.println("컨트롤러 - 자재소모 실패");
+//				}
+//			}
+//		}
+		
 		int result = workService.insertWorkMidRegist(workMidVO);
 		String msg;
 		if(result == 1) {
@@ -45,7 +62,6 @@ public class WorkController {
 		}else {
 			msg = "작업등록이 실패했습니다.";
 		}
-		
 		return msg;
 	}
 	
@@ -90,7 +106,23 @@ public class WorkController {
 	
 	@PutMapping("/insStateUpdate")
 	@ResponseBody
-	public void updateInsState(@RequestBody String dinsCode) {
+	public void updateInsState(@RequestBody MatUseVO matuseVO) {
+		String dinsCode = matuseVO.getMatCode();
+		String procCode = matuseVO.getProcCode();
+		List<MatUseVO> vo = workService.checkMatUse(dinsCode, procCode);
+		if(!vo.isEmpty()) {
+			for (MatUseVO matUseVO : vo) {
+		        int inputValue = matUseVO.getMatTotalCon();
+		        String inputMatCode = matUseVO.getMatCode();
+		        int result = workService.updateMatLot(inputValue, inputMatCode);
+		        if(result == 1) {
+					System.out.println("컨트롤러 - 자재소모 성공");
+				}else {
+					System.out.println("컨트롤러 - 자재소모 실패");
+				}
+			}
+		}
+		
 		int result = workService.updateProdInsState(dinsCode);
 		String msg;
 		if(result == 1) {

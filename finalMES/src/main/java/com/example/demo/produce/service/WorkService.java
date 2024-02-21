@@ -2,7 +2,9 @@ package com.example.demo.produce.service;
 
 import java.util.List;
 
+
 import com.example.demo.produce.FacCateVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.WorkMidRegistVO;
 
 public interface WorkService {
@@ -14,4 +16,5 @@ public interface WorkService {
 	public int updateProdInsState(String dinsCode);
 	public int updateOrdListState(String dinsCode);
 	public int updateMatLot(int inputValue, String inputMatCode);
+	public List<MatUseVO> checkMatUse(String dinsCode, String procCode);
 }
