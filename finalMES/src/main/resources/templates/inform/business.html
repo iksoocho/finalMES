@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>business.html</title>
+	<style>
+		.tui-grid-row-odd .busi.businessName,
+		.tui-grid-row-odd .busi.businessType,
+		.tui-grid-row-odd .busi.businessManager,
+		.tui-grid-row-odd .busi.businessManagerPhone
+		 {
+			background-color: #FDC0CE;
+			/* 예시로 빨간색을 지정했습니다. */
+		}
+	</style>
+</head>
+
+<body>
+	<section layout:fragment="content" class="m-5">
+		<h2>거래처 관리</h2>
+		<br>
+		<div>
+		<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
+					<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
+			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="businessInsert">저장</button>
+			<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" onclick="addRow()">추가</button>
+		</div>
+		<div id="grid"></div>
+
+		<script th:inline="javascript">
+		// 검색 기능 추가
+    	function searchFunction() {
+    	    // 입력된 검색어 가져오기
+    	    var input, filter, table, tr, td, i, j, txtValue;
+    	    input = document.getElementById("searchInput");
+    	    // 대문자로변환하기
+    	    filter = input.value.toUpperCase();
+    	    // 테이블 확인
+    	    table = document.getElementById("grid");
+
+    	    // 테이블 돌면서 확인
+    	    tr = table.getElementsByTagName("tr");
+    	    for (i = 0; i < tr.length; i++) {
+    	        // 각 행에서 셀을 가져오기
+    	        td = tr[i].getElementsByTagName("td");
+    	        // 행의 각 셀 돌면서 일치하는지 확인
+    	        for (j = 0; j < td.length; j++) {
+    	            // 셀의 내용을 가져오기
+    	            txtValue = td[j].textContent || td[j].innerText;
+    	            // 조건으로 검색어 있으면 가져오기
+    	            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    	                tr[i].style.display = "";
+    	                break;
+    	            } else {
+    	                // 검색어 없으면 리스트 안보이게 display none 처리
+    	                tr[i].style.display = "none";
+    	            }
+    	        }
+    	    }
+    	}
+		
+		
+    	function addRow() {
+    		 // 이미 'isNew'가 true인 행이 있는지 확인
+		    const existingNewRows = grid.findRows(row => row.isNew);
+
+		    // 새로운 행이 이미 존재하는 경우, 추가하지 않고 경고
+		    if (existingNewRows.length > 0) {
+		        alert("추가 중인 정보가 있습니다.")
+		        return; // 함수 종료
+		    }
+			 const newRowData = {
+				        // 이 부분에 다른 셀 데이터를 추가할 수 있습니다
+				        // 예: name: 'New Name', age: 30, etc.
+				        _attributes: {
+				            className: {
+				                row: ['busi']  // 여기서 'your-custom-class'는 원하는 클래스 이름입니다
+				            }
+				        }, 
+				         isNew: true
+				    };
+			
+			grid.prependRow(newRowData);
+
+			// 마지막 행의 데이터를 콘솔에 출력
+			const lastRowId = grid.getRowCount() - 1;
+			const lastRowData = grid.getRow(lastRowId);
+			console.log('새로 추가된 행 데이터:', lastRowData);
+		}
+
+			function onBeforeChange(ev) {
+				const {rowKey} = ev.changes[0];
+
+				// TOAST UI Grid의 getRow 메소드를 사용하여 현재 행의 데이터를 가져옵니다.
+				const row = grid.getRow(rowKey);
+
+				// 현재 행의 데이터를 콘솔에 출력
+				console.log('편집 시도 행 데이터:', row);
+
+				// isNew 속성이 true가 아니면 편집을 중단합니다.
+				if (!row || row.isNew !== true) {
+					ev.stop(); // 이 메소드는 편집을 취소합니다.
+				}
+			}
+
+			function onAfterChange(ev) {
+				console.log('편집 완료 이벤트:', ev);
+				// 필요한 경우, 여기에서 데이터 업데이트 로직을 구현할 수 있습니다.
+			}
+
+
+			class DeleteButtonRenderer {
+				constructor(props) {
+					const el = document.createElement('button');
+					el.textContent = '삭제';
+					el.addEventListener('click', () => {
+
+						const rowData = props.grid.getRow(props.rowKey);
+						const businessCode = rowData.businessCode;
+						
+						
+						let data = businessCode;
+
+						console.log("data : " + data);
+						
+						if(confirm("거래처 정보를 삭제 하시겠습니까?")){
+							fetch('/businessDelete', {
+								method: 'DELETE',
+								headers: {
+									'Content-Type': 'application/json',
+
+								},
+								body: data
+							})
+								.then(response => {
+									if (!response.ok) {
+										throw new Error('Network response was not ok');
+									}
+									return response.text();
+								})
+								.then(data => {
+									console.log('Success:', data);
+									
+									alert(data);
+									
+									
+									location.href = '/business'; // 성공적으로 처리된 후 리디렉트
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						}else{
+							alert("삭제를 취소했습니다.");
+							return;
+						}
+						
+						
+
+					});
+
+					this.el = el;
+				}
+
+				getElement() {
+					return this.el;
+				}
+			}
+
+
+
+
+			let busi = [[${list}]]
+			
+			
+
+			// TOAST UI Grid 초기화
+			const grid = new tui.Grid({
+
+
+
+				el: document.getElementById('grid'),
+				data: busi, // 여기서 emps 데이터를 사용
+				scrollX: false,
+				scrollY: false,
+				columns: [
+					{header: '거래처 코드', name: 'businessCode', align: "center",},
+					{
+						header: '거래처 명', name: 'businessName',
+						align: "center",
+						editor: 'text', className : 'businessName'
+
+					},
+					{
+						header: '유형', name: 'businessType',
+						className : 'businessType',
+						editor: {
+							type: 'select',
+							align: "center",
+							options: {
+								listItems: [
+									{text: '제품', value: '제품'},
+									{text: '자재', value: '자재'},
+									{text: '설비', value: '설비'},
+								]
+							}
+						},
+					},
+					{
+						header: '담당자', name: 'businessManager',
+						align: "center",
+						editor: 'text', className : 'businessManager'
+
+					},
+					{
+						header: '담당자 연락처', name: 'businessManagerPhone',
+						align: "center",
+						editor: 'text', className : 'businessManagerPhone'
+
+					},
+					{
+						header: '등록일', name: 'startDate',
+						align: "center",
+						editor: 'text',
+						formatter: function ({value}) {
+							if (value) {
+								var date = new Date(value);
+								var year = date.getFullYear();
+								var month = (date.getMonth() + 1).toString().padStart(2, '0');
+								var day = date.getDate().toString().padStart(2, '0');
+								return `${year}-${month}-${day}`;
+							}
+							return '';
+						},
+					},
+					
+					{
+						header: '삭제',
+						name: 'deleteButton',
+						align: "center",
+						renderer: {
+							type: DeleteButtonRenderer
+						}
+					}
+					
+
+				],
+				rowHeaders: ['rowNum'],
+				pageOptions: {
+					useClient: true,
+					perPage: 5
+				}
+			});
+			grid.on('beforeChange', onBeforeChange);
+			//grid.on('afterChange', onAfterChange);
+
+		</script>
+		<script>
+			
+
+			function saveNewRows() {
+				// 새로 추가된 행만 필터링하여 가져옵니다.
+				const newData = grid.getData().filter(row => row.isNew);
+
+				if (newData.length === 0) {
+					console.log('추가된 행이 없습니다.');
+					alert("저장 할 데이터가 없습니다.");
+					return;
+				}
+				if (newData[0].businessName == null) {
+					alert("거래처 명을 입력해 주세요.");
+					return;
+				}
+				if (newData[0].businessType == null) {
+					alert("거래처 유형을 선택해 주세요.");
+					return;
+				}
+				if (newData[0].businessManager == null) {
+					alert("거래처 담당자를 입력해 주세요.");
+					return;
+				}
+				if (newData[0].businessManagerPhone == null) {
+					alert("거래처 담당자 연락처를 입력해 주세요.");
+					return;
+				}
+				// 콘솔에 출력하거나 서버로 보낼 수 있습니다.
+				console.log('추가된 행의 데이터:', newData);
+			
+				let type;
+				if(newData[0].businessType == '제품'){
+					type = 'b1'
+				}
+				if(newData[0].businessType == '자재'){
+					type = 'b2'
+				}
+				if(newData[0].businessType == '설비'){
+					type = 'b3'
+				}
+
+				
+
+				let data = {};
+				data.businessName = newData[0].businessName;
+				data.businessType = type;
+				data.businessManager = newData[0].businessManager;
+				data.businessManagerPhone = newData[0].businessManagerPhone;
+				
+				
+
+				console.log('data : ', data);
+
+				fetch('/businessInsert', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+
+					},
+					body: JSON.stringify(data)
+				})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+						return response.text();
+					})
+					.then(data => {
+						console.log('Success:', data);
+						alert(data);
+						location.href = '/business'; // 성공적으로 처리된 후 리디렉트
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+
+			// "저장" 버튼에 이벤트 리스너를 등록합니다.
+			document.getElementById('businessInsert').addEventListener('click', saveNewRows);
+
+		</script>
+
+	</section>
+
+</body>
+
+</html>
