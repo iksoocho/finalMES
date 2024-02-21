@@ -36,7 +36,7 @@
 		JOIN process p ON f.proc_code=p.proc_code
 		JOIN fac_notop n ON f.fac_code=n.fac_code
 		WHERE f.proc_code=#{procCode}
-		AND n.fac_not_situation = 0
+		AND n.fac_not_situation = 'f1'
 	</select>
 
 	<select id="getProcData" resultType="ProcessVO">
