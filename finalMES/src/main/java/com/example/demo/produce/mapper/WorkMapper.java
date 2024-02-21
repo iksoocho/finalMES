@@ -1,6 +1,7 @@
 package com.example.demo.produce.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.repository.query.Param;
 
@@ -9,7 +10,6 @@ import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdProgressJoinVO;
 import com.example.demo.produce.WorkLoadVO;
 import com.example.demo.produce.WorkMidRegistVO;
-import com.example.demo.produce.WorkResultVO;
 
 public interface WorkMapper {
 	public List<WorkLoadVO> getLoadData(String prodCode);
@@ -22,5 +22,5 @@ public interface WorkMapper {
 	public int insertWorkResult(@Param("dinsCode") String dinsCode);
 	public int updateProdInsState(@Param("dinsCode") String dinsCode);
 	public int updateOrdListState(@Param("dinsCode") String dinsCode);
-	
+	public int updateMatLot(@Param("inputValue") int inputValue, @Param("inputMatCode") String inputMatCode);
 }

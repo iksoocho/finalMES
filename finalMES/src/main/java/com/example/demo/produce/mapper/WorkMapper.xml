@@ -147,6 +147,15 @@
 														FROM prod_d_ins 
 														WHERE d_ins_code=#{dInsCode})))
 	</update>
+	
+	<update id="updateMatLot" parameterType="map">
+    <![CDATA[
+    {call update_mat_lot(
+      #{inputValue, mode=IN, jdbcType=NUMERIC},
+      #{inputMatCode, mode=IN, jdbcType=VARCHAR}
+    )}
+    ]]>
+  </update>
 
 
 </mapper>

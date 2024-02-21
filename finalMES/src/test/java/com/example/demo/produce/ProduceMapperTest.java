@@ -1,8 +1,6 @@
 package com.example.demo.produce;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +23,29 @@ public class ProduceMapperTest {
 	WorkMapper workMapper;
 	
 	
-	
-	//업데이트 테스트
+	//재고소모테스트
 	@Test
-	public void update() {
-		WorkMidRegistVO vo = new WorkMidRegistVO();
-		vo.setProgBadCount(2);
-		vo.setProgPassCount(20);
-		vo.setEndTime("24-02-09 19:33");
-		vo.setProgCode("PROG009");
-		
-		int result = workMapper.updateWorkMidRegist(vo);
-		System.out.println(result);
-		
-		
-		
+	public void useMat() {
+		int inputValue = 10000;
+		String inputMatCode = "MAT002";
+		int result = workMapper.updateMatLot(inputValue, inputMatCode);
+		assertNotEquals(result, 0);
 	}
 	
 	
+	
+//	//업데이트 테스트
+//	@Test
+//	public void update() {
+//		WorkMidRegistVO vo = new WorkMidRegistVO();
+//		vo.setProgBadCount(2);
+//		vo.setProgPassCount(20);
+//		vo.setEndTime("24-02-09 19:33");
+//		vo.setProgCode("PROG009");
+//		
+//		int result = workMapper.updateWorkMidRegist(vo);
+//		System.out.println(result);
+//	}
 	
 //	//등록 테스트
 //	@Test
@@ -52,9 +55,6 @@ public class ProduceMapperTest {
 //		
 //		List<WorkMidRegistVO> vo = workMapper.checkWorkMidRegist(dinsCode, procCode);
 //		System.out.println(vo);
-//		
-//		
-//		
 //	}
 	
 	
@@ -71,7 +71,6 @@ public class ProduceMapperTest {
 //		System.out.println("================================");
 //		System.out.println(list);
 //		System.out.println("================================");
-//		
 //		
 //		assertThat(list.isEmpty()).isEqualTo(false);
 //	}

@@ -13,4 +13,5 @@ public interface WorkService {
 	public int insertWorkResult(String dinsCode);
 	public int updateProdInsState(String dinsCode);
 	public int updateOrdListState(String dinsCode);
+	public int updateMatLot(int inputValue, String inputMatCode);
 }
