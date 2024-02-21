@@ -44,13 +44,111 @@ button {
 #myModal3 {
 	text-align: center;
 }
+body {
+    font-family: Arial, sans-serif; /* 전체 페이지에 대한 기본 글꼴 설정 */
+    background-color: #f8f9fa; /* 페이지 배경색 설정 */
+}
+
+.container {
+    margin: auto; /* 컨테이너를 수평 가운데 정렬 */
+    padding: 20px;
+    background-color: #ffffff; /* 컨테이너 배경색 설정 */
+    border-radius: 10px; /* 컨테이너에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+h1 {
+    text-align: center; /* 제목 가운데 정렬 */
+}
+
+.btn {
+    margin-right: 5px; /* 버튼 간격 설정 */
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%; /* 입력란 전체 너비로 설정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
+}
+
+/* 검색 입력란 스타일 */
+#searchInput {
+    margin-top: 10px; /* 검색 입력란과 버튼 사이의 간격 설정 */
+    width: 200px; /* 너비를 작게 조정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
+}
+
+/* 모달 스타일 */
+.modal-content {
+    border-radius: 10px; /* 모달에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+.modal-header {
+    background-color: #007bff; /* 모달 헤더 배경색 설정 */
+    color: white; /* 모달 헤더 글자색 설정 */
+    border-radius: 10px 10px 0 0; /* 모달 헤더에 라운드 모서리 설정 */
+}
+
+.modal-footer {
+    background-color: #f8f9fa; /* 모달 푸터 배경색 설정 */
+    border-top: none; /* 모달 푸터에 테두리 없애기 */
+    border-radius: 0 0 10px 10px; /* 모달 푸터에 라운드 모서리 설정 */
+}
+.modal-title {
+    font-size: 24px; /* 기존 크기 유지 */
+    font-weight: bold; /* 진하게 표시 */
+    color: black; /* 텍스트 색상 변경 */
+}
+/* select 요소의 전체 스타일 */
+select {
+    width: 100%; /* 너비 설정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 테두리 설정 */
+    background-color: #fff; /* 배경색 설정 */
+    font-size: 16px; /* 폰트 크기 설정 */
+    color: #495057; /* 텍스트 색상 설정 */
+}
+
+/* select 요소의 활성화 상태 스타일 */
+select:focus {
+    outline: none; /* 포커스 시 테두리 제거 */
+    border-color: #80bdff; /* 포커스 시 테두리 색상 변경 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 포커스 시 그림자 효과 추가 */
+}
+
+/* select 요소의 드롭다운 화살표 아이콘 스타일 */
+select::-ms-expand {
+    display: none; /* IE에서 드롭다운 화살표 아이콘 숨김 */
+}
+
+/* select 요소의 드롭다운 화살표 스타일 */
+.select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* 마우스 이벤트 방지 */
+}
+
+/* 선택된 옵션의 스타일 */
+option:checked {
+    background-color: #007bff; /* 선택된 옵션의 배경색 */
+    color: #fff; /* 선택된 옵션의 텍스트 색상 */
+}
+
+
 </style>
 </head>
 <body>
 
 	<section layout:fragment="content">
-		<h1>설비비가동관리</h1>
 		<div class="container">
+		<h1>설비비가동관리</h1>
 			<div class="col">
 				<br> <br>
 				<table class="table">
@@ -68,8 +166,8 @@ button {
 						<tr>
 							
 							<th>담당자</th>
-							<td colspan="2"><input type="text" id="facNotPerson"
-								name="facNotPerson" th:value="${username}" required></td>
+							<td colspan="2"><input type="text" id="facPerson"
+								name="facPerson" th:value="${username}" required></td>
 							<th>시작일</th>
 							<td colspan="2"><input type="date" id="facNotSdate"
 								name="facNotSdate" required></td>
@@ -77,14 +175,17 @@ button {
 							<td colspan="2"><input type="date" id="facNotLdate"
 								name="facNotLdate" required></td>
 						<tr>
+						<th>설비상태</th>
+							<td>
+								<select id="facNotSituation" name="facNotSituation">
+										<option value="f1">대기</option>
+										<option value="f2">가동</option>
+										<option value="f3">비가동</option>
+								</select>
+							</td>
 							<td colspan="2"><input type="text" id="facCode"
 								name="facCode" required style="display: none;"></td>
-							<th>설비상태</th>
-							<td><select id="facNotSituation" name="facNotSituation">
-									<option value="f1">대기</option>
-									<option value="f2">가동</option>
-									<option value="f3">비가동</option>
-							</select></td>
+							
 						</tr>
 						<tr>
 					</thead>
@@ -137,17 +238,25 @@ button {
    		var facCode = document.getElementsByName("facCode")[0].value;
    		var facNotCode = document.getElementsByName("facNotCode")[0].value;
         var facName = document.getElementsByName("facName")[0].value;
-        var facNotPerson = document.getElementsByName("facNotPerson")[0].value;
+        var facPerson = document.getElementsByName("facPerson")[0].value;
         var facNotReason = document.getElementsByName("facNotReason")[0].value;
         var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
         var facNotSdate = document.getElementsByName("facNotSdate")[0].value;
         var facNotLdate = document.getElementsByName("facNotLdate")[0].value;
         
         
-        if (!facName) {
+        if (!facName || !facNotReason) {
         	Swal.fire({
             icon: 'error',
-            text: '설비명을 입력해주세요.'
+            text: '설비명과 사유를 입력해주세요.'
+        });
+        return;
+    	}
+        
+        if (!facPerson) {
+        	Swal.fire({
+            icon: 'error',
+            text: '담당자를 입력해주세요.'
         });
         return;
     	}
@@ -157,7 +266,7 @@ button {
             	  facCode: facCode,
             	  facNotCode: facNotCode,
                   facName: facName,
-                  facNotPerson: facNotPerson,
+                  facPerson: facPerson,
                   facNotReason: facNotReason,
                   facNotSituation: facNotSituation,
                   facNotSdate: facNotSdate,
@@ -175,8 +284,12 @@ button {
                 console.log(response.status);
                  if (response.ok) {
                      console.log(response);
-                     alert("등록완료!");
-                     location.href = '/facNotop';  // 여기 경로로 리디렉션
+                     Swal.fire({
+ 		                icon: 'success',
+ 		                text: '저장이 완료되었습니다!'
+ 		            }).then(() => {
+ 		                location.reload(); // 페이지 새로고침
+ 		            });  
                  } else {
                      console.log(response);
                      alert("등록실패");
@@ -188,6 +301,18 @@ button {
              });
          });
    		
+   	//  차기점검을 날짜포맷
+        function formatDate(dateString) {
+   		if(dateString.value == null) {
+   			return '';
+   		}
+            // dateString을 Date 객체로 파싱
+            const date = new Date(dateString.value);
+            // 날짜 포맷 변경
+            const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+            return formattedDate;
+        } 
+   	
    	/* 	// 엑셀다운로드
    		function downloadCSV() {
         const gridData = grid.getData(); // 그리드에서 데이터 가져오기
@@ -250,7 +375,7 @@ button {
    
    	 // 그리드 페이징
    	    let facNotList = [[${nlist}]];
-   	 	console.log(facNotList);
+   	 	console.log("facNotList ",facNotList);
    	    const grid = new tui.Grid({
    	      el: document.getElementById('grid'),
    	      data: facNotList,
@@ -269,6 +394,7 @@ button {
    	        },
    	        {
    	          header: '비가동등록사유',
+   	          width: 200,
    	          name: 'facNotReason',
    	          align: 'center'
    	        },
@@ -279,9 +405,21 @@ button {
    	        },
    	        {
    	          header: '담당자',
-   	          name: 'facNotPerson',
+   	          name: 'facPerson',
    	          align: 'center'
    	        },
+   	     	{
+              header: '등록일',
+              name: 'facNotSdate',
+              formatter : formatDate,
+              align: 'center'
+             },
+   	     	{
+              header: '종료일',
+              name: 'facNotLdate',
+              formatter : formatDate,
+              align: 'center'
+            },
    	        {
    	          header: '상태',
    	          name: 'facNotSituation',
@@ -297,25 +435,26 @@ button {
    	    });
 
    	    // 설비코드 클릭 시 이벤트 처리해서 위에 input박스에 값넣기
-   	   function handleFacCodeClick(event) {
-   	      // 클릭한 행의 데이터 가져오기
-   	   const rowData = grid.getRowAt(event.rowKey);
-
-   	      // 설비명과 담당자 값을 가져와서 input 박스에 넣기
-   	   const facName = rowData.facName;
-   	   const facNotPerson = rowData.facPerson;
-   	   const facNotCode = rowData.facNotCode;
-   	   const facCode = rowData.facCode;
-   	   const facNotSdate = rowData.facNotSdate;
-   	   const facNotLdate = rowData.facNotLdate;
-   	   
-   	   document.getElementById('facNotCode').value = facNotCode;
-   	   document.getElementById('facCode').value = facCode;
-   	   document.getElementById('facName').value = facName;
-   	   document.getElementById('facPerson').value = facPerson;
-   	   document.getElementById('facNotSdate').value = facNotSdate;
-   	   document.getElementById('facNotLdate').value = facNotLdate;
-   	    }
+		function handleFacCodeClick(event) {
+    		// 클릭한 행의 데이터 가져오기
+		    const rowData = grid.getRowAt(event.rowKey);
+		
+		    // 설비명과 담당자 값을 가져와서 input 박스에 넣기
+		    const facName = rowData.facName;
+		    const facPerson = rowData.facPerson;
+		    const facNotCode = rowData.facNotCode;
+		    const facCode = rowData.facCode;
+		    const facNotSdate = rowData.facNotSdate;
+		    const facNotLdate = rowData.facNotLdate;
+		
+		    // 값을 input 요소에 할당
+		    document.getElementById('facNotCode').value = facNotCode;
+		    document.getElementById('facCode').value = facCode;
+		    document.getElementById('facName').value = facName;
+		    document.getElementById('facPerson').value = facPerson;
+		    document.getElementById('facNotSdate').value = facNotSdate;
+		    document.getElementById('facNotLdate').value = facNotLdate;
+		}
 
    	    // grid 생성 코드 아래에 설비코드 클릭 이벤트 리스너 등록
    	    grid.on('click', (event) => {

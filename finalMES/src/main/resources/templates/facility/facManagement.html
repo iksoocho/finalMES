@@ -42,69 +42,111 @@ button {
 	margin-right: 5px;
 }
 
-#myModal3 {
-	text-align: center;
+body {
+    font-family: Arial, sans-serif; /* 전체 페이지에 대한 기본 글꼴 설정 */
+    background-color: #f8f9fa; /* 페이지 배경색 설정 */
+}
+
+.container {
+    margin: auto; /* 컨테이너를 수평 가운데 정렬 */
+    padding: 20px;
+    background-color: #ffffff; /* 컨테이너 배경색 설정 */
+    border-radius: 10px; /* 컨테이너에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+h1 {
+    text-align: center; /* 제목 가운데 정렬 */
+}
+
+.btn {
+    margin-right: 5px; /* 버튼 간격 설정 */
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%; /* 입력란 전체 너비로 설정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
+}
+
+/* 검색 입력란 스타일 */
+#searchInput {
+    margin-top: 10px; /* 검색 입력란과 버튼 사이의 간격 설정 */
+    width: 200px; /* 너비를 작게 조정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
 }
 
 /* 모달 스타일 */
-.modal-dialog {
-	max-width: 800px;
-}
-
 .modal-content {
-	border-radius: 10px;
+    border-radius: 10px; /* 모달에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 }
 
 .modal-header {
-	background-color: #007bff;
-	color: white;
-	border-radius: 10px 10px 0 0;
-}
-
-.modal-body {
-	padding: 20px;
+    background-color: #007bff; /* 모달 헤더 배경색 설정 */
+    color: white; /* 모달 헤더 글자색 설정 */
+    border-radius: 10px 10px 0 0; /* 모달 헤더에 라운드 모서리 설정 */
 }
 
 .modal-footer {
-	border-radius: 0 0 10px 10px;
+    background-color: #f8f9fa; /* 모달 푸터 배경색 설정 */
+    border-top: none; /* 모달 푸터에 테두리 없애기 */
+    border-radius: 0 0 10px 10px; /* 모달 푸터에 라운드 모서리 설정 */
 }
-
 .modal-title {
-	font-size: 24px;
+    font-size: 24px; /* 기존 크기 유지 */
+    font-weight: bold; /* 진하게 표시 */
+    color: black; /* 텍스트 색상 변경 */
+}
+/* select 요소의 전체 스타일 */
+select {
+    width: 100%; /* 너비 설정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 테두리 설정 */
+    background-color: #fff; /* 배경색 설정 */
+    font-size: 16px; /* 폰트 크기 설정 */
+    color: #495057; /* 텍스트 색상 설정 */
 }
 
-.table th, .table td {
-	text-align: center;
+/* select 요소의 활성화 상태 스타일 */
+select:focus {
+    outline: none; /* 포커스 시 테두리 제거 */
+    border-color: #80bdff; /* 포커스 시 테두리 색상 변경 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 포커스 시 그림자 효과 추가 */
 }
 
-.modal-table {
-	width: 100%;
-	border-collapse: collapse;
+/* select 요소의 드롭다운 화살표 아이콘 스타일 */
+select::-ms-expand {
+    display: none; /* IE에서 드롭다운 화살표 아이콘 숨김 */
 }
 
-.modal-table th, .modal-table td {
-	padding: 10px;
-	border-bottom: 1px solid #dee2e6;
+/* select 요소의 드롭다운 화살표 스타일 */
+.select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* 마우스 이벤트 방지 */
 }
 
-.modal-table th {
-	background-color: #f8f9fa;
+/* 선택된 옵션의 스타일 */
+option:checked {
+    background-color: #007bff; /* 선택된 옵션의 배경색 */
+    color: #fff; /* 선택된 옵션의 텍스트 색상 */
 }
 
-.modal-table tbody tr:hover {
-	background-color: #f2f2f2;
-}
 
-/* 모달 창 외부를 클릭하여 닫을 수 있도록 */
-.modal-backdrop {
-	opacity: 0.2;
-}
+
 </style>
 </head>
 <body>
 	<section layout:fragment="content">
 		<div class="container">
-			<h2>설비관리</h2>
+			<h1>설비관리</h1>
 			<br>
 			<div class="container">
 				<table class="table">
@@ -128,8 +170,8 @@ button {
 						<tr>
 							<th>공정명</th>
 							<td colspan="2"><input type="text" id="procName"
-								name="procName" required data-toggle="modal"
-								data-target="#myModal2"></td>
+								name="procName" required data-bs-toggle="modal"
+								data-bs-target="#staticBackdropOne1"></td>
 
 							<th>공정코드</th>
 							<td colspan="2"><input type="text" id="procCode"
@@ -139,8 +181,8 @@ button {
 						<tr>
 							<th>거래처</th>
 							<td colspan="2"><input type="text" id="businessName"
-								name="businessName" required data-toggle="modal"
-								data-target="#myModal4"></td>
+								name="businessName" required data-bs-toggle="modal"
+								data-bs-target="#staticBackdropOne"></td>
 							<th>담당자</th>
 							<td colspan="2"><input type="text" id="facPerson"
 								name="facPerson" th:value="${username}" required></td>
@@ -209,50 +251,99 @@ button {
 			</div>
 		</div>
 
-		<!-- 거래처모달 -->
-		<div class="modal" id="myModal4">
-			<div class="modal-dialog">
+		
+		<!-- 공정모달 -->
+		<div class="modal" id="staticBackdropOne1"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<!-- modal-dialog 클래스에 modal-dialog-scrollable 클래스 추가 -->
 				<div class="modal-content">
-					<!-- 모달 헤더 -->
-					<div class="modal-header">
-						<h4 class="modal-title">거래처</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">공정목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
 					</div>
-					<div class="modal-body">
-						<!-- 모달 내용 데이터로 받아와야함 설비명 -->
+
+					<div class="modal-body" style="overflow-y: hidden;">
+						<!-- overflow-y 속성 추가 -->
+						<table>
+							<thead style="text-align: center;">
+								<tr>
+									<th>No.</th>
+									<th>공정명</th>
+									<th>공정코드</th>
+								</tr>
+							</thead>
+							<tbody style="text-align: center;">
+								<!-- 컨트롤러에서 봐야함 -->
+								<tr th:each="fac: ${proList}">
+									<td th:text="${facStat.count}"></td>
+									<td th:text="${fac.procName}"
+										th:data-procCode="${fac.procCode}"
+										th:data-procName="${fac.procName}"
+										th:onclick="'updateInputFields1(this)'" data-bs-dismiss="modal"></td>
+									<td th:text="${fac.procCode}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer" style="background-color: #0d6efd;">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 거래처모달 -->
+		<div class="modal" id="staticBackdropOne" data-bs-backdrop="static"
+			data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #0d6efd;">
+						<h1 class="modal-title fs-5" id="staticBackdropLabel"
+							style="font-weight: bold">거래처 목록</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body" style="overflow-y: hidden;">
 						<table class="table">
-							<thead>
+							<thead style="text-align: center;">
 								<tr>
 									<th>No.</th>
 									<th>거래처명</th>
 									<th>거래처코드</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="fac: ${busiList}">
-									<td th:text="${facStat.count}"></td>
+							<tbody style="text-align: center;">
+								<!-- Thymeleaf를 사용하여 거래처 데이터를 반복하고 각 항목을 모달에 표시 -->
+								<tr th:each="fac, index : ${facBusList}">
+									<td th:text="${index.index + 1}"></td>
 									<td th:text="${fac.businessName}"
-										th:data-businessCode="${fac.businessCode}"
 										th:data-businessName="${fac.businessName}"
-										onclick="updateInputFields3(this)" data-bs-dismiss="modal"></td>
+										th:data-businessCode="${fac.businessCode}"
+										data-bs-dismiss="modal"
+										th:onclick="'updateInputFields3(this)'"></td>
 									<td th:text="${fac.businessCode}"></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					<div class="modal-footer">
+					<div class="modal-footer" style="background-color: #0d6efd;">
 						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">닫기</button>
+							data-bs-dismiss="modal">닫기</button>
 					</div>
 				</div>
-
 			</div>
-
 		</div>
 
 
+
 		<script th:inline="javascript">
-   
+		
     // 모달의 데이터 받아서 input 창에 뿌리기
     function updateInputFields1(Element) {
          // 클릭한 <td> 요소에서 데이터 속성을 가져옴
@@ -274,12 +365,11 @@ button {
       }
 
    
-   // 등록
-   // saveBtn 에 이벤트 걸어서 클릭 시 함수 실행 하기
-   document.getElementById('saveBtn').addEventListener("click", function() {
-        // 저장할 객체 초기화 시킴
-         let data = {};   
-        // 입력필드의 name 값 받아와서 각 변수에 할당시킴
+ // saveBtn 클릭 시 실행되는 부분
+    document.getElementById('saveBtn').addEventListener("click", function() {
+        // 등록할 데이터 객체 초기화
+        let data = {};
+        // 입력 필드의 값을 가져와서 변수에 할당
         var procCode = document.getElementsByName("procCode")[0].value;
         var businessCode = document.getElementsByName("businessCode")[0].value;
         var facName = document.getElementsByName("facName")[0].value;
@@ -288,90 +378,66 @@ button {
         var facDate = document.getElementsByName("facDate")[0].value;
         var facInscycle = document.getElementsByName("facInscycle")[0].value;
         var facPerson = document.getElementsByName("facPerson")[0].value;
-        
-	          // 등록 시 유효성검사
-	        if (!facName) {
-	        	Swal.fire({
-	            icon: 'error',
-	            text: '설비명을 입력해주세요.'
-	        });
-	        return;
-	    	}
-	
-	    	if (!procName) {
-	        	Swal.fire({
-	            icon: 'error',
-	            text: '공정명을 입력해주세요.'
-	        });
-	        return;
-	    	}
-	
-	    	if (!procCode) {
-	        	Swal.fire({
-	            icon: 'error',
-	            text: '공정코드를 입력해주세요.'
-	        });
-	        return;
-	    	}
-	
-	    	if (!facPerson) {
-	        	Swal.fire({
-	            icon: 'error',
-	            text: '담당자를 입력해주세요.'
-	        });
-	        return;
-	    	}
 
-	    	if (!businessCode) {
-	        	Swal.fire({
-	            icon: 'error',
-	            text: '거래처를 입력해주세요.'
-	        });
-	        return;
-    		}	
-             // 등록할 데이터 객체로 구성하기
-               var facData = {
-                  procCode: procCode,
-                  businessCode: businessCode,
-                   facName: facName,
-                   facHig: facHig,
-                   facLow: facLow,
-                   facDate: facDate,
-                   facInscycle: facInscycle,
-                   facPerson: facPerson,
-               
-               };
-             // 추가 데이터 객체 초기화
-               var notData = {};
-               // 전송할 데이터 객체에 등록 및 추가 데이터를 할당
-               data.facManageVO = facData;
-               data.facNotopVO = notData;
-               
-               // fetch POST 서버로 데이터 전송시키기
-               fetch("/insrtFacAndNot", {
-                 method: "POST",
-                 body: JSON.stringify(data), // 요청한 데이터 지정 data 객체를 JSON 문자열로 변환하여 전송
-                 headers: {
-                     "Content-Type": "application/json"  // JSON 형식임을 확인
-                 }
-             })
-               // 응답처리
-             .then(response => {
-                 if(!response.ok){
+        // 등록 시 유효성 검사
+        if (!facName || !procCode || !businessCode || !facHig || !facLow || !facDate || !facInscycle || facInscycle === '선택' || !facPerson) {
+            Swal.fire({
+                icon: 'error',
+                text: '모든 값을 입력해주세요.'
+            });
+            return;
+        }
+
+        // 등록할 데이터 객체 구성
+        var facData = {
+            procCode: procCode,
+            businessCode: businessCode,
+            facName: facName,
+            facHig: facHig,
+            facLow: facLow,
+            facDate: facDate,
+            facInscycle: facInscycle,
+            facPerson: facPerson,
+        };
+        // 추가 데이터 객체 초기화
+        var notData = {};
+        // 전송할 데이터 객체에 등록 및 추가 데이터를 할당
+        data.facManageVO = facData;
+        data.facNotopVO = notData;
+
+        // fetch POST로 데이터 전송
+        fetch("/insrtFacAndNot", {
+            method: "POST",
+            body: JSON.stringify(data), // 데이터를 JSON 문자열로 변환하여 전송
+            headers: {
+                "Content-Type": "application/json" // JSON 형식임을 확인
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
                     throw new Error("반응 없음")
-                 }
-                 return response.text();
-             })
-             .then(data => {
-                alert(data);
-                // 페이지 리디렉션
-                location.href = "/facManagement"
-             })
-             .catch(error => {
-                 console.log(error);
-                 alert("오류");
-             });
-         });
+                }
+                return response.text();
+            })
+            .then(data => {
+                // 등록 완료 시 알림창 표시
+            	Swal.fire({
+                    icon: 'success',
+                    text: '설비등록이 완료되었습니다.'
+                }).then(() => {
+                    location.href = '/facManagement'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                // 오류 발생 시 알림창 표시
+                Swal.fire({
+                    icon: 'error',
+                    text: '오류가 발생했습니다. 다시 시도해주세요.'
+                });
+            });
+    });
+
    
    
    // 엑셀 다운로드

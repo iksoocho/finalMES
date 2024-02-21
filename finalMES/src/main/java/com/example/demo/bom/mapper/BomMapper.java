@@ -18,16 +18,17 @@ public interface BomMapper {
 	public List<OriginMaterialVO> getOriginMaterialList();
 	// 하단 그리드의 공정 들고오는 리스트
 	public List<ProcessVO> getProcessList();
-	// bom 시퀀스
-	public int getBomSeq();
-	// bom insert
-	public void bomInsert(BomVO bomVO);
 	
-	// bom list
+	
+	// 시퀀스
+	public int getBomSeq();
+	// insert
+	public void bomInsert(BomVO bomVO);
+	// list
 	public List<BomVO> getBomList(String prodCode);
-	// bom delete
+	// delete
 	public void bomDelete(BomVO bomVO);
-	// bom update
+	// update
 	public void bomUpdate(BomVO bomVO);
 
 }

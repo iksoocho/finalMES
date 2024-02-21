@@ -44,14 +44,79 @@ button {
 #myModal3 {
 	text-align: center;
 }
+body {
+    font-family: Arial, sans-serif; /* 전체 페이지에 대한 기본 글꼴 설정 */
+    background-color: #f8f9fa; /* 페이지 배경색 설정 */
+}
+
+.container {
+    margin: auto; /* 컨테이너를 수평 가운데 정렬 */
+    padding: 20px;
+    background-color: #ffffff; /* 컨테이너 배경색 설정 */
+    border-radius: 10px; /* 컨테이너에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+h1 {
+    text-align: center; /* 제목 가운데 정렬 */
+}
+
+.btn {
+    margin-right: 5px; /* 버튼 간격 설정 */
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%; /* 입력란 전체 너비로 설정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
+}
+
+/* 검색 입력란 스타일 */
+#searchInput {
+    margin-top: 10px; /* 검색 입력란과 버튼 사이의 간격 설정 */
+    width: 200px; /* 너비를 작게 조정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
+}
+
+/* 모달 스타일 */
+.modal-content {
+    border-radius: 10px; /* 모달에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+.modal-header {
+    background-color: #007bff; /* 모달 헤더 배경색 설정 */
+    color: white; /* 모달 헤더 글자색 설정 */
+    border-radius: 10px 10px 0 0; /* 모달 헤더에 라운드 모서리 설정 */
+}
+
+.modal-footer {
+    background-color: #f8f9fa; /* 모달 푸터 배경색 설정 */
+    border-top: none; /* 모달 푸터에 테두리 없애기 */
+    border-radius: 0 0 10px 10px; /* 모달 푸터에 라운드 모서리 설정 */
+}textarea {
+    width: 100%; /* 전체 너비로 설정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 테두리 설정 */
+    resize: none; /* 크기 조정 비활성화 */
+    font-family: Arial, sans-serif; /* 글꼴 설정 */
+    font-size: 14px; /* 글꼴 크기 설정 */
+    line-height: 1.5; /* 줄 간격 설정 */
+}
+
+
 
 </style>
 </head>
 <body>
 
 	<section layout:fragment="content">
-		<h1>설비수리관리</h1>
 		<div class="container">
+		<h1>설비수리관리</h1>
 			<div id="layoutSidenav_content" class="container text-center">
 
 				<div class="col">
@@ -100,6 +165,8 @@ button {
 						<button type="button" id="selectBtn"
 							class="btn btn-outline-success" data-bs-toggle="modal"
 							data-bs-target="#staticBackdropOne">조회</button>
+						<button type="button" class="btn btn-outline-primary"
+						onclick="downloadCSV()">Excel</button>
 						<input type="text" id="searchInput" oninput="searchFunction()"
 							placeholder="검색...">
 					</div>
@@ -109,7 +176,7 @@ button {
 			</div>
 		</div>
 
-		<div class="modal fade modal-xl" id="staticBackdropOne"
+		<div class="modal" id="staticBackdropOne"
 			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 			aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-scrollable">
@@ -128,7 +195,6 @@ button {
 								<tr>
 									<th>설비코드</th>
 									<th>설비명</th>
-									<!-- <th>담당자</th> -->
 									<th>비가동등록사유</th>
 									<th>상태</th>
 								</tr>
@@ -194,15 +260,6 @@ button {
 		// saveBtn 버튼에 이벤트 걸어서 클릭 시 해당 함수 호출
 		document.getElementById('saveBtn').addEventListener("click", function() {
 		    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
-		    
-		    
-		   
-
-		    // 수리사항이 비어있는지 확인
-		    if (!facRepRepairs.trim()) {
-		        alert("수리사항을 입력해주세요.");
-		        return;
-		    }
 
 		    // 입력필드의 name 값을 가져와서 각 변수에 할당
 		    var facRepCode = document.getElementsByName("facRepCode")[0].value;
@@ -214,6 +271,30 @@ button {
 		    var facRepDate = document.getElementsByName("facRepDate")[0].value;
 		    var facNotSituation = document.getElementsByName("facNotSituation")[0].value;
 			
+		    if (!facName) {
+	        	Swal.fire({
+	            icon: 'error',
+	            text: '설비명을 입력해주세요.'
+	        });
+	        return;
+	    	}
+		    
+		    if (!facRepRepairs) {
+	        	Swal.fire({
+	            icon: 'error',
+	            text: '수리사항을 입력해주세요.'
+	        });
+	        return;
+	    	}
+		    
+		    if (!facRepContent) {
+	        	Swal.fire({
+	            icon: 'error',
+	            text: '수리내용을 입력해주세요.'
+	        });
+	        return;
+	    	}
+		    
 		    // 등록할 데이터 객체로 
 		    var data = {
 		        facRepCode: facRepCode,
@@ -242,12 +323,19 @@ button {
 		    .then(response => {
 		        console.log(response.status);
 		        if (response.ok) {
-		            console.log(response);
-		            alert("등록완료!");
-		            location.href = '/facRep';  // 여기 경로로 리디렉션
+		        	console.log(response);
+    	            Swal.fire({
+    	                icon: 'success',
+    	                text: '등록 완료!'
+    	            }).then(() => {
+    	                location.reload(); // 등록 완료 후 페이지 새로고침
+    	            });
 		        } else {
-		            console.log(response);
-		            alert("등록실패");
+		        	 console.log(response);
+     	            Swal.fire({
+     	                icon: 'error',
+     	                text: '등록 실패'
+     	            });
 		        }
 		    })
 		    .catch(error => {
@@ -262,13 +350,7 @@ button {
           document.getElementById('insertBtn').addEventListener("click", function() {
         	    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
         	    
-        	    if (!facName) {
-    	        	Swal.fire({
-    	            icon: 'error',
-    	            text: '설비명을 입력해주세요.'
-    	        });
-    	        return;
-    	    	}
+        	 
     	
         	    // 입력필드의 name 값 받아와서 각 변수에 할당
         	    var facRepCode = document.getElementsByName("facRepCode")[0].value;
@@ -277,10 +359,35 @@ button {
         	    
         	    var facName = document.getElementsByName("facName")[0].value;
         	    var facRepPerson = document.getElementsByName("facRepPerson")[0].value;
-        	    /* var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value; */
+        	    var facRepRepairs = document.getElementsByName("facRepRepairs")[0].value;
         	    var facRepContent = document.getElementsByName("facRepContent")[0].value;
         	    var facRepDate = document.getElementsByName("facRepDate")[0].value;
 				
+        	    if (!facName) {
+    	        	Swal.fire({
+    	            icon: 'error',
+    	            text: '설비명을 입력해주세요.'
+    	        });
+    	        return;
+    	    	}
+    		    
+    		    if (!facRepRepairs) {
+    	        	Swal.fire({
+    	            icon: 'error',
+    	            text: '수리사항을 입력해주세요.'
+    	        });
+    	        return;
+    	    	}
+    		    
+    		    if (!facRepContent) {
+    	        	Swal.fire({
+    	            icon: 'error',
+    	            text: '수리내용을 입력해주세요.'
+    	        });
+    	        return;
+    	    	}
+        	    
+        	    
         	    // 등록할 데이터 객체로 할당
         	    var data = {
         	        facRepCode: facRepCode,
@@ -307,19 +414,29 @@ button {
         	        }
         	    })
         	    .then(response => {
+        	        console.log(response.status);
         	        if (response.ok) {
         	            console.log(response);
-        	            alert("등록되었습니다!");
-        	            // 페이지 새로고침
-        	            location.reload();
+        	            Swal.fire({
+        	                icon: 'success',
+        	                text: '등록 완료!'
+        	            }).then(() => {
+        	                location.reload(); // 등록 완료 후 페이지 새로고침
+        	            });
         	        } else {
         	            console.log(response);
-        	            alert("등록에 실패했습니다.");
+        	            Swal.fire({
+        	                icon: 'error',
+        	                text: '등록 실패'
+        	            });
         	        }
         	    })
         	    .catch(error => {
-        	        console.error('Error:', error);
-        	        alert("등록에 실패했습니다.");
+        	        console.log(error);
+        	        Swal.fire({
+        	            icon: 'error',
+        	            text: '오류 발생'
+        	        });
         	    });
         	});
        // 업데이트 후 해당 행을 숨기는 함수
@@ -475,7 +592,41 @@ button {
     		document.getElementById('facNotSituation').value = facNotSituation;
     	}
         
-     // 검색 기능 추가
+        
+        // 엑셀 다운로드
+        function downloadCSV() {
+            const gridData = grid.getData(); // 그리드에서 데이터 가져오기
+            const header = ['수리코드', '설비명', '설비코드', '수리사항', '담당자', '수리내용', '등록일자']; // 헤더 생성
+            const csvRows = [header.join(',')]; // 헤더를 CSV 형식으로 변환하여 첫 번째 행으로 설정
+
+            // 데이터 생성
+            gridData.forEach(row => {
+                const values = Object.values(row);
+                const formattedRow = values.map(value => {
+                    if (value instanceof Date) {
+                        // 날짜의 경우 ISO 형식으로 변환
+                        return value.toISOString().split('T')[0];
+                    } else {
+                        return value;
+                    }
+                });
+                csvRows.push(formattedRow.join(','));
+            });
+
+            // CSV 내용 생성
+            const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+            const encodedUri = encodeURI(csvContent); // URI 인코딩
+
+            // 다운로드 링크 생성 및 클릭
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'data.csv');
+            document.body.appendChild(link);
+            link.click();
+        }
+        
+        
+     	 // 검색 기능 추가
      	 function searchFunction() {
      	     var input, filter, table, tr, td, i, j, txtValue;
      	     input = document.getElementById("searchInput");
