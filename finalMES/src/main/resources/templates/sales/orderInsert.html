@@ -6,6 +6,12 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
+.orderManage{
+	font-family: 'Noto Sans KR';
+	font-size: 24px;
+	color: #333;
+	font-weight: 700;
+}
 input {
 	padding-left: 10px;
 }
@@ -20,7 +26,7 @@ th {
 }
 
 .containerTwo {
-	margin-top: 20px;
+	margin-top: 5px;
 }
 
 table {
@@ -96,7 +102,7 @@ button {
 }
 
 .containerThree {
-	margin-top: 30px;
+	margin-top: 10px;
 }
 
 .red {
@@ -171,7 +177,7 @@ button {
 <body>
 	<section layout:fragment="content">
 		<div class="containerOne">
-			<h4>주문 관리</h4>
+			<h4 class="orderManage">주문 관리</h4>
 			<div class="containerTwo">
 				<h5>주문서정보</h5>
 				<button class="btn btn-primary" onclick="resetForm()">초기화</button>

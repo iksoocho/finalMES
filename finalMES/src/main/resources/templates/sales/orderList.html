@@ -2,10 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
 <style>
+.orderSearch {
+	font-family: 'Noto Sans KR';
+	font-size: 24px;
+	color: #333;
+	font-weight: 700;
+}
+
+.orderStatus {
+	width: 100px;
+	height: 34px;
+	margin-left: 762px;
+	border: solid 1px #ebebeb;
+	background-color: #fff;
+	border-bottom-color: #d8d8d8;
+	border-right-color: #d8d8d8;
+	border-radius: 3px;
+}
+
+.date {
+	width: 200px;
+	height: 34px;
+	border: solid 1px #ebebeb;
+	background-color: #fff;
+	border-bottom-color: #d8d8d8;
+	border-right-color: #d8d8d8;
+	border-radius: 3px;
+}
+
 .tui-grid-cell.tui-grid-cell-has-input.tui-grid-cell-editable.ordNote {
-    background-color: #FDC0CE;
-    border: 0.3px solid white;
-    /* 원하는 배경색을 지정합니다. */
+	background-color: #FDC0CE;
+	border: 0.3px solid white;
+	/* 원하는 배경색을 지정합니다. */
 }
 
 .containerOne {
@@ -36,21 +64,21 @@
 <body>
 	<section layout:fragment="content">
 		<div class="containerOne">
-			<h4>주문 조회</h4>
+			<h4 class="orderSearch">주문 조회</h4>
 			<h5 class="titleOne">목록</h5>
 			<small class="totalOrdCount" style="margin-right: 20px;"> (총 주문 수: <span th:text="${orderList.size()}"></span>)
-			</small>
-						<select id="orderStatus">
-							<option value="o" selected>상태</option>
-							<option value="o2">등록완료</option>
-							<option value="o3">처리중</option>
-							<option value="o4">출고대기</option>
-							<option value="o5">출고중</option>
-							<option value="o6">종결</option>
-						</select>
-					<label for="startDate"></label> <input type="date" id="startDate" name="startDate"> <label for="endDate"> ~ </label> <input type="date" id="endDate" name="endDate">
-					<button type="button" class="btn btn-primary" id="updateOrderState" style="float: right; margin-bottom: 5px;">저장</button>
-					<button type="button" class="btn btn-primary" id="searchByDate" style="margin-bottom: 5px;">검색</button>
+			</small> <select id="orderStatus" class="orderStatus">
+				<option value="o" selected>상태</option>
+				<option value="o2">등록완료</option>
+				<option value="o3">처리중</option>
+				<option value="o4">출고대기</option>
+				<option value="o5">출고중</option>
+				<option value="o6">종결</option>
+			</select> <label for="startDate"></label> <input type="date" id="startDate" class="date" name="startDate"> <label for="endDate"> ~ </label> <input type="date" id="endDate" class="date"
+				name="endDate">
+			<button type="button" class="btn btn-primary" id="updateOrderState" style="float: right; margin-bottom: 10px;">저장</button>
+			<button type="button" class="btn btn-primary" id="searchByDate" style="margin-bottom: 5px;">검색</button>
+
 			<div id="grid"></div>
 			<h5>상세</h5>
 			<div></div>

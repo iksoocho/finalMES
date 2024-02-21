@@ -4,9 +4,22 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
+.outManage{
+	font-family: 'Noto Sans KR';
+	font-size: 24px;
+	color: #333;
+	font-weight: 700;
+}
+.deleteButton{
+	margin: 0px;
+	margin-right: 9px;
+	background-color: #DC3545;
+	border: solid 0.3px gray;
+	border-radius: 5px;
+}
 .tui-grid-cell.tui-grid-cell-has-input.tui-grid-cell-editable.ttlPrice {
     background-color: #FDC0CE;
-    /* 원하는 배경색을 지정합니다. */
+	border: solid 0.3px white;    
 }
 .mainContainerOne {
 	margin: 50px;
@@ -187,7 +200,7 @@ button {
 <body>
 	<section layout:fragment="content">
 		<div class="mainContainerOne">
-			<h4>완제품출고 관리</h4>
+			<h4 class="outManage">완제품출고 등록</h4>
 			<div class="mainContainerTwo">
 				<h5>출고서정보</h5>
 				<button class="btn btn-primary" onclick="resetForm()">초기화</button>
@@ -414,7 +427,23 @@ button {
 		</div>
 
 		<script th:inline="javascript">
-		
+		class DeleteButtonRenderer {
+			  constructor(props) {
+			    const el = document.createElement('button');
+			    el.textContent = '삭제';
+			    el.classList.add('deleteButton');
+			    el.addEventListener('click', () => {
+			      // 클라이언트 측에서만 행 삭제
+			      props.grid.removeRow(props.rowKey);
+			    });
+
+			    this.el = el;
+			  }
+
+			  getElement() {
+			    return this.el;
+			  }
+			}
 			/* 토스트 그리드 */
 
 			let grid = tui.Grid;
@@ -489,7 +518,7 @@ button {
 				el : document.getElementById('outGrid'),
 				scrollX : false,
 				scrollY : false,
-				rowHeaders : [ 'rowNum', 'checkbox' ],
+				rowHeaders : [ 'rowNum' ],
 				columns : [ {
 					header : '주문상세번호',
 					name : 'ordDCode',
@@ -513,18 +542,18 @@ button {
 				},{
 					header : '삭제',
 					name : 'deleteButton',
+					className: 'deleteButton',
 					align: "center",
 					width: 60,
+					renderer: {
+						type: DeleteButtonRenderer
+					}
 				},
 					
 			],
 		
 		});
 			
-			
-			
-
-
 			document.addEventListener('DOMContentLoaded',function() {
 				// 현재 날짜를 가져오는 함수 호출
 				var currentDate = getCurrentDate();
