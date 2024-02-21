@@ -16,32 +16,12 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
 <title>발주 관리 ^^</title>
 <style>
-button {
-	float: right;
-	margin-right: 5px;
-	margin-bottom: 10px;
-}
 
-table {
-	border-collapse: collapse;
-	width: 20%; /* 크기를 조정합니다 */
-}
 
-th {
-	background-color: #f2f2f2;
-	color: #333;
-	font-weight: bold;
-	padding: 8px;
-	text-align: left;
-}
 
-td {
-	padding: 8px;
-	border-bottom: 1px solid #ddd;
-}
 
 input[type="text"] {
-	width: 100%;
+	width: 20%;
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -56,25 +36,33 @@ input[type="text"]:focus {
 #excel {
 	float: left;
 }
+#searchOrder {
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+#selectBtn {
+    float: left;
+    margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
-	<section layout:fragment="content">
-		<h2>발주관리</h2>
-		<div class="container">
-
-
-
+	<section layout:fragment="content" class="m-5">
+		<div>
+			<h2>발주관리</h2>
 
 			<div>
-				<table>
-					<tr>
-						<th><input type="text" id="searchOrder"
-							oninput="searchFunction()" placeholder="검색..."></th>
-					</tr>
-				</table>
 
+				<input type="text" id="searchOrder" oninput="searchFunction()"
+					placeholder="검색..." >
+				<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
+			<br>
+			<br>
+			<br>
 
 			<!--  ================== 그리드 ================  -->
 			<div class="row">
@@ -99,14 +87,12 @@ input[type="text"]:focus {
 
 		</div>
 
-		<div class="container">
+		<div>
 			<h2>발주목록</h2>
 			<button type="button" class="btn btn-outline-primary"
-				id="orderInsert">저장</button>
+				id="orderInsert" style="float: right; margin: 8px 5px;">저장</button>
 			<button type="button" class="btn btn-outline-primary" id="excel"
 				onclick="downloadCSV()">EXCEL</button>
-			<button type="button" class="btn btn-outline-primary" id="excel"
-				onclick="downloadPDF()">PDF</button>
 			<div id="ordGrid"></div>
 		</div>
 
@@ -262,16 +248,32 @@ input[type="text"]:focus {
                          	                
                          	                let matCode = matmat.matCode;
                          	                let matName = matmat.matName;
+                         	                let isNew = true;
                          	                
-                         	                let data = {matCode, businessCode, businessName, matName}
+                         	                let data = {matCode, businessCode, businessName, matName, isNew}
                          	                
+                         	                
+                         	               const existingNewRows = ordGrid.findRows(row => row.isNew);
+
+	                         	   		    // 새로운 행이 이미 존재하는 경우, 추가하지 않고 경고
+	                         	   		    if (existingNewRows.length > 0) {
+	                         	   		        alert("추가 중인 정보가 있습니다.")
+	                         	   		        return; // 함수 종료
+	                         	   		    }
+	                         	   		    
+	                         	   			
+                         	   			 
                          	                ordGrid.prependRow(data);
                          	                
-                         	            }
+//                          	                 const lastRowId = grid.getRowCount() - 1;
+// 	                         	  			const lastRowData = grid.getRow(lastRowId);
+// 	                         	  			console.log('새로 추가된 행 데이터:', lastRowData);
+                         	                
+                         	           }
                          	        }
                          	    });
                          	    
-
+								
 
                            	   function getOutStatus(value, row) {
                          			console.log("value.value :",  value.value); // 값 확인용 로그
@@ -365,18 +367,9 @@ input[type="text"]:focus {
                          	}
 
  
-                        
-//                         function getMatOrderName(value, row){
-//                         	let statusText, backgroundColor;
-                        
-//                         	switch (value.value){
-//                         	case "재고부족":
-//                         		statusText = '재고부족';
-//                         		break;
-//                         	case "긴급":
-//                         		statue
-//                         	}
-//                         }
+
+                 
+             
 
 
 
@@ -389,7 +382,10 @@ input[type="text"]:focus {
                     document.querySelector('#orderInsert').addEventListener('click', function() {
                     let name = [[${session.userName}]]
                     const newData = ordGrid.getModifiedRows().createdRows;
-                    console.log(newData);
+                    console.log("data", newData);
+                    
+                    console.log("newData[0].matOrName : " , newData[0].matOrName)
+                    
         //          	const newOrder = document.querySelectorAll('.order')
         //          	console.log(newOrder);
         
@@ -400,28 +396,35 @@ input[type="text"]:focus {
             	    }
 	                
 	                // 데이터 유효성 검사
-					for (const data of newData) {
-					  if (!data.matOrName || data.matOrName.trim() === "") {
+					
+					  if (newData[0].matOrName == null) {
 					    alert("발주명을 확인해주세요.");
 					    return;
 					  }
-					  if (!data.matOrCount || isNaN(data.matOrCount) || Number(data.matOrCount) <= 0) {
+					  if (newData[0].matOrCount == null) {
 	                        alert("발주량을 확인해주세요.");
 	                        return;
 	                  }
 	                   // 다른 필드에 대한 유효성 검사도 여기에 추가할 수 있습니다.  
-					  let matOrDate = new Date(data.matOrDate);
-		              if (isNaN(matOrDate.getTime())) {
+					  
+		              if (newData[0].matOrDate == null) {
 		                  alert("유효하지 않은 발주일입니다 다시 지정해 주세요");
 		                  return;
 		              }
-		              let matOrDueDate = new Date(data.matOrDueDate);
-		              if(isNaN(matOrDueDate.getTime())){
+		              
+		              if(newData[0].matOrDueDate == null){
 		            	  alert("납기일을 선택해 주세요");
 		            	  return;
 		              }
 					  
-					}
+		              const orderDate = new Date(newData[0].matOrDate);
+		              const dueDate = new Date(newData[0].matOrDueDate);
+		              const currentDate = new Date();
+		              
+		              if (orderDate > dueDate) {
+		                  alert("납기일은 발주일보다 빠를수 없습니다.");
+		                  return;
+		              }
 	                
 
                  	console.log('추가된 행의 데이터:' , newData);
@@ -574,50 +577,6 @@ input[type="text"]:focus {
             link.click();
         }
     	
-    	//pdf
-		function downloadPDF() {
-		    // 그리드에서 데이터 가져오기
-		    const gridData = ordGrid.getData();
-		
-		    // 테이블 헤더
-		    const header = ordGrid.getColumns().map(column => column.header);
-		
-		    // 테이블 데이터
-		    const data = gridData.map(row => {
-		        return ordGrid.getColumns().map(column => row[column.name]);
-		    });
-		
-		    // PDF 문서 정의
-		    const docDefinition = {
-		        content: [
-		            { text: 'pdf', style: 'header' },
-		            {
-		                style: 'table',
-		                table: {
-		                    headerRows: 1,
-		                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-		                    body: [
-		                        header,
-		                        ...data
-		                    ]
-		                }
-		            }
-		        ],
-		        styles: {
-		            header: {
-		                fontSize: 18,
-		                bold: true,
-		                margin: [0, 0, 0, 10]
-		            },
-		            table: {
-		                margin: [0, 10, 0, 0]
-		            }
-		        }
-		    };
-		
-		    // PDF 생성 및 다운로드
-		    pdfMake.createPdf(docDefinition).download('data.pdf');
-		}
         
 
         

@@ -84,7 +84,7 @@
 				ord.ord_state = #{ordState}
 			</if>
 		</where>
-		ORDER BY ord.ord_date DESC, ord.ord_code DESC
+		ORDER BY ord.ord_date DESC
 	</select>
 
 	<select id="getOrderDetailList" resultType="OrderDetailDVO">
@@ -102,7 +102,7 @@
 		business_name, business_manager,
 		business_manager_phone
 		FROM business
-		WHERE business_type = 1
+		WHERE business_type = 'b1'
 	</select>
 
 	<select id="getProductList" resultType="ProductListVO"> <!-- 상품 목록조회 -->
@@ -153,6 +153,7 @@
 		FROM 	ord_list ord
 		LEFT JOIN 	business business ON ord.business_code = business.business_code
     	WHERE ord_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+    	ORDER BY ord_date DESC
 	</select>
 	
 	<select id="getOrderListByOrdState" resultType="OrderDVO" parameterType="String"> 
@@ -172,5 +173,6 @@
 		FROM 	ord_list ord
 		LEFT JOIN 	business business ON ord.business_code = business.business_code
 		WHERE ord_state = #{ordState}
+		ORDER BY ord_date DESC
 	</select>
 </mapper>

@@ -204,7 +204,7 @@ button {
 					</tr>
 					<tr>
 						<th class="red">담당자</th>
-						<td class="serch"><input type="text" id="selectedUserCode" readonly> <input type="text" id="selectedUserName" name="outManager">
+						<td class="serch"><input type="text" id="selectedUserCode" placeholder="사원번호" readonly> <input type="text" id="selectedUserName" name="outManager" placeholder="담당자이름" readonly>
 
 							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropEmployee">
 								<p>검색</p>
@@ -216,7 +216,7 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" readonly> <input type="text" id="selectedBusinessName" readonly>
+						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" placeholder="거래처코드" readonly> <input type="text" id="selectedBusinessName" placeholder="거래처이름" readonly>
 							<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropBusiness">
 								<p>검색</p>
 							</button></td>
@@ -234,10 +234,8 @@ button {
 		</div>
 		<div class=containerOne>
 			<h5>상세정보</h5>
-			<button class="btn btn-primary">취소</button>
-			<button class="btn btn-primary">추가</button>
 			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" onclick="fetchInventory()">재고현황 불러오기</button>
-			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd">주문서 불러오기</button>
+			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd" onclick="addToMainGridOrd()">주문서 불러오기</button>
 		</div>
 		<div id="grid" class="containerOne"></div>
 
@@ -590,7 +588,6 @@ button {
 		       	document.getElementById('selectedBusinessManager').value = businessManager;
 		       	document.getElementById('selectedBusinessManagerPhone').value = businessManagerPhone;
 		       	
-		       	
 		        // ordCode를 기반으로 주문 세부 정보를 가져오기
 		        
 		        fetch('/orderDetailList/' + ordCode)
@@ -634,9 +631,6 @@ button {
 			    var rows = detailTableBody.find('tr');
 			    var newData = [];
 				
-			    
-			    
-
 			    rows.each(function (index, row) {
 			        var cells = $(row).find('td');
 			        console.log(cells);
@@ -668,6 +662,7 @@ button {
 			        newData.push(newDataRow);
 			        
 			    });
+			    
 
 			    // 그리드의 기존 데이터를 모두 삭제
 			    mainGrid.clear();
@@ -690,6 +685,12 @@ button {
 			    var mainGrid = outGrid;
 			    var inventoryTableBody = $('#inventoryTableBody');
 			    var selectedRows = inventoryTableBody.find('.inventory-checkbox:checked').closest('tr'); // 재고현황 모달에서 선택된 tr 가져오기.
+			    
+			    if (selectedRows.length === 0) {
+			        alert('품목을 선택하세요.');
+			        return;
+			    }
+
 				console.log('선택된 행...',selectedRows)
 			    // 주문 데이터 가져오기
 			    
@@ -749,6 +750,10 @@ button {
 			// 추가된 함수: 재고 정보 가져오기
 			function fetchInventory() {
 				var newOrderData = grid.getCheckedRows();
+				if(newOrderData.length === 0){
+					alert('재고를 확인하고 싶은 행을 선택해주세요');
+					return
+				}
 			    console.log('선택된주문 데이터:', newOrderData); // 주문 데이터 콘솔 로그 출력
 				let selectedRows = grid.getCheckedRows();
 				let ordDCodes = selectedRows.map(row => row.ordDCode);
@@ -756,8 +761,8 @@ button {
 			    // 배열에 prodCode가 있는지 확인
 			    let prodCodes = selectedRows.map(x => x.prodCode);
 			    console.log('제품코드 ',prodCodes)
-			    if (prodCodes.length > 0) {
 			        // 각각의 prodCode에 대해 AJAX 요청을 보냅니다.
+			        if (prodCodes.length > 0) {
 			        var inventoryTableBody = $('#staticBackdropInventory tbody');
 			        inventoryTableBody.empty();
 			    	prodCodes.forEach(function (prodCode, index) {
@@ -814,8 +819,6 @@ button {
 			
 			}
 			
-			
-			
 			//////////////////////////////////////INSERT///////////////////////////////////////////
 			document.querySelector('#prodDlvyInsert').addEventListener('click', function () {
 				
@@ -824,19 +827,45 @@ button {
 				let outObj = {};
 				let ordCode = {};
 				
-				outObj.outCode = document.getElementById('outCode').value;
-				outObj.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerText;
-				outObj.outDate = document.getElementById('registrationDate').value;
 				outObj.outManager = document.getElementById('selectedUserName').value;
+				
+				 if (!outObj.outManager) {
+				        alert('담당자를 선택해주세요.');
+				        return;
+				    }
+				
+				
+				outObj.outCode = document.getElementById('outCode').value;
+				outObj.outCode = document.getElementById('outCode').value;
+
+			    // Check if ordCode div exists
+			    let ordCodeDiv = document.querySelector('td[data-column-name="ordCode"] div');
+			    if (!ordCodeDiv) {
+			        alert('주문서를 등록해주세요.');
+			        return;
+			    }
+
+			    outObj.ordCode = ordCodeDiv.innerText;
+				
+				outObj.outDate = document.getElementById('registrationDate').value;
 				outObj.outState = document.getElementById('outState').value;
 		        
+				
 				ordCode.ordCode = document.querySelector('td[data-column-name="ordCode"] div').innerText;
 				
+				
 				var newOutDetailRows = document.querySelectorAll('#outGrid tbody');
+				console.log(newOutDetailRows[3])
+				if (!newOutDetailRows[3].innerText) {
+			        alert('완제품 재고를 추가해주세요');
+			        return;
+			    }
+				
 				var fourthTBody = newOutDetailRows[3];
-		        		
+				
 				let outDetailData = [];
-						
+				
+				let warningShown = false;		
 				// fourthTBody 안에 포함된 tr 엘리먼트들에 접근
 				fourthTBody.querySelectorAll('tr').forEach((tr, i) => {
 
@@ -848,17 +877,36 @@ button {
 					console.log("주문상세번호 : " + obj.ordDCode);
 					obj.prodLotCode = target.find('td:eq(1)').text();
 					console.log("제품LOT번호 : " + obj.prodLotCode);
-					obj.outCount = target.find('td:eq(2)').text();
+					obj.outCount = target.find('td:eq(3)').text();
+					
+					if (!obj.outCount && obj.outCount !== 0 && obj.outCount !== '0') {
+				        if (!warningShown) {
+				            alert("출고수량이 비어있습니다.");
+				            warningShown = true;  // Set the flag to true after showing the warning
+				        }
+				        return;  // Skip this row
+				    } else if (obj.outCount < 0 || isNaN(obj.outCount)){
+				        if (!warningShown) {
+				            alert("출고수량을 정확하게 입력해주세요.");
+				            warningShown = true;  // Set the flag to true after showing the warning
+				        }
+				        return;  // Skip this row
+				    }
+					
 					console.log("출고수량 : " + obj.outCount)
 					obj.outDState = "dlvyD1";
 					outDetailData.push(obj);
 						    
 				});
 				
+				if (warningShown) {
+			        // 경고창이 나타났을 경우 서버로의 전송을 막음
+			        return;
+			    }
+				
 				data.prodDlvyVO = outObj;
 				data.prodDetailDlvyList = outDetailData;
 				data.orderVO = ordCode;
-				
 
 						// AJAX 요청으로 서버에 데이터 전송
 						fetch('/saveDlvy', {

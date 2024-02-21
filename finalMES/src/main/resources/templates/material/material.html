@@ -4,7 +4,7 @@
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8" />
-<title>자재 관리^^</title>
+<title>자재 관리</title>
 <style>
 button {
 	float: right;
@@ -31,7 +31,7 @@ td {
 }
 
 input[type="text"] {
-	width: 100%;
+	width: 20%;
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -42,21 +42,32 @@ input[type="text"]:focus {
 	outline: none;
 	border-color: #4CAF50;
 }
+#searchOrder {
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+#selectBtn {
+    float: left;
+    margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
-	<section layout:fragment="content">
-		<div class="container">
+	<section layout:fragment="content" class="m-5">
+		<div>
+		<h2>자재 조회</h2>
 			<div>
-				<table>
-					<tr>
-						<th><input type="text" id="searchOrder"
-							oninput="searchFunction()" placeholder="검색..."></th>
-					</tr>
-				</table>
 
+				<input type="text" id="searchOrder" oninput="searchFunction()"
+					placeholder="검색..." >
+				<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
-
+			<br>
+			<br>
+			<br>
 
 			<div class="row">
 				<div class="col-7">
@@ -188,7 +199,7 @@ input[type="text"]:focus {
                  let input, filter, table, tr, td, i, j, txtValue;
          	     input = document.getElementById("searchOrder");
          	     filter = input.value.toUpperCase();
-         	     table = document.getElementById("ordGrid");
+         	     table = document.getElementById("matGrid");
 
          	     tr = table.getElementsByTagName("tr");
          	     for (i = 0; i < tr.length; i++) {

@@ -4,71 +4,77 @@
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8" />
-<title>입고 관리^^</title>
+<title>입고 관리</title>
 <script src="https://uicdn.toast.com/grid/latest/grid.js"></script>
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/grid.css">
-</head>
+
 <style>
 .custom-style {
 	float: right;
 }
+
+input[type="text"] {
+	width: 20%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+	outline: none;
+	border-color: #4CAF50;
+}
+#excel {
+	float: left;
+}
+#searchOrder {
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+#selectBtn {
+    float: left;
+    margin-bottom: 10px;
+}
 </style>
+</head>
 <body>
-	<section layout:fragment="content">
-		<h2>입고관리</h2>
-		<!-- 모달을 위한 HTML 요소 -->
-		<div id="myModal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<div id="modalContent"></div>
+	<section layout:fragment="content" class="m-5">
+		<div>
+			<h2>입고관리</h2>
+
+			<div>
+
+				<input type="text" id="searchOrder" oninput="searchFunction()"
+					placeholder="검색..." >
+				<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
-		</div>
+			<br>
+			<br>
+			<br>
 
 
-		<!-- Modal -->
-		<div class="modal fade modal-lg" id="staticBackdrop"
-			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="staticBackdropLabel">Modal
-							title</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<h3>발주 주문서</h3>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Understood</button>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		<div class="container">
 			<h3>검수 완료 목록</h3>
-			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
-			<!-- 				data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
-			<!-- 				주문서 조회</button> -->
-			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
-			<!-- 				id="orderInsert">저장</button> -->
 
 			<div id="ckeckGrid"></div>
 
 			<h3>입고목록</h3>
 			<button type="button" class="btn btn-outline-primary custom-style"
 				id="orderInsert">저장</button>
+			<button type="button" class="btn btn-outline-primary" id="excel"
+				onclick="downloadCSV()">EXCEL</button>
+			<br> <br>
+
+
 			<div id="inputGrid"></div>
-			<!-- Button trigger modal -->
 		</div>
 
 		<script th:inline="javascript">
-		
 						// 입고 그리드
                 		let matInputList = [[${matInputList}]]
                 		console.log(matInputList)
@@ -151,16 +157,30 @@
         				    let name = [[${session.userName}]];
 
         				    const inputRows = newInpuRows;
-        				    console.log('잘 들고오네요...',inputRows[0].matInsCode);
+        				    console.log('잘 들고오네요...',inputRows[0].matLotCode);
 
 							
 
+        				    for (const data of inputRows) {
+        				        // 입력값이 비어있는지 확인
+        				        if (!data.matInputCount || isNaN(data.matInputCount) || Number(data.matInputCount) <= 0) {
+        				            alert("입고량을 확인해주세요.");
+        				            return;
+        				        }
 
-        				    if (inputRows.length === 0) {
-        				        console.log('추가된 데이터가 없습니다.');
-        				        return;
+        				        // 입력값 길이 확인
+        				        if (data.matInputCount.length > 10) { // 예시로 최대 길이를 10으로 설정
+        				            alert("입고량은 10자 이하여야 합니다.");
+        				            return;
+        				        }
+
+        				        // 입력값 형식 확인
+        				        let matInputDate = new Date(data.matInputDate);
+        				        if (isNaN(matInputDate.getTime())) {
+        				            alert("올바른 입고일을 선택해 주세요");
+        				            return;
+        				        }
         				    }
-
 
         				    // 데이터를 객체로 생성
         				    let data = {};
@@ -257,10 +277,10 @@
                 				  name: 'matInsBad',
                 				  editor: 'text'
                 				},
-                		        {
-                    		      header: '불량내용',
-                    		      name: 'matNote',
-                    		    },
+//                 		        {
+//                     		      header: '불량내용',
+//                     		      name: 'matNote',
+//                     		    },
                 				{
                 		            header: '검수일자',
                 		            name: 'matInsDate',
@@ -284,9 +304,6 @@
                 	           }
                 		    });
 
-   
-
-
                 		// 날짜 형식 지정 함수
                      	function formatDate({ value }) {
                      	    if (value) {
@@ -298,10 +315,6 @@
                      	    }
                      	    return '';
                      	}
-                		
- 
-
-               	
       </script>
 	</section>
 </body>

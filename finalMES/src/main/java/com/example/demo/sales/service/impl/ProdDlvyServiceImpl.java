@@ -52,8 +52,10 @@ public class ProdDlvyServiceImpl implements ProdDlvyService {
 			 
 			 
 		}
-		// 주문서 상태 업데이트
-		prodDlvyMapper.updateOrderState(dlvyCompositeVO.getOrderVO().getOrdCode());
+		
+		 // 주문서 상태 업데이트
+		 prodDlvyMapper.updateOrderState(dlvyCompositeVO.getOrderVO().getOrdCode());
+		 
 		
 		
 		System.out.println("등록성공");
@@ -88,6 +90,8 @@ public class ProdDlvyServiceImpl implements ProdDlvyService {
         }
         // 출고서 상태 업데이트
         prodDlvyMapper.updateOutState(prodDetailUpdateList.get(0).getOutCode());
+        
+        
 
         return totalCount;
     }
