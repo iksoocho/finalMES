@@ -9,6 +9,7 @@ import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
 import com.example.demo.material.MatOutputVO;
 import com.example.demo.material.MatReturnVO;
+import com.example.demo.material.MaterialVO;
 import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.sales.vo.business.BusinessListVO;
 
@@ -55,6 +56,8 @@ public interface MaterialMapper {
 	
 	//수정
 	public void updateMatOrder(MatOrderInfoVO matOrderInfoVO);
+	// 입고쪽
+    public void updateMatLot(MaterialVO materialVO);
 	
 	//삭제
 	public void deleteMatOrder(String matOrCode);

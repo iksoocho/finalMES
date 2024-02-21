@@ -74,7 +74,7 @@
 			    m.mat_safe_stock,
 			    m.mat_unit,
 			    m.mat_standard,
-			    (SELECT SUM(mat_input_count) FROM mat_lot WHERE mat_code = m.mat_code) AS matCount2,
+			    (SELECT SUM(mat_count) FROM mat_lot WHERE mat_code = m.mat_code) AS matCount2,
 			    ml.mat_input_count
 			FROM material m 
 			JOIN (
@@ -232,14 +232,14 @@
 	</insert>
 
 
-	<!-- 발주 업데이트 -->
-	<update id="updateMatOrder" parameterType="String">
-		UPDATE mat_order
+	<!-- 입고 업데이트 -->
+	<update id="updateMatLot" parameterType="MaterialVO">
+		UPDATE mat_lot
 		SET
-		mat_or_count = #{matOrCount},
-		mat_or_due_date = #{matOrDueDate}
+		mat_input_count = #{matInputCount},
+		mat_input_date = #{matInputDate}
 		WHERE
-		mat_or_code = #{matOrCode}
+		mat_lot_code = #{matLotCode}
 	</update>
 
 	<delete id="deleteMatOrder" parameterType="String">
@@ -322,11 +322,13 @@
 		SELECT ml.mat_lot_code,
 		        ml.mat_input_count,
 		        ml.mat_input_date,
+                ml.mat_count,
 		        m.mat_code,
 		        m.mat_name
 		FROM mat_lot ml
 		JOIN material m ON ml.mat_code = m.mat_code
 		WHERE m.mat_code = #{matCode}
+		AND ml.mat_count > 0
 		ORDER BY ml.mat_input_date
 	</select>
 </mapper>

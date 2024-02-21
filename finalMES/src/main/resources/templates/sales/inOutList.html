@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
+<style>
+.containerOne{
+	margin: 50px;
+}
+</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<style>
-</style>
 <body>
 	<section layout:fragment="content">
 		<div class="containerOne">
-			<h4>주문 조회</h4>
+			<h4>입출고 조회</h4>
 			<h5 class="titleOne">목록</h5>
 			<div id="grid"></div>
 			<h5 style="float: left;">상세</h5>
@@ -308,19 +311,51 @@
 			    const checkedRows = detailGrid.getCheckedRows();
 
 			    if (checkedRows.length === 0) {
-			        alert('체크된 행이 없습니다.');
+			    	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '행을 선택해주세요.'
+	    	        });
 			        return;
 			    }
+			    
+			   // 행 데이터를 모아서 배열에 담기
+			   let warningShown = false;
+			   
+    			const data = checkedRows.map(row => {
+        			if (!row.outDDate && !warningShown) {
+        				Swal.fire({
+    	    	            icon: 'warning',
+    	    	            text: '날짜를 입력해주세요.'
+    	    	        });
+        				warningShown = true;
+            			return;
+        			}
+        			
+        			console.log(row.outDState)
+        			if(row.outDState === '출고완료' && !warningShown){
+        				Swal.fire({
+    	    	            icon: 'error',
+    	    	            text: '이미 출고완료된 상태입니다'
+    	    	        });
+        				warningShown = true;
+        				return;
+        			}
 
-			    // 행 데이터를 모아서 배열에 담기
-			    const data = checkedRows.map(row => ({
-			        outDCode: row.outDCode,
-			        outCode: row.outDCode.substring(0, row.outDCode.lastIndexOf("-")),
-			        outDDate: row.outDDate,
-			        prodLotCode: row.prodLotCode,
-			        outCount : row.outCount
-			    }));
+        			return {
+        				outDState: row.outDState,
+            			outDCode: row.outDCode,
+            			outCode: row.outDCode.substring(0, row.outDCode.lastIndexOf("-")),
+            			outDDate: row.outDDate,
+            			prodLotCode: row.prodLotCode,
+            			outCount: row.outCount
+        			};
+    			});
 
+			    console.log(data);
+			    if (!data.every(item => item)) {
+			        // 여기서는 각 행의 데이터가 모두 유효한 경우에만 fetch를 실행합니다.
+			        return;
+			    }
 			    fetch('/updateOutDDate', {
 			        method: 'PUT',
 			        headers: {
@@ -335,10 +370,13 @@
 			        return response.text();
 			    })
 			    .then(data => {
-			        console.log('Success:', data);
-			        alert(data);
-			        location.href = '/inOutList';
-			    })
+				Swal.fire({
+					icon: 'success',
+					text: '성공적으로 업데이트되었습니다.'
+			}).then(() => {
+				location.href = '/inOutList'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+			});
+		})
 			    .catch(error => {
 			        console.error('Error:', error);
 			    });
