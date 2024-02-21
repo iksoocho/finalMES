@@ -103,7 +103,7 @@ button:hover {
 					<label for="userCode">사원 번호:</label> <input type="text" id="userCode" name="userCode" th:value="${emp.userCode}" readonly>
 				</div>
 				<div class="form-group">
-					<label for="deptName">부서:</label> <input type="text" id="deptName" name="deptName" th:value="${emp.deptName}" readonly>
+					<label for="deptName">부서:</label> <input type="text" id="deptName" name="deptName" th:value="${emp.deptName == 'prod' ? '생산' : emp.deptName == 'sal' ? '영업' : emp.deptName == 'fac' ? '설비' : emp.deptName == 'mat' ? '자재' : emp.deptName}" readonly>
 				</div>
 				<div class="form-group">
 					<label for="userName">이름:</label> <input type="text" id="userName" name="userName" th:value="${emp.userName}" readonly>
@@ -114,8 +114,8 @@ button:hover {
 				<div class="form-group">
 					<label for="userPhone">전화 번호:</label> <input type="text" id="userPhone" name="userPhone" th:value="${emp.userPhone}" readonly>
 				</div>
-				<div class="form-group">
-					<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#checkPassModal">비밀번호 변경</button>
+				<div class="form-group" style="text-align: center;">
+					<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#checkPassModal" >비밀번호 변경</button>
 				</div>
 			</div>
 
