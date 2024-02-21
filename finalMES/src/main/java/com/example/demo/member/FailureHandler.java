@@ -36,8 +36,19 @@ public class FailureHandler implements AuthenticationFailureHandler {
 					message = "비밀번호가 틀렸습니다.";
 				}
 		
-				out.println("<script language='javascript'>");
-				out.println("alert('" + message + "'); location.href='/login';");
+				out.println("<script src='https://cdn.jsdelivr.net/npm/sweetalert2@10'></script>");
+				out.println("<script>");
+				out.println("window.onload = function() {");
+				out.println("    Swal.fire({");
+				out.println("        icon: 'error',");
+				out.println("        text: '" + message + "',");
+				out.println("        confirmButtonText: 'OK'");
+				out.println("    }).then((result) => {");
+				out.println("        if (result.isConfirmed) {");
+				out.println("            location.href = '/login';");
+				out.println("        }");
+				out.println("    });");
+				out.println("}");
 				out.println("</script>");
 				out.flush();
 			}

@@ -157,5 +157,10 @@
     ]]>
   </update>
 
+	<select id="checkMatUse" parameterType="String" resultType="MatUseVO">
+		SELECT mat_code, mat_total_con 
+		FROM mat_use 
+		WHERE d_ins_code=#{dinsCode} and proc_code=#{procCode}
+	</select>	
 
 </mapper>

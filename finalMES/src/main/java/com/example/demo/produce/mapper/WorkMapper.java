@@ -1,11 +1,11 @@
 package com.example.demo.produce.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.repository.query.Param;
 
 import com.example.demo.produce.FacCateVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.ProcessVO;
 import com.example.demo.produce.ProdProgressJoinVO;
 import com.example.demo.produce.WorkLoadVO;
@@ -23,4 +23,5 @@ public interface WorkMapper {
 	public int updateProdInsState(@Param("dinsCode") String dinsCode);
 	public int updateOrdListState(@Param("dinsCode") String dinsCode);
 	public int updateMatLot(@Param("inputValue") int inputValue, @Param("inputMatCode") String inputMatCode);
+	public List<MatUseVO> checkMatUse(@Param("dinsCode") String dinsCode, @Param("procCode") String procCode);
 }

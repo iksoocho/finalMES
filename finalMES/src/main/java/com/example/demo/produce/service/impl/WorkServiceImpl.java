@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.produce.FacCateVO;
+import com.example.demo.produce.MatUseVO;
 import com.example.demo.produce.WorkMidRegistVO;
 import com.example.demo.produce.mapper.WorkMapper;
 import com.example.demo.produce.service.WorkService;
@@ -105,6 +106,11 @@ public class WorkServiceImpl implements WorkService {
 			System.out.println("IMPL 소모자재 업데이트 실패");
 			return -1;
 		}
+	}
+
+	@Override
+	public List<MatUseVO> checkMatUse(String dinsCode, String procCode) {
+		return workMapper.checkMatUse(dinsCode, procCode);
 	}
 
 }

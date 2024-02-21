@@ -456,7 +456,7 @@ option:checked {
         link.click();
     } */
     
-    // 엑셀 다운로드
+ // 엑셀 다운로드
     function downloadCSV() {
         const gridData = grid.getData(); // 그리드에서 데이터 가져오기
         const header = ['설비코드', '설비명', '공정라인', '담당자', '입고일', '점검주기']; // 헤더 생성
@@ -465,7 +465,7 @@ option:checked {
         // 데이터 생성
         gridData.forEach(row => {
             const values = Object.values(row);
-            const formattedRow = values.map(value => {
+            const formattedRow = values.slice(0, 6).map(value => { // 6번째 열까지만 가져오도록 수정
                 if (value instanceof Date) {
                     // 날짜의 경우 ISO 형식으로 변환
                     return value.toISOString().split('T')[0];
@@ -487,6 +487,7 @@ option:checked {
         document.body.appendChild(link);
         link.click();
     }
+
 
 
 

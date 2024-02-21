@@ -364,16 +364,22 @@
           	  let hours = currentTime.getHours();
           	  let minutes = currentTime.getMinutes();
           	  let startTime = document.querySelector('input[id="workStart"]');
-          	  let dinscode = '[[${vo.dInsCode}]]';
+          	  //let dinscode = '[[${vo.dInsCode}]]';
+           	  //let proccode = document.querySelector('input[id="hiddenProcCode"]').value;
+           	  let data={};
+           	  data.matCode = '[[${vo.dInsCode}]]';
+           	  data.procCode = document.querySelector('input[id="hiddenProcCode"]').value;
           	  // 시간을 HH:MM 형식으로 변환하여 입력 태그에 출력
           	  startTime.value = formatTime(hours, minutes);
           	  startTime.name = formatFullTime(currentTime);
+          	  console.log(data);
+          	  
 	          	fetch('/insStateUpdate', {
 					method : 'put',
 					headers : {
 						'Content-Type' : 'application/json',
 					},
-					body : dinscode
+					body : JSON.stringify(data)
 				})
 				.then(response => {
 					if(!response.ok) {

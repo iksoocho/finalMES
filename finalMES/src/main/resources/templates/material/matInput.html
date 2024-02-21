@@ -133,7 +133,7 @@ input[type="text"]:focus {
            	            	  editor : 'text'
                 			},
                 	        {
-                		      header: '자재검사코드',
+                		      header: '자제검수코드',
                 		      name: 'matInsCode'
                 		    },
                 	        {
@@ -353,7 +353,7 @@ input[type="text"]:focus {
                      	}
                 		
                 		
-                		//plan detail update
+                			// mat update
                 			document.querySelector('#matupdate').addEventListener('click', function() {
         				    	
         				    	const inputRows = newInpuRows;
@@ -364,9 +364,13 @@ input[type="text"]:focus {
 
             				    let data = {};
 
+            			        data.matLotCode = inputRows[0].matLotCode;
+            			        console.log("data.matlotCode : ",  data.matLotCode);
             			        data.matInputDate = inputRows[0].matInputDate;
             			        console.log(" data.matInputDate : ",  data.matInputDate);
             			        data.matInputCount = inputRows[0].matInputCount;
+            			        console.log("data.matInputCount : ", data.matInputCount);
+            			        data.matCount = inputRows[0].matCount;
 
             				    console.log('전송할 데이터:', data);
                      			
@@ -395,7 +399,6 @@ input[type="text"]:focus {
                 					    }).then(() => {
                 					        location.href = '/matInput'; // 성공적으로 처리된 후 리디렉트
                 					        
-                					     
                 					    });
                 					})
                      				.catch(error => {
@@ -403,6 +406,57 @@ input[type="text"]:focus {
                      				});
 
                      		});
+                			
+                			// 엑셀 다운로드
+                	    	function downloadCSV() {
+                	    		const grids = [
+                	    			{ data : ckeckGrid.getData(),
+                	    			  header: ['자제검수코드','발주코드','자재명','단위','규격','거래처명','발주량','합격량','불합격량','검수일자'],
+                	    			  fields: ['matInsCode','matOrCode','matName','matUnit','matStandard','businessName','matOrCount','matInsGood','matInsBad','matInsDate']
+                	    			},
+                	    			{ data: inputGrid.getData(),
+                	    		      header: ['LOT코드','자재코드','자재명','단위','규격','거래처','입고일','합격량','입고량','자제검수코드','담당자'],
+                	    			  fields: ['matLotCode','matCode','matName','matUnit','matStandard','businessName','matInputDate','matInsGood','matInputCount','matInsCode','matOrManager']
+                	    			}
+                	    		];
+                	    		
+                	    		const fileName = '발주관리.csv'; // 엑셀파일이름
+                	    		const csvRows = [];
+                	    		
+                	    		grids.forEach((grid, index) => {
+                	    		
+                	    			if (index > 0){
+                	    				csvRows.push('');
+                	    				csvRows.push('');    				
+                	    			}
+                	    			csvRows.push(grid.header.join(','));
+                	    			
+                	    			grid.data.forEach(row => {
+                	    				const values = grid.fields.map(field => {
+                	    					const value = row[field] || '';
+                	    					console.log("field : ", field)
+                	    					if (field == 'matInsDate' || field == 'matStandard'){
+                	    						return value.split('T')[0];
+                	    					} else {
+                	    						return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
+                	    					}
+                	    				});
+                	    				csvRows.push(values.join(','));
+                	    			});
+                	    		});
+                	    		
+                	    		const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+                	    		const encodedUri = encodeURI(csvContent);
+                	    		
+                	            const link = document.createElement('a');
+                	            link.setAttribute('href', encodedUri);
+                	            link.setAttribute('download', 'data.csv');
+                	            document.body.appendChild(link);
+                	            link.click();
+                	        }
+                		
+                		
+                		
       </script>
 	</section>
 </body>
