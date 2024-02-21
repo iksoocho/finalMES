@@ -67,7 +67,10 @@
 
 		    // 새로운 행이 이미 존재하는 경우, 추가하지 않고 경고
 		    if (existingNewRows.length > 0) {
-		        alert("추가 중인 정보가 있습니다.")
+		         Swal.fire({
+	                icon: 'error',
+	                text: '추가 중인 정보가 있습니다.'
+	            })
 		        return; // 함수 종료
 		    }
 			 const newRowData = {
@@ -123,7 +126,16 @@
 
 						console.log("data : " + data);
 						
-						if(confirm("제품 정보를 삭제 하시겠습니까?")){
+						Swal.fire({
+						    title: '제품 정보를 삭제 하시겠습니까?',
+						    icon: 'warning',
+						    showCancelButton: true,
+						    confirmButtonColor: '#3085d6',
+						    cancelButtonColor: '#d33',
+						    confirmButtonText: '예, 삭제합니다!',
+						    cancelButtonText: '아니오, 취소합니다!'
+						}).then((result) => {
+						    if (result.isConfirmed) {
 							fetch('/prodInfoDelete', {
 								method: 'DELETE',
 								headers: {
@@ -140,20 +152,24 @@
 								})
 								.then(data => {
 									console.log('Success:', data);
-									
-									alert(data);
-									
-									
-									location.href = '/prodList'; // 성공적으로 처리된 후 리디렉트
+									Swal.fire({
+						                icon: 'success',
+						                text: '성공적으로 삭제되었습니다.'
+						            }).then(() => {
+						                location.href = '/prodList'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+						            });
 								})
 								.catch(error => {
 									console.error('Error:', error);
 								});
-						}else{
-							alert("삭제를 취소했습니다.");
-							return;
-						}
-						
+						    } else if (result.dismiss === Swal.DismissReason.cancel) {
+						        Swal.fire(
+						            '취소됨',
+						            '삭제가 취소되었습니다.',
+						            'error'
+						        )
+						    }
+						});
 						
 
 					});
@@ -259,25 +275,40 @@
 
 				if (newData.length === 0) {
 					console.log('추가된 행이 없습니다.');
-					alert("저장 할 데이터가 없습니다.");
+					Swal.fire({
+		                icon: 'error',
+		                text: '저장 할 데이터가 없습니다.'
+		            })
 					return;
 				}
 				if (newData[0].prodName == null) {
-					alert("제품 명을 입력해 주세요.");
+					Swal.fire({
+		                icon: 'error',
+		                text: '제품 명을 입력해 주세요.'
+		            })
 					return;
 				}
 				if (newData[0].prodSpec == null) {
-					alert("단위을 선택해 주세요.");
+					Swal.fire({
+		                icon: 'error',
+		                text: '단위을 선택해 주세요.'
+		            })
 					return;
 				}
 				if (newData[0].prodUnit == null) {
-					alert("규격을 선택해 주세요.");
+					Swal.fire({
+		                icon: 'error',
+		                text: '규격을 선택해 주세요.'
+		            })
 					return;
 				}
 				
 				
 				if (newData[0].prodPrice == null) {
-					alert("가격을 입력해 주세요.");
+					Swal.fire({
+		                icon: 'error',
+		                text: '가격을 입력해 주세요.'
+		            })
 					return;
 				}
 				// 콘솔에 출력하거나 서버로 보낼 수 있습니다.
@@ -317,8 +348,12 @@
 					})
 					.then(data => {
 						console.log('Success:', data);
-						alert(data);
-						location.href = '/prodList'; // 성공적으로 처리된 후 리디렉트
+						 Swal.fire({
+				                icon: 'success',
+				                text: data
+				            }).then(() => {
+				                location.href = '/prodList'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+				            });
 					})
 					.catch(error => {
 						console.error('Error:', error);

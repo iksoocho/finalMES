@@ -264,7 +264,10 @@
 						const planState = rowData.planState;
 						
 						if(planState == '지시 등록'){
-							alert("생산 지시에 등록된 계획입니다.")
+							Swal.fire({
+				                icon: 'error',
+				                text: '생산 지시에 등록된 계획입니다.'
+				            })
 							return;
 						}
 						console.log("planCode : " + planCode)
@@ -281,7 +284,16 @@
 
 						console.log("data : " + data);
 
-						if(confirm("생산 계획을 삭제 하시겠습니까?")){
+						Swal.fire({
+						    title: '생산 계획을 삭제 하시겠습니까?',
+						    icon: 'warning',
+						    showCancelButton: true,
+						    confirmButtonColor: '#3085d6',
+						    cancelButtonColor: '#d33',
+						    confirmButtonText: '예, 삭제합니다!',
+						    cancelButtonText: '아니오, 취소합니다!'
+						}).then((result) => {
+						    if (result.isConfirmed) {
 							fetch('/planDelete', {
 								method: 'DELETE',
 								headers: {
@@ -298,16 +310,24 @@
 								})
 								.then(data => {
 									console.log('Success:', data);
-									alert(data);
-									location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+									 Swal.fire({
+							                icon: 'success',
+							                text: data
+							            }).then(() => {
+							                location.href = '/planManage'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+							            });
 								})
 								.catch(error => {
 									console.error('Error:', error);
 								});
-						}else{
-							alert("삭제를 취소 했습니다.");
-							return;
-						}
+						    } else if (result.dismiss === Swal.DismissReason.cancel) {
+						        Swal.fire(
+						            '취소됨',
+						            '삭제가 취소되었습니다.',
+						            'error'
+						        )
+						    }
+						});
 						
 
 					});
@@ -503,7 +523,10 @@
 				
 				var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
 				if (!selectedRadio) {
-					alert('주문을 선택해주세요.');
+					 Swal.fire({
+			                icon: 'error',
+			                text: '주문을 선택해주세요.'
+			            })
 					return;
 				}
 
@@ -515,7 +538,10 @@
 
 			    // 이미 추가된 행이 있다면 경고 메시지 출력하고 함수 종료
 			    if (isRowAlreadyAdded) {
-			        alert('이미 추가된 행이 있습니다.');
+			        Swal.fire({
+		                icon: 'error',
+		                text: '이미 추가된 행이 있습니다.'
+		            })
 			        return;
 			    }
 			    
@@ -688,11 +714,17 @@
 			document.querySelector('#planInsert').addEventListener('click', function () {
 				const newPlan = document.querySelectorAll('.plan');
 				if (newPlan.length === 0) {
-					alert("저장 할 내용이 없습니다.")
+					 Swal.fire({
+		                icon: 'error',
+		                text: '저장 할 내용이 없습니다.'
+		            })
 					return;
 				}
 				if (document.querySelector('td[data-column-name="planTitle"] div').innerHTML == '') {
-					alert("계획명을 입력해 주세요.")
+					Swal.fire({
+		                icon: 'error',
+		                text: '계획명을 입력해 주세요.'
+		            })
 					return;
 				}
 
@@ -727,16 +759,25 @@
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
 					if (target.find('td:eq(2)').text() == '') {
-						alert("시작일을 입력해 주세요.")
+						Swal.fire({
+			                icon: 'error',
+			                text: '시작일을 입력해 주세요.'
+			            })
 						return;
 					}
 					
 					if (target.find('td:eq(3)').text() == '') {
-						alert("종료일을 입력해 주세요.")
+						Swal.fire({
+			                icon: 'error',
+			                text: '종료일을 입력해 주세요.'
+			            })
 						return;
 					}
 					if (target.find('td:eq(6)').text() == '') {
-						alert("계획량을 입력해 주세요.")
+						Swal.fire({
+			                icon: 'error',
+			                text: '계획량을 입력해 주세요.'
+			            })
 						return;
 					}
 					
@@ -783,27 +824,42 @@
 				}
 				
 				if(planDate > startDate){
-					alert("시작일은 계획일 보다 작을 수 없습니다.")
+					Swal.fire({
+			                icon: 'error',
+			                text: '시작일은 계획일 보다 작을 수 없습니다.'
+			            })
 					return;
 				}
 				
 				if(planDate > endDate1){
-					alert("종료일은 계획일 보다 작을 수 없습니다.")
+					Swal.fire({
+			                icon: 'error',
+			                text: '종료일은 계획일 보다 작을 수 없습니다.'
+			            })
 					return;
 				}
 				
 				if(startDate2 > endDate2){
-					alert("종료일은 시작일 보다 작을 수 없습니다.")
+					Swal.fire({
+			                icon: 'error',
+			                text: '종료일은 시작일 보다 작을 수 없습니다.'
+			            })
 					return;
 				}
 				
 				if(dvlyDate < endDate3){
-					alert("종료일은 납기일 보다 클 수 없습니다.")
+					Swal.fire({
+			                icon: 'error',
+			                text: '종료일은 납기일 보다 클 수 없습니다.'
+			            })
 					return;
 				}
 				
 				if(ordcount > plancount){
-					alert(`최소 계획량은 ${ordcount}개 입니다.`)
+					Swal.fire({
+			                icon: 'error',
+			                text: `최소 계획량은 ${ordcount}개 입니다.`
+			            })
 					return;
 				}
 
@@ -830,8 +886,12 @@
 					})
 					.then(data => {
 						console.log('Success:', data);
-						alert(data);
-						location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+						Swal.fire({
+			                icon: 'success',
+			                text: data
+			            }).then(() => {
+			                location.href = '/planManage'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+			            });
 					})
 					.catch(error => {
 						console.error('Error:', error);
@@ -855,11 +915,17 @@
 				
 				const newDetail = document.querySelector('#planDGrid .tui-grid-row-odd');
 				if (newDetail === null) {
-					alert("저장 할 내용이 없습니다.")
+					Swal.fire({
+		                icon: 'error',
+		                text: '저장 할 내용이 없습니다.'
+		            })
 					return;
 				}
 				if(pState == '지시 등록'){
-					alert("생산 지시가 내려진 계획입니다.")
+					Swal.fire({
+		                icon: 'error',
+		                text: '생산 지시가 내려진 계획입니다.'
+		            })
 					return;
 				}
 
@@ -874,20 +940,32 @@
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
 					if (target.find('td:eq(0)').text() == '') {
-						alert("계획이 완료되지 않았습니다.")
+						Swal.fire({
+			                icon: 'error',
+			                text: '계획이 완료되지 않았습니다.'
+			            })
 						return;
 					}
 					if (target.find('td:eq(2)').text() == '') {
-						alert("시작일을 입력해 주세요.")
+						Swal.fire({
+			                icon: 'error',
+			                text: '시작일을 입력해 주세요.'
+			            })
 						return;
 					}
 					
 					if (target.find('td:eq(3)').text() == '') {
-						alert("종료일을 입력해 주세요.")
+						Swal.fire({
+			                icon: 'error',
+			                text: '종료일을 입력해 주세요.'
+			            })
 						return;
 					}
 					if (target.find('td:eq(6)').text() == '') {
-						alert("계획량을 입력해 주세요.")
+						Swal.fire({
+			                icon: 'error',
+			                text: '계획량을 입력해 주세요.'
+			            })
 						return;
 					}
 					
@@ -926,22 +1004,34 @@
 				}
 				
 				if(planDate > startDate){
-					alert("시작일은 계획일 보다 작을 수 없습니다.")
+					Swal.fire({
+			                icon: 'error',
+			                text: '시작일은 계획일 보다 작을 수 없습니다.'
+			            })
 					return;
 				}
 				
 				if(planDate > endDate1){
-					alert("종료일은 계획일 보다 작을 수 없습니다.")
+					Swal.fire({
+			                icon: 'error',
+			                text: '종료일은 계획일 보다 작을 수 없습니다.'
+			            })
 					return;
 				}
 				
 				if(startDate2 > endDate2){
-					alert("종료일은 시작일 보다 작을 수 없습니다.")
+					Swal.fire({
+			                icon: 'error',
+			                text: '종료일은 시작일 보다 작을 수 없습니다.'
+			            })
 					return;
 				}
 				
 				if(ordcount > plancount){
-					alert(`최소 계획량은 ${ordcount}개 입니다.`)
+					Swal.fire({
+			                icon: 'error',
+			                text: `최소 계획량은 ${ordcount}개 입니다.`
+			            })
 					return;
 				}
 				
@@ -964,8 +1054,12 @@
 					})
 					.then(data => {
 						console.log('Success:', data);
-						alert(data);
-						location.href = '/planManage'; // 성공적으로 처리된 후 리디렉트
+						 Swal.fire({
+				                icon: 'success',
+				                text: data
+				            }).then(() => {
+				                location.href = '/planManage'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+				            });
 					})
 					.catch(error => {
 						console.error('Error:', error);
