@@ -2,60 +2,60 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 
 <head>
-	<meta charset="UTF-8">
-	<title>생산 계획 관리</title>
-	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-	<style>
-		.tui-grid-row-odd .plan {
-			background-color: #e0f7fa;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+<meta charset="UTF-8">
+<title>생산 계획 관리</title>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<style>
+.tui-grid-row-odd .plan {
+	background-color: #e0f7fa;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-odd .plan.planTitle {
-			background-color: #FDC0CE;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-odd .plan.planTitle {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-odd .detail {
-			background-color: #e0f7fa;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-odd .detail {
+	background-color: #e0f7fa;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-even .detail {
-			background-color: #e0f7fa;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-even .detail {
+	background-color: #e0f7fa;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-odd .start {
-			background-color: #FDC0CE;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-odd .start {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-odd .end {
-			background-color: #FDC0CE;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-odd .end {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-odd .dplanCount {
-			background-color: #FDC0CE;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-odd .dplanCount {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-even .start {
-			background-color: #FDC0CE;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-even .start {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-even .end {
-			background-color: #FDC0CE;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
+.tui-grid-row-even .end {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 
-		.tui-grid-row-even .dplanCount {
-			background-color: #FDC0CE;
-			/* 예시로 빨간색을 지정했습니다. */
-		}
-	</style>
+.tui-grid-row-even .dplanCount {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
+</style>
 </head>
 
 <body>
@@ -94,6 +94,9 @@
 											<td th:text="${ord.ordCode}"></td>
 											<td th:text="${#dates.format(ord.ordDate, 'yyyy-MM-dd')}"></td>
 											<td th:text="${ord.ordNote}"></td>
+										</tr>
+										<tr th:unless="${ordList.size() > 0}">
+											<td colspan="4" style="text-align: center; padding: 50px;">주문서가 없습니다.</td>
 										</tr>
 									</tbody>
 								</table>
@@ -150,8 +153,9 @@
 				<!-- ============================생산상세계획============================ -->
 
 				<div class="mt-4">
-					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planDUpdate">저장</button>
+					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planDUpdate">수정</button>
 					<div id="planDGrid"></div>
+					<button type="button" class="btn btn-outline-primary" style="float: right; margin: 8px 5px;" onclick="downloadCSV()">Excel</button>
 					<!-- <table class="table table-hover" id="planDetailTable">
 						<thead>
 							<tr>
@@ -710,6 +714,8 @@
 				let startDate2;
 				let endDate1;
 				let endDate2;
+				let endDate3;
+				let dvlyDate;
 				let ordcount;
 				let plancount;
 				var newPlanDetailRows = document.querySelectorAll('#planDGrid tbody tr');
@@ -755,6 +761,12 @@
 					if(new Date(target.find('td:eq(2)').text()) > new Date(target.find('td:eq(3)').text())){
 						endDate2 = new Date(target.find('td:eq(3)').text());
 					}
+					
+					dvlyDate = new Date(target.find('td:eq(7)').text());
+					if(dvlyDate < new Date(target.find('td:eq(3)').text())){
+						endDate3 = new Date(target.find('td:eq(3)').text());
+					}
+					
 					console.log("st1, st2, end1, end2 : ", startDate, startDate2, endDate1, endDate2);
 					
 					ordcount = parseInt(target.find('td:eq(5)').text())*1.1;
@@ -763,6 +775,8 @@
 					if(ordcount > parseInt(target.find('td:eq(6)').text())){
 						plancount = parseInt(target.find('td:eq(6)').text());
 					}
+					
+					
 		
 					planDetailData.push(obj);
 
@@ -780,6 +794,11 @@
 				
 				if(startDate2 > endDate2){
 					alert("종료일은 시작일 보다 작을 수 없습니다.")
+					return;
+				}
+				
+				if(dvlyDate < endDate3){
+					alert("종료일은 납기일 보다 클 수 없습니다.")
 					return;
 				}
 				
@@ -854,6 +873,10 @@
 					// 현재 tr 요소 내의 prodCode에 해당하는 div를 찾습니다.
 					let obj = {};
 					let target = $(newPlanDetailRows[i]);
+					if (target.find('td:eq(0)').text() == '') {
+						alert("계획이 완료되지 않았습니다.")
+						return;
+					}
 					if (target.find('td:eq(2)').text() == '') {
 						alert("시작일을 입력해 주세요.")
 						return;
@@ -949,6 +972,53 @@
 					});
 
 			});
+			
+			
+			function downloadCSV() {
+			    const grids = [
+			    	 { data: planGrid.getData(), 
+			    	   header: ['생산 계획 코드', '주문 코드', '계획명', '담당자', '생산계획일자', '상태'], 
+			    	   fields: ['planCode', 'ordCode', 'planTitle', 'planPerson', 'planDate','planState']
+			    	 },
+			         { data: planDGrid.getData(), 
+			    	   header: ['생산 계획 코드', '제품코드', '시작일자', '종료일자','현재 재고', '주문수량','계획량','납기일자'], 
+			    	 fields: ['dplanCode', 'prodCode', 'start', 'end', 'prodCount','ordCount','dplanCount','dlvyDate']
+			         }
+			    	];
+			    const fileName = '생산계획.csv'; // 원하는 파일 이름으로 설정
+			    const csvRows = [];
+
+			    grids.forEach((grid, index) => {
+			        // 한글 헤더 추가
+			        if (index > 0) {
+			            csvRows.push('');
+			            csvRows.push('');
+			        }
+			        csvRows.push(grid.header.join(','));
+
+			        // 데이터 행 추가
+			        grid.data.forEach(row => {
+			            const values = grid.fields.map(field => {
+			                const value = row[field] || '';
+			                if (field == 'planDate' || field == 'start' || field == 'end'|| field == 'dlvyDate') {
+			                    return value.split('T')[0];
+			                } else {
+			                    return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
+			                }
+			            });
+			            csvRows.push(values.join(','));
+			        });
+			    });
+
+			    const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+			    const encodedUri = encodeURI(csvContent);
+
+			    const link = document.createElement('a');
+			    link.setAttribute('href', encodedUri);
+			    link.setAttribute('download', fileName);
+			    document.body.appendChild(link);
+			    link.click();
+			}
 
 		</script>
 	</section>

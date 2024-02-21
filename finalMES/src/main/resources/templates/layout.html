@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
 <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
 <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
@@ -29,7 +29,7 @@
 
 	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
 		<!-- Navbar Brand-->
-		<a class="navbar-brand ps-3" href="/">빠따 MES</a>
+		<a class="navbar-brand ps-3" href="/">A-MES</a>
 		<!-- Sidebar Toggle-->
 		<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
 			id="sidebarToggle" href="#!">
@@ -73,7 +73,7 @@
 							aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
 								<a class="nav-link" href="/empList">사원관리</a> 
-								<a class="nav-link" href="/">거래처 관리</a>
+								<a class="nav-link" href="/business">거래처 관리</a>
 								<a class="nav-link" href="/matList">자재 관리</a>
 								<a class="nav-link" href="/prodList">제품 관리</a>
 								<a class="nav-link" href="/procList">공정 관리</a>
@@ -141,12 +141,7 @@
 							aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
 								<a class="nav-link" href="/planManage">생산계획관리</a> 
-								<a class="nav-link" href="/">생산계획조회(작업전)</a> 
 								<a class="nav-link" href="/planIns">생산지시관리</a>
-								<a class="nav-link" href="/planOrder">생산지시조회(작업전)</a>
-								<a class="nav-link" href="/planOrderList">공정실적관리</a>
-								<a class="nav-link" href="/">공정실적조회(작업전)</a>
-							</nav>
 						</div>
 						
 						<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"

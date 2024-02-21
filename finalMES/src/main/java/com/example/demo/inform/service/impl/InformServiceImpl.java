@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.inform.BadMaterialVO;
+import com.example.demo.inform.BusinessVO;
 import com.example.demo.inform.EmpVO;
 import com.example.demo.inform.MatVO;
 import com.example.demo.inform.ProcVO;
@@ -148,6 +149,25 @@ public class InformServiceImpl implements InformService {
 	@Override
 	public void deleteBad(String badMatCode) {
 		informMapper.deleteBad(badMatCode);
+	}
+
+	
+	
+	//거래처
+	@Override
+	public List<BusinessVO> getBusinessList() {
+		return informMapper.selectBusinessList();
+	}
+
+	@Override
+	public BusinessVO insertBusiness(BusinessVO businessVO) {
+		informMapper.insertBusiness(businessVO);
+		return businessVO;
+	}
+
+	@Override
+	public void deleteBusiness(String businessCode) {
+		informMapper.deleteBusiness(businessCode);
 	}
 
 	

@@ -8,5 +8,5 @@ public class FacCateVO {
 	private String facName;
 	private String procCode;
 	private String procName;
-	private Integer facState;
+	private String facState;
 }

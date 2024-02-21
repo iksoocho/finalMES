@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.inform.BadMaterialVO;
+import com.example.demo.inform.BusinessVO;
 import com.example.demo.inform.EmpVO;
 import com.example.demo.inform.MatVO;
 import com.example.demo.inform.ProcVO;
 import com.example.demo.inform.ProdVO;
 import com.example.demo.inform.service.InformService;
-import com.example.demo.produce.PlanCompositeVO;
 
 @Controller
 public class InformController {
@@ -243,5 +243,32 @@ public class InformController {
 		msg = "불량 정보가 삭제 되었습니다.";
 		return msg;
 	}
+	
+	
+	// ----------------------------------거래처---------------------------------------------------------
+	@GetMapping("business")
+	public String getBusinessList(Model model) {
+		List<BusinessVO> list = informService.getBusinessList();
+		model.addAttribute("list", list);
 
+		return "inform/business";
+	}
+
+	@PostMapping("/businessInsert")
+	@ResponseBody
+	public String insertBusiness(@RequestBody BusinessVO businessVO) {
+		String msg;
+		informService.insertBusiness(businessVO);
+		msg = "거래처 정보가 등록 되었습니다.";
+		return msg;
+	}
+	
+	@DeleteMapping("/businessDelete")
+	@ResponseBody
+	public String deleteBusiness(@RequestBody String businessCode) {
+		String msg;
+		informService.deleteBusiness(businessCode);
+		msg = "거래처 정보가 삭제 되었습니다.";
+		return msg;
+	}
 }

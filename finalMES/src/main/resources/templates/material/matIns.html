@@ -15,6 +15,18 @@
 
 <style>
 /* 검색 입력란 스타일 */
+input[type="text"] {
+	width: 20%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+	outline: none;
+	border-color: #4CAF50;
+}
 #searchOrder {
 	padding: 10px;
 	border: 1px solid #ccc;
@@ -22,128 +34,54 @@
 	font-size: 14px;
 }
 
-/* 테이블 스타일 */
-table {
-	border-collapse: collapse;
-	width: 100%;
-}
-
-table td {
-	padding: 5px;
-}
-
-table tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
-.modal {
-	display: none;
-	position: fixed;
-	z-index: 1;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-	background-color: #fefefe;
-	margin: 15% auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 80%;
-	max-width: 600px;
-}
-
-.close {
-	color: #aaa;
+button {
 	float: right;
-	font-size: 28px;
-	font-weight: bold;
-	cursor: pointer;
+	margin-right: 5px;
+	margin-bottom: 10px;
 }
 
-.close:hover, .close:focus {
-	color: black;
-	text-decoration: none;
-	cursor: pointer;
+#excel {
+	float: left;
+}
+
+#searchOrder {
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 10px;
+}
+
+#selectBtn {
+	float: left;
+	margin-bottom: 10px;
 }
 </style>
 </head>
 <body>
-	<section layout:fragment="content">
-
-		<!-- Modal -->
-		<!-- ManagerListModal -->
-		<!-- 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" -->
-		<!-- 			data-bs-keyboard="false" tabindex="-1" -->
-		<!-- 			aria-labelledby="staticBackdropLabel" aria-hidden="true"> -->
-		<!-- 			<div class="modal-dialog"> -->
-		<!-- 				<div class="modal-content"> -->
-		<!-- 					<div class="modal-header" style="background-color: #0d6efd;"> -->
-		<!-- 						<h1 class="modal-title fs-5" id="staticBackdropLabel" -->
-		<!-- 							style="font-weight: bold">거래처 목록</h1> -->
-		<!-- 						<button type="button" class="btn-close" data-bs-dismiss="modal" -->
-		<!-- 							aria-label="Close"></button> -->
-		<!-- 					</div> -->
-
-		<!-- 					<div class="modal-body"> -->
-
-		<!-- 						<table> -->
-		<!-- 							<thead style="text-align: center;"> -->
-		<!-- 								<tr> -->
-		<!-- 									<th>거래처코드</th> -->
-		<!-- 									<th>거래처명</th> -->
-		<!-- 								</tr> -->
-		<!-- 							</thead> -->
-		<!-- 							<tbody style="text-align: center;"> -->
-		<!-- 								<tr th:each="badMat : ${badMatList}" -->
-		<!-- 									th:data-businessCode="${business.businessCode}" -->
-		<!-- 									th:data-businessManagerPhone="${business.businessManagerPhone}" -->
-		<!-- 									data-bs-dismiss="modal" onclick="updateInputFields(this)"> -->
-		<!-- 									<td th:text="${business.businessCode}"></td> -->
-		<!-- 									<td th:text="${business.businessName}"></td> -->
-		<!-- 								</tr> -->
-		<!-- 							</tbody> -->
-		<!-- 						</table> -->
-		<!-- 					</div> -->
-		<!-- 					<div class="modal-footer" style="background-color: #0d6efd;"> -->
-		<!-- 						<button type="button" class="btn btn-secondary" -->
-		<!-- 							data-bs-dismiss="modal">닫기</button> -->
-		<!-- 					</div> -->
-		<!-- 				</div> -->
-		<!-- 			</div> -->
-		<!-- 		</div> -->
+	<section layout:fragment="content" class="m-5">
 
 
-
-
-		<div class="container">
+		<div>
 			<div>
-				<h2>자재 검사</h2>
+				<h2>자재 검수 관리</h2>
 			</div>
+			<br>
 
-			<div class="search-container">
-				<table>
-					<tr>
-						<td><input type="text" id="searchOrder" placeholder="검색...">
-							<button type="button" class="btn btn-primary"
-								onclick="searchFunction()">검색</button></td>
-						<!-- 수정된 부분: oninput 이벤트 제거 -->
+			<div>
 
-					</tr>
-				</table>
+				<input type="text" id="searchOrder" oninput="searchFunction()"
+					placeholder="검색...">
+				<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
+			<br> <br> <br>
 
-			<h3>검수 목록</h3>
-			<!-- 			<button type="button" class="btn btn-outline-primary custom-style" -->
-			<!-- 				data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
-			<!-- 				주문서 조회</button> -->
+	
+		
 			<button type="button" class="btn btn-outline-primary custom-style"
 				id="orderInsert">저장</button>
-
+			<button type="button" class="btn btn-outline-primary" id="excel"
+				onclick="downloadCSV()">EXCEL</button>
+			<br>
 			<div id="insGrid"></div>
 
 
@@ -205,10 +143,6 @@ table tr:nth-child(even) {
                 		                }
                 		            }
                 		        },
-                		        {
-                  		          header: '불량명',
-                  		          name: 'matNote',
-                  		        },
                 		      ],
                 		      rowHeaders: ['rowNum', 'checkbox'],
                 	           pageOptions: {
@@ -235,29 +169,52 @@ table tr:nth-child(even) {
         				    let name = [[${session.userName}]];
 
         				    const insCheckRows = newCheckRows;
-        				    console.log('잘 들고오네요...',insCheckRows[0]);
+        				    console.log('잘 들고오네요...',insCheckRows);
 
-        				    if (insCheckRows.length === 0) {
+        				    if (newCheckRows.length === 0) {
         				        console.log('추가된 데이터가 없습니다.');
         				        return;
         				    }
 							
         				    
-        			        for (const data of insCheckRows) {
-        	                    if (!data.matInsCount > 0) {
-        	                        alert("검사량을 확인해주세요.");
-        	                        return;
-        	                        
-        	                    }
-        	                    if (!data.matInsGood || isNaN(data.matInsGood) || Number(data.matInsGood) <= 0) {
-        	                        alert("합격량을 확인해주세요.");
-        	                        return;
-        	                    }
-        	                    if()
-        	                    
-        	                }
+        				  		
+        				        // 검사량이 0보다 크거나 같은지 확인
+        				        if (insCheckRows[0].matInsCount == null) {
+        				            alert("검사량을 확인해주세요.");
+        				            return;
+        				        }
+        				        // 합격량이 0보다 크거나 같은지 확인
+        				        if (insCheckRows[0].matInsGood == null) {
+        				            alert("합격량을 확인해주세요.");
+        				            return;
+        				        }
+        				        // 불합격량이 0보다 크거나 같은지 확인
+        				        if (insCheckRows[0].matInsBad != 0 && (insCheckRows[0].matInsBad == null)) {
+								    alert("불합격량을 확인해주세요.");
+								    return;
+								}
+        				        // 검수날짜가 올바른 형식인지 확인
+        				        
+        				        
+        				        if (insCheckRows[0].matInsDate == null) {
+        				            alert("올바른 검수날짜를 선택해 주세요");
+        				            return;
+        				        }
+        				        
+        				        
+        				     	// 입고량이 발주량을 넘지 않는지 확인
+//         				        if (Number(data.matOrCount) > Number(data.matInsCount)) {
+//         				            alert("입고량은 발주량을 넘을 수 없습니다.");
+//         				            return;
+//         				        }
+        				     	
+//         				        if (Number(data.matInsCount) > Number(insCheckRows[0].matInsGood)) {
+//         				            alert("합격량은 발주량을 넘을 수 없습니다.");
+//         				            return;
+//         				        }
+        				 
         			        
-        			        
+        			        	
         			        
         			    
         			        
@@ -319,130 +276,36 @@ table tr:nth-child(even) {
                      	}
                 		
                 		
-            			
-            	        // 검색
-						function searchFunction() {
-						  let input, filter, table, tr, td, i, j, txtValue;
-						
-						  input = document.getElementById("searchOrder");
-						  filter = input.value.toUpperCase();
-						  table = document.getElementById("insGrid");
-						
-						  const header = table.getElementsByTagName("thead")[0];
-						  tr = table.getElementsByTagName("tr");
-						
-						  for (i = 0; i < tr.length; i++) {
-						    td = tr[i].getElementsByTagName("td");
-						    let found = false;
-						    let display = '';
-						
-						    for (j = 0; j < td.length; j++) {
-						      txtValue = td[j].textContent || td[j].innerText;
-						      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-						        found = true;
-						        break;
-						      }
-						    }
-						
-						    if (found) {
-						      display = '';
-						      if (header) {
-						        header.style.display = '';
-						      }
-						    } else {
-						      display = 'none';
-						      if (header) {
-						        header.style.display = 'table-header-group';
-						      }
-						    }
-						
-						    tr[i].style.display = display;
-						  }
-						}
+     
                 		
             	        
             	        
-// 				        // 검색
-// 				        function searchFunction() {	
-// 				             let input, filter, table, tr, td, i, j, txtValue;
-// 				     	     input = document.getElementById("searchOrder");
-// 				     	     filter = input.value.toUpperCase();
-// 				     	     table = document.getElementById("ordGrid");
+				        // 검색
+				        function searchFunction() {	
+				             let input, filter, table, tr, td, i, j, txtValue;
+				     	     input = document.getElementById("searchOrder");
+				     	     filter = input.value.toUpperCase();
+				     	     table = document.getElementById("insGrid");
 
-// 				     	     tr = table.getElementsByTagName("tr");
-// 				     	     for (i = 0; i < tr.length; i++) {
-// 				     	         td = tr[i].getElementsByTagName("td");
-// 				     	         for (j = 0; j < td.length; j++) {
-// 				     	             txtValue = td[j].textContent || td[j].innerText;
-// 				     	             if (txtValue.toUpperCase().indexOf(filter) > -1) {
-// 				     	                 tr[i].style.display = "";
-// 				     	                 break;
-// 				     	             } else {
-// 				     	                 tr[i].style.display = "none";
-// 				     	             }
-// 				     	         }
-// 				     	     }
-// 				     	 }
+				     	     tr = table.getElementsByTagName("tr");
+				     	     for (i = 0; i < tr.length; i++) {
+				     	         td = tr[i].getElementsByTagName("td");
+				     	         for (j = 0; j < td.length; j++) {
+				     	             txtValue = td[j].textContent || td[j].innerText;
+				     	             if (txtValue.toUpperCase().indexOf(filter) > -1) {
+				     	                 tr[i].style.display = "";
+				     	                 break;
+				     	             } else {
+				     	                 tr[i].style.display = "none";
+				     	             }
+				     	         }
+				     	     }
+				     	 }
 
 
 
 						
-					// 그리드에서 불량명 열 클릭 시 모달 창 띄우기
-						insGrid.on('click', (ev) => {
-						  const columnName = ev.columnName;
-						  if (columnName === 'matNote') {
-						    const rowKey = ev.rowKey;
-						
-						    // 서버에서 데이터 가져오기
-						    fetch('/' + rowKey)
-						      .then(response => response.json())
-						      .then(data => {
-						        const rowData = data; // 가져온 데이터를 rowData에 할당
-						
-						        // 모달 창 생성
-						        const modal = document.createElement('div');
-						        modal.id = 'myModal';
-						        modal.className = 'modal';
-						
-						        // 모달 내용 영역 생성
-						        const modalContent = document.createElement('div');
-						        modalContent.className = 'modal-content';
-						
-						        // 모달 닫기 버튼 생성
-						        const closeBtn = document.createElement('span');
-						        closeBtn.className = 'close';
-						        closeBtn.textContent = '×';
-						
-						        // 불량명 표시 영역 생성
-						        const matNoteContent = document.createElement('p');
-						        matNoteContent.textContent = rowData.matNote;
-						
-						        // 모달 내용에 요소들 추가
-						        modalContent.appendChild(closeBtn);
-						        modalContent.appendChild(matNoteContent);
-						        modal.appendChild(modalContent);
-						
-						        // body 요소에 모달 창 추가
-						        document.body.appendChild(modal);
-						
-						        // 모달 닫기 버튼 클릭 이벤트 처리
-						        closeBtn.addEventListener('click', () => {
-						          modal.style.display = 'none';
-						        });
-						
-						        // 모달 창의 바깥 영역 클릭 시 모달 닫기
-						        window.addEventListener('click', (ev) => {
-						          if (ev.target === modal) {
-						            modal.style.display = 'none';
-						          }
-						        });
-						
-						        // 모달 창 표시
-						        modal.style.display = 'block';
-						      });
-						  }
-						});
-						
+	
 					
 						
 
