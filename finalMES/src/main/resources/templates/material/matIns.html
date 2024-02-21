@@ -325,7 +325,49 @@ button {
 				     	 }
 
 
-
+            			// 엑셀 다운로드
+            	    	function downloadCSV() {
+            	    		const grids = [
+            	    			{ data : insGrid.getData(),
+            	    			  header: ['자제검수코드','발주코드','자재명','발주량','검사량','합격량','불합격량','검수일자'],
+            	    			  fields: ['matInsCode','matOrCode','matName','matOrCount','matInsCount','matInsGood','matInsBad','matInsDate']
+            	    			}
+            	    		];
+            	    		
+            	    		const fileName = '자재검사관리.csv'; // 엑셀파일이름
+            	    		const csvRows = [];
+            	    		
+            	    		grids.forEach((grid, index) => {
+            	    		
+            	    			if (index > 0){
+            	    				csvRows.push('');
+            	    				csvRows.push('');    				
+            	    			}
+            	    			csvRows.push(grid.header.join(','));
+            	    			
+            	    			grid.data.forEach(row => {
+            	    				const values = grid.fields.map(field => {
+            	    					const value = row[field] || '';
+            	    					console.log("field : ", field)
+            	    					if (field == 'matInsDate'){
+            	    						return value.split('T')[0];
+            	    					} else {
+            	    						return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
+            	    					}
+            	    				});
+            	    				csvRows.push(values.join(','));
+            	    			});
+            	    		});
+            	    		
+            	    		const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+            	    		const encodedUri = encodeURI(csvContent);
+            	    		
+            	            const link = document.createElement('a');
+            	            link.setAttribute('href', encodedUri);
+            	            link.setAttribute('download', 'data.csv');
+            	            document.body.appendChild(link);
+            	            link.click();
+            	        }
 						
 	
 					

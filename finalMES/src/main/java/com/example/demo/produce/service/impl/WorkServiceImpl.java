@@ -99,7 +99,7 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public int updateMatLot(int inputValue, String inputMatCode) {
 		int result = workMapper.updateMatLot(inputValue, inputMatCode);
-		if(result > 0) {
+		if(result == -1) {
         	System.out.println("IMPL 소모자재 업데이트 성공");
 			return 1;
 		}else {
