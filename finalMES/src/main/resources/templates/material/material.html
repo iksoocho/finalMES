@@ -31,7 +31,7 @@ td {
 }
 
 input[type="text"] {
-	width: 100%;
+	width: 20%;
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -45,18 +45,15 @@ input[type="text"]:focus {
 </style>
 </head>
 <body>
-	<section layout:fragment="content">
-		<div class="container">
+	<section layout:fragment="content" class="m-5">
+		<div>
+		<h2>자재 조회</h2>
 			<div>
-				<table>
-					<tr>
-						<th><input type="text" id="searchOrder"
-							oninput="searchFunction()" placeholder="검색..."></th>
-					</tr>
-				</table>
 
+				<input type="text" id="searchOrder" oninput="searchFunction()"
+					placeholder="검색...">
 			</div>
-
+			<br>
 
 			<div class="row">
 				<div class="col-7">
@@ -188,7 +185,7 @@ input[type="text"]:focus {
                  let input, filter, table, tr, td, i, j, txtValue;
          	     input = document.getElementById("searchOrder");
          	     filter = input.value.toUpperCase();
-         	     table = document.getElementById("ordGrid");
+         	     table = document.getElementById("matGrid");
 
          	     tr = table.getElementsByTagName("tr");
          	     for (i = 0; i < tr.length; i++) {
