@@ -40,7 +40,10 @@
 
 			    // 새로운 행이 이미 존재하는 경우, 추가하지 않고 경고
 			    if (existingNewRows.length > 0) {
-			        alert("추가 중인 정보가 있습니다.")
+			         Swal.fire({
+			            icon: 'error',
+			            text: '추가 중인 정보가 있습니다.'
+			        });
 			        return; // 함수 종료
 			    }
 				
