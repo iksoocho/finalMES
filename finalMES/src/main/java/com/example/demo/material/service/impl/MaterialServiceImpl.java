@@ -13,6 +13,7 @@ import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
 import com.example.demo.material.MatOutputVO;
 import com.example.demo.material.MatReturnVO;
+import com.example.demo.material.MaterialVO;
 import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.material.mapper.MaterialMapper;
 import com.example.demo.material.service.MaterialService;
@@ -197,6 +198,13 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<OriginMaterialVO> getMatOriginInfoList(String matCode) {
 		// TODO Auto-generated method stub
 		return materialMapper.getMatOriginInfoList(matCode);
+	}
+
+	@Override
+	public void updateMatLot(MaterialVO materialVO) {
+		// TODO Auto-generated method stub
+		materialMapper.updateMatLot(materialVO);
+		
 	}
 
 

@@ -65,35 +65,6 @@
 
 	</select>
 
-	<!-- 발주 거래처 관리 -->
-	<!-- <select id="getMatBusiness" resultType="OriginMaterialVO"> -->
-	<!-- SELECT -->
-	<!-- m.mat_code, -->
-	<!-- m.mat_name, -->
-	<!-- m.mat_unit, -->
-	<!-- m.mat_standard, -->
-	<!-- m.mat_safe_stock, -->
-	<!-- ml.mat_count, -->
-	<!-- b.business_name, -->
-	<!-- b.business_code, -->
-	<!-- COUNT(mr.mat_lot_code) AS deal -->
-	<!-- FROM material m -->
-	<!-- JOIN mat_lot ml ON m.mat_code = ml.mat_code -->
-	<!-- JOIN mat_return mr ON ml.mat_lot_code = mr.mat_lot_code -->
-	<!-- FULL JOIN business b ON mr.business_code = b.business_code -->
-	<!-- GROUP BY -->
-	<!-- m.mat_code, -->
-	<!-- m.mat_name, -->
-	<!-- m.mat_unit, -->
-	<!-- m.mat_standard, -->
-	<!-- m.mat_safe_stock, -->
-	<!-- ml.mat_count, -->
-	<!-- b.business_name, -->
-	<!-- b.business_code -->
-	<!-- </select> -->
-
-
-
 	<!-- 자재관리 -->
 	<select id="getOriginMaterialList1"
 		resultType="OriginMaterialVO">
@@ -103,7 +74,7 @@
 			    m.mat_safe_stock,
 			    m.mat_unit,
 			    m.mat_standard,
-			    (SELECT SUM(mat_input_count) FROM mat_lot WHERE mat_code = m.mat_code) AS matCount2,
+			    (SELECT SUM(mat_count) FROM mat_lot WHERE mat_code = m.mat_code) AS matCount2,
 			    ml.mat_input_count
 			FROM material m 
 			JOIN (
@@ -261,14 +232,14 @@
 	</insert>
 
 
-	<!-- 발주 업데이트 -->
-	<update id="updateMatOrder" parameterType="String">
-		UPDATE mat_order
+	<!-- 입고 업데이트 -->
+	<update id="updateMatLot" parameterType="MaterialVO">
+		UPDATE mat_lot
 		SET
-		mat_or_count = #{matOrCount},
-		mat_or_due_date = #{matOrDueDate}
+		mat_input_count = #{matInputCount},
+		mat_input_date = #{matInputDate}
 		WHERE
-		mat_or_code = #{matOrCode}
+		mat_lot_code = #{matLotCode}
 	</update>
 
 	<delete id="deleteMatOrder" parameterType="String">
@@ -325,7 +296,6 @@
 			mat_manager,
 			mat_code,
 			mat_input_count,
-			mat_out_count,
 			mat_count
 		)
 		VALUES
@@ -335,8 +305,7 @@
 			#{matManager},
 			#{matCode},
 			#{matInputCount},
-			#{matOutCount},
-			#{matCount}
+			#{matInputCount}
 		)
 	</insert>
 
@@ -346,7 +315,6 @@
 				bm.bad_mat_name
 		FROM mat_bad mb
 		RIGHT JOIN bad_material bm ON bm.bad_mat_code = bm.bad_mat_code
-
 	</select>
 
 	<!-- LOT 별 자재재고 -->
@@ -354,11 +322,13 @@
 		SELECT ml.mat_lot_code,
 		        ml.mat_input_count,
 		        ml.mat_input_date,
+                ml.mat_count,
 		        m.mat_code,
 		        m.mat_name
 		FROM mat_lot ml
 		JOIN material m ON ml.mat_code = m.mat_code
 		WHERE m.mat_code = #{matCode}
+		AND ml.mat_count > 0
 		ORDER BY ml.mat_input_date
 	</select>
 </mapper>

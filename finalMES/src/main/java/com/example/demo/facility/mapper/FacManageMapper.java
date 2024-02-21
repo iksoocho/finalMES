@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.facility.FacBusinessVO;
 import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
 import com.example.demo.facility.FacManageVO;
@@ -15,6 +16,7 @@ public interface FacManageMapper {
 	public FacManageVO getFacManage(String facCode);
 	public List<FacManageVO> getfacList(FacManageVO facManageVO);
 	public int insertFac(FacManageVO facManageVO);
+	public List<FacBusinessVO> getfacBusList(FacBusinessVO facBusinessVO);
 	
 	// 비가동관리
 	public FacNotopVO getFacNotop(String facCode);
@@ -31,6 +33,7 @@ public interface FacManageMapper {
 	public int insertFacInsNot(FacNotopVO facNotopVO);
 	// 관리쪽 판정 업데이트
 	public void updateFacInsSi(String facNotCode);
+	public void updateFacInsSif3(String facNotCode);
 	
 	// 수리관리
 	public List<FacRepVO> getfacRepList();
@@ -39,4 +42,5 @@ public interface FacManageMapper {
 	public int updateFacRep(FacRepVO facRepVO);
 	// 수리쪽 수리사항 업데이트
 	public void updateFacRepNot(String facNotCode);
+	
 }

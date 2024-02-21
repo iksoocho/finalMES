@@ -21,7 +21,7 @@ import com.example.demo.facility.FacRepVO;
 import com.example.demo.facility.mapper.FacManageMapper;
 import com.example.demo.facility.service.FacManageService;
 import com.example.demo.produce.service.ProdInsService;
-import com.example.demo.sales.service.OrdService;
+/*import com.example.demo.sales.service.OrdService;*/
 
 import lombok.extern.log4j.Log4j2;
 /**
@@ -39,10 +39,9 @@ public class FacManageController {
 	FacManageService facManageService;
 	@Autowired
 	ProdInsService prodInsService;
-	@Autowired
-	OrdService ordService;
 
-	/**
+
+	 /**
 	 * 설비 전체조회
 	 * @param model
 	 * @return facility/facManagement
@@ -51,15 +50,16 @@ public class FacManageController {
 	public String list(Model model, HttpServletRequest session) {
 		model.addAttribute("list", facManageService.FacList(null));
 		model.addAttribute("proList", prodInsService.getProcData());
-		model.addAttribute("busiList", ordService.getBusinessList());
-		System.out.println(ordService.getBusinessList());
+		model.addAttribute("facBusList", facManageService.FacBusList(null));
+		/* model.addAttribute("busiList", ordService.getBusinessList()); */
+//		System.out.println(ordService.getBusinessList());
 		System.out.println("userName : "+ session.getAttribute("userName"));
 		model.addAttribute("username", session.getSession().getAttribute("userName"));
 		return "facility/facManagement";
 
 	}
 
-	/**
+	 /**
 	 * 비가동 전체조회
 	 * @param model
 	 * @return facility/facNotop
@@ -73,7 +73,7 @@ public class FacManageController {
 
 	}
 
-	/**
+	 /**
 	 * 비가동 수정
 	 * @param model
 	 * @return msg
@@ -88,7 +88,7 @@ public class FacManageController {
 		return msg;
 	}
 
-	/**
+	 /**
 	 * 점검관리 리스트
 	 * @return 점검리스트
 	 */
@@ -98,7 +98,7 @@ public class FacManageController {
 		return facManageService.FacInsList();
 	}
 
-	/**
+	 /**
 	 * 점검관리 수정
 	 * @param facInsVO
 	 * @return msg
@@ -112,7 +112,11 @@ public class FacManageController {
 		return msg;
 	}
 	
-	// 설비점검관리	
+	 /**
+	 * 설비점검관리
+	 * @param model
+	 * @return facility/facIns
+	 */	
 	@GetMapping("/facIns")
 	public String NotopInslist(Model model, HttpServletRequest session) {
 		System.out.println("userName : "+ session.getAttribute("userName"));
@@ -121,7 +125,13 @@ public class FacManageController {
 		model.addAttribute("Inslist", facManageService.FacNotopList());
 		return "facility/facIns";
 	}
-
+	
+	
+	/**
+	 * 설비/비가동 등록
+	 * @param facCompositeVO
+	 * @return msg
+	 */	
 	@PostMapping("/insrtFacAndNot")
 	@ResponseBody
 	public String insertFacAndNot(@RequestBody FacCompositeVO facCompositeVO) {
@@ -131,6 +141,11 @@ public class FacManageController {
 		return msg;
 	}
 	
+	 /**
+	 * 점검관리 등록
+	 * @param facInsDVO
+	 * @return msg
+	 */	
 	@PostMapping("/insertFacIns")
 	@ResponseBody
 	public String insertFacIns(@RequestBody FacInsDVO facInsDVO) {
@@ -140,7 +155,11 @@ public class FacManageController {
 		return msg;
 	}
 
-	
+	 /**
+	 * 점검관리/비가동 등록
+	 * @param facNotopVO
+	 * @return msg
+	 */	
 	@PostMapping("/insertFacInsNot")
 	@ResponseBody
 	public String insertFacInsNot(@RequestBody FacNotopVO facNotopVO) {
@@ -150,16 +169,11 @@ public class FacManageController {
 		return msg;
 	}
 	
-	/*
-	 * @GetMapping("/facRep") public String facRepList(Model model) {
-	 * System.out.println("통신완료"); model.addAttribute("rlist",
-	 * facManageService.FacRepList()); return "facility/facRep";
-	 * 
-	 * }
-	 */
-	
-	
-	// 수리관리 전체조회
+	 /**
+	 * 수리관리 전체조회
+	 * @param 
+	 * @return getfacRepList
+	 */	
 	@GetMapping("/FacRepList")
 	@ResponseBody
 	public List<FacRepVO> getFacRepList() {
@@ -167,7 +181,11 @@ public class FacManageController {
 		
 	}
 	
-	// 수리관리 리스트
+	 /**
+	 * 수리관리 리스트
+     * @param model
+     * @return facRep
+	 */	
 	@GetMapping("/facRep")
 	public String NotopReplist(Model model, HttpServletRequest session) {
 		System.out.println("userName : "+ session.getAttribute("userName"));
@@ -178,7 +196,11 @@ public class FacManageController {
 
 	}
 	
-	// insert
+	 /**
+	 * 수리관리 등록
+     * @param facRepVO
+     * @return msg
+	 */	
 	@PostMapping("/insertFacRep")
 	@ResponseBody
 	public String insertFacRep(@RequestBody FacRepVO facRepVO) {

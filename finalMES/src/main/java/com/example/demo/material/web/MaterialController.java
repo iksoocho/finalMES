@@ -21,6 +21,7 @@ import com.example.demo.material.MatOrderInfoVO;
 import com.example.demo.material.MatOrderVO;
 import com.example.demo.material.MatOutputVO;
 import com.example.demo.material.MatReturnVO;
+import com.example.demo.material.MaterialVO;
 import com.example.demo.material.OriginMaterialVO;
 import com.example.demo.material.service.MaterialService;
 
@@ -202,9 +203,9 @@ public class MaterialController {
 	 */
 	@PutMapping("/matUpdate")
 	@ResponseBody
-	public String updateMatOrder(@RequestBody MatOrderCompositeVO matOrderCompositeVO) {
+	public String updateMatOrder(@RequestBody MaterialVO materialVO) {
 		String msg;
-		materialService.updateMatOrder(matOrderCompositeVO);
+		materialService.updateMatLot(materialVO);
 		msg = "발주 목록을 수정하였습니다.";
 		return msg;
 	}

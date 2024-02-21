@@ -34,10 +34,8 @@
 			<h5 class="titleOne">목록</h5>
 			<small class="totalOrdCount" style="margin-right: 20px;"> (총 주문 수: <span th:text="${orderList.size()}"></span>)
 			</small>
-			<div class="ttlContainer">
-				<div>
 						<select id="orderStatus">
-							<option value="" selected>상태</option>
+							<option value="o" selected>상태</option>
 							<option value="o2">등록완료</option>
 							<option value="o3">처리중</option>
 							<option value="o4">출고대기</option>
@@ -45,10 +43,8 @@
 							<option value="o6">종결</option>
 						</select>
 					<label for="startDate"></label> <input type="date" id="startDate" name="startDate"> <label for="endDate"> ~ </label> <input type="date" id="endDate" name="endDate">
-					<button type="button" id="updateOrderState" style="float: right;">저장</button>
-					<button type="button" id="searchByDate" style="float: right;">검색</button>
-				</div>
-			</div>
+					<button type="button" class="btn btn-primary" id="updateOrderState" style="float: right; margin-bottom: 5px;">저장</button>
+					<button type="button" class="btn btn-primary" id="searchByDate" style="margin-bottom: 5px;">검색</button>
 			<div id="grid"></div>
 			<h5>상세</h5>
 			<div></div>
@@ -309,45 +305,83 @@
 		// 상태 기반 검색
 		document.querySelector('#orderStatus').addEventListener('change', function(){
 			const ordState = document.getElementById('orderStatus').value;
-	        
-			if (ordState === '') {
-		        // 만약 상태가 0이면 모든 주문서 출력을 위해 서버에게 빈 문자열을 전송
-		        data = {
-		            ordState: ''
-		        };
+	        console.log("ordState", ordState)
+			if (ordState === 'o') {
+				grid.resetData(orderList);
 		    } else {
 		        // 그 외에는 선택된 상태에 대한 목록을 가져오기 위해 상태 값을 전송
 		        data = {
 		            ordState: ordState
 		        };
+		        fetch('/orderListByOrdState/' + ordState, {
+			        method: 'POST',
+			        headers: {
+			            'Content-Type': 'application/json',
+			        },
+			        body: JSON.stringify(data)
+			    })
+			    .then(response => {
+			        if (!response.ok) {
+			            throw new Error('Network response was not ok');
+			        }
+			        return response.json();
+			    })
+			    .then(data => {
+			        console.log('Success:', data);
+			        if (data.length === 0) {
+			        	Swal.fire({
+		    	            icon: 'warning',
+		    	            text: '해당 상태에 존재하는 데이터가 없습니다.'
+		    	        });
+		            } else {
+		                grid.resetData(data);
+		            }
+			    })
+			    .catch(error => {
+			        console.error('Error:', error);
+			    });
 		    }
 	        
-	        fetch('/orderListByOrdState/' + ordState, {
-		        method: 'POST',
-		        headers: {
-		            'Content-Type': 'application/json',
-		        },
-		        body: JSON.stringify(data)
-		    })
-		    .then(response => {
-		        if (!response.ok) {
-		            throw new Error('Network response was not ok');
-		        }
-		        return response.json();
-		    })
-		    .then(data => {
-		        console.log('Success:', data);
-		        grid.resetData(data);
-		    })
-		    .catch(error => {
-		        console.error('Error:', error);
-		    });
+	        
 		})
 		
 		// 날짜 기반 검색
 		document.querySelector('#searchByDate').addEventListener('click', function(){
 			const startDate = document.getElementById('startDate').value;
 	        const endDate = document.getElementById('endDate').value;
+	        
+	        if (!startDate && !endDate) {
+	        	Swal.fire({
+    	            icon: 'warning',
+    	            text: '시작날짜와 종료날짜를 모두 선택해주세요.'
+    	        });
+	            return;
+	        }
+	        
+	        if (!startDate){
+	        	Swal.fire({
+    	            icon: 'warning',
+    	            text: '시작날짜를 선택해주세요'
+    	        });
+	        	return;
+	        }
+	        
+	        if (!endDate){
+	        	Swal.fire({
+    	            icon: 'warning',
+    	            text: '종료날짜를 선택해주세요'
+    	        });
+	        	return;
+	        }
+	        
+	        // 날짜 비교를 통해 종료날짜가 시작날짜보다 작을 때 경고창 표시
+	        if (startDate > endDate) {
+	        	Swal.fire({
+    	            icon: 'error',
+    	            text: '종료날짜는 시작날짜 이후여야 합니다.'
+    	        });
+	            return; // 경고창을 표시한 후 함수 종료
+	        }
 	        
 	        let data = {
 	        		startDate: formatDate(startDate),
@@ -371,7 +405,14 @@
 		    })
 		    .then(data => {
 		        console.log('Success:', data);
-		        grid.resetData(data);
+		        if (data.length === 0) {
+		        	Swal.fire({
+	    	            icon: 'error',
+	    	            text: '해당하는 기간에 데이터가 없습니다.'
+	    	        });
+	            } else {
+	                grid.resetData(data);
+	            }
 		    })
 		    .catch(error => {
 		        console.error('Error:', error);
@@ -383,7 +424,10 @@
 		    const checkedRows = grid.getCheckedRows();
 
 		    if (checkedRows.length === 0) {
-		        alert('체크된 행이 없습니다.');
+		    	Swal.fire({
+    	            icon: 'warning',
+    	            text: '행을 선택해주세요.'
+    	        });
 		        return;
 		    }
 
@@ -393,11 +437,13 @@
 		        ordNote: row.ordNote
 		    }));
 		    
+		    
 		    let data = {};
 			data.ordCode = newData[0].ordCode;
 			data.ordState = newData[0].ordState;
 			data.ordNote = newData[0].ordNote;
-
+			
+			
 		    fetch('/updateOrderState', {
 		        method: 'PUT',
 		        headers: {
@@ -412,10 +458,13 @@
 		        return response.text();
 		    })
 		    .then(data => {
-		        console.log('Success:', data);
-		        alert(data);
-		        location.href = '/orderList';
-		    })
+				Swal.fire({
+					icon: 'success',
+					text: '성공적으로 업데이트되었습니다.'
+			}).then(() => {
+				location.href = '/orderList'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+			});
+		})
 		    .catch(error => {
 		        console.error('Error:', error);
 		    });

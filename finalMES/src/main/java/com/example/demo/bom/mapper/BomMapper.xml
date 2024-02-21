@@ -42,11 +42,14 @@
 		m.mat_name,
 		p.prod_name,
 		pc.proc_name
-		from bom_material bom
+		from bom_material
+		bom
 		join material m on bom.mat_code = m.mat_code
 		join
-		product p on bom.prod_code = p.prod_code
-		join process pc on bom.proc_code = pc.proc_code
+		product p on
+		bom.prod_code = p.prod_code
+		join process pc on bom.proc_code =
+		pc.proc_code
 		where bom.prod_code =
 		#{prodCode}
 	</select>
@@ -61,7 +64,8 @@
 		SET
 		mat_code = #{matCode},
 		proc_code = #{procCode},
-		bom_mat_count = #{bomMatCount}
+		bom_mat_count =
+		#{bomMatCount}
 		WHERE
 		bom_code = #{bomCode}
 		and bom_num = #{bomNum}
