@@ -305,7 +305,7 @@
 		// 상태 기반 검색
 		document.querySelector('#orderStatus').addEventListener('change', function(){
 			const ordState = document.getElementById('orderStatus').value;
-	        
+	        console.log("ordState", ordState)
 			if (ordState === 'o') {
 				grid.resetData(orderList);
 		    } else {
@@ -313,32 +313,36 @@
 		        data = {
 		            ordState: ordState
 		        };
+		        fetch('/orderListByOrdState/' + ordState, {
+			        method: 'POST',
+			        headers: {
+			            'Content-Type': 'application/json',
+			        },
+			        body: JSON.stringify(data)
+			    })
+			    .then(response => {
+			        if (!response.ok) {
+			            throw new Error('Network response was not ok');
+			        }
+			        return response.json();
+			    })
+			    .then(data => {
+			        console.log('Success:', data);
+			        if (data.length === 0) {
+			        	Swal.fire({
+		    	            icon: 'warning',
+		    	            text: '해당 상태에 존재하는 데이터가 없습니다.'
+		    	        });
+		            } else {
+		                grid.resetData(data);
+		            }
+			    })
+			    .catch(error => {
+			        console.error('Error:', error);
+			    });
 		    }
 	        
-	        fetch('/orderListByOrdState/' + ordState, {
-		        method: 'POST',
-		        headers: {
-		            'Content-Type': 'application/json',
-		        },
-		        body: JSON.stringify(data)
-		    })
-		    .then(response => {
-		        if (!response.ok) {
-		            throw new Error('Network response was not ok');
-		        }
-		        return response.json();
-		    })
-		    .then(data => {
-		        console.log('Success:', data);
-		        if (data.length === 0) {
-	                alert('해당 상태에 존재하는 데이터가 없습니다.');
-	            } else {
-	                grid.resetData(data);
-	            }
-		    })
-		    .catch(error => {
-		        console.error('Error:', error);
-		    });
+	        
 		})
 		
 		// 날짜 기반 검색
@@ -347,23 +351,35 @@
 	        const endDate = document.getElementById('endDate').value;
 	        
 	        if (!startDate && !endDate) {
-	            alert('시작날짜와 종료날짜를 모두 선택해주세요.');
+	        	Swal.fire({
+    	            icon: 'warning',
+    	            text: '시작날짜와 종료날짜를 모두 선택해주세요.'
+    	        });
 	            return;
 	        }
 	        
 	        if (!startDate){
-	        	alert('시작날짜를 선택해주세요');
+	        	Swal.fire({
+    	            icon: 'warning',
+    	            text: '시작날짜를 선택해주세요'
+    	        });
 	        	return;
 	        }
 	        
 	        if (!endDate){
-	        	alert('종료날짜를 선택해주세요');
+	        	Swal.fire({
+    	            icon: 'warning',
+    	            text: '종료날짜를 선택해주세요'
+    	        });
 	        	return;
 	        }
 	        
 	        // 날짜 비교를 통해 종료날짜가 시작날짜보다 작을 때 경고창 표시
 	        if (startDate > endDate) {
-	            alert('종료날짜는 시작날짜 이후여야 합니다.');
+	        	Swal.fire({
+    	            icon: 'error',
+    	            text: '종료날짜는 시작날짜 이후여야 합니다.'
+    	        });
 	            return; // 경고창을 표시한 후 함수 종료
 	        }
 	        
@@ -390,8 +406,10 @@
 		    .then(data => {
 		        console.log('Success:', data);
 		        if (data.length === 0) {
-	                // 기간에 해당하는 데이터가 없으면 경고창 표시
-	                alert('기간에 해당하는 데이터가 없습니다.');
+		        	Swal.fire({
+	    	            icon: 'error',
+	    	            text: '해당하는 기간에 데이터가 없습니다.'
+	    	        });
 	            } else {
 	                grid.resetData(data);
 	            }
@@ -406,7 +424,10 @@
 		    const checkedRows = grid.getCheckedRows();
 
 		    if (checkedRows.length === 0) {
-		        alert('체크된 행이 없습니다.');
+		    	Swal.fire({
+    	            icon: 'warning',
+    	            text: '행을 선택해주세요.'
+    	        });
 		        return;
 		    }
 
@@ -421,7 +442,8 @@
 			data.ordCode = newData[0].ordCode;
 			data.ordState = newData[0].ordState;
 			data.ordNote = newData[0].ordNote;
-
+			
+			
 		    fetch('/updateOrderState', {
 		        method: 'PUT',
 		        headers: {
@@ -436,10 +458,13 @@
 		        return response.text();
 		    })
 		    .then(data => {
-		        console.log('Success:', data);
-		        alert(data);
-		        location.href = '/orderList';
-		    })
+				Swal.fire({
+					icon: 'success',
+					text: '성공적으로 업데이트되었습니다.'
+			}).then(() => {
+				location.href = '/orderList'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+			});
+		})
 		    .catch(error => {
 		        console.error('Error:', error);
 		    });

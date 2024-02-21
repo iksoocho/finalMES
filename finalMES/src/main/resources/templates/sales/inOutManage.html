@@ -4,7 +4,9 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
-
+.mainContainerOne {
+	margin: 50px;
+}
 /* 모달 창 내 주문서 목록 테이블에 마진 추가 */
 #staticBackdropOrd table {
 	margin-bottom: 40px; /* 원하는 여백 크기로 조정 */
@@ -30,12 +32,12 @@ th {
 }
 
 .mainContainerTwo {
-	margin: 20px 50px;
+	margin-bottom: 20px;
 	text-align: center;
 }
 
 .containerOne {
-	margin: 20px 50px;
+	margin-bottom: 20px;
 	text-align: center;
 }
 
@@ -231,7 +233,6 @@ button {
 					</tr>
 				</table>
 			</div>
-		</div>
 		<div class=containerOne>
 			<h5>상세정보</h5>
 			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" onclick="fetchInventory()">재고현황 불러오기</button>
@@ -240,6 +241,7 @@ button {
 		<div id="grid" class="containerOne"></div>
 
 		<div id="outGrid" class="containerTwo"></div>
+		</div>
 
 		<!-- 거래처 모달 -->
 		<div class="modal fade" id="staticBackdropEmployee" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -687,7 +689,10 @@ button {
 			    var selectedRows = inventoryTableBody.find('.inventory-checkbox:checked').closest('tr'); // 재고현황 모달에서 선택된 tr 가져오기.
 			    
 			    if (selectedRows.length === 0) {
-			        alert('품목을 선택하세요.');
+			    	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '품목을 선택하세요.'
+	    	        });
 			        return;
 			    }
 
@@ -724,14 +729,18 @@ button {
 			            mainGrid.appendRow(newDataRow);
 			        } else {
 			            // 이미 추가된 경우에 대한 처리
-			            alert(prodLotCode + '는 이미 추가된 품목입니다.');
+			            const errorMessage = prodLotCode + '는 이미 추가된 품목입니다.';
+			            Swal.fire({
+	    	            icon: 'warning',
+	    	            text: errorMessage
+	    	        });
 			        }
 
 			        
 			    });
-
 			    // 모달 창 닫기
 			    $('#staticBackdropInventory').modal('hide');
+
 			}
 
 			
@@ -751,7 +760,10 @@ button {
 			function fetchInventory() {
 				var newOrderData = grid.getCheckedRows();
 				if(newOrderData.length === 0){
-					alert('재고를 확인하고 싶은 행을 선택해주세요');
+					Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '재고를 확인하고 싶은 행을 먼저 선택해주세요'
+	    	        });
 					return
 				}
 			    console.log('선택된주문 데이터:', newOrderData); // 주문 데이터 콘솔 로그 출력
@@ -830,7 +842,10 @@ button {
 				outObj.outManager = document.getElementById('selectedUserName').value;
 				
 				 if (!outObj.outManager) {
-				        alert('담당자를 선택해주세요.');
+					 Swal.fire({
+		    	            icon: 'warning',
+		    	            text: '담당자를 선택해주세요.'
+		    	        });
 				        return;
 				    }
 				
@@ -841,7 +856,10 @@ button {
 			    // Check if ordCode div exists
 			    let ordCodeDiv = document.querySelector('td[data-column-name="ordCode"] div');
 			    if (!ordCodeDiv) {
-			        alert('주문서를 등록해주세요.');
+			    	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '주문서를 선택해주세요.'
+	    	        });
 			        return;
 			    }
 
@@ -857,7 +875,10 @@ button {
 				var newOutDetailRows = document.querySelectorAll('#outGrid tbody');
 				console.log(newOutDetailRows[3])
 				if (!newOutDetailRows[3].innerText) {
-			        alert('완제품 재고를 추가해주세요');
+					Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '완제품 재고를 추가해주세요.'
+	    	        });
 			        return;
 			    }
 				
@@ -881,13 +902,19 @@ button {
 					
 					if (!obj.outCount && obj.outCount !== 0 && obj.outCount !== '0') {
 				        if (!warningShown) {
-				            alert("출고수량이 비어있습니다.");
+				        	Swal.fire({
+			    	            icon: 'warning',
+			    	            text: "출고수량이 비어있습니다."
+			    	        });
 				            warningShown = true;  // Set the flag to true after showing the warning
 				        }
 				        return;  // Skip this row
 				    } else if (obj.outCount < 0 || isNaN(obj.outCount)){
 				        if (!warningShown) {
-				            alert("출고수량을 정확하게 입력해주세요.");
+				        	Swal.fire({
+			    	            icon: 'warning',
+			    	            text: "출고수량을 정확하게 입력해주세요."
+			    	        });
 				            warningShown = true;  // Set the flag to true after showing the warning
 				        }
 				        return;  // Skip this row
@@ -924,12 +951,21 @@ button {
 						})
 						.then(data => {
 						    console.log('Success:', data);
-						    alert("저장되었습니다.");
-						    location.href= '/inOutManage'; // 페이지 새로고침
-						})
+						    Swal.fire({
+								icon: 'success',
+								text: data
+							}).then(() => {
+								
+								// 사용자가 Swal 팝업을 닫으면 실행됩니다.
+								location.href = '/inOutManage';
+								});
+							})
 						.catch(error => {
 						    console.error('Error:', error);
-						    alert("저장에 실패했습니다.");
+						    Swal.fire({
+			    	            icon: 'warning',
+			    	            text: "저장에 실패했습니다."
+			    	        });
 						});
 			});
 		</script>
