@@ -4,6 +4,10 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
+.tui-grid-cell.tui-grid-cell-has-input.tui-grid-cell-editable.ttlPrice {
+    background-color: #FDC0CE;
+    /* 원하는 배경색을 지정합니다. */
+}
 .mainContainerOne {
 	margin: 50px;
 }
@@ -36,13 +40,13 @@ th {
 	text-align: center;
 }
 
-.containerOne {
+.gridContainerOne {
 	margin-bottom: 20px;
 	text-align: center;
 }
 
 .containerTwo {
-	margin: 20px 50px;
+	margin-bottom: 20px;
 	text-align: center;
 }
 
@@ -235,10 +239,10 @@ button {
 			</div>
 		<div class=containerOne>
 			<h5>상세정보</h5>
-			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" onclick="fetchInventory()">재고현황 불러오기</button>
+			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" id="addGrid">재고현황 불러오기</button>
 			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd" onclick="addToMainGridOrd()">주문서 불러오기</button>
 		</div>
-		<div id="grid" class="containerOne"></div>
+		<div id="grid" class="gridContainerOne"></div>
 
 		<div id="outGrid" class="containerTwo"></div>
 		</div>
@@ -410,6 +414,7 @@ button {
 		</div>
 
 		<script th:inline="javascript">
+		
 			/* 토스트 그리드 */
 
 			let grid = tui.Grid;
@@ -502,22 +507,29 @@ button {
 					header : '출고수량',
 					name : 'outCount',
 					align: "right",
+					className: 'ttlPrice',
+					background: '#014386',
 					editor: 'text',
-			},
-		],
+				},{
+					header : '삭제',
+					name : 'deleteButton',
+					align: "center",
+					width: 60,
+				},
+					
+			],
 		
-	});
+		});
+			
+			
+			
 
 
-			document
-					.addEventListener(
-							'DOMContentLoaded',
-							function() {
-								// 현재 날짜를 가져오는 함수 호출
-								var currentDate = getCurrentDate();
-								// 입력 필드에 현재 날짜 설정
-								document.getElementById('registrationDate').value = currentDate;
-							});
+			document.addEventListener('DOMContentLoaded',function() {
+				// 현재 날짜를 가져오는 함수 호출
+				var currentDate = getCurrentDate();
+				// 입력 필드에 현재 날짜 설정
+				document.getElementById('registrationDate').value = currentDate;});
 
 			// 현재 날짜를 반환하는 함수
 			function getCurrentDate() {
@@ -686,7 +698,7 @@ button {
 			    
 			    var mainGrid = outGrid;
 			    var inventoryTableBody = $('#inventoryTableBody');
-			    var selectedRows = inventoryTableBody.find('.inventory-checkbox:checked').closest('tr'); // 재고현황 모달에서 선택된 tr 가져오기.
+			    var selectedRows = inventoryTableBody.find('.inventory-radio:checked').closest('tr'); // 재고현황 모달에서 선택된 tr 가져오기.
 			    
 			    if (selectedRows.length === 0) {
 			    	Swal.fire({
@@ -738,9 +750,6 @@ button {
 
 			        
 			    });
-			    // 모달 창 닫기
-			    $('#staticBackdropInventory').modal('hide');
-
 			}
 
 			
@@ -757,66 +766,30 @@ button {
 			
 			
 			// 추가된 함수: 재고 정보 가져오기
-			function fetchInventory() {
-				var newOrderData = grid.getCheckedRows();
-				if(newOrderData.length === 0){
-					Swal.fire({
-	    	            icon: 'warning',
-	    	            text: '재고를 확인하고 싶은 행을 먼저 선택해주세요'
-	    	        });
-					return
-				}
-			    console.log('선택된주문 데이터:', newOrderData); // 주문 데이터 콘솔 로그 출력
-				let selectedRows = grid.getCheckedRows();
-				let ordDCodes = selectedRows.map(row => row.ordDCode);
-				console.log('주문상세번호 ',ordDCodes);
-			    // 배열에 prodCode가 있는지 확인
-			    let prodCodes = selectedRows.map(x => x.prodCode);
-			    console.log('제품코드 ',prodCodes)
-			        // 각각의 prodCode에 대해 AJAX 요청을 보냅니다.
-			        if (prodCodes.length > 0) {
-			        var inventoryTableBody = $('#staticBackdropInventory tbody');
-			        inventoryTableBody.empty();
-			    	prodCodes.forEach(function (prodCode, index) {
-			            $.ajax({
-			                url: '/productLotList/' + prodCode,
-			                method: 'GET',
-			                success: function (inventoryData) {
-			                    // 가져온 재고 데이터를 처리하고 표시합니다.
-			                    console.log('재고 품목 코드 ' + prodCode + ':', inventoryData);
-			                 // 재고 표시를 업데이트하는 로직을 구현합니다.
-			                    updateInventoryModal(inventoryData, ordDCodes[index]);
-			                },
-			                error: function (error) {
-			                    console.error('Error fetching inventory for ' + prodCode + ':', error);
-			                }
-			            });
-			        });
-
-			    }
-			}
+			
 			
 			function updateInventoryModal(inventoryData, ordDCode) {
-				console.log('재고현황 불러오기에 주문상세번호 ',ordDCode)
+			    console.log('재고현황 불러오기에 주문상세번호 ', ordDCode)
 			    var inventoryTableBody = $('#inventoryTableBody');
 			    inventoryTableBody;
 
 			    // 가져온 데이터를 테이블에 추가
 			    inventoryData.forEach(function (prodLot) {
 			        var row = $('<tr>');
-			        
-			     // ordDCode를 tr에 추가
+
+			        // ordDCode를 tr에 추가
 			        row.data('ordDCode', ordDCode);
-			        
-			     // 체크박스 추가
-			        var checkbox = $('<input>').attr({
-			            type: 'checkbox',
-			            class: 'inventory-checkbox',
+
+			        // 라디오 버튼 추가
+			        var radio = $('<input>').attr({
+			            type: 'radio',
+			            class: 'inventory-radio',
+			            name: 'inventory-radio-group', // Use the same name for all radio buttons in the group
 			            value: prodLot.prodLotCode // 유일한 식별자로 변경
 			        });
 
-			        row.append($('<td>').append(checkbox).css({
-			        	'width':'42px'
+			        row.append($('<td>').append(radio).css({
+			            'width': '42px'
 			        }));
 			        row.append($('<td>').text(prodLot.prodLotCode));
 			        row.append($('<td>').text(prodLot.prodName));
@@ -828,8 +801,60 @@ button {
 
 			    // 모달 열기 (만약 열려있지 않은 경우)
 			    $('#staticBackdropInventory').modal('show');
-			
 			}
+			
+			
+			document.querySelector('#addGrid').addEventListener('click', function () {
+			    console.log('클릭')
+
+			    // 선택된 주문 데이터 가져오기
+			    var newOrderData = grid.getCheckedRows();
+
+			    // 선택된 행이 하나도 없을 경우 경고창 띄우고 함수 종료
+			    console.log(newOrderData.length)
+			    if (newOrderData.length === 0) {
+			    	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '최소한 하나 이상의 행을 선택하세요.'
+	    	        });
+			        return; // 함수 종료
+			    }
+
+			    // 선택된 주문 데이터 출력
+			    console.log('선택된주문 데이터:', newOrderData);
+
+			    // 선택된 행들의 주문상세번호 가져오기
+			    let selectedRows = grid.getCheckedRows();
+			    let ordDCodes = selectedRows.map(row => row.ordDCode);
+			    console.log('주문상세번호 ', ordDCodes);
+
+			    // 선택된 행들의 제품코드 가져오기
+			    let prodCodes = selectedRows.map(x => x.prodCode);
+			    console.log('제품코드 ', prodCodes)
+
+			    // 선택된 제품코드들에 대해 AJAX 요청을 보내기
+			    if (prodCodes.length > 0) {
+			        var inventoryTableBody = $('#staticBackdropInventory tbody');
+			        inventoryTableBody.empty();
+
+			        prodCodes.forEach(function (prodCode, index) {
+			            $.ajax({
+			                url: '/productLotList/' + prodCode,
+			                method: 'GET',
+			                success: function (inventoryData) {
+			                    // 가져온 재고 데이터를 처리하고 표시합니다.
+			                    console.log('재고 품목 코드 ' + prodCode + ':', inventoryData);
+			                    // 재고 표시를 업데이트하는 로직을 구현합니다.
+			                    updateInventoryModal(inventoryData, ordDCodes[index]);
+			                },
+			                error: function (error) {
+			                    console.error('Error fetching inventory for ' + prodCode + ':', error);
+			                }
+			            });
+			        });
+			    }
+			});
+			
 			
 			//////////////////////////////////////INSERT///////////////////////////////////////////
 			document.querySelector('#prodDlvyInsert').addEventListener('click', function () {
@@ -851,14 +876,13 @@ button {
 				
 				
 				outObj.outCode = document.getElementById('outCode').value;
-				outObj.outCode = document.getElementById('outCode').value;
 
 			    // Check if ordCode div exists
 			    let ordCodeDiv = document.querySelector('td[data-column-name="ordCode"] div');
 			    if (!ordCodeDiv) {
 			    	Swal.fire({
 	    	            icon: 'warning',
-	    	            text: '주문서를 선택해주세요.'
+	    	            text: '주문서를 추가해주세요.'
 	    	        });
 			        return;
 			    }
@@ -897,6 +921,7 @@ button {
 					obj.ordDCode = target.find('td:eq(0)').text();
 					console.log("주문상세번호 : " + obj.ordDCode);
 					obj.prodLotCode = target.find('td:eq(1)').text();
+					prodCount = target.find('td:eq(2)').text();
 					console.log("제품LOT번호 : " + obj.prodLotCode);
 					obj.outCount = target.find('td:eq(3)').text();
 					
@@ -918,6 +943,15 @@ button {
 				            warningShown = true;  // Set the flag to true after showing the warning
 				        }
 				        return;  // Skip this row
+				    } else if (parseFloat(obj.outCount) > parseFloat(prodCount)) {
+				        if (!warningShown) {
+				            Swal.fire({
+				                icon: 'warning',
+				                text: "출고수량이 재고 수량보다 큽니다."
+				            });
+				            warningShown = true;  // 경고가 표시되면 플래그를 true로 설정
+				        }
+				        return;  // 해당 행 건너뛰기
 				    }
 					
 					console.log("출고수량 : " + obj.outCount)

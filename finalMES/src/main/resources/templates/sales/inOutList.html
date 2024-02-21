@@ -2,6 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
 <style>
+.tui-grid-cell.tui-grid-cell-has-input.tui-grid-cell-editable.outDDate {
+	background-color: #FDC0CE;
+    border: 0.3px solid white;
+}
 .containerOne{
 	margin: 50px;
 }
@@ -223,6 +227,7 @@
 		 		name : 'outDDate',
 		 		formatter : outDateFormatter,
 		 		align : 'center',
+		 		className : 'outDDate',
 		 		editor: {
 					type: 'datePicker',
 					options: {

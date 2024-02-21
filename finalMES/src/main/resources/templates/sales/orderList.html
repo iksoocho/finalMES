@@ -2,6 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
 <style>
+.tui-grid-cell.tui-grid-cell-has-input.tui-grid-cell-editable.ordNote {
+    background-color: #FDC0CE;
+    border: 0.3px solid white;
+    /* 원하는 배경색을 지정합니다. */
+}
+
 .containerOne {
 	margin: 50px;
 }
@@ -158,6 +164,8 @@
  	 	 		name:'ordNote',
  	 	 		align: 'center',
  	 	 		editor: 'text',
+ 	 	 		className: 'ordNote',
+ 	 	 		background: '#014386',
  	 	 	},
  	      ],
  	      rowHeaders: ['rowNum','checkbox'],
