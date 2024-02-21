@@ -29,6 +29,16 @@ input[type="text"]:focus {
 #excel {
 	float: left;
 }
+#searchOrder {
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+#selectBtn {
+    float: left;
+    margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -39,8 +49,12 @@ input[type="text"]:focus {
 			<div>
 
 				<input type="text" id="searchOrder" oninput="searchFunction()"
-					placeholder="검색...">
+					placeholder="검색..." >
+				<button type="button" id="selectBtn" class="btn btn-outline-success"
+					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
+			<br>
+			<br>
 			<br>
 
 
@@ -143,16 +157,30 @@ input[type="text"]:focus {
         				    let name = [[${session.userName}]];
 
         				    const inputRows = newInpuRows;
-        				    console.log('잘 들고오네요...',inputRows[0].matInsCode);
+        				    console.log('잘 들고오네요...',inputRows[0].matLotCode);
 
 							
 
+        				    for (const data of inputRows) {
+        				        // 입력값이 비어있는지 확인
+        				        if (!data.matInputCount || isNaN(data.matInputCount) || Number(data.matInputCount) <= 0) {
+        				            alert("입고량을 확인해주세요.");
+        				            return;
+        				        }
 
-        				    if (inputRows.length === 0) {
-        				        console.log('추가된 데이터가 없습니다.');
-        				        return;
+        				        // 입력값 길이 확인
+        				        if (data.matInputCount.length > 10) { // 예시로 최대 길이를 10으로 설정
+        				            alert("입고량은 10자 이하여야 합니다.");
+        				            return;
+        				        }
+
+        				        // 입력값 형식 확인
+        				        let matInputDate = new Date(data.matInputDate);
+        				        if (isNaN(matInputDate.getTime())) {
+        				            alert("올바른 입고일을 선택해 주세요");
+        				            return;
+        				        }
         				    }
-
 
         				    // 데이터를 객체로 생성
         				    let data = {};
@@ -249,10 +277,10 @@ input[type="text"]:focus {
                 				  name: 'matInsBad',
                 				  editor: 'text'
                 				},
-                		        {
-                    		      header: '불량내용',
-                    		      name: 'matNote',
-                    		    },
+//                 		        {
+//                     		      header: '불량내용',
+//                     		      name: 'matNote',
+//                     		    },
                 				{
                 		            header: '검수일자',
                 		            name: 'matInsDate',
@@ -276,9 +304,6 @@ input[type="text"]:focus {
                 	           }
                 		    });
 
-   
-
-
                 		// 날짜 형식 지정 함수
                      	function formatDate({ value }) {
                      	    if (value) {
@@ -290,10 +315,6 @@ input[type="text"]:focus {
                      	    }
                      	    return '';
                      	}
-                		
- 
-
-               	
       </script>
 	</section>
 </body>
