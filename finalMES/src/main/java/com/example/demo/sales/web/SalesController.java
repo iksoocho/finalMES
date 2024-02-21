@@ -154,7 +154,7 @@ public class SalesController {
 	@PutMapping("/updateOutDDate")
 	@ResponseBody
 	public String updateOutDDate(@RequestBody List<ProdDetailUpdateDVO> prodDetailUpdateDVOList) {
-	    String msg = "날짜 및 상태 업데이트가 완료되었습니다";
+	    String msg = "출고서 업데이트가 완료되었습니다.";
 	    prodDlvyService.updateOutDDate(prodDetailUpdateDVOList);
 	    return msg;
 	}
@@ -162,7 +162,7 @@ public class SalesController {
 	@PutMapping("/updateOrderState")
 	@ResponseBody
 	public String updateOrderState(@RequestBody OrderStateDVO orderStateDVO) {
-		String msg = "상태 업데이트가 완료되었습니다.";
+		String msg = "주문서 업데이트가 완료되었습니다.";
 		ordService.updateOrderState(orderStateDVO);
 		return msg;
 	}

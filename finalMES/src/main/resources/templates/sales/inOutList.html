@@ -311,16 +311,39 @@
 			        alert('체크된 행이 없습니다.');
 			        return;
 			    }
+			    
+			   // 행 데이터를 모아서 배열에 담기
+			   let warningShown = false;
+			   
+    			const data = checkedRows.map(row => {
+        			if (!row.outDDate && !warningShown) {
+            			alert('날짜를 입력해주세요.');
+        				warningShown = true;
+            			return;
+        			}
+        			
+        			console.log(row.outDState)
+        			if(row.outDState === '출고완료' && !warningShown){
+        				alert('출고완료된 제품입니다');
+        				warningShown = true;
+        				return;
+        			}
 
-			    // 행 데이터를 모아서 배열에 담기
-			    const data = checkedRows.map(row => ({
-			        outDCode: row.outDCode,
-			        outCode: row.outDCode.substring(0, row.outDCode.lastIndexOf("-")),
-			        outDDate: row.outDDate,
-			        prodLotCode: row.prodLotCode,
-			        outCount : row.outCount
-			    }));
+        			return {
+        				outDState: row.outDState,
+            			outDCode: row.outDCode,
+            			outCode: row.outDCode.substring(0, row.outDCode.lastIndexOf("-")),
+            			outDDate: row.outDDate,
+            			prodLotCode: row.prodLotCode,
+            			outCount: row.outCount
+        			};
+    			});
 
+			    console.log(data);
+			    if (!data.every(item => item)) {
+			        // 여기서는 각 행의 데이터가 모두 유효한 경우에만 fetch를 실행합니다.
+			        return;
+			    }
 			    fetch('/updateOutDDate', {
 			        method: 'PUT',
 			        headers: {
