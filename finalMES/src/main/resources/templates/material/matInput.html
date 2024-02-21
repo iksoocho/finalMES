@@ -420,7 +420,7 @@ input[type="text"]:focus {
                 	    			}
                 	    		];
                 	    		
-                	    		const fileName = '발주관리.csv'; // 엑셀파일이름
+                	    		const fileName = '입고관리.csv'; // 엑셀파일이름
                 	    		const csvRows = [];
                 	    		
                 	    		grids.forEach((grid, index) => {
@@ -435,7 +435,7 @@ input[type="text"]:focus {
                 	    				const values = grid.fields.map(field => {
                 	    					const value = row[field] || '';
                 	    					console.log("field : ", field)
-                	    					if (field == 'matInsDate' || field == 'matStandard'){
+                	    					if (field == 'matInsDate' || field == 'matInputDate'){
                 	    						return value.split('T')[0];
                 	    					} else {
                 	    						return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체

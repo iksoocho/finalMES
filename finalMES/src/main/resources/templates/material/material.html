@@ -12,24 +12,6 @@ button {
 	margin-bottom: 10px;
 }
 
-table {
-	border-collapse: collapse;
-	width: 20%; /* 크기를 조정합니다 */
-}
-
-th {
-	background-color: #f2f2f2;
-	color: #333;
-	font-weight: bold;
-	padding: 8px;
-	text-align: left;
-}
-
-td {
-	padding: 8px;
-	border-bottom: 1px solid #ddd;
-}
-
 input[type="text"] {
 	width: 20%;
 	padding: 8px;
@@ -42,32 +24,31 @@ input[type="text"]:focus {
 	outline: none;
 	border-color: #4CAF50;
 }
+
 #searchOrder {
-    float: left;
-    margin-right: 5px;
-    margin-bottom: 10px;
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 10px;
 }
 
 #selectBtn {
-    float: left;
-    margin-bottom: 10px;
+	float: left;
+	margin-bottom: 10px;
 }
 </style>
 </head>
 <body>
 	<section layout:fragment="content" class="m-5">
 		<div>
-		<h2>자재 조회</h2>
+			<h2>자재 조회</h2>
 			<div>
 
 				<input type="text" id="searchOrder" oninput="searchFunction()"
-					placeholder="검색..." >
+					placeholder="검색...">
 				<button type="button" id="selectBtn" class="btn btn-outline-success"
 					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
-			<br>
-			<br>
-			<br>
+			<br> <br> <br>
 
 			<div class="row">
 				<div class="col-7">
@@ -82,6 +63,8 @@ input[type="text"]:focus {
 				</div>
 			</div>
 		</div>
+		<button type="button" class="btn btn-outline-primary" id="excel"
+			onclick="downloadCSV()">EXCEL</button>
 		<script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
 	        let matList = [[${matList}]];
@@ -215,7 +198,61 @@ input[type="text"]:focus {
          	         }
          	     }
          	 }
-
+			  
+            
+            
+			// 엑셀 다운로드
+	    	function downloadCSV() {
+		    const grids = [
+		        { data: matGrid.getData(),
+		          header: ['자재코드', '자재명', '단위', '규격', '총재고량', '안전재고'],
+		          fields: ['matCode', 'matName', 'matUnit', 'matStandard', 'matCount2', 'matSafeStock']
+		        },
+		        { data: lotGrid.getData(),
+		          header: ['자재LOT', '자재코드', '자재명', '재고'],
+		          fields: ['matLotCode', 'matCode', 'matName', 'matCount']
+		        }
+		    ];
+		
+		    const fileName = '발주관리.csv'; // 엑셀파일이름
+		    const csvRows = [];
+		
+		    grids.forEach((grid, index) => {
+		
+		        if (index > 0) {
+		            csvRows.push('');
+		            csvRows.push('');
+		        }
+		        csvRows.push(grid.header.join(','));
+		
+    			grid.data.forEach(row => {
+    				const values = grid.fields.map(field => {
+    					const value = row[field] || '';
+    					console.log("field : ", field)
+    					if (field == 'matInsDate'){
+    						return value.split('T')[0];
+    					} else {
+    						return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
+    					}
+    				});
+    				csvRows.push(values.join(','));
+    			});
+		
+		        grid.data.forEach(item => {
+		            const row = grid.fields.map(field => item[field]);
+		            csvRows.push(row.join(','));
+		        });
+		    });
+		
+		    const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+		    const encodedUri = encodeURI(csvContent);
+		
+		    const link = document.createElement('a');
+		    link.setAttribute('href', encodedUri);
+		    link.setAttribute('download', fileName); // 파일 이름을 변수 fileName으로 변경
+		    document.body.appendChild(link);
+		    link.click();
+		}
             
       </script>
 	</section>
