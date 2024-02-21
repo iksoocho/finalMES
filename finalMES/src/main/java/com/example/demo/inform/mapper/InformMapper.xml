@@ -124,4 +124,28 @@
 		where bad_mat_code = #{badMatCode}
 	</delete>
 	
+	
+	<!-- 거래처 -->
+	<select id="selectBusinessList" resultType="BusinessVO">
+		select 
+			business_code,
+			business_name,
+			find_codename(business_type) business_type,
+			business_manager,
+			business_manager_phone,
+			start_date
+		from business
+		order by business_code desc
+	</select>
+	
+	<insert id="insertBusiness" parameterType="BusinessVO">
+		insert into
+		business(business_name, business_type, business_manager, business_manager_phone)
+		values(#{businessName}, #{businessType}, #{businessManager}, #{businessManagerPhone})
+	</insert>
+	
+	<delete id="deleteBusiness">
+		delete from business
+		where business_code = #{businessCode}
+	</delete>
 </mapper>

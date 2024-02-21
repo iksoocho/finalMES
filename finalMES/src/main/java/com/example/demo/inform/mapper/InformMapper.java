@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.query.Param;
 
 import com.example.demo.inform.BadMaterialVO;
+import com.example.demo.inform.BusinessVO;
 import com.example.demo.inform.EmpVO;
 import com.example.demo.inform.MatVO;
 import com.example.demo.inform.ProcVO;
@@ -44,4 +45,9 @@ public interface InformMapper {
 	public List<BadMaterialVO> selectBadMatList();
 	public int insertBadMatInfo(BadMaterialVO badMatVO);
 	public int deleteBad(String badMatCode);
+	
+	//거래처
+	public List<BusinessVO> selectBusinessList();
+	public int insertBusiness(BusinessVO businessVO);
+	public int deleteBusiness(String businessCode);
 };
