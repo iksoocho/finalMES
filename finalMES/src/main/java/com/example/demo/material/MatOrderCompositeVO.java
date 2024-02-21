@@ -12,4 +12,5 @@ public class MatOrderCompositeVO {
 	private List<MatOrderInfoVO> matOrderInfoList;
 	private MatOrderInfoVO matOrderInfoVO;
 	private BusinessListVO businessListVO;
+	private MaterialVO materialVO;
 }

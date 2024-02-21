@@ -28,6 +28,7 @@ input[type="text"]:focus {
 }
 #excel {
 	float: left;
+	margin: 8px; 5px;
 }
 #searchOrder {
     float: left;
@@ -65,7 +66,9 @@ input[type="text"]:focus {
 
 			<h3>입고목록</h3>
 			<button type="button" class="btn btn-outline-primary custom-style"
-				id="orderInsert">저장</button>
+				id="orderInsert" style="margin: 8px 5px;">저장</button>
+			<button type="button" class="btn btn-outline-primary custom-style"
+				id="matupdate" style="margin: 8px 5px;">수정</button>
 			<button type="button" class="btn btn-outline-primary" id="excel"
 				onclick="downloadCSV()">EXCEL</button>
 			<br> <br>
@@ -121,6 +124,10 @@ input[type="text"]:focus {
                 			  }
         				    },
                 	        {
+                			  header: '합격량',
+                			  name: 'matInsGood',
+                			},
+                	        {
                 			  header: '입고량',
                 			  name: 'matInputCount',
            	            	  editor : 'text'
@@ -157,30 +164,55 @@ input[type="text"]:focus {
         				    let name = [[${session.userName}]];
 
         				    const inputRows = newInpuRows;
-        				    console.log('잘 들고오네요...',inputRows[0].matLotCode);
-
+        				    console.log('잘 들고오네요...',inputRows);
+								
+        				    if(inputRows.length === 0 ){
+            	             	Swal.fire({
+        				            icon: 'error',
+        				            text: '저장할 내용이 없습니다.'
+        				        });
+                	         	return;
+                    	    }
+        				    
+        				    
+        				    if (inputRows[0].matInputDate == null) {
+    				            Swal.fire({
+    					            icon: 'error',
+    					            text: '올바른 입고일을 선택해 주세요'
+    					      });
+    				            return;
+    				        }
 							
 
-        				    for (const data of inputRows) {
         				        // 입력값이 비어있는지 확인
-        				        if (!data.matInputCount || isNaN(data.matInputCount) || Number(data.matInputCount) <= 0) {
-        				            alert("입고량을 확인해주세요.");
-        				            return;
-        				        }
+       				        if (inputRows[0].matInputCount == '') {
+       				            Swal.fire({
+       					            icon: 'error',
+       					            text: '입고량을 확인해주세요.'
+       					        });
+       				            return;
+       				        }
+        				        
+        				        
+    				        if (Number(inputRows[0].matInputCount) > Number(inputRows[0].matInsGood)) {
+							    Swal.fire({
+							        icon: 'error',
+							        text: '입고량은 합격량을 넘을 수 없습니다.'
+							    });
+							    return;
+							}
 
-        				        // 입력값 길이 확인
-        				        if (data.matInputCount.length > 10) { // 예시로 최대 길이를 10으로 설정
-        				            alert("입고량은 10자 이하여야 합니다.");
-        				            return;
-        				        }
+       				        // 입력값 길이 확인
+							if (Number(inputRows[0].matInputCount) <= 0) {
+							    Swal.fire({
+							        icon: 'error',
+							        text: '입고량은 0보다 커야 합니다.'
+							    });
+							    return;
+							}
 
-        				        // 입력값 형식 확인
-        				        let matInputDate = new Date(data.matInputDate);
-        				        if (isNaN(matInputDate.getTime())) {
-        				            alert("올바른 입고일을 선택해 주세요");
-        				            return;
-        				        }
-        				    }
+       				        // 입력값 형식 확인
+        				      
 
         				    // 데이터를 객체로 생성
         				    let data = {};
@@ -215,9 +247,13 @@ input[type="text"]:focus {
         				    })
         				    .then(data => {
         				        console.log('Success:', data);
-        				        alert(data);
-        				        location.href = '/matInput'; // 성공적으로 처리된 후 리디렉트
-        				    })
+        				        Swal.fire({
+        					        icon: 'success',
+        					        text: data
+        					    }).then(() => {
+        					        location.href = '/matInput'; // 성공적으로 처리된 후 리디렉트
+        					    });
+        					})
         				    .catch(error => {
         				        console.error('Error:', error);
         				    });
@@ -315,6 +351,58 @@ input[type="text"]:focus {
                      	    }
                      	    return '';
                      	}
+                		
+                		
+                		//plan detail update
+                			document.querySelector('#matupdate').addEventListener('click', function() {
+        				    	
+        				    	const inputRows = newInpuRows;
+                     			if (inputRows === null) {
+                     				alert("저장 할 내용이 없습니다.")
+                     				return;
+                     			}
+
+            				    let data = {};
+
+            			        data.matInputDate = inputRows[0].matInputDate;
+            			        console.log(" data.matInputDate : ",  data.matInputDate);
+            			        data.matInputCount = inputRows[0].matInputCount;
+
+            				    console.log('전송할 데이터:', data);
+                     			
+                   
+                     			console.log(data);
+                     			// AJAX 요청으로 서버에 데이터 전송
+                     			fetch('/matUpdate', {
+                     				method: 'put',
+                     				headers: {
+                     					'Content-Type': 'application/json',
+
+                     				},
+                     				body: JSON.stringify(data)
+                     			})
+                     				.then(response => {
+                     					if (!response.ok) {
+                     						throw new Error('Network response was not ok');
+                     					}
+                     					return response.text();
+                     				})
+                     				.then(data => {
+                     					console.log('Success:', data);
+                     					Swal.fire({
+                					        icon: 'success',
+                					        text: data
+                					    }).then(() => {
+                					        location.href = '/matInput'; // 성공적으로 처리된 후 리디렉트
+                					        
+                					     
+                					    });
+                					})
+                     				.catch(error => {
+                     					console.error('Error:', error);
+                     				});
+
+                     		});
       </script>
 	</section>
 </body>

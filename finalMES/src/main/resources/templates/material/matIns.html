@@ -171,8 +171,11 @@ button {
         				    const insCheckRows = newCheckRows;
         				    console.log('잘 들고오네요...',insCheckRows);
 
-        				    if (newCheckRows.length === 0) {
-        				        console.log('추가된 데이터가 없습니다.');
+        				    if (insCheckRows.length === 0) {
+        				        Swal.fire({
+        				            icon: 'error',
+        				            text: '저장할 데이터가 없습니다.'
+        				        });
         				        return;
         				    }
 							
@@ -180,49 +183,61 @@ button {
         				  		
         				        // 검사량이 0보다 크거나 같은지 확인
         				        if (insCheckRows[0].matInsCount == null) {
-        				            alert("검사량을 확인해주세요.");
+        				            Swal.fire({
+        					            icon: 'error',
+        					            text: '검사량을 확인해주세요.'
+        					        });
         				            return;
         				        }
         				        // 합격량이 0보다 크거나 같은지 확인
         				        if (insCheckRows[0].matInsGood == null) {
-        				            alert("합격량을 확인해주세요.");
+        				            Swal.fire({
+        					            icon: 'error',
+        					            text: '합격량을 확인해주세요.'
+        					        });
         				            return;
         				        }
         				        // 불합격량이 0보다 크거나 같은지 확인
         				        if (insCheckRows[0].matInsBad != 0 && (insCheckRows[0].matInsBad == null)) {
-								    alert("불합격량을 확인해주세요.");
+								    Swal.fire({
+							            icon: 'error',
+							            text: '불합격량을 확인해주세요.'
+							        });
 								    return;
 								}
         				        // 검수날짜가 올바른 형식인지 확인
         				        
         				        
         				        if (insCheckRows[0].matInsDate == null) {
-        				            alert("올바른 검수날짜를 선택해 주세요");
+        				            Swal.fire({
+        					            icon: 'error',
+        					            text: '검수날짜를 선택해 주세요.'
+        					        });
         				            return;
         				        }
         				        
         				        
-        				     	// 입고량이 발주량을 넘지 않는지 확인
-//         				        if (Number(data.matOrCount) > Number(data.matInsCount)) {
-//         				            alert("입고량은 발주량을 넘을 수 없습니다.");
-//         				            return;
-//         				        }
-        				     	
-//         				        if (Number(data.matInsCount) > Number(insCheckRows[0].matInsGood)) {
-//         				            alert("합격량은 발주량을 넘을 수 없습니다.");
-//         				            return;
-//         				        }
+        				        
+        				        // 입고량이 발주량을 넘지 않는지 확인
+								if (Number(insCheckRows[0].matInsCount) > Number(insCheckRows[0].matOrCount)) {
+								    Swal.fire({
+								        icon: 'error',
+								        text: '검사량은 발주량을 넘을 수 없습니다.'
+								    });
+								    return;
+								}
+								
+								// 합격량이 발주량을 넘지 않는지 확인
+								if (Number(insCheckRows[0].matInsGood) > Number(insCheckRows[0].matOrCount)) {
+								    Swal.fire({
+								        icon: 'error',
+								        text: '합격량은 발주량을 넘을 수 없습니다.'
+								    });
+								    return;
+								}
         				 
         			        
         			        	
-        			        
-        			    
-        			        
-        			        
-        			        
-        			        
-
-        				 
 
 
         				    // 데이터를 객체로 생성
@@ -254,9 +269,16 @@ button {
         				    })
         				    .then(data => {
         				        console.log('Success:', data);
-        				        alert(data);
-        				        location.href = '/matIns'; // 성공적으로 처리된 후 리디렉트
-        				    })
+        				        
+        				        Swal.fire({
+        					        icon: 'success',
+        					        text: data
+        					    }).then(() => {
+        					        location.href = '/matIns'; // 성공적으로 처리된 후 리디렉트
+        					        
+        					     
+        					    });
+        					})
         				    .catch(error => {
         				        console.error('Error:', error);
         				    });
