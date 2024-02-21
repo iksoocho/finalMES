@@ -14,14 +14,16 @@ public interface BomService {
 	public List<OriginMaterialVO> OriginMaterialList();
 	// 공정리스트
 	public List<ProcessVO> ProcessList();
-	// bom 시퀀스
+	
+	
+	// 시퀀스
 	public int bomSeq();
-	// bom insert
+	// insert
 	public void bomInsert(List<BomVO> bomList);
-	//bom list 
+	//list 
 	public List<BomVO> getBomList(String prodCode);
-	// bom delete
+	// delete
 	public void bomDelete(BomVO bomVO);
-	// bom update
+	// update
 	public void bomUpdate(List<BomVO> bomList);
 }

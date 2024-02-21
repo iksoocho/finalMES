@@ -15,11 +15,17 @@
 		LEFT JOIN not_operator no ON n.notop_code = no.notop_code
 		order by fm.fac_code desc
 	</select>
-	
-	
+		
+	<select id="getfacBusList" resultType="FacBusinessVO">
+		SELECT business_code,
+		business_name
+		FROM business
+		WHERE business_type = 'b3'
+	</select>
 
 	<select id="getfacNotList" resultType="FacNotopVO">
-		SELECT fm.fac_name, 
+		SELECT fm.fac_name,
+			   fm.fac_person,
 		       fn.fac_not_code,
 		       fn.fac_code,
 		       fn.notop_code,
@@ -90,7 +96,7 @@
 		UPDATE fac_notop
 		SET
 		fac_code = #{facCode},
-		fac_not_sdate = #{facNotSdate},
+		fac_not_sdate = SYSDATE,
 		fac_not_ldate =
 		#{facNotLdate},
 		fac_not_person = #{facNotPerson},
@@ -152,7 +158,15 @@
 	<update id="updateFacInsSi" parameterType="String">
 		UPDATE fac_notop
 		SET
-		fac_not_situation = 'f1'
+		fac_not_situation = 'f1',
+		fac_not_ldate = SYSDATE
+		WHERE fac_not_code = #{facNotCode}
+	</update>
+	
+	<update id="updateFacInsSif3" parameterType="String">
+		UPDATE fac_notop
+		SET
+		fac_not_situation = 'f3'
 		WHERE fac_not_code = #{facNotCode}
 	</update>
 	
