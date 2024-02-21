@@ -2,6 +2,7 @@ package com.example.demo.facility.service;
 
 import java.util.List;
 
+import com.example.demo.facility.FacBusinessVO;
 import com.example.demo.facility.FacCompositeVO;
 import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
@@ -16,6 +17,8 @@ public interface FacManageService {
 	public List<FacManageVO> FacList(FacManageVO facManageVO);
 	// 등록
 	public int insertFac(FacManageVO facManageVO);
+	// 거래처모달 리스트
+	public List<FacBusinessVO> FacBusList(FacBusinessVO facBusinessVO);
 
 
 	

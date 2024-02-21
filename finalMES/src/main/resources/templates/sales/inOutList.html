@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
+<style>
+.containerOne{
+	margin: 50px;
+}
+</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<style>
-</style>
 <body>
 	<section layout:fragment="content">
 		<div class="containerOne">
-			<h4>주문 조회</h4>
+			<h4>입출고 조회</h4>
 			<h5 class="titleOne">목록</h5>
 			<div id="grid"></div>
 			<h5 style="float: left;">상세</h5>
@@ -308,7 +311,10 @@
 			    const checkedRows = detailGrid.getCheckedRows();
 
 			    if (checkedRows.length === 0) {
-			        alert('체크된 행이 없습니다.');
+			    	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '행을 선택해주세요.'
+	    	        });
 			        return;
 			    }
 			    
@@ -317,14 +323,20 @@
 			   
     			const data = checkedRows.map(row => {
         			if (!row.outDDate && !warningShown) {
-            			alert('날짜를 입력해주세요.');
+        				Swal.fire({
+    	    	            icon: 'warning',
+    	    	            text: '날짜를 입력해주세요.'
+    	    	        });
         				warningShown = true;
             			return;
         			}
         			
         			console.log(row.outDState)
         			if(row.outDState === '출고완료' && !warningShown){
-        				alert('출고완료된 제품입니다');
+        				Swal.fire({
+    	    	            icon: 'error',
+    	    	            text: '이미 출고완료된 상태입니다'
+    	    	        });
         				warningShown = true;
         				return;
         			}
@@ -358,10 +370,13 @@
 			        return response.text();
 			    })
 			    .then(data => {
-			        console.log('Success:', data);
-			        alert(data);
-			        location.href = '/inOutList';
-			    })
+				Swal.fire({
+					icon: 'success',
+					text: '성공적으로 업데이트되었습니다.'
+			}).then(() => {
+				location.href = '/inOutList'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+			});
+		})
 			    .catch(error => {
 			        console.error('Error:', error);
 			    });

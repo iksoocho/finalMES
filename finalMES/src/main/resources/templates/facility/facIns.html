@@ -41,63 +41,74 @@ button {
 	margin-right: 5px;
 }
 
-/* 모달 스타일 */
-.modal-dialog {
-	max-width: 800px;
+body {
+    font-family: Arial, sans-serif; /* 전체 페이지에 대한 기본 글꼴 설정 */
+    background-color: #f8f9fa; /* 페이지 배경색 설정 */
+}
+
+.container {
+    margin: auto; /* 컨테이너를 수평 가운데 정렬 */
+    padding: 20px;
+    background-color: #ffffff; /* 컨테이너 배경색 설정 */
+    border-radius: 10px; /* 컨테이너에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+h1 {
+    text-align: center; /* 제목 가운데 정렬 */
+}
+
+.btn {
+    margin-right: 5px; /* 버튼 간격 설정 */
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%; /* 입력란 전체 너비로 설정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
+}
+
+/* 검색 입력란 스타일 */
+#searchInput {
+    margin-top: 10px; /* 검색 입력란과 버튼 사이의 간격 설정 */
+    width: 200px; /* 너비를 작게 조정 */
+    padding: 8px; /* 내부 여백 추가 */
+    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
+    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
 }
 
 .modal-content {
-	border-radius: 10px;
+    border-radius: 10px; /* 모달에 라운드 모서리 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 }
 
 .modal-header {
-	background-color: #007bff;
-	color: white;
-	border-radius: 10px 10px 0 0;
-}
-
-.modal-body {
-	padding: 20px;
+    background-color: #007bff; /* 모달 헤더 배경색 설정 */
+    color: white; /* 모달 헤더 글자색 설정 */
+    border-radius: 10px 10px 0 0; /* 모달 헤더에 라운드 모서리 설정 */
 }
 
 .modal-footer {
-	border-radius: 0 0 10px 10px;
+    background-color: #f8f9fa; /* 모달 푸터 배경색 설정 */
+    border-top: none; /* 모달 푸터에 테두리 없애기 */
+    border-radius: 0 0 10px 10px; /* 모달 푸터에 라운드 모서리 설정 */
 }
-
 .modal-title {
-	font-size: 24px;
+    font-size: 24px; /* 기존 크기 유지 */
+    font-weight: bold; /* 진하게 표시 */
+    color: black; /* 텍스트 색상 변경 */
 }
 
-.table th, .table td {
-	text-align: center;
-}
-
-.modal-table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.modal-table th, .modal-table td {
-	padding: 10px;
-	border-bottom: 1px solid #dee2e6;
-}
-
-.modal-table th {
-	background-color: #f8f9fa;
-}
-
-.modal-table tbody tr:hover {
-	background-color: #f2f2f2;
-}
 </style>
 </head>
 <body>
 
 	<section layout:fragment="content">
-		<h1>설비점검관리</h1>
+		
 
 		<div class="container">
-
+		<h1>설비점검관리</h1>
 			<div class="col">
 				<br> <br>
 				<table class="table">
@@ -161,7 +172,7 @@ button {
 
 
 
-		<div class="modal fade modal-xl" id="staticBackdropOne"
+		<div class="modal" id="staticBackdropOne"
 			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 			aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-scrollable">
@@ -268,12 +279,13 @@ document.getElementById('saveBtn').addEventListener("click", function() {
         }
     }
 
-    if (!facName) {
+    if (!facName || !facInsCheck) {
+        // 설비명 또는 점검사항이 빈 값인 경우
         Swal.fire({
             icon: 'error',
-            text: '설비명을 입력해주세요.'
+            text: '설비명과 점검사항을 입력해주세요.'
         });
-        return;
+        return; 
     }
 
     // 데이터 객체에 위에서 가져온 값들 넣기
@@ -300,12 +312,18 @@ document.getElementById('saveBtn').addEventListener("click", function() {
     .then(response => {
         console.log(response.status);
         if (response.ok) {
-            console.log(response);
-            alert("수정완료!");
-            location.href = '/facIns';  // 여기 경로로 리디렉션
+        	Swal.fire({
+                icon: 'success',
+                text: '수정이 완료되었습니다!'
+            }).then(() => {
+                location.reload(); // 페이지 새로고침
+            });
         } else {
-            console.log(response);
-            alert("수정실패");
+        	console.log(response);
+        	 Swal.fire({
+	                icon: 'error',
+	                text: '수정 실패'
+	            });
         }
     })
     .catch(error => {
@@ -347,63 +365,65 @@ document.getElementById('saveBtn').addEventListener("click", function() {
 
         
          
-         // facIns Insert
-         // insertBtn 에 이벤트 걸어서 해당 버튼 클릭 시 함수 실행
-         document.getElementById('insertBtn').addEventListener("click", function() {
-              // 각각의 변수에 특정 이름을 가진 요소의 값을 할당 인덱스 0에 있는 요소의 값을 가져옴
-                var facInsCode = document.getElementsByName("facInsCode")[0].value;
-                var facNotCode = document.getElementsByName("facNotCode")[0].value;
-                var facCode = document.getElementsByName("facCode")[0].value;
-                var facName = document.getElementsByName("facName")[0].value;
-                var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
-                var facInsCheck = document.getElementsByName("facInsCheck")[0].value;
-                var facInsJud = document.getElementsByName("facInsJud")[0].value;
+document.getElementById('insertBtn').addEventListener("click", function() {
+	
+    var facInsCode = document.getElementsByName("facInsCode")[0].value;
+    var facNotCode = document.getElementsByName("facNotCode")[0].value;
+    var facCode = document.getElementsByName("facCode")[0].value;
+    var facName = document.getElementsByName("facName")[0].value;
+    var facInsPerson = document.getElementsByName("facInsPerson")[0].value;
+    var facInsCheck = document.getElementsByName("facInsCheck")[0].value;
+    var facInsJud = document.getElementsByName("facInsJud")[0].value;
 
-                
-                if (!facName) {
-    	        	Swal.fire({
-    	            icon: 'error',
-    	            text: '설비명을 입력해주세요.'
-    	        });
-    	        return;
-    	    	}
-    		    
-            // data 객체에 위에서 받아온 값 넣기
-                var data = {
-                    facInsCode: facInsCode,
-                    facNotCode: facNotCode,
-                    facCode: facCode,
-                    facName: facName,
-                    facInsPerson: facInsPerson,
-                    facInsCheck: facInsCheck,
-                    facInsJud: facInsJud,
+    if (!facName || !facInsCheck) {
+        // 설비명 또는 점검사항이 빈 값인 경우
+        Swal.fire({
+            icon: 'error',
+            text: '설비명과 점검사항을 입력해주세요.'
+        });
+        return; // 등록을 중지하고 함수를 빠져나감
+    }
 
-                };
-                
-                // 서버로 데이터 전송하여 insert 수행
-                fetch("/insertFacIns", {
-                    method: "POST",
-                    body: JSON.stringify(data),  // JSON 형식으로 문자열 변환
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log(response);
-                        alert("등록되었습니다!");
-                        // 페이지 새로고침
-                        location.reload();
-                    } else {
-                        console.log(response);
-                        alert("등록에 실패했습니다.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("등록에 실패했습니다.");
-                });
+    // 데이터 객체에 위에서 가져온 값들 넣기
+    var data = {
+        facInsCode: facInsCode,
+        facNotCode: facNotCode,
+        facCode: facCode,
+        facName: facName,
+        facInsPerson: facInsPerson,
+        facInsCheck: facInsCheck,
+        facInsJud: facInsJud,
+    };
+
+    // 서버로 데이터 전송하여 insert 수행
+    fetch("/insertFacIns", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log(response);
+            Swal.fire({
+                icon: 'success',
+                text: '등록이 완료되었습니다!'
+            }).then(() => {
+                location.reload(); // 페이지 새로고침
             });
+        } else {
+        	 Swal.fire({
+	                icon: 'error',
+	                text: '등록 실패'
+	            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("등록에 실패했습니다.");
+    });
+});
 
             
 
@@ -433,6 +453,7 @@ document.getElementById('saveBtn').addEventListener("click", function() {
                 },
                 {
                     header: '점검사항',
+                    width: 150,
                     name: 'facInsCheck',
                     align: 'center'
                 },
@@ -494,7 +515,7 @@ document.getElementById('saveBtn').addEventListener("click", function() {
             // 날짜 포맷 변경
             const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
             return formattedDate;
-        }
+        } 
         
         // 설비명 클릭 시 이벤트 처리해서 위에 input 박스에 값넣기
         function handleFacNameClick(event) {
@@ -576,7 +597,7 @@ document.getElementById('saveBtn').addEventListener("click", function() {
        }
        
        
-       // 엑셀 다운로드
+    	// 엑셀 다운로드 함수 수정
        function downloadCSV() {
            const gridData = grid.getData(); // 그리드에서 데이터 가져오기
            const header = ['점검코드', '설비명', '설비코드', '점검사항', '담당자', '판정', '점검일', '차기점검일', '상태']; // 헤더 생성
@@ -584,16 +605,19 @@ document.getElementById('saveBtn').addEventListener("click", function() {
 
            // 데이터 생성
            gridData.forEach(row => {
-               const values = Object.values(row);
-               const formattedRow = values.map(value => {
-                   if (value instanceof Date) {
-                       // 날짜의 경우 ISO 형식으로 변환
-                       return value.toISOString().split('T')[0];
-                   } else {
-                       return value;
-                   }
-               });
-               csvRows.push(formattedRow.join(','));
+               // 각 행의 데이터에서 상태 열의 코드와 추가 정보를 제거한 새로운 행 생성
+               const newRow = [
+                   row.facInsCode,
+                   row.facName,
+                   row.facCode,
+                   row.facInsCheck,
+                   row.facInsPerson,
+                   row.facInsJud,
+                   row.facInsDate,
+                   row.facInsNexd,
+                   row.facNotSituation // 상태 열은 코드와 추가 정보를 그대로 사용
+               ];
+               csvRows.push(newRow.join(','));
            });
 
            // CSV 내용 생성
@@ -607,6 +631,8 @@ document.getElementById('saveBtn').addEventListener("click", function() {
            document.body.appendChild(link);
            link.click();
        }
+
+
         
     </script>
 	</section>

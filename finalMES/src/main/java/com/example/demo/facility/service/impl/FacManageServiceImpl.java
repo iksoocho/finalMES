@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.facility.FacBusinessVO;
 import com.example.demo.facility.FacCompositeVO;
 import com.example.demo.facility.FacInsDVO;
 import com.example.demo.facility.FacInsVO;
@@ -30,6 +31,11 @@ public class FacManageServiceImpl implements FacManageService {
 	public List<FacManageVO> FacList(FacManageVO facManageVO) {
 		return facManageMapper.getfacList(facManageVO);
 	}
+	
+	@Override
+	public List<FacBusinessVO> FacBusList(FacBusinessVO facBusinessVO) {
+		return facManageMapper.getfacBusList(facBusinessVO);
+	}
 
 	@Override
 	public int insertFac(FacManageVO facManageVO) {
@@ -52,12 +58,6 @@ public class FacManageServiceImpl implements FacManageService {
 	public List<FacNotopVO> FacNotopList() {
 		return facManageMapper.getfacNotList();
 	}
-
-
-
-	
-	
-	
 	
 	//설비 등록
 	@Override
@@ -96,7 +96,10 @@ public class FacManageServiceImpl implements FacManageService {
 		String facNotCode = facInsVO.getFacNotCode();
 		if ("적합".equals(facInsJud)) {
 		    facManageMapper.updateFacInsSi(facNotCode);
-		} 
+		}
+		if ("부적합".equals(facInsJud)) {
+		    facManageMapper.updateFacInsSif3(facNotCode);
+		}
 		facManageMapper.updateFacIns(facInsVO);
 	}
 	
@@ -162,5 +165,6 @@ public class FacManageServiceImpl implements FacManageService {
 		facManageMapper.updateFacRep(facRepVO);
 		
 	}
+
 	
 }

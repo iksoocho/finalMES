@@ -692,17 +692,26 @@ button {
 	    
 	 	// 유효성 검사 추가(2024-02-20)
     	if(orderData.ordManager === ''){
-    		alert("출고담당자를 선택해주세요")
+    		Swal.fire({
+	            icon: 'warning',
+	            text: '담당자를 선택해주세요.'
+	        });
     		return;
     	}
      	
     	if(orderData.businessCode === ''){
-    		alert("거래처를 선택해주세요.")
+    		Swal.fire({
+	            icon: 'warning',
+	            text: '거래처를 선택해주세요.'
+	        });
     		return;
     	}
     	
     	if(orderData.dlvyDate === ''){
-			alert("납기일자를 선택해주세요.")
+    		Swal.fire({
+	            icon: 'warning',
+	            text: '납기일자를 입력해주세요.'
+	        });
 			return;
 		}
     	
@@ -733,22 +742,34 @@ button {
 	                // 다른 필요한 필드들 추가
 	            });
 	            if(dlvyDate = ''){
-	            	alert("납기일자를 선택해주세요.")
+	            	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '납기일자를 입력해주세요.'
+	    	        });
 	            	return;
 	            }
 	            
 	            if(ordCount === '0'){
-	            	alert("수량을 입력해주세요.");
+	            	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '수량을 입력해주세요.'
+	    	        });
 	            	return;
 	            } else if(ordCount < '0'){
-	            	alert("올바른 수량을 입력해주세요.")
+	            	Swal.fire({
+	    	            icon: 'warning',
+	    	            text: '올바른 수량을 입력해주세요.'
+	    	        });
 	            	return;
 	            }
 	        }
 	    }
 	    
 	    if (orderData.orderDetails.length === 0) {
-    	    alert("상세정보를 추가해주세요.");
+	    	Swal.fire({
+	            icon: 'warning',
+	            text: '상세정보를 추가해주세요.'
+	        });
     	    return;
     	}
 	    
@@ -763,11 +784,17 @@ button {
 	    })
 	    .then(response => response.text())
 	    .then(data => {
-	        // 서버로부터 받은 응답에 대한 처리
-	        console.log('Success:', data);
-	        alert("저장되었습니다.");
-		    location.href= '/orderInsert';
-	    })
+	    	
+			console.log('Success:', data);
+			Swal.fire({
+				icon: 'success',
+				text: data
+			}).then(() => {
+				
+				// 사용자가 Swal 팝업을 닫으면 실행됩니다.
+				location.href = '/orderInsert';
+				});
+			})
 	    .catch((error) => {
 	        // 오류 처리
 	        console.error('Error:', error);
