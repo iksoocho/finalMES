@@ -18,8 +18,7 @@
     </style>
   </head>
   <body>
-    <section layout:fragment="content">
-      <div class="container w-75">
+    <section layout:fragment="content" class="m-5">
         <!-- ============================모달============================ -->
         <div
           class="modal fade"
@@ -152,19 +151,35 @@
               class="col-3 col-form-label col-form-label-lg text-center fw-bolder"
               data-bs-toggle="modal"
               data-bs-target="#facSelect"
-              >설비</label
+              >설비 / 설비명</label
             >
             <div class="col-3">
-              <input
-                type="text"
-                class="form-control form-control-lg text-center"
-                placeholder="설비선택"
-                aria-label="selectedFacCode"
-                id="selectedFacCode"
-                data-bs-toggle="modal"
-              	data-bs-target="#facSelect"
-                readonly
-              />
+	            <div class="row">
+		            <div class="col-6">
+		              <input
+		                type="text"
+		                class="form-control form-control-lg text-center"
+		                placeholder="설비"
+		                aria-label="selectedFacCode"
+		                id="selectedFacCode"
+		                data-bs-toggle="modal"
+		              	data-bs-target="#facSelect"
+		                readonly
+		              />
+		            </div>
+		            <div class="col-6">
+		              <input
+		                type="text"
+		                class="form-control form-control-lg text-center"
+		                placeholder="선택"
+		                aria-label="selectedFacName"
+		                id="selectedFacName"
+		                data-bs-toggle="modal"
+		              	data-bs-target="#facSelect"
+		                readonly
+		              />
+		            </div>
+	            </div>
             </div>
             <label
               for="OrderCount"
@@ -342,7 +357,6 @@
             </div>
           </div>
         </div>
-      </div>
 
       <script>
           	document.addEventListener('DOMContentLoaded', (event) => {
@@ -467,6 +481,7 @@
 
           		document.getElementById('selectedFacCode').value = selectFac.id;
           		document.getElementById('selectedFacCode').name = selectFac.name;
+          		document.getElementById('selectedFacName').value = selectFac.name;
           		
 
           		let facSelectModal = document.getElementById('facSelect');
