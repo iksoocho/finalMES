@@ -40,6 +40,16 @@ input[type="text"]:focus {
     float: left;
     margin-bottom: 10px;
 }
+.tui-grid-row-odd .matInputDate,
+.tui-grid-row-even .matInputDate {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
+.tui-grid-row-odd .matInputCount,
+.tui-grid-row-even .matInputCount {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 </style>
 </head>
 <body>
@@ -51,7 +61,7 @@ input[type="text"]:focus {
 
 				<input type="text" id="searchOrder" oninput="searchFunction()"
 					placeholder="검색..." >
-				<button type="button" id="selectBtn" class="btn btn-outline-success"
+				<button type="button" id="selectBtn" class="btn btn-secondary"
 					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
 			<br>
@@ -65,11 +75,11 @@ input[type="text"]:focus {
 			<div id="ckeckGrid"></div>
 
 			<h3>입고목록</h3>
-			<button type="button" class="btn btn-outline-primary custom-style"
+			<button type="button" class="btn btn-secondary custom-style"
 				id="orderInsert" style="margin: 8px 5px;">저장</button>
-			<button type="button" class="btn btn-outline-primary custom-style"
+			<button type="button" class="btn btn-secondary custom-style"
 				id="matupdate" style="margin: 8px 5px;">수정</button>
-			<button type="button" class="btn btn-outline-primary" id="excel"
+			<button type="button" class="btn btn-secondary" id="excel"
 				onclick="downloadCSV()">EXCEL</button>
 			<br> <br>
 
@@ -78,10 +88,20 @@ input[type="text"]:focus {
 		</div>
 
 		<script th:inline="javascript">
+		document.addEventListener('DOMContentLoaded', function () {
 						// 입고 그리드
                 		let matInputList = [[${matInputList}]]
                 		console.log(matInputList)
-                		 const inputGrid = new tui.Grid({
+                		
+             			let inputGrid = tui.Grid;
+                		inputGrid.applyTheme('clean', {
+			      			  row: {
+			      			    hover: {
+			      			      background: '#d4e9f2'
+			      			    }
+			      			  }
+			      			});
+                		 inputGrid = new tui.Grid({
 
                            el: document.getElementById('inputGrid'),
                            data: matInputList, // 여기서 emps 데이터를 사용
@@ -113,23 +133,33 @@ input[type="text"]:focus {
                 	          name: 'businessName'
                 	        },
                 	        {
+                			  header: '발주일',
+                			  name: 'matOrDate',
+                			  formatter: formatDate,
+        				    },
+                	        {
                 			  header: '입고일',
                 			  name: 'matInputDate',
+                			  className: 'matInputDate',
                 			  formatter: formatDate,
                 			  editor: {
           		                type: 'datePicker',
           		                options: {
-          		                    format: 'yyyy-MM-dd'
+          		                    format: 'yyyy-MM-dd',
+          		                  	language: 'ko'
           		                }
                 			  }
         				    },
                 	        {
                 			  header: '합격량',
                 			  name: 'matInsGood',
+                			  formatter: formatTotalTtlPrice
                 			},
                 	        {
                 			  header: '입고량',
                 			  name: 'matInputCount',
+                			  formatter: formatTotalTtlPrice,
+                			  className: 'matInputCount',
            	            	  editor : 'text'
                 			},
                 	        {
@@ -165,6 +195,8 @@ input[type="text"]:focus {
 
         				    const inputRows = newInpuRows;
         				    console.log('잘 들고오네요...',inputRows);
+        				    
+
 								
         				    if(inputRows.length === 0 ){
             	             	Swal.fire({
@@ -210,8 +242,15 @@ input[type="text"]:focus {
 							    });
 							    return;
 							}
+       				        
+							if (inputRows[0].matInputDate > inputRows[0].matOrdate) {
+							    Swal.fire({
+							        icon: 'error',
+							        text: '입고 일은 발주 일보다 이전 일수 없습니다.'
+							    });
+							    return;
+							}
 
-       				        // 입력값 형식 확인
         				      
 
         				    // 데이터를 객체로 생성
@@ -227,6 +266,7 @@ input[type="text"]:focus {
         			        data.matOutCount = inputRows[0].matOutCount;
         			        data.matCount = inputRows[0].matCount;
         			        data.matInsCode = inputRows[0].matInsCode;
+        			        data.matOrdate = inputRows[0].matOrdate;
         			        data.matManager = name;
 
         				    console.log('전송할 데이터:', data);
@@ -301,22 +341,18 @@ input[type="text"]:focus {
                 		        },
                 		        {
                 		          header: '발주량',
-                		          name: 'matOrCount'
+                		          name: 'matOrCount',
+                		          formatter: formatTotalTtlPrice
                 		        },
                 		        {
                 				  header: '합격량',
                 				  name: 'matInsGood',
-                				  editor: 'text'
+                				  formatter: formatTotalTtlPrice
                 				},
                 		        {
                 				  header: '불합격량',
-                				  name: 'matInsBad',
-                				  editor: 'text'
+                				  name: 'matInsBad'
                 				},
-//                 		        {
-//                     		      header: '불량내용',
-//                     		      name: 'matNote',
-//                     		    },
                 				{
                 		            header: '검수일자',
                 		            name: 'matInsDate',
@@ -361,6 +397,30 @@ input[type="text"]:focus {
                      				alert("저장 할 내용이 없습니다.")
                      				return;
                      			}
+                     			
+        				        if (Number(inputRows[0].matInputCount) > Number(inputRows[0].matInsGood)) {
+    							    Swal.fire({
+    							        icon: 'error',
+    							        text: '입고량은 합격량을 넘을 수 없습니다.'
+    							    });
+    							    return;
+    							}
+        				        
+
+        				        
+        				        
+        				        // 날짜를 객체로 변환
+        				        const matInputDate = new Date(inputRows[0].matInputDate);
+        				        const matOrDate = new Date(inputRows[0].matOrDate);
+
+        				        // 날짜를 비교하여 유효성 검사 수행
+        				        if (matInputDate < matOrDate) {
+        				            Swal.fire({
+        				                icon: 'error',
+        				                text: '입고 일은 발주 일보다 이전 일수 없습니다.'
+        				            });
+        				            return;
+        				        }
 
             				    let data = {};
 
@@ -371,6 +431,8 @@ input[type="text"]:focus {
             			        data.matInputCount = inputRows[0].matInputCount;
             			        console.log("data.matInputCount : ", data.matInputCount);
             			        data.matCount = inputRows[0].matCount;
+            			        data.matOrDate = inputRows[0].matOrDate;
+            			        console.log("data.matOrdate : ", data.matOrdate);
 
             				    console.log('전송할 데이터:', data);
                      			
@@ -455,8 +517,14 @@ input[type="text"]:focus {
                 	            link.click();
                 	        }
                 		
-                		
-                		
+                			// 총금액 포맷터 함수
+                			function formatTotalTtlPrice({ value }) {
+                			    if (value) {
+                			        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                			    }
+                			    return '';
+                			}
+		});
       </script>
 	</section>
 </body>

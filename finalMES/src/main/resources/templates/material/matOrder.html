@@ -29,9 +29,7 @@ input[type="text"]:focus {
 	border-color: #4CAF50;
 }
 
-#excel {
-	float: left;
-}
+
 
 #searchOrder {
 	float: left;
@@ -42,6 +40,26 @@ input[type="text"]:focus {
 #selectBtn {
 	float: left;
 	margin-bottom: 10px;
+}
+.tui-grid-row-odd .matOrName,
+.tui-grid-row-even .matOrName {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
+.tui-grid-row-odd .matOrCount,
+.tui-grid-row-even .matOrCount {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
+.tui-grid-row-odd .matOrDate,
+.tui-grid-row-even .matOrDate {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
+.tui-grid-row-odd .matOrDueDate,
+.tui-grid-row-even .matOrDueDate {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
 }
 </style>
 </head>
@@ -54,7 +72,7 @@ input[type="text"]:focus {
 
 				<input type="text" id="searchOrder" oninput="searchFunction()"
 					placeholder="검색...">
-				<button type="button" id="selectBtn" class="btn btn-outline-success"
+				<button type="button" id="selectBtn" class="btn btn-secondary"
 					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
 			<br> <br> <br>
@@ -84,18 +102,39 @@ input[type="text"]:focus {
 
 		<div>
 			<h2>발주목록</h2>
-			<button type="button" class="btn btn-outline-primary"
+			<button type="button" class="btn btn-secondary"
 				id="orderInsert" style="float: right; margin: 8px 5px;">저장</button>
-			<button type="button" class="btn btn-outline-primary" id="excel"
+			<button type="button" class="btn btn-secondary" style="float: left; margin: 8px 5px;"
 				onclick="downloadCSV()">EXCEL</button>
 			<div id="ordGrid"></div>
 		</div>
 
 		<script th:inline="javascript">
+		function getOutStatus2(value, row) {
+ 			console.log("value.value :",  value.value); // 값 확인용 로그
+ 			let statusText, bgColor;
+
+ 			// 주문 상태에 따라 원하는 문자열과 배경색 설정
+ 			switch (value.value) {
+ 				case "재고 부족":
+ 					statusText = '재고 부족';
+ 					bgColor = 'red'; // 등록완료에 대한 배경색 설정
+ 					break;
+ 				case "":
+ 				case undefined:
+ 				case null:
+ 					statusText = '알수없음';
+ 					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+ 					break;
+
+ 			}
+ 			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+ 		};
+		
+		
                             // 현재 자재 재고
                          	let mat = [[${oList}]];
                          	let matGrid, busiGrid, ordGrid;
-
                          	class DeleteButtonRenderer {
                          	    constructor(props) {
                          	        const el = document.createElement('button');
@@ -182,6 +221,14 @@ input[type="text"]:focus {
 
                          	document.addEventListener('DOMContentLoaded', function () {
                          	    // matGrid 초기화
+                         	    let matGrid = tui.Grid;
+                         	    matGrid.applyTheme('clean', {
+                          			  row: {
+                          			    hover: {
+                          			      background: '#d4e9f2'
+                          			    }
+                          			  }
+                          			});
                          	    matGrid = new tui.Grid({
                          	        el: document.getElementById('matGrid'),
                          	        data: mat,
@@ -190,14 +237,34 @@ input[type="text"]:focus {
                          	            { header: '자재명', name: 'matName' },
                          	            { header: '단위', name: 'matUnit' },
                          	            { header: '규격', name: 'matStandard' },
-                         	            { header: '안전재고', name: 'matSafeStock' }
+                         	            { header: '현재재고', name: 'matCount2',
+                         	            	formatter: formatTotalTtlPrice
+                         	            },
+                         	            { header: '안전재고', name: 'matSafeStock',
+                         	            	formatter: formatTotalTtlPrice
+                         	            },
+                         	           {
+                         	                header: '상태', 
+                         	               
+                         	                formatter: function({ row }) {
+                         	                    // 여기서 matStandard와 matSafeStock 비교
+                         	                    return row.matCount2 >= row.matSafeStock ? '' : '재고 부족';
+                         	                }
+                         	               
+                         	            },
+                         	           
                          	        ],
                          	        rowHeaders: ['rowNum'],
                          	        pageOptions: {
                          	            useClient: true,
                          	            perPage: 5
                          	        }
+                         	        
                          	    });
+                         	    
+                         	    
+                        
+	                       
 
                          	    // matGrid 클릭 이벤트 핸들러
                          	    let matmat = {};
@@ -278,7 +345,10 @@ input[type="text"]:focus {
 
 	                         	   		    // 새로운 행이 이미 존재하는 경우, 추가하지 않고 경고
 	                         	   		    if (existingNewRows.length > 0) {
-	                         	   		        alert("추가 중인 정보가 있습니다.")
+	                         	   		        Swal.fire({
+			        					            icon: 'error',
+			        					            text: '추가 중인 정보가 있습니다.'
+			        					        });	
 	                         	   		        return; // 함수 종료
 	                         	   		    }
 	                         	   		    
@@ -332,23 +402,28 @@ input[type="text"]:focus {
                          	        columns: [
                          	            { name: 'matOrCode', header: '발주코드', sortable: true, sortingType: 'desc' },
                          	            { name: 'matOrName', header: '발주명' ,
+                         	            	className: 'matOrName',
                          	            	editor : 'text'},
                          	            { name: 'matCode', header: '자재코드' },
                          	            { name: 'businessName', header: '거래처명' },
                          	            { name: 'matName', header: '자재명' },
-                         	            { name: 'matOrCount', header: '발주량' , editor: 'text'},
-                         	            { name: 'matOrDate', header: '발주일', formatter: formatDate,
+                         	            { name: 'matOrCount', header: '발주량' ,
+                         	            	formatter: formatTotalTtlPrice,
+                         	            	className:'matOrCount' , editor: 'text'},
+                         	            { name: 'matOrDate', header: '발주일',  className:'matOrDate' ,formatter: formatDate,
                          	            	editor: {
                 								type: 'datePicker',
                 								options: {
-                									format: 'yyyy-MM-dd'
+                									format: 'yyyy-MM-dd',
+                									language: 'ko'
                 								}
                          	            }},
-                         	            { name: 'matOrDueDate', header: '납기요청일', formatter: formatDate,
+                         	            { name: 'matOrDueDate', header: '납기요청일', className:'matOrDueDate', formatter: formatDate,
                          	           	editor: {
             								type: 'datePicker',
             								options: {
-            									format: 'yyyy-MM-dd'
+            									format: 'yyyy-MM-dd',
+            									language: 'ko'
             								}
             							}},
                          	            { name: 'matOrManager', header: '담당자' },
@@ -374,7 +449,7 @@ input[type="text"]:focus {
                          	        }
                          	    });
                          	});
-
+                         	
                          	// 날짜 형식 지정 함수
                          	function formatDate({ value }) {
                          	    if (value) {
@@ -641,7 +716,13 @@ input[type="text"]:focus {
             link.click();
         }
     	
-        
+		// 총금액 포맷터 함수
+		function formatTotalTtlPrice({ value }) {
+		    if (value) {
+		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		    }
+		    return '';
+		}
 
         
       </script>

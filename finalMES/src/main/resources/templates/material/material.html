@@ -45,7 +45,7 @@ input[type="text"]:focus {
 
 				<input type="text" id="searchOrder" oninput="searchFunction()"
 					placeholder="검색...">
-				<button type="button" id="selectBtn" class="btn btn-outline-success"
+				<button type="button" id="selectBtn" class="btn btn-secondary"
 					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
 			<br> <br> <br>
@@ -54,21 +54,33 @@ input[type="text"]:focus {
 				<div class="col-7">
 					<div id="matGrid" class="container">
 						<h3>자재 전체 재고</h3>
+						<button type="button" class="btn btn-secondary"
+							style="float: left; margin: 6px 5px;" onclick="downloadCSV()">EXCEL</button>
 					</div>
 				</div>
 				<div class="col-5">
 					<div id="lotGrid" class="container">
+					<br>
+					<br>
 						<h3>LOT 별 자재 재고</h3>
+					
 					</div>
 				</div>
 			</div>
 		</div>
-		<button type="button" class="btn btn-outline-primary" id="excel"
-			onclick="downloadCSV()">EXCEL</button>
+
 		<script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
 	        let matList = [[${matList}]];
-            let matGrid = new tui.Grid({
+	        let matGrid = tui.Grid;
+     	    matGrid.applyTheme('clean', {
+      			  row: {
+      			    hover: {
+      			      background: '#d4e9f2'
+      			    }
+      			  }
+      			});
+	         matGrid = new tui.Grid({
                 el: document.getElementById('matGrid'),
                 data: matList,
                 scrollX: false,
@@ -94,15 +106,13 @@ input[type="text"]:focus {
                     },
                     {
                         header: '총재고량',
-                        name: 'matCount2'
+                        name: 'matCount2',
+                        formatter: formatTotalTtlPrice
                     },
-//                     {
-//                         header: '총재고량',
-//                         name: 'matCount'
-//                     },
                     {
                         header: '안전재고',
-                        name: 'matSafeStock'
+                        name: 'matSafeStock',
+                        formatter: formatTotalTtlPrice
                     },
                 ],
                 rowHeaders: ['rowNum'],
@@ -147,7 +157,7 @@ input[type="text"]:focus {
  	    		}});
         	});
 
-            let lotGrid = new tui.Grid({
+              lotGrid = new tui.Grid({
                 el: document.getElementById('lotGrid'),
                 scrollX: false,
                 scrollY: false,
@@ -166,7 +176,8 @@ input[type="text"]:focus {
                     },
                     {
                         header: '재고',
-                        name: 'matCount'
+                        name: 'matCount',
+                        formatter: formatTotalTtlPrice
                     },
                 ],
                 rowHeaders: ['rowNum'],
@@ -214,7 +225,7 @@ input[type="text"]:focus {
 		        }
 		    ];
 		
-		    const fileName = '발주관리.csv'; // 엑셀파일이름
+		    const fileName = '자재관리.csv'; // 엑셀파일이름
 		    const csvRows = [];
 		
 		    grids.forEach((grid, index) => {
@@ -225,25 +236,17 @@ input[type="text"]:focus {
 		        }
 		        csvRows.push(grid.header.join(','));
 		
-    			grid.data.forEach(row => {
+		        grid.data.forEach(row => {
     				const values = grid.fields.map(field => {
     					const value = row[field] || '';
     					console.log("field : ", field)
-    					if (field == 'matInsDate'){
-    						return value.split('T')[0];
-    					} else {
+    					if (csvRows){
     						return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
     					}
     				});
     				csvRows.push(values.join(','));
     			});
-		
-		        grid.data.forEach(item => {
-		            const row = grid.fields.map(field => item[field]);
-		            csvRows.push(row.join(','));
-		        });
-		    });
-		
+    		});
 		    const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
 		    const encodedUri = encodeURI(csvContent);
 		
@@ -253,6 +256,13 @@ input[type="text"]:focus {
 		    document.body.appendChild(link);
 		    link.click();
 		}
+  			// 총금액 포맷터 함수
+			function formatTotalTtlPrice({ value }) {
+			    if (value) {
+			        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			    }
+			    return '';
+			}
             
       </script>
 	</section>

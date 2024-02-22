@@ -4,12 +4,12 @@
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<title>출고 관리^^</title>
+<title>출고 관리</title>
 </head>
 <body>
 	<section layout:fragment="content" class="m-5">
 
-		<div id="grid" class="container"><h3>출고관리</h3></div>
+		<div id="grid"><h3>출고관리</h3></div>
 
 		<script th:inline="javascript">
 		let matOutList = [[${matOutList}]]
@@ -31,7 +31,7 @@
 	        },
 	        {
 	          header: '담당자',
-	          name: 'matManager'
+	          name: 'matOrManager'
 	        },
 	        {
 		      header: '제품명',
@@ -47,24 +47,49 @@
 			},
 	        {
 			  header: '출고량',
-			  name: 'matOutCount'
+			  name: 'matOutCount',
+			  editor: 'text'
 			},
 			{
 			  header: '출고일',
 			  name: 'matOutDate',
-  		      formatter : function dateFormatter(params) {
-  		    	  const date = new Date(params.value);
-  		    	  const isoDate = date.toISOString().split('T')[0];
-  		    	  return isoDate;
-  		    	}
+			  formatter: formatDate,
+	            editor: {
+	                type: 'datePicker',
+	                options: {
+	                    format: 'yyyy-MM-dd'
+	                },
+	                disable: (value) => {
+	                    // value가 비어있으면(disabled라면) true 반환하여 비활성화
+	                    return !value;
+	                }
+	            }
 			},
 	      ],
-	      rowHeaders: ['rowNum'],
+	      rowHeaders: ['rowNum','checkbox'],
             pageOptions: {
                 useClient: true,
                 perPage: 5
             }
 	    });
+		
+		
+		
+		
+		
+		
+		
+		// 날짜 형식 지정 함수
+     	function formatDate({ value }) {
+     	    if (value) {
+     	        let date = new Date(value);
+     	        let year = date.getFullYear();
+     	        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+     	        let day = date.getDate().toString().padStart(2, '0');
+     	        return `${year}-${month}-${day}`;
+     	    }
+     	    return '';
+     	}
 		</script>
 	</section>
 

@@ -1,6 +1,7 @@
 package com.example.demo.produce.web;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -142,6 +143,24 @@ public class WorkController {
 			msg = "CONTROL 주문서 상태변경 성공";
 		}else {
 			msg = "CONTROL 주문서 상태변경 실패";
+		}
+		System.out.println(msg);
+	}
+	
+	@PutMapping("/deInsStateUpdate")
+	@ResponseBody
+	public void updateDeInsState(@RequestBody Map<String, String> vo) {
+		System.out.println("vo : " + vo);
+		String state = vo.get("deInsState");
+		String dInsCode = vo.get("deInsCode");
+		System.out.println("state : " + state + ", dInsCode : " + dInsCode);
+		
+		int result = workService.updateDeInsState(state, dInsCode);
+		String msg;
+		if(result == 1) {
+			msg = "CONTROL 지시상세 상태변경 성공";
+		}else {
+			msg = "CONTROL 지시상세 상태변경 실패";
 		}
 		System.out.println(msg);
 	}

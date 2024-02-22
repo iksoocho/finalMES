@@ -24,4 +24,5 @@ public interface WorkMapper {
 	public int updateOrdListState(@Param("dinsCode") String dinsCode);
 	public int updateMatLot(@Param("inputValue") int inputValue, @Param("inputMatCode") String inputMatCode);
 	public List<MatUseVO> checkMatUse(@Param("dinsCode") String dinsCode, @Param("procCode") String procCode);
+	public int updateDeInsState(@Param("dinsState") String dinsState, @Param("dinsCode") String dinsCode);
 }

@@ -1074,13 +1074,7 @@
 			        let prodCode = rowData.prodCode;
 			        let dinsState = rowData.dinsState;
 			        
-			        if(dinsState == '생산중'){
-			        	Swal.fire({
-			                icon: 'error',
-			                text: '생산중인 지시입니다.'
-			            })
-			            return;
-			        }
+			        
 			        
 			        if(dinsState == '생산완료'){
 			        	Swal.fire({

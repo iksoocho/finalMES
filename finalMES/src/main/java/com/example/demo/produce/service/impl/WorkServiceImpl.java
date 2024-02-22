@@ -113,4 +113,16 @@ public class WorkServiceImpl implements WorkService {
 		return workMapper.checkMatUse(dinsCode, procCode);
 	}
 
+	@Override
+	public int updateDeInsState(String dinsState, String dinsCode) {
+		int result = workMapper.updateDeInsState(dinsState, dinsCode);
+		if(result == 1) {
+			System.out.println("IMPL 지시상세 상태 업데이트 성공");
+			return 1;
+		}else {
+			System.out.println("IMPL 지시상세 상태 업데이트 실패");
+			return -1;
+		}
+	}
+
 }

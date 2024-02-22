@@ -17,4 +17,5 @@ public interface WorkService {
 	public int updateOrdListState(String dinsCode);
 	public int updateMatLot(int inputValue, String inputMatCode);
 	public List<MatUseVO> checkMatUse(String dinsCode, String procCode);
+	public int updateDeInsState(String dinsState, String dinsCode);
 }

@@ -60,6 +60,7 @@
 
 <body>
 	<section layout:fragment="content" class="m-5">
+
 		<div class="container">
 			<!-- ============================모달창============================ -->
 			<div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -156,6 +157,8 @@
 					<button class="btn btn-secondary" style="float: right; margin: 8px 5px;" id="planDUpdate">수정</button>
 					<div id="planDGrid"></div>
 					<button type="button" class="btn btn-outline-primary" style="float: right; margin: 8px 5px;" onclick="downloadCSV()">Excel</button>
+					<div tabindex="-1" id="hiddenFocusElement" style="position: absolute; left: -9999px;"></div>
+					<!-- <div tabindex="-1" id="hiddenFocusElement" ></div> -->
 					<!-- <table class="table table-hover" id="planDetailTable">
 						<thead>
 							<tr>
@@ -450,6 +453,7 @@
 							editor: {
 								type: 'datePicker',
 								options: {
+									language: 'ko',
 									format: 'yyyy-MM-dd'
 								}
 							}
@@ -470,6 +474,7 @@
 							editor: {
 								type: 'datePicker',
 								options: {
+									language: 'ko',
 									format: 'yyyy-MM-dd'
 								}
 							}
@@ -508,6 +513,27 @@
 				});
 
 				console.log("planGrid", planGrid)
+				
+				
+
+				// 문서 전체에 클릭 이벤트 리스너 추가
+				/* document.addEventListener('click', function(event) {
+				    // 클릭된 요소가 PlanGrid 내부에 있는지 확인
+				    var isInGrid = planGrid.el.contains(event.target);
+				    var isInDGrid = planDGrid.el.contains(event.target);
+				    // 클릭된 요소가 PlanGrid 외부라면 에디터 종료
+				    if (!isInGrid) {
+				    	
+				        planGrid.finishEditing();
+				    	
+				    }
+				    
+					if (!isInDGrid) {
+				    	
+				        planDGrid.finishEditing();
+				    	
+				    }
+				}); */
 
 			});
 
@@ -712,6 +738,13 @@
 
 			//==========================insert===========================================================
 			document.querySelector('#planInsert').addEventListener('click', function () {
+				planGrid.finishEditing();
+				planDGrid.finishEditing();
+				
+				var hiddenElement = document.getElementById('hiddenFocusElement');
+			    hiddenElement.focus();
+			    hiddenElement.blur();
+			    setTimeout(function() {
 				const newPlan = document.querySelectorAll('.plan');
 				if (newPlan.length === 0) {
 					 Swal.fire({
@@ -727,6 +760,10 @@
 		            })
 					return;
 				}
+				
+				var hiddenElement = document.getElementById('hiddenFocusElement');
+				hiddenElement.focus();
+				hiddenElement.blur();
 
 				let data = {};
 				let planobj = {};
@@ -810,7 +847,7 @@
 					
 					console.log("st1, st2, end1, end2 : ", startDate, startDate2, endDate1, endDate2);
 					
-					ordcount = parseInt(target.find('td:eq(5)').text())*1.1;
+					ordcount = Math.round(parseInt(target.find('td:eq(5)').text()) * 1.1);
 					
 					obj.dplanCount = target.find('td:eq(6)').text();
 					if(ordcount > parseInt(target.find('td:eq(6)').text())){
@@ -867,7 +904,9 @@
 				data.planDVOList = planDetailData;
 				data.planOrdVO = ordState;
 
-
+				
+				
+			    
 				console.log(data);
 				// AJAX 요청으로 서버에 데이터 전송
 				fetch('/planInsert', {
@@ -1034,7 +1073,7 @@
 			            })
 					return;
 				}
-				
+			}, 100);
 				data.planDVOList = planDetailData;
 				console.log(data);
 				// AJAX 요청으로 서버에 데이터 전송
@@ -1114,6 +1153,9 @@
 			    link.click();
 			}
 
+			
+
+			
 		</script>
 	</section>
 

@@ -28,6 +28,8 @@ public class MatInputVO {
 	private int matInsGoodCount;
 	private String matName;
 	private int matInsGood; //검수를 끝내고 들어온 합격량을 입고시킨다는 느낌
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date matOrDate;
 	
 	
 }
