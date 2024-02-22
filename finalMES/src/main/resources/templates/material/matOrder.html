@@ -51,11 +51,7 @@ input[type="text"]:focus {
 	background-color: #FDC0CE;
 	/* 예시로 빨간색을 지정했습니다. */
 }
-.tui-grid-row-odd .matOrDate,
-.tui-grid-row-even .matOrDate {
-	background-color: #FDC0CE;
-	/* 예시로 빨간색을 지정했습니다. */
-}
+
 .tui-grid-row-odd .matOrDueDate,
 .tui-grid-row-even .matOrDueDate {
 	background-color: #FDC0CE;
@@ -466,6 +462,10 @@ input[type="text"]:focus {
 
                     // =============== insert ===============
                     document.querySelector('#orderInsert').addEventListener('click', function() {
+                    ordGrid.finishEditing();
+                    
+                    
+                    setTimeout(function() {
                     let name = [[${session.userName}]]
                     const newData = ordGrid.getModifiedRows().createdRows;
                     console.log("data", newData);
@@ -581,6 +581,7 @@ input[type="text"]:focus {
 					.catch(error => {
 					    console.error('Error:', error);
 					});
+                    }, 100);
                     });
 
         		//plan detail update

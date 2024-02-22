@@ -88,6 +88,7 @@ input[type="text"]:focus {
 		</div>
 
 		<script th:inline="javascript">
+		let newInpuRows = []
 		document.addEventListener('DOMContentLoaded', function () {
 						// 입고 그리드
                 		let matInputList = [[${matInputList}]]
@@ -177,20 +178,23 @@ input[type="text"]:focus {
                                perPage: 5
                            }
                 	    });
+                		 inputGrid.on('check', (ev) => {
+     	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
+     	        		    newInpuRows = inputGrid.getCheckedRows();
+     	        		    console.log(newInpuRows);
+     	        		});
+		});
 						
 						
 						
-            			let newInpuRows = []
+            			
 
-            			inputGrid.on('check', (ev) => {
-    	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
-    	        		    newInpuRows = inputGrid.getCheckedRows();
-    	        		    console.log(newInpuRows);
-    	        		});
+            			
                 		
             			
         				// ================ matIns insert ==================
         				document.querySelector('#orderInsert').addEventListener('click', function() {
+        					
         				    let name = [[${session.userName}]];
 
         				    const inputRows = newInpuRows;
@@ -243,13 +247,17 @@ input[type="text"]:focus {
 							    return;
 							}
        				        
-							if (inputRows[0].matInputDate > inputRows[0].matOrdate) {
-							    Swal.fire({
-							        icon: 'error',
-							        text: '입고 일은 발주 일보다 이전 일수 없습니다.'
-							    });
-							    return;
-							}
+    				        const matInputDate = new Date(inputRows[0].matInputDate);
+    				        const matOrDate = new Date(inputRows[0].matOrDate);
+
+    				        // 날짜를 비교하여 유효성 검사 수행
+    				        if (matInputDate < matOrDate) {
+    				            Swal.fire({
+    				                icon: 'error',
+    				                text: '입고 일은 발주 일보다 이전 일수 없습니다.'
+    				            });
+    				            return;
+    				        }
 
         				      
 
@@ -298,10 +306,6 @@ input[type="text"]:focus {
         				        console.error('Error:', error);
         				    });
         				});
-                		
-                		
-                		
-                		
                 		
                 		
                 		
@@ -389,12 +393,18 @@ input[type="text"]:focus {
                      	}
                 		
                 		
+                		
+        		
+                		
                 			// mat update
                 			document.querySelector('#matupdate').addEventListener('click', function() {
         				    	
         				    	const inputRows = newInpuRows;
                      			if (inputRows === null) {
-                     				alert("저장 할 내용이 없습니다.")
+                     				Swal.fire({
+    							        icon: 'error',
+    							        text: '저장 할 내용이 없습니다.'
+    							    });
                      				return;
                      			}
                      			
@@ -524,7 +534,8 @@ input[type="text"]:focus {
                 			    }
                 			    return '';
                 			}
-		});
+                			  
+	
       </script>
 	</section>
 </body>

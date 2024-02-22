@@ -27,6 +27,15 @@
 		<div id="grid"></div>
 
 		<script th:inline="javascript">
+		let Grid = tui.Grid;
+		Grid.applyTheme('clean', {
+			  row: {
+			    hover: {
+			      background: '#d4e9f2'
+			    }
+			  }
+			});
+		
 		// 검색 기능 추가
     	function searchFunction() {
     	    // 입력된 검색어 가져오기
@@ -275,6 +284,10 @@
 			
 
 			function saveNewRows() {
+				grid.finishEditing();
+				
+				
+			    setTimeout(function() {
 				// 새로 추가된 행만 필터링하여 가져옵니다.
 				const newData = grid.getData().filter(row => row.isNew);
 
@@ -366,6 +379,7 @@
 					.catch(error => {
 						console.error('Error:', error);
 					});
+			    }, 100);
 			}
 
 			// "저장" 버튼에 이벤트 리스너를 등록합니다.

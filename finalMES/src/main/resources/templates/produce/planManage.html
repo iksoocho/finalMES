@@ -205,6 +205,15 @@
 			let plan = [[${list}]];
 			let planGrid, planDGrid, matUseGrid;
 			let pState;
+			
+			let Grid = tui.Grid;
+			Grid.applyTheme('clean', {
+    			  row: {
+    			    hover: {
+    			      background: '#d4e9f2'
+    			    }
+    			  }
+    			});
 
 			function getOutStatus(value, row) {
 				console.log(value.value); // 값 확인용 로그
