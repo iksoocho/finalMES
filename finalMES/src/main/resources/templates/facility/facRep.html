@@ -10,7 +10,6 @@
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <title>설비수리관리</title>
 <style>
 #layoutSidenav_content {
@@ -41,9 +40,6 @@ button {
 	margin-right: 5px;
 }
 
-#myModal3 {
-	text-align: center;
-}
 body {
     font-family: Arial, sans-serif; 
     background-color: #f8f9fa; 
@@ -52,9 +48,9 @@ body {
 .container {
     margin: auto; 
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #ffffff; 
     border-radius: 10px; 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -62,120 +58,166 @@ h1 {
 }
 
 .btn {
-    margin-right: 5px;
+    margin-right: 5px; /* 버튼 간격 설정 */
 }
 
 input[type="text"], input[type="date"] {
     width: 100%; 
-    padding: 8px; 
+    padding: 8px;
     border-radius: 5px; 
     border: 1px solid #ced4da; 
 }
 
-
 #searchInput {
-    margin-top: 10px; /* 검색 입력란과 버튼 사이의 간격 설정 */
-    width: 200px; /* 너비를 작게 조정 */
-    padding: 8px; /* 내부 여백 추가 */
-    border-radius: 5px; /* 입력란에 라운드 모서리 설정 */
-    border: 1px solid #ced4da; /* 입력란 테두리 설정 */
+    margin-top: 10px; 
+    width: 200px; 
+    padding: 8px; 
+    border-radius: 5px;
+    border: 1px solid #ced4da; 
 }
 
-
 .modal-content {
-    border-radius: 10px; /* 모달에 라운드 모서리 설정 */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .modal-header {
-    background-color: #007bff; /* 모달 헤더 배경색 설정 */
-    color: white; /* 모달 헤더 글자색 설정 */
-    border-radius: 10px 10px 0 0; /* 모달 헤더에 라운드 모서리 설정 */
+    background-color: #007bff; 
+    color: white; 
+    border-radius: 10px 10px 0 0;
 }
 
 .modal-footer {
-    background-color: #f8f9fa; /* 모달 푸터 배경색 설정 */
-    border-top: none; /* 모달 푸터에 테두리 없애기 */
-    border-radius: 0 0 10px 10px; /* 모달 푸터에 라운드 모서리 설정 */
+    background-color: #f8f9fa; 
+    border-top: none; 
+    border-radius: 0 0 10px 10px; 
 }
-textarea {
-    width: 100%; /* 전체 너비로 설정 */
-    padding: 8px; /* 내부 여백 추가 */
-    border-radius: 5px; /* 라운드 모서리 설정 */
-    border: 1px solid #ced4da; /* 테두리 설정 */
-    resize: none; /* 크기 조정 비활성화 */
-    font-family: Arial, sans-serif; /* 글꼴 설정 */
-    font-size: 14px; /* 글꼴 크기 설정 */
-    line-height: 1.5; /* 줄 간격 설정 */
+.modal-title {
+    font-size: 24px; 
+    font-weight: bold; 
+    color: black; 
+}
+
+select {
+    width: 100%;
+    padding: 8px; 
+    border-radius: 5px; 
+    border: 1px solid #ced4da; 
+    background-color: #fff; 
+    font-size: 16px; 
+    color: #495057; 
+}
+
+select:focus {
+    outline: none; 
+    border-color: #80bdff; 
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); 
+}
+
+select::-ms-expand {
+    display: none; 
+}
+
+.select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; 
 }
 
 
+option:checked {
+    background-color: #007bff; 
+    color: #fff; 
+}
+.modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+
+.modal-body th,
+.modal-body td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.modal-body th {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:hover {
+    background-color: #ddd;
+}
+
+
+.modal-dialog {
+    max-width: 45%; /* 모달의 최대 너비를 조정합니다. */
+}
 
 </style>
 </head>
 <body>
 
-	<section layout:fragment="content">
-		<div class="container">
-		<h1>설비수리관리</h1>
-			<div id="layoutSidenav_content" class="container text-center">
+<section layout:fragment="content">
+	<div class="container">
+    	<h1>설비수리관리</h1>
+    		<div id="layoutSidenav_content" class="container text-center">
+        		<div class="col">
+            		<br> <br>
+            		<div class="text-left" style="margin-bottom: 20px;">
+	                    <button type="button" id="selectBtn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
+	                    <button type="button" class="btn btn-outline-success" onclick="downloadCSV()">Excel</button>
+                    </div>
+                    
+            	<table class="table">
+	                <thead>
+	                    <tr>
+	                        <th>수리코드</th>
+	                        <th colspan="2"><input type="text" id="facRepCode" name="facRepCode" required readonly></th>
+	                        <th>설비코드</th>
+	                        <th colspan="2"><input type="text" id="facCode" name="facCode" required readonly></th>
+	                    </tr>
+	                    <tr>
+	                        <th>수리사항</th>
+	                        <th colspan="2"><input type="text" id="facRepRepairs" name="facRepRepairs"></th>
+	                        <th>설비명</th>
+	                        <th colspan="2"><input type="text" id="facName" name="facName" th:data-facCode="${facCode}" required readonly></th>
+	                    </tr>
+	                    <tr>
+	                        <th>등록일자</th>
+	                        <th colspan="2"><input type="date" id="facRepDate" name="facRepDate" required></th>
+	                        <th>담당자</th>
+	                        <th colspan="2"><input type="text" id="facRepPerson" name="facRepPerson" th:value="${username}" required></th>
+	                    </tr>
+	                    <tr>
+	                        <th>수리내용</th>
+	                        <td colspan="2"><textarea rows="3" id="facRepContent" name="facRepContent" style="resize: none; width: 100%;"></textarea></td>
+	                    </tr>
+	                </thead>
+            	</table>
+            	
+		            <input type="hidden" id="facNotCode" name="facNotCode" value="">
+		            <input type="hidden" id="facNotSituation" name="facNotSituation" required>
+			            <div class="text-center">
+			                <button type="button" id="saveBtn" class="btn btn-outline-primary">수정</button>
+			                <button type="button" id="insertBtn" class="btn btn-outline-primary">등록</button>
+			            </div>
+			            <br>
+			            <div class="text-left" style="margin-bottom: 3px;">
+    						<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
+						</div>
+        		</div>
+        		<div id="grid" class="container"></div>
+    		</div>
+	</div>
 
-				<div class="col">
-					<br> <br>
-					<table class="table">
-						<thead>
-							<tr>
-								<th>수리코드</th>
-								<th colspan="2"><input type="text" id="facRepCode"
-									name="facRepCode" required readonly></th>
-								<th>설비코드</th>
-								<th colspan="2"><input type="text" id="facCode"
-									name="facCode" required readonly></th>
-							</tr>
-							<tr>
-								<th>수리사항</th>
-								<th colspan="2"><input type="text" id="facRepRepairs"
-									name="facRepRepairs"></th>
-								<th>설비명</th>
-								<th colspan="2"><input type="text" id="facName"
-									name="facName" th:data-facCode="${facCode}" required readonly>
-							</tr>
-							<tr>
-								<th>등록일자</th>
-								<th colspan="2"><input type="date" id="facRepDate"
-									name="facRepDate" required></th>
-								<th>담당자</th>
-								<th colspan="2"><input type="text" id="facRepPerson"
-									name="facRepPerson" th:value="${username}" required></th>
-							</tr>
-							<tr>
-								<th>수리내용</th>
-								<td colspan="2"><textarea rows="3" id="facRepContent"
-									name="facRepContent" style="resize: none; width: 100%;"></textarea>
-								</td>
-							</tr>
-						</thead>
-					</table>
-					<input type="hidden" id="facNotCode" name="facNotCode" value="">
-					<input type="hidden" id="facNotSituation" name="facNotSituation"
-						required>
-					<div class="text-center">
-						<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-						<button type="button" id="insertBtn"
-							class="btn btn-outline-success">등록</button>
-						<button type="button" id="selectBtn"
-							class="btn btn-outline-success" data-bs-toggle="modal"
-							data-bs-target="#staticBackdropOne">조회</button>
-						<button type="button" class="btn btn-outline-primary"
-						onclick="downloadCSV()">Excel</button>
-						<input type="text" id="searchInput" oninput="searchFunction()"
-							placeholder="검색...">
-					</div>
-					<br> <br> <br>
-					<div id="grid" class="container"></div>
-				</div>
-			</div>
-		</div>
 
 		<div class="modal" id="staticBackdropOne"
 			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -185,7 +227,7 @@ textarea {
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #0d6efd;">
 						<h1 class="modal-title fs-5" id="staticBackdropLabel"
-							style="font-weight: bold"></h1>
+							style="font-weight: bold">설비목록</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
@@ -574,7 +616,7 @@ textarea {
                 handleFacNameClick(event);
             }
         });
-		
+        
         
         
         function displaySelectedFacNotIns(element) {

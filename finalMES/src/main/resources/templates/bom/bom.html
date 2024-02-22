@@ -11,6 +11,10 @@
    crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <style>
+.container {
+    margin-bottom: 20px; /* BOM관리 아래에 여백 추가 */
+}
+
 .tui-grid-row-odd .plan {
    background-color: #e0f7fa;
    /* 예시로 빨간색을 지정했습니다. */
@@ -97,10 +101,11 @@
    <section layout:fragment="content">
       <div class="container">
          <!-- ============================메인============================ -->
-         <h2>BOM관리</h2>
+         <h2 style="margin-top: 40px;">BOM관리</h2>
+         <br>
          <div>
-            <!-- <button class="btn btn-secondary"
-               style="float: right; margin: 8px 5px;" id="planInsert">저장</button> -->
+               <button class="btn btn-outline-primary"
+                  style="float: right; margin: 8px 5px;" id="addRowBtn">추가</button>
             <div>
                <div id="planGrid"></div>
 
@@ -109,11 +114,9 @@
 
 
             <div class="mt-4">
-               <button class="btn btn-secondary"
+               <button class="btn btn-outline-primary"
                   style="float: right; margin: 8px 5px;" id="bomInsert">저장</button>
-               <button class="btn btn-secondary"
-                  style="float: right; margin: 8px 5px;" id="addRowBtn">추가</button>
-               <button class="btn btn-secondary"
+               <button class="btn btn-outline-primary"
                   style="float: right; margin: 8px 5px;" id="bomUpdate">수정완료</button>
                <div id="planDGrid"></div>
 
@@ -284,9 +287,12 @@
                const rowData = planGrid.getRow(focusedCell.rowKey);
 
                // rowData가 null인 경우 알림 표시 후 함수 종료
-               if (!rowData) {
-                  alert("제품을 선택하세요.");
-                  return;
+              if (!rowData) {
+                Swal.fire({
+                icon: 'warning',
+                text: '제품을 선택하세요.'
+               });
+               return;
                }
 
                // 선택한 행의 제품 코드와 제품명 가져오기

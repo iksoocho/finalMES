@@ -45,7 +45,7 @@ input[type="text"]:focus {
 
 				<input type="text" id="searchOrder" oninput="searchFunction()"
 					placeholder="검색...">
-				<button type="button" id="selectBtn" class="btn btn-outline-success"
+				<button type="button" id="selectBtn" class="btn btn-secondary"
 					data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회</button>
 			</div>
 			<br> <br> <br>
@@ -54,21 +54,32 @@ input[type="text"]:focus {
 				<div class="col-7">
 					<div id="matGrid" class="container">
 						<h3>자재 전체 재고</h3>
+						<button type="button" class="btn btn-secondary"
+							style="float: left; margin: 6px 5px;" onclick="downloadCSV()">EXCEL</button>
 					</div>
 				</div>
 				<div class="col-5">
 					<div id="lotGrid" class="container">
+					<br>
+					<br>
 						<h3>LOT 별 자재 재고</h3>
+					
 					</div>
 				</div>
 			</div>
 		</div>
-		<button type="button" class="btn btn-outline-primary" style="float: left; margin: 8px 5px;"
-			onclick="downloadCSV()">EXCEL</button>
+
 		<script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
 	        let matList = [[${matList}]];
-	       
+	        let matGrid = tui.Grid;
+     	    matGrid.applyTheme('clean', {
+      			  row: {
+      			    hover: {
+      			      background: '#d4e9f2'
+      			    }
+      			  }
+      			});
 	         matGrid = new tui.Grid({
                 el: document.getElementById('matGrid'),
                 data: matList,
@@ -95,11 +106,13 @@ input[type="text"]:focus {
                     },
                     {
                         header: '총재고량',
-                        name: 'matCount2'
+                        name: 'matCount2',
+                        formatter: formatTotalTtlPrice
                     },
                     {
                         header: '안전재고',
-                        name: 'matSafeStock'
+                        name: 'matSafeStock',
+                        formatter: formatTotalTtlPrice
                     },
                 ],
                 rowHeaders: ['rowNum'],
@@ -163,7 +176,8 @@ input[type="text"]:focus {
                     },
                     {
                         header: '재고',
-                        name: 'matCount'
+                        name: 'matCount',
+                        formatter: formatTotalTtlPrice
                     },
                 ],
                 rowHeaders: ['rowNum'],
@@ -242,6 +256,13 @@ input[type="text"]:focus {
 		    document.body.appendChild(link);
 		    link.click();
 		}
+  			// 총금액 포맷터 함수
+			function formatTotalTtlPrice({ value }) {
+			    if (value) {
+			        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			    }
+			    return '';
+			}
             
       </script>
 	</section>
