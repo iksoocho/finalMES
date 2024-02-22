@@ -113,6 +113,11 @@ input[type="text"]:focus {
                 	          name: 'businessName'
                 	        },
                 	        {
+                			  header: '발주일',
+                			  name: 'matOrDate',
+                			  formatter: formatDate,
+        				    },
+                	        {
                 			  header: '입고일',
                 			  name: 'matInputDate',
                 			  formatter: formatDate,
@@ -165,6 +170,14 @@ input[type="text"]:focus {
 
         				    const inputRows = newInpuRows;
         				    console.log('잘 들고오네요...',inputRows);
+        				    
+        				    if (inputRows[0].matLotCode !== '') {
+        				        Swal.fire({
+        				            icon: 'error',
+        				            text: 'mat_lot_code가 이미 부여되었습니다. 수정은 가능하지만 저장은 불가능합니다.'
+        				        });
+        				        return;
+        				    }
 								
         				    if(inputRows.length === 0 ){
             	             	Swal.fire({
@@ -210,8 +223,15 @@ input[type="text"]:focus {
 							    });
 							    return;
 							}
+       				        
+							if (inputRows[0].matInputDate > inputRows[0].matOrdate) {
+							    Swal.fire({
+							        icon: 'error',
+							        text: '입고 일은 발주 일보다 이전 일수 없습니다.'
+							    });
+							    return;
+							}
 
-       				        // 입력값 형식 확인
         				      
 
         				    // 데이터를 객체로 생성
@@ -227,6 +247,7 @@ input[type="text"]:focus {
         			        data.matOutCount = inputRows[0].matOutCount;
         			        data.matCount = inputRows[0].matCount;
         			        data.matInsCode = inputRows[0].matInsCode;
+        			        data.matOrdate = inputRows[0].matOrdate;
         			        data.matManager = name;
 
         				    console.log('전송할 데이터:', data);
@@ -361,6 +382,28 @@ input[type="text"]:focus {
                      				alert("저장 할 내용이 없습니다.")
                      				return;
                      			}
+                     			
+        				        if (Number(inputRows[0].matInputCount) > Number(inputRows[0].matInsGood)) {
+    							    Swal.fire({
+    							        icon: 'error',
+    							        text: '입고량은 합격량을 넘을 수 없습니다.'
+    							    });
+    							    return;
+    							}
+        				        
+        				        
+        				        // 날짜를 객체로 변환
+        				        const matInputDate = new Date(inputRows[0].matInputDate);
+        				        const matOrDate = new Date(inputRows[0].matOrDate);
+
+        				        // 날짜를 비교하여 유효성 검사 수행
+        				        if (matInputDate < matOrDate) {
+        				            Swal.fire({
+        				                icon: 'error',
+        				                text: '입고 일은 발주 일보다 이전 일수 없습니다.'
+        				            });
+        				            return;
+        				        }
 
             				    let data = {};
 
@@ -371,6 +414,8 @@ input[type="text"]:focus {
             			        data.matInputCount = inputRows[0].matInputCount;
             			        console.log("data.matInputCount : ", data.matInputCount);
             			        data.matCount = inputRows[0].matCount;
+            			        data.matOrDate = inputRows[0].matOrDate;
+            			        console.log("data.matOrdate : ", data.matOrdate);
 
             				    console.log('전송할 데이터:', data);
                      			

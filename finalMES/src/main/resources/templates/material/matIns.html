@@ -27,6 +27,7 @@ input[type="text"]:focus {
 	outline: none;
 	border-color: #4CAF50;
 }
+
 #searchOrder {
 	padding: 10px;
 	border: 1px solid #ccc;
@@ -38,10 +39,6 @@ button {
 	float: right;
 	margin-right: 5px;
 	margin-bottom: 10px;
-}
-
-#excel {
-	float: left;
 }
 
 #searchOrder {
@@ -75,11 +72,13 @@ button {
 			</div>
 			<br> <br> <br>
 
-	
-		
+
+
 			<button type="button" class="btn btn-outline-primary custom-style"
-				id="orderInsert">저장</button>
-			<button type="button" class="btn btn-outline-primary" id="excel"
+				id="orderInsert" style="margin: 8px 5px;">저장</button>
+			<button type="button" class="btn btn-outline-primary custom-style"
+				id="matupdate" style="margin: 8px 5px;">수정</button>
+			<button type="button" class="btn btn-outline-primary" style="float: left; margin: 8px 5px;"
 				onclick="downloadCSV()">EXCEL</button>
 			<br>
 			<div id="insGrid"></div>
@@ -370,7 +369,87 @@ button {
             	        }
 						
 	
-					
+            			document.querySelector('#matupdate').addEventListener('click', function() {
+    				    	
+            				const insCheckRows = newCheckRows;
+                 			if (insCheckRows === null) {
+                 				alert("수정 할 내용이 없습니다.")
+                 				return;
+                 			}
+                 			
+							if (Number(insCheckRows[0].matInsCount) > Number(insCheckRows[0].matOrCount)) {
+							    Swal.fire({
+							        icon: 'error',
+							        text: '검사량은 발주량을 넘을 수 없습니다.'
+							    });
+							    return;
+							}
+							
+							// 합격량이 발주량을 넘지 않는지 확인
+							if (Number(insCheckRows[0].matInsGood) > Number(insCheckRows[0].matOrCount)) {
+							    Swal.fire({
+							        icon: 'error',
+							        text: '합격량은 발주량을 넘을 수 없습니다.'
+							    });
+							    return;
+							}
+    				        
+    				        
+    				        // 날짜를 객체로 변환
+//     				        const matInputDate = new Date(insCheckRows[0].matInputDate);
+//     				        const matOrDate = new Date(insCheckRows[0].matOrDate);
+
+//     				        // 날짜를 비교하여 유효성 검사 수행
+//     				        if (matInputDate < matOrDate) {
+//     				            Swal.fire({
+//     				                icon: 'error',
+//     				                text: '입고 일은 발주 일보다 이전 일수 없습니다.'
+//     				            });
+//     				            return;
+//     				        }
+
+        				    let data = {};
+
+        			        data.matInsCode = insCheckRows[0].matInsCode;
+        			        data.matInsGood = insCheckRows[0].matInsGood;
+        			        data.matInsCount = insCheckRows[0].matInsCount;
+        			        data.matInsBad = insCheckRows[0].matInsBad;
+        			        data.matInsDate = insCheckRows[0].matInsDate;
+
+        				    console.log('전송할 데이터:', data);
+                 			
+               
+                 			console.log(data);
+                 			// AJAX 요청으로 서버에 데이터 전송
+                 			fetch('/matInsUpdate', {
+                 				method: 'put',
+                 				headers: {
+                 					'Content-Type': 'application/json',
+
+                 				},
+                 				body: JSON.stringify(data)
+                 			})
+                 				.then(response => {
+                 					if (!response.ok) {
+                 						throw new Error('Network response was not ok');
+                 					}
+                 					return response.text();
+                 				})
+                 				.then(data => {
+                 					console.log('Success:', data);
+                 					Swal.fire({
+            					        icon: 'success',
+            					        text: data
+            					    }).then(() => {
+            					        location.href = '/matIns'; // 성공적으로 처리된 후 리디렉트
+            					        
+            					    });
+            					})
+                 				.catch(error => {
+                 					console.error('Error:', error);
+                 				});
+
+                 		});
 						
 
 

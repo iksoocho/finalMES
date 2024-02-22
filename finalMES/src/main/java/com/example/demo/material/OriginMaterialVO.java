@@ -27,7 +27,6 @@ public class OriginMaterialVO {
 	private String matLotCount;
 	private String matInsGood;
 	
-	
 	private String matCount2;
 	private String matInputCount;
 	
@@ -39,4 +38,16 @@ public class OriginMaterialVO {
 	private Date matOrDueDate;
 	private String matOrManager;
 	private String matOrState;
+	
+	
+//	원래 테이블
+//	private String matCode;
+//	private String matName;
+//	private String matUnit;
+//	private String matStandard;
+//	private int matSafeStock;
+//	private String matLotCode;
+//	private String matCode;
+//	private int matCount;
+	
 }

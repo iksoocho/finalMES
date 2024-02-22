@@ -208,6 +208,12 @@ public class MaterialServiceImpl implements MaterialService {
 		
 	}
 
+	@Override
+	public void updateMatIns(MatInspectionVO matInspectionVO) {
+		// TODO Auto-generated method stub
+		materialMapper.updateMatIns(matInspectionVO);
+	}
+
 
 
 
