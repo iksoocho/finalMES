@@ -63,12 +63,13 @@ input[type="text"]:focus {
 				</div>
 			</div>
 		</div>
-		<button type="button" class="btn btn-outline-primary" id="excel"
+		<button type="button" class="btn btn-outline-primary" style="float: left; margin: 8px 5px;"
 			onclick="downloadCSV()">EXCEL</button>
 		<script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
 	        let matList = [[${matList}]];
-            let matGrid = new tui.Grid({
+	       
+	         matGrid = new tui.Grid({
                 el: document.getElementById('matGrid'),
                 data: matList,
                 scrollX: false,
@@ -96,10 +97,6 @@ input[type="text"]:focus {
                         header: '총재고량',
                         name: 'matCount2'
                     },
-//                     {
-//                         header: '총재고량',
-//                         name: 'matCount'
-//                     },
                     {
                         header: '안전재고',
                         name: 'matSafeStock'
@@ -147,7 +144,7 @@ input[type="text"]:focus {
  	    		}});
         	});
 
-            let lotGrid = new tui.Grid({
+              lotGrid = new tui.Grid({
                 el: document.getElementById('lotGrid'),
                 scrollX: false,
                 scrollY: false,
@@ -214,7 +211,7 @@ input[type="text"]:focus {
 		        }
 		    ];
 		
-		    const fileName = '발주관리.csv'; // 엑셀파일이름
+		    const fileName = '자재관리.csv'; // 엑셀파일이름
 		    const csvRows = [];
 		
 		    grids.forEach((grid, index) => {
@@ -225,25 +222,17 @@ input[type="text"]:focus {
 		        }
 		        csvRows.push(grid.header.join(','));
 		
-    			grid.data.forEach(row => {
+		        grid.data.forEach(row => {
     				const values = grid.fields.map(field => {
     					const value = row[field] || '';
     					console.log("field : ", field)
-    					if (field == 'matInsDate'){
-    						return value.split('T')[0];
-    					} else {
+    					if (csvRows){
     						return value.toString().replace(/,/g, ''); // 쉼표가 있는 경우 제거 또는 대체
     					}
     				});
     				csvRows.push(values.join(','));
     			});
-		
-		        grid.data.forEach(item => {
-		            const row = grid.fields.map(field => item[field]);
-		            csvRows.push(row.join(','));
-		        });
-		    });
-		
+    		});
 		    const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
 		    const encodedUri = encodeURI(csvContent);
 		
