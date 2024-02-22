@@ -199,7 +199,7 @@
 		(
 			#{matCode},
 			#{businessCode},
-			#{matOrDate},
+			sysdate,
 			#{matOrManager},
 			#{matOrCount},
 			#{matOrName},
@@ -276,7 +276,7 @@
 			#{matInsCount},
 			#{matInsGood},
 			#{matInsBad},
-			#{matInsDate},
+			sysdate,
 			#{matOrCode},
 			#{matNote}
 		)
@@ -340,6 +340,6 @@
 		JOIN material m ON ml.mat_code = m.mat_code
 		WHERE m.mat_code = #{matCode}
 		AND ml.mat_count > 0
-		ORDER BY ml.mat_input_date
+		ORDER BY ml.mat_lot_code
 	</select>
 </mapper>

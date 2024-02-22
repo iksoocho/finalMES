@@ -159,7 +159,7 @@
 		              <input
 		                type="text"
 		                class="form-control form-control-lg text-center"
-		                placeholder="설비"
+		                placeholder="설비코드"
 		                aria-label="selectedFacCode"
 		                id="selectedFacCode"
 		                data-bs-toggle="modal"
@@ -171,7 +171,7 @@
 		              <input
 		                type="text"
 		                class="form-control form-control-lg text-center"
-		                placeholder="선택"
+		                placeholder="설비명"
 		                aria-label="selectedFacName"
 		                id="selectedFacName"
 		                data-bs-toggle="modal"
@@ -239,6 +239,7 @@
                     id="workCount"
                     th:max=${vo.dInsCount}
                     th:min=0
+                    onchange="checkWorkCount()"
                   />
                 </div>
               </div>
@@ -371,6 +372,27 @@
                console.log('순서 최대값 : ', [[${#lists.size(prJoin)}]]);
                
            });
+          	
+          	//작업량 입력시 최대수량 체크
+       	    function checkWorkCount() {
+		        let workCountInput = document.getElementById("workCount");
+		        let workCount = parseInt(workCountInput.value);
+		        let maxCount = parseInt(workCountInput.getAttribute("max"));
+		        
+		        if (workCount > maxCount) {
+		            Swal.fire({
+		                icon: 'error',
+		                text: '계획량보다 큰 값을 입력할 수 없습니다.'
+		            });
+		            workCountInput.value = maxCount; // 입력된 값이 최대값을 초과하는 경우 최대값으로 변경
+		        }else if(workCount < 0){
+		        	Swal.fire({
+		                icon: 'error',
+		                text: '정상적인 값을 입력해주세요.'
+		            });
+		        	workCountInput.value = 0; 
+		        }
+		    }
 
           	// 작업시작 버튼 클릭 시
           	document.querySelector('button[id="workStart"]').addEventListener("click", function() {
@@ -411,6 +433,14 @@
 
           	// 작업종료 버튼 클릭 시
           	document.querySelector('button[id="workEnd"]').addEventListener("click", function() {
+          		let workStart = document.querySelector('input[id="workStart"]').name;
+          		if(workStart == ''){
+          			Swal.fire({
+		                icon: 'error',
+		                text: '작업이 아직 시작되지 않았습니다.'
+		            });
+          			return;
+          		}
           	  let currentTime = new Date();
           	  let hours = currentTime.getHours();
           	  let minutes = currentTime.getMinutes();
@@ -481,7 +511,7 @@
 
           		document.getElementById('selectedFacCode').value = selectFac.id;
           		document.getElementById('selectedFacCode').name = selectFac.name;
-          		document.getElementById('selectedFacName').value = selectFac.name;
+          		document.getElementById('selectedFacName').value = selectFac.closest('tr').querySelector('td:nth-child(3)').innerHTML;
           		
 
           		let facSelectModal = document.getElementById('facSelect');
@@ -560,13 +590,36 @@
         			prodCode : prodcode
         	};
         	
-        	/* if (Object.values(vo).some(value => value === null)) {
-        	    Swal.fire({
-		            title : '데이터를 모두 입력해주세요.',
-		            icon : 'error'
-		        });
-        	    return;
-        	  } */
+        	//유효성검사
+        	//설비선택
+        	let selectFac = document.querySelector('input[id="selectedFacCode"]');
+        	if(selectFac.value == '' || selectFac.value == undefined){
+				Swal.fire({
+	                icon: 'error',
+	                text: '설비가 선택되지 않았습니다.'
+	            })
+				return;
+        	}
+        	//작업량
+        	if(progpasscount == '0' || progpasscount == ''){
+        		Swal.fire({
+	                icon: 'error',
+	                text: '작업량을 입력해주세요.'
+	            })
+				return;
+        	}
+        	//작업 시작,종료시간
+        	if(endtime == ''){
+        		Swal.fire({
+	                icon: 'error',
+	                title: '작업을 완료하지 않았습니다.',
+	                html: '작업종료버튼을 눌러주세요'
+	            })
+				return;
+        	}
+        	
+        	
+        	
 
         	await fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
         	.then((response) => response.json())
