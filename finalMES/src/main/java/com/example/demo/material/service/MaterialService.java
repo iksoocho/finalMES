@@ -61,6 +61,8 @@ public interface MaterialService {
 	public void updateMatOrder(MatOrderCompositeVO matOrderCompositeVO);
 	// 입고쪽
 	public void updateMatLot(MaterialVO materialVO);
+	// 검수쪽
+	public void updateMatIns(MatInspectionVO matInspectionVO);
 	
 	//삭제
 	public void deleteMatOrder(MatOrderCompositeVO matOrderCompositeVO);

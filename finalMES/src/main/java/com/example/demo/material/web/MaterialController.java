@@ -209,6 +209,16 @@ public class MaterialController {
 		msg = "발주 목록을 수정하였습니다.";
 		return msg;
 	}
+	
+	@PutMapping("/matInsUpdate")
+	@ResponseBody
+	public String updateMatIns(@RequestBody MatInspectionVO matInspectionVO) {
+		String msg;
+		materialService.updateMatIns(matInspectionVO);
+		msg = "검수 목록을 수정하였습니다.";
+		
+		return msg;
+	}
 
 	/**
 	 * 
@@ -252,6 +262,8 @@ public class MaterialController {
 		return msg;
 		
 	}
+	
+	
 
 		
 	

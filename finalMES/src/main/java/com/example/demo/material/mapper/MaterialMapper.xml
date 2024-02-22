@@ -58,9 +58,9 @@
 
 	<!-- 발주 자재 관리 -->
 	<select id="getOriginMaterialList" resultType="OriginMaterialVO">
-		SELECT *
+		SELECT m.*, (SELECT SUM(mat_count) FROM mat_lot ml WHERE ml.mat_code = m.mat_code) AS matCount2
 		FROM
-		material ORDER BY mat_code
+		material m ORDER BY mat_code
 
 
 	</select>
@@ -89,20 +89,18 @@
 
 	<!-- 출고 관리 -->
 	<select id="getOutputList" resultType="MatOutputVO">
-		SELECT
-				MO.mat_out_code,
-				MO.business_code,
-				B.business_name,
-				ML.mat_manager,
-				M.mat_name,
-				ML.mat_lot_code,
-				ML.mat_count,
-				MO.mat_out_count,
-				MO.mat_out_date
-		FROM mat_output MO
-		JOIN mat_lot ML ON MO.mat_lot_code=ML.mat_lot_code
-		JOIN business B ON MO.business_code = B.business_code
-		JOIN material M ON ML.mat_code=M.mat_code
+		SELECT ml.mat_lot_code,
+		        ml.mat_count,
+		        m.mat_name,
+		        b.business_name,
+		        mop.mat_out_code,
+		        mop.mat_out_date,
+		        mo.mat_or_manager
+		FROM mat_lot ml
+		JOIN material m ON ml.mat_code = m.mat_code
+		JOIN mat_order mo ON m.mat_code = mo.mat_code
+		JOIN business b ON mo.business_code = b.business_code
+		LEFT JOIN mat_output mop ON b.business_code = mop.business_code
 	</select>
 
 	<!-- 입고 목록 관리 -->
@@ -238,9 +236,21 @@
 		SET
 		mat_input_count = #{matInputCount},
 		mat_input_date = #{matInputDate},
-		mat_count = #{matCount}
+		mat_count = #{matInputCount}
 		WHERE
 		mat_lot_code = #{matLotCode}
+	</update>
+	
+	<!-- 검수 업데이트 -->
+	<update id="updateMatIns" parameterType="MatInspectionVO">
+		UPDATE mat_inspection
+		SET
+		mat_ins_count = #{matInsCount},
+		mat_ins_good = #{matInsGood},
+		mat_ins_bad = #{matInsBad},
+		mat_ins_date = #{matInsDate}
+		WHERE
+		mat_ins_code = #{matInsCode}
 	</update>
 
 	<delete id="deleteMatOrder" parameterType="String">

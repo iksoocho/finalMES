@@ -99,5 +99,24 @@
 		WHERE out_code = #{outCode}
 	</update>
 	
+	<!-- 상태에 따른 출고서 조회 -->
+	<select id="getDlvyListByOutState" resultType="ProdDlvyDVO" parameterType="String">
+		SELECT outl.out_code, outl.out_date, outl.out_manager, find_codename(outl.out_state) AS out_state, bus.business_name, ordl.ord_code
+		FROM out_list outl
+		LEFT JOIN ord_list ordl ON(outl.ord_code = ordl.ord_code)
+		LEFT JOIN business bus ON(ordl.business_code = bus.business_code)
+		WHERE out_state = #{outState}
+		ORDER BY outl.out_date DESC
+	</select>
+	
+	<!-- 기간에 따른 출고서 조회 -->
+	<select id="getDlvyListByDateRange" resultType="ProdDlvyDVO" parameterType="OrderDateDVO">
+		SELECT outl.out_code, outl.out_date, outl.out_manager, find_codename(outl.out_state) AS out_state, bus.business_name, ordl.ord_code
+		FROM out_list outl
+		LEFT JOIN ord_list ordl ON(outl.ord_code = ordl.ord_code)
+		LEFT JOIN business bus ON(ordl.business_code = bus.business_code)
+		WHERE out_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+		ORDER BY outl.out_date DESC
+	</select>
 </mapper>
  

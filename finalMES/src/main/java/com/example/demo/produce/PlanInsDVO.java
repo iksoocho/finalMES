@@ -14,6 +14,7 @@ public class PlanInsDVO {
 	private Date dinsEdate;
 	private String dinsNote;
 	private String dplanCount;
+	private String dinsState;
 	
 	
 }

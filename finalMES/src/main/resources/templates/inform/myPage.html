@@ -131,7 +131,7 @@ button:hover {
 						<!-- ============================모달 내용============================ -->
 						<div class="modal-body">
 							<div>
-								<label for="userCode">현재 비밀번호:</label> <input type="text" id="userPassword" name="userPassword">
+								<label for="userCode">현재 비밀번호:</label> <input type="password" id="userPassword" name="userPassword">
 							</div>
 						</div>
 
@@ -155,9 +155,9 @@ button:hover {
 						<div class="modal-body">
 							<div>
 								<label for="userCode">새로운 비밀번호:</label> 
-								<input type="text" id="newPassword" name="newPassword">
+								<input type="password" id="newPassword" name="newPassword">
 								<label for="userCode">비밀번호 확인:</label> 
-								<input type="text" id="checkNewPassword" name="checkNewPassword">
+								<input type="password" id="checkNewPassword" name="checkNewPassword">
 							</div>
 						</div>
 
@@ -182,18 +182,27 @@ button:hover {
 							},
 							success : function(response) {
 								if(response == "1"){
-									alert("비밀번호가 일치 합니다."); // 서버의 응답에 따라 알림 표시
+									Swal.fire({
+						                icon: 'success',
+						                text: '비밀번호가 일치 합니다.'
+						            })
 									
 									$('#checkPassModal').modal('hide');
 									$('#updatePassModal').modal('show');
 								}else{
-									alert("비밀번호가 일치하지 않습니다.");
+									Swal.fire({
+						                icon: 'error',
+						                text: '비밀번호가 일치하지 않습니다.'
+						            })
 									$('#userPassword').val('').focus();
 								}
 								
 							},
 							error : function(xhr, status, error) {
-								alert("오류 발생: " + error);
+								Swal.fire({
+					                icon: 'error',
+					                text: '오류 발생: '+ error
+					            })
 							}
 						});
 					});
@@ -217,22 +226,35 @@ button:hover {
 							},
 							success : function(response) {
 								if(response == "1"){
-									alert("비밀번호가 변경 되었습니다. 다시 로그인 해 주세요."); // 서버의 응답에 따라 알림 표시
-									location.href = '/logout';
+									Swal.fire({
+						                icon: 'success',
+						                text: '비밀번호가 변경 되었습니다. 다시 로그인 해 주세요.'
+						            }).then(() => {
+						                location.href = '/logout'; // 사용자가 Swal 팝업을 닫으면 실행됩니다.
+						            });
 									//$('#updatePassModal').modal('hide');
 								}else{
-									alert("비밀번호가 변경 되지 않았습니다.");
+									Swal.fire({
+						                icon: 'error',
+						                text: '비밀번호가 변경 되지 않았습니다..'
+						            })
 									
 								}
 								
 								
 							},
 							error : function(xhr, status, error) {
-								alert("오류 발생: " + error);
+								Swal.fire({
+					                icon: 'error',
+					                text: '오류 발생'+ error
+					            })
 							}
 						});
 					}else{
-						alert("비밀번호가 같지 않습니다.")
+						Swal.fire({
+					                icon: 'error',
+					                text: '비밀번호가 일치하지 않습니다.'
+					            })
 						$('#newPassword').val('');
 						$('#checkNewPassword').val('');
 						$('#newPassword').focus();
