@@ -162,5 +162,11 @@
 		FROM mat_use 
 		WHERE d_ins_code=#{dinsCode} and proc_code=#{procCode}
 	</select>	
+	
+	<update id="updateDeInsState" parameterType="String">
+		UPDATE prod_d_ins 
+		SET d_ins_state=#{dinsState} 
+		WHERE d_ins_code=#{dinsCode}
+	</update>
 
 </mapper>
