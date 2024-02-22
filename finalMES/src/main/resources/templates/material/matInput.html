@@ -88,7 +88,7 @@ input[type="text"]:focus {
 		</div>
 
 		<script th:inline="javascript">
-		let newInpuRows = []
+		let newInpuRows = [];
 		document.addEventListener('DOMContentLoaded', function () {
 						// 입고 그리드
                 		let matInputList = [[${matInputList}]]
@@ -179,16 +179,18 @@ input[type="text"]:focus {
                            }
                 	    });
                 		 inputGrid.on('check', (ev) => {
-     	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
-     	        		    newInpuRows = inputGrid.getCheckedRows();
-     	        		    console.log(newInpuRows);
-     	        		});
-		});
+                	  		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
+                	  		    newInpuRows = inputGrid.getCheckedRows();
+                	  		    console.log(newInpuRows);
+                			 });
+                			 });
+     	        		
+		
+	
 						
 						
 						
-            			
-
+		 
             			
                 		
             			
@@ -254,7 +256,7 @@ input[type="text"]:focus {
     				        if (matInputDate < matOrDate) {
     				            Swal.fire({
     				                icon: 'error',
-    				                text: '입고 일은 발주 일보다 이전 일수 없습니다.'
+    				                text: '입고 일은 발주 일보다 빠를 수 없습니다.'
     				            });
     				            return;
     				        }
@@ -400,15 +402,17 @@ input[type="text"]:focus {
                 			document.querySelector('#matupdate').addEventListener('click', function() {
         				    	
         				    	const inputRows = newInpuRows;
-                     			if (inputRows === null) {
+        				    	
+        				    	
+                     			if (inputRows == 0) {
                      				Swal.fire({
     							        icon: 'error',
-    							        text: '저장 할 내용이 없습니다.'
+    							        text: '수정 할 내용이 없습니다.'
     							    });
                      				return;
                      			}
                      			
-        				        if (Number(inputRows[0].matInputCount) > Number(inputRows[0].matInsGood)) {
+        				        if (parseInt(inputRows[0].matInputCount) > parseInt(inputRows[0].matInsGood)) {
     							    Swal.fire({
     							        icon: 'error',
     							        text: '입고량은 합격량을 넘을 수 없습니다.'
@@ -535,7 +539,7 @@ input[type="text"]:focus {
                 			    return '';
                 			}
                 			  
-	
+		
       </script>
 	</section>
 </body>

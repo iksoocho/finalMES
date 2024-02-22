@@ -108,7 +108,9 @@ button {
 
 		<script th:inline="javascript">      
 		let newCheckRows = []
+		console.log("newCheckRows : ", newCheckRows);
 		document.addEventListener('DOMContentLoaded', function () {
+
                 		let insList = [[${matInsList}]]
                 		console.log(insList);
                 		
@@ -186,6 +188,7 @@ button {
                 	               perPage: 10
                 	           }
                 		    });
+             		
                 		 insGrid.on('check', (ev) => {
      	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
     	        		    newCheckRows = insGrid.getCheckedRows();
@@ -207,7 +210,7 @@ button {
         					
         					
 							        					
-        					setTimeout(function() {
+        					
         				    let name = [[${session.userName}]];
         				    const insCheckRows = newCheckRows;
         				    console.log('잘 들고오네요...',insCheckRows);
@@ -322,7 +325,7 @@ button {
         				    .catch(error => {
         				        console.error('Error:', error);
         				    });
-        					}, 100);
+        			
         				});
         				
 		
@@ -417,12 +420,15 @@ button {
     				    	
             				const insCheckRows = newCheckRows;
             				
-                 			if (insCheckRows === null) {
-                 				alert("수정 할 내용이 없습니다.")
+                 			if (insCheckRows == 0) {
+                 				Swal.fire({
+							        icon: 'error',
+							        text: '수정 할 내용이 없습니다.'
+							    });
                  				return;
                  			}
                  			
-							if (parseInt(insCheckRows[0].matInsCount) > parseInt(insCheckRows[0].matOrCount)) {
+							if (Number(insCheckRows[0].matInsCount) > Number(insCheckRows[0].matOrCount)) {
 							    Swal.fire({
 							        icon: 'error',
 							        text: '검사량은 발주량을 넘을 수 없습니다.'
@@ -431,7 +437,7 @@ button {
 							}
 							
 							// 합격량이 발주량을 넘지 않는지 확인
-							if (parseInt(insCheckRows[0].matInsGood) > parseInt(insCheckRows[0].matOrCount)) {
+							if (Number(insCheckRows[0].matInsGood) > Number(insCheckRows[0].matOrCount)) {
 							    Swal.fire({
 							        icon: 'error',
 							        text: '합격량은 발주량을 넘을 수 없습니다.'

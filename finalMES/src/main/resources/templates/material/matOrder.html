@@ -57,6 +57,11 @@ input[type="text"]:focus {
 	background-color: #FDC0CE;
 	/* 예시로 빨간색을 지정했습니다. */
 }
+.tui-grid-row-odd .state,
+.tui-grid-row-even .state {
+	background-color: #FDC0CE;
+	/* 예시로 빨간색을 지정했습니다. */
+}
 </style>
 </head>
 <body>
@@ -241,11 +246,18 @@ input[type="text"]:focus {
                          	            },
                          	           {
                          	                header: '상태', 
+                         	                
+                         	                className: 'state',
+                         	                align: 'center',
                          	               
-                         	                formatter: function({ row }) {
-                         	                    // 여기서 matStandard와 matSafeStock 비교
-                         	                    return row.matCount2 >= row.matSafeStock ? '' : '재고 부족';
-                         	                }
+                         	               formatter: function({ row }) {
+                         	            	    // 여기서 matCount2와 matSafeStock를 비교하여 재고 부족 여부를 판단
+                         	            	    if (row.matCount2 < row.matSafeStock) {
+                         	            	        return '<span style="color: red;">재고 부족</span>';
+                         	            	    } else {
+                         	            	        return '';
+                         	            	    }
+                         	            	}
                          	               
                          	            },
                          	           
