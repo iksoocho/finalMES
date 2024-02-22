@@ -186,4 +186,24 @@ public class SalesController {
 		System.out.println("데이타 확인:" + orderList);
 		return orderList;
 	}
+	
+	@PostMapping("/dlvyListByOutState/{outState}")
+	@ResponseBody
+	public List<ProdDlvyDVO> getDlvyListByOutState(@PathVariable String outState){
+		System.out.println("입력데이터확인 : " + outState);
+		List<ProdDlvyDVO> prodDlvyList = prodDlvyService.getDlvyListByOutState(outState);
+		System.out.println("입력데이터확인 : " + prodDlvyList);
+		return prodDlvyList;
+	}
+	
+	@PostMapping("/dlvyListByDateRange")
+	@ResponseBody
+	public List<ProdDlvyDVO> getDlvyListByDateRange(@RequestBody OrderDateDVO orderDateDVO) {
+	    // orderService를 사용해서 주문 목록을 가져옴
+		System.out.println("입력데이터확인 : " + orderDateDVO);
+	    List<ProdDlvyDVO> prodDlvyList = prodDlvyService.getDlvyListByDateRange(orderDateDVO);
+	    System.out.println("데이타 확인:" + prodDlvyList);
+	    
+	    return prodDlvyList;
+	}
 }

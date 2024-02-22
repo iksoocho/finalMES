@@ -10,6 +10,8 @@ import com.example.demo.sales.vo.delivery.ProdDetailDlvyVO;
 import com.example.demo.sales.vo.delivery.ProdDetailUpdateDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
+import com.example.demo.sales.vo.order.OrderDVO;
+import com.example.demo.sales.vo.order.OrderDateDVO;
 
 @Mapper
 public interface ProdDlvyMapper {
@@ -29,6 +31,11 @@ public interface ProdDlvyMapper {
 	public List<ProdDetailDlvyDVO> prodDetailDlvyList(String outCode); // 제품출고서 상세 조회
 	
 	public void updateOutState(String outCode); // 업데이트 실행시 출고서 상태업데이트 .
+	
+	List<ProdDlvyDVO> getDlvyListByOutState(String outState);
+	
+	// 기간을 이용한 주문 목록 조회
+    List<ProdDlvyDVO> getDlvyListByDateRange(OrderDateDVO orderDateDVO);
 	
 	
 }

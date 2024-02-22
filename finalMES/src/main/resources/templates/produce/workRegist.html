@@ -458,7 +458,10 @@
         function facSelect(){
           		const selectFac = document.querySelector('input[name="facSelect"]:checked');
           		if(!selectFac){
-          			alert('설비를 선택해주세요');
+          			Swal.fire({
+    		            title : '설비를 선택해주세요',
+    		            icon : 'error'
+    		        });
           			return;
           		}
 
@@ -541,6 +544,14 @@
         			endTime : endtime,
         			prodCode : prodcode
         	};
+        	
+        	/* if (Object.values(vo).some(value => value === null)) {
+        	    Swal.fire({
+		            title : '데이터를 모두 입력해주세요.',
+		            icon : 'error'
+		        });
+        	    return;
+        	  } */
 
         	await fetch("checkWorkMid?dinsCode="+ dinscode +"&procCode=" + proccode)
         	.then((response) => response.json())
@@ -550,8 +561,6 @@
         		console.log('vo : ', vo);
 
         		if(data.length != 0){
-        			alert("이미 데이터가 존재");
-        			
 	        		vo.progCode = data[0].progCode;
 	        		console.log('vo추가 : ', vo);
 	        		
@@ -578,12 +587,16 @@
         			})
         			.then(data => {
         				console.log('Success : ', data);
-        				alert(data);
         				console.log('상태저장 : ', saveState);
         	       		if(saveState == 3 && lastProcCode === selectProcCode){
         	       			resultInsert(dinscode);
+        	       			deInsStateUpdate('di3', dinscode);
         	       		}
-        				/* location.href = '/planOrderList'; */
+        				 
+        		        Swal.fire({
+        		            title : data,
+        		            icon : 'success',
+        		          }).then(function(){location.href = '/planIns';});
         			})
         			.catch(error => {
         				console.log('Error : ', error);
@@ -616,11 +629,18 @@
         			})
         			.then(data => {
         				console.log('Success:', data);
-        	            alert(data);
         	            console.log('상태저장 : ', saveState);
+        	            let state = 'di2';
         	       		if(saveState == 3 && lastProcCode === selectProcCode){
+        	       			state = 'di3';
         	       			resultInsert(dinscode);
         	       		}
+        	       		deInsStateUpdate(state, dinscode);
+
+        	       		Swal.fire({
+        		            title : data,
+        		            icon : 'success',
+        		        }).then(function(){location.href = '/planIns';});;
         			})
         			.catch(error => {
         	            console.error('Error:', error);
@@ -634,9 +654,12 @@
         function workCancle(){
         	let starttime = document.querySelector('input[id="workStart"]').name;
         	if(starttime.length == 0){
-        		location.href = '/planOrderList';
+        		location.href = '/planIns';
         	} else{
-        		alert("작업중에는 취소가 불가능합니다.");
+        		Swal.fire({
+		            title : '작업중에는 취소가 불가능합니다.',
+		            icon : 'warning'
+		        });
         		return;
         	}
         }
@@ -660,14 +683,40 @@
 			})
 			.then(data => {
 				console.log('Success:', data);
-	            alert(data);
 			})
 			.catch(error => {
 	            console.error('Error:', error);
 	        });
         }
         
-        
+        //지시상세 상태 업데이트
+        function deInsStateUpdate(state, code){
+        	const data = {
+        		  deInsState: state,
+        		  deInsCode: code
+        	};
+        	
+        	fetch('/deInsStateUpdate', {
+				method : 'put',
+				headers : {
+					'Content-Type' : 'application/json',
+				},
+				body : JSON.stringify(data)
+			})
+			.then(response => {
+				if(!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.text();
+			})
+			.then(data => {
+				console.log('Success : ', data);
+			})
+			.catch(error => {
+				console.log('Error : ', error);
+			});
+        	
+        }
       </script>
     </section>
   </body>
