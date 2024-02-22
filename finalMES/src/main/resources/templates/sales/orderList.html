@@ -97,6 +97,50 @@ input{
 		<script th:inline="javascript">
 		let orderList = [[${orderList}]]
 		let grid = tui.Grid;
+		
+		class CustomDivRenderer {
+		      constructor(props) {
+		        const el = document.createElement('div');
+		        this.el = el;
+		        this.render(props);
+		      }
+
+		      getElement() {
+		        return this.el;
+		      }
+
+		      render(props) {
+		    	  let statusText, bgColor;
+		    	  switch (props.value) {
+		            case 'o2':
+		                statusText = '등록완료';
+		                bgColor = 'green'; // 등록완료에 대한 배경색 설정
+		                break;
+		            case 'o3':
+		                statusText = '처리중';
+		                bgColor = 'yellow'; // 처리중에 대한 배경색 설정
+		                break;
+		            case 'o4':
+		                statusText = '출고대기';
+		                bgColor = 'yellow'; // 종결에 대한 배경색 설정
+		                break;
+		            case 'o5':
+		            	statusText = '출고중';
+		            	bgColor = 'yellow';
+		            	break;
+		            case 'o6':
+		            	statusText = '종결';
+		            	bgColor = 'red';
+		            	break;
+		            default:
+		                statusText = value;
+		                bgColor = 'gray'; // 기본 배경색
+		        	}
+				this.el.style.backgroundColor = bgColor
+		        this.el.innerText = String(statusText);
+		      }
+		 }
+		
 		grid.applyTheme('clean', {
 			  row: {
 			    hover: {
@@ -136,37 +180,9 @@ input{
 						]
 					}
 				},
-				formatter: function ({ value }) {
-			        let statusText, bgColor;
-
-			        switch (value) {
-			            case 'o2':
-			                statusText = '등록완료';
-			                bgColor = 'green'; // 등록완료에 대한 배경색 설정
-			                break;
-			            case 'o3':
-			                statusText = '처리중';
-			                bgColor = 'yellow'; // 처리중에 대한 배경색 설정
-			                break;
-			            case 'o4':
-			                statusText = '출고대기';
-			                bgColor = 'yellow'; // 종결에 대한 배경색 설정
-			                break;
-			            case 'o5':
-			            	statusText = '출고중';
-			            	bgColor = 'yellow';
-			            	break;
-			            case 'o6':
-			            	statusText = '종결';
-			            	bgColor = 'red';
-			            	break;
-			            default:
-			                statusText = value;
-			                bgColor = 'gray'; // 기본 배경색
-			        }
-			     // 선택된 항목에 대해서만 배경색 적용
-			        return `<div style="background-color: ${bgColor};">${statusText}</div>`;
-			    }
+				renderer: {
+		            type: CustomDivRenderer
+		          },
  	        },
  	        {
  	          header: '거래처',
