@@ -29,8 +29,8 @@
         >
           <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">title</h5>
+              <div class="modal-header" style="background-color: #999999;">
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">설비선택</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -90,7 +90,7 @@
                   </div>
                 </div>
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer" style="background-color: #999999;">
                 <button
                   type="button"
                   class="btn btn-secondary"
@@ -382,13 +382,13 @@
 		        if (workCount > maxCount) {
 		            Swal.fire({
 		                icon: 'error',
-		                text: '계획량보다 큰 값을 입력할 수 없습니다.'
+		                title: '계획량보다 큰 값을 입력할 수 없습니다.'
 		            });
 		            workCountInput.value = maxCount; // 입력된 값이 최대값을 초과하는 경우 최대값으로 변경
 		        }else if(workCount < 0){
 		        	Swal.fire({
 		                icon: 'error',
-		                text: '정상적인 값을 입력해주세요.'
+		                title: '정상적인 값을 입력해주세요.'
 		            });
 		        	workCountInput.value = 0; 
 		        }
@@ -437,7 +437,7 @@
           		if(workStart == ''){
           			Swal.fire({
 		                icon: 'error',
-		                text: '작업이 아직 시작되지 않았습니다.'
+		                title: '작업이 아직 시작되지 않았습니다.'
 		            });
           			return;
           		}
@@ -596,7 +596,7 @@
         	if(selectFac.value == '' || selectFac.value == undefined){
 				Swal.fire({
 	                icon: 'error',
-	                text: '설비가 선택되지 않았습니다.'
+	                title: '설비가 선택되지 않았습니다.'
 	            })
 				return;
         	}
@@ -604,7 +604,7 @@
         	if(progpasscount == '0' || progpasscount == ''){
         		Swal.fire({
 	                icon: 'error',
-	                text: '작업량을 입력해주세요.'
+	                title: '작업량을 입력해주세요.'
 	            })
 				return;
         	}
