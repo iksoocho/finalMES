@@ -415,7 +415,7 @@
 							fetch('/planDetail?planCode=' + planCode)
 								.then(response => response.json())
 								.then(data => {
-									console.log(data);
+									
 									// 상세 그리드에 데이터 표시
 									// grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
 									planDGrid.resetData(data);
@@ -741,9 +741,7 @@
 				planGrid.finishEditing();
 				planDGrid.finishEditing();
 				
-				var hiddenElement = document.getElementById('hiddenFocusElement');
-			    hiddenElement.focus();
-			    hiddenElement.blur();
+				
 			    setTimeout(function() {
 				const newPlan = document.querySelectorAll('.plan');
 				if (newPlan.length === 0) {
@@ -906,8 +904,8 @@
 
 				
 				
-			    
-				console.log(data);
+			   
+				
 				// AJAX 요청으로 서버에 데이터 전송
 				fetch('/planInsert', {
 					method: 'POST',
@@ -937,13 +935,15 @@
 					});
 
 
-
+			    }, 100);
 			});
 
 
 			//plan detail update
 			document.querySelector('#planDUpdate').addEventListener('click', function () {
-				
+				planGrid.finishEditing();
+				planDGrid.finishEditing();
+				setTimeout(function() {
 				let planDate = new Date(document.querySelector('td[data-column-name="planDate"] div').innerHTML);
 				let startDate;
 				let startDate2;
@@ -1008,7 +1008,7 @@
 						return;
 					}
 					
-					
+					obj.dplanCode = target.find('td:eq(0)').text();
 
 					obj.prodCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
@@ -1034,6 +1034,7 @@
 					ordcount = parseInt(target.find('td:eq(5)').text())*1.1;
 					
 					obj.dplanCount = target.find('td:eq(6)').text();
+					console.log("dplanCount : ", obj.dplanCount)
 					if(ordcount > parseInt(target.find('td:eq(6)').text())){
 						plancount = parseInt(target.find('td:eq(6)').text());
 					}
@@ -1073,9 +1074,11 @@
 			            })
 					return;
 				}
-			}, 100);
+			
 				data.planDVOList = planDetailData;
-				console.log(data);
+				
+				 
+				
 				// AJAX 요청으로 서버에 데이터 전송
 				fetch('/planDUpdate', {
 					method: 'put',
@@ -1103,6 +1106,7 @@
 					.catch(error => {
 						console.error('Error:', error);
 					});
+				}, 100);
 
 			});
 			
