@@ -30,6 +30,13 @@
 		<div id="grid"></div>
 
 		<script th:inline="javascript">
+		
+		function formatTotalTtlPrice({ value }) {
+		    if (value) {
+		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		    }
+		    return '';
+		}
 		// 검색 기능 추가
     	function searchFunction() {
     	    // 입력된 검색어 가져오기
@@ -229,7 +236,7 @@
 								]
 							}
 						},className : 'prodUnit' },
-					{header: '가격', name: 'prodPrice', editor: 'text' ,className : 'prodPrice'},
+					{header: '가격', name: 'prodPrice', editor: 'text' ,className : 'prodPrice', formatter: formatTotalTtlPrice},
 					{header: '등록일', name: 'prodDate',
 						formatter: function ({value}) {
 							if (value) {
