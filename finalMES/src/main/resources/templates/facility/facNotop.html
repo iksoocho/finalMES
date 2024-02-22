@@ -10,7 +10,6 @@
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <title>설비비가동등록</title>
 <style>
 #layoutSidenav_content {
@@ -142,6 +141,7 @@ option:checked {
 }
 
 
+
 </style>
 </head>
 <body>
@@ -193,11 +193,13 @@ option:checked {
 				<div class="text-center">
 				<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
 				<button type="button" class="btn btn-outline-primary" onclick="downloadCSV()">Excel</button>
+				</div>
+				<br>
+				<div class="text-left" style="margin-bottom: 3px;">
 				<input type="text" id="searchInput" oninput="searchFunction()" placeholder="검색...">
 				</div>
-				<br> <br> <br>
-				<div id="grid" class="container"></div>
 			</div>
+			<div id="grid" class="container"></div>
 			</div>
 
 		<script th:inline="javascript">
@@ -330,11 +332,6 @@ option:checked {
     } */
     
  
-
-
-   		
-   		
-   
    
    	 // 그리드 페이징
    	    let facNotList = [[${nlist}]];
@@ -372,13 +369,13 @@ option:checked {
    	          align: 'center'
    	        },
    	     	{
-              header: '등록일',
+              header: '비가동등록일',
               name: 'facNotSdate',
               formatter : formatDate,
               align: 'center'
              },
    	     	{
-              header: '종료일',
+              header: '비가동종료일',
               name: 'facNotLdate',
               formatter : formatDate,
               align: 'center'
@@ -396,6 +393,8 @@ option:checked {
    	        perPage: 5
    	      }
    	    });
+   	    
+   	    
    	    
    	 function downloadCSV() {
          // 헤더 생성
@@ -496,6 +495,8 @@ option:checked {
    		        }
    		    }
    		}
+      	
+      	
 
 </script>
 	</section>

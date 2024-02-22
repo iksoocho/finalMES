@@ -11,6 +11,7 @@ public class FacManageVO {
 	private String facCode;
 	private String procCode;
 	private String businessCode;
+	private String businessName;
 	private String facName;
 	private String notopCode;
 	private String notopContent;

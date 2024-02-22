@@ -10,12 +10,12 @@
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <title>설비등록</title>
 <style>
 /* 기존 스타일 유지 */
 #layoutSidenav_content {
 	margin-top: 20px;
+	
 }
 
 table {
@@ -76,6 +76,7 @@ input[type="text"], input[type="date"] {
     padding: 8px; 
     border-radius: 5px;
     border: 1px solid #ced4da; 
+    
 }
 
 .modal-content {
@@ -133,6 +134,30 @@ option:checked {
     background-color: #007bff; 
     color: #fff; 
 }
+.modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+
+.modal-body th,
+.modal-body td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.modal-body th {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:hover {
+    background-color: #ddd;
+}
 
 
 
@@ -171,7 +196,6 @@ option:checked {
 							<th>공정코드</th>
 							<td colspan="2"><input type="text" id="procCode"
 								name="procCode" required></td>
-
 						</tr>
 						<tr>
 							<th>거래처</th>
@@ -196,16 +220,20 @@ option:checked {
 				<input type="hidden" id="businessCode" name="businessCode" value="">
 				<br>
 				<div class="text-center">
-					<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-					<button type="button" class="btn btn-outline-primary"
+					<button type="button" id="saveBtn" class="btn btn-outline-primary">저장</button>
+					<button type="button" class="btn btn-outline-success"
 						onclick="downloadCSV()">Excel</button>
-					<input type="text" id="searchInput" oninput="searchFunction()"
+				</div>
+				<br>
+				<div class="text-left" style="margin-bottom: -20px;">
+				<input type="text" id="searchInput" oninput="searchFunction()"
 						placeholder="검색...">
 				</div>
-				<br> <br>
-				<div id="grid" class="container"></div>
 			</div>
+			<div id="grid" class="container"></div>
 		</div>
+		
+		
 
 		<!-- 공정명모달 -->
 		<div class="modal" id="myModal2">
@@ -549,7 +577,41 @@ option:checked {
            perPage: 5
        }
    });
-
+	
+/* // 설비명 클릭 시 이벤트 처리해서 위에 input박스에 값넣기
+   function handleFacNameClick(event) {
+   	// 클릭한 행의 데이터 가져오기
+       const rowData = grid.getRowAt(event.rowKey);
+   	
+       // 설비명과 담당자 값을 가져와서 input 박스에 넣기
+       const facName = rowData.facName;
+       const procCode = rowData.procCode;
+       const procName = rowData.procName;
+       const facHig = rowData.facHig;
+       const facLow = rowData.facLow;
+       const businessName = rowData.businessName;
+       const businessCode = rowData.businessCode;
+       const facDate = document.getElementById("facDate").value;
+       console.log("facDate:", facDate);
+       const facPerson = rowData.facPerson;
+       // 값을 input 요소에 할당
+       document.getElementById('facName').value = facName;
+       document.getElementById('procCode').value = procCode;
+       document.getElementById('procName').value = procName;
+       document.getElementById('facHig').value = facHig;
+       document.getElementById('facLow').value = facLow;
+       document.getElementById('businessName').value = businessName;
+       document.getElementById('businessCode').value = businessCode;
+       document.getElementById('facDate').value = facDate;
+       document.getElementById('facPerson').value = facPerson;
+   }
+	
+	    // grid 생성 코드 아래에 설비코드 클릭 이벤트 리스너 등록
+	    grid.on('click', (event) => {
+	      if (event.columnName === 'facName') {
+	    	  handleFacNameClick(event);
+	      }
+	    }); */
    
    // 검색 기능 추가
    function searchFunction() {
