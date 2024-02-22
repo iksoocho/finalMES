@@ -2,6 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
 <style>
+input{
+	padding-left: 10px;
+}
+.btn.btn-outline-primary {
+	float: right;
+	margin-right: 10px;
+}
+
 .orderSearch {
 	font-family: 'Noto Sans KR';
 	font-size: 24px;
@@ -10,9 +18,9 @@
 }
 
 .orderStatus {
+	
 	width: 100px;
 	height: 34px;
-	margin-left: 762px;
 	border: solid 1px #ebebeb;
 	background-color: #fff;
 	border-bottom-color: #d8d8d8;
@@ -74,10 +82,12 @@
 				<option value="o4">출고대기</option>
 				<option value="o5">출고중</option>
 				<option value="o6">종결</option>
-			</select> <label for="startDate"></label> <input type="date" id="startDate" class="date" name="startDate"> <label for="endDate"> ~ </label> <input type="date" id="endDate" class="date"
-				name="endDate">
-			<button type="button" class="btn btn-primary" id="updateOrderState" style="float: right; margin-bottom: 10px;">저장</button>
-			<button type="button" class="btn btn-primary" id="searchByDate" style="margin-bottom: 5px;">검색</button>
+			</select> <label for="startDate"></label> <input type="date" id="startDate" class="date" name="startDate"> <label for="endDate"> ~ </label> <input
+				type="date" id="endDate" class="date" name="endDate"
+			>
+			<button type="button" class="btn btn-secondary" id="updateOrderState" style="float: right; margin-bottom: 10px;">저장</button>
+			<button type="button" class="btn btn-secondary" id="searchByDate" style="margin-bottom: 5px;">검색</button>
+			<button type="button" class="btn btn-outline-primary" id="excel" onclick="downloadCSV()">EXCEL</button>
 
 			<div id="grid"></div>
 			<h5>상세</h5>
@@ -514,6 +524,50 @@
 
 			  return `${year}-${month}-${day}`;
 		}
+		
+		function downloadCSV() {
+    		const grids = [
+    			{ data : grid.getData(),
+    			  header: ['주문서번호','상태','거래처','등록일','담당자','총금액','비고'],
+    			  fields: ['ordCode','ordState','businessName','ordDate','ordManager','totalTtlPrice','ordNote']
+    			}
+    		];
+    		
+    		const fileName = '주문서.csv'; // 엑셀파일이름
+    		const csvRows = [];
+    		
+    		 grids.forEach((grid, index) => {
+
+    		        if (index > 0) {
+    		            csvRows.push('');
+    		            csvRows.push('');
+    		        }
+    		        csvRows.push(grid.header.join(','));
+
+    		        grid.data.forEach(row => {
+    		            const values = grid.fields.map(field => {
+    		                const value = row[field] || '';
+    		                console.log("field : ", field)
+    		                if (field == 'ordDate' || field == 'dlvyDate') {
+    		                    const dateValue = new Date(value);
+    		                    return dateValue.toISOString().split('T')[0]; // Remove time part
+    		                } else {
+    		                    return value.toString().replace(/,/g, ''); // Remove commas if present
+    		                }
+    		            });
+    		            csvRows.push(values.join(','));
+    		        });
+    		    });
+    		
+    		const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.join('\n');
+    		const encodedUri = encodeURI(csvContent);
+    		
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'data.csv');
+            document.body.appendChild(link);
+            link.click();
+        }
 		
 		</script>
 	</section>

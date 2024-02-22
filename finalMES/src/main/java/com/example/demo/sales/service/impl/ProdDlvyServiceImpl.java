@@ -1,6 +1,5 @@
 package com.example.demo.sales.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -16,6 +15,7 @@ import com.example.demo.sales.vo.delivery.ProdDetailDlvyVO;
 import com.example.demo.sales.vo.delivery.ProdDetailUpdateDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyDVO;
 import com.example.demo.sales.vo.delivery.ProdDlvyVO;
+import com.example.demo.sales.vo.order.OrderDateDVO;
 
 @Service
 public class ProdDlvyServiceImpl implements ProdDlvyService {
@@ -95,6 +95,18 @@ public class ProdDlvyServiceImpl implements ProdDlvyService {
 
         return totalCount;
     }
+
+	@Override
+	public List<ProdDlvyDVO> getDlvyListByOutState(String outState) {
+		// TODO Auto-generated method stub
+		return prodDlvyMapper.getDlvyListByOutState(outState);
+	}
+
+	@Override
+	public List<ProdDlvyDVO> getDlvyListByDateRange(OrderDateDVO orderDateDVO) {
+		// TODO Auto-generated method stub
+		return prodDlvyMapper.getDlvyListByDateRange(orderDateDVO);
+	}
 
 	
 	
