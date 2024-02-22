@@ -66,11 +66,11 @@ button {
 	background-color: #FDC0CE;
 	/* 예시로 빨간색을 지정했습니다. */
 }
-.tui-grid-row-odd .matInsDate,
-.tui-grid-row-even .matInsDate {
-	background-color: #FDC0CE;
-	/* 예시로 빨간색을 지정했습니다. */
-}
+/* .tui-grid-row-odd .matInsDate, */
+/* .tui-grid-row-even .matInsDate { */
+/* 	background-color: #FDC0CE; */
+/* 	/* 예시로 빨간색을 지정했습니다. */ */
+/* } */
 </style>
 </head>
 <body>
@@ -107,6 +107,7 @@ button {
 		</div>
 
 		<script th:inline="javascript">      
+		let newCheckRows = []
 		document.addEventListener('DOMContentLoaded', function () {
                 		let insList = [[${matInsList}]]
                 		console.log(insList);
@@ -185,24 +186,29 @@ button {
                 	               perPage: 10
                 	           }
                 		    });
+                		 insGrid.on('check', (ev) => {
+     	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
+    	        		    newCheckRows = insGrid.getCheckedRows();
+    	        		    console.log(newCheckRows);
+    	        		});
 
-                	
+				});
 							
-                			let newCheckRows = []
+                		
 
-                			insGrid.on('check', (ev) => {
-        	        		    const checkedRows = ev.checkedRows; // 선택된 행들의 배열을 가져옵니다.
-        	        		    newCheckRows = insGrid.getCheckedRows();
-        	        		    console.log(newCheckRows);
-        	        		});
+                			
                 			
             
 	
 
         				// ================ matIns insert ==================
         				document.querySelector('#orderInsert').addEventListener('click', function() {
+        					
+        					
+        					
+							        					
+        					setTimeout(function() {
         				    let name = [[${session.userName}]];
-
         				    const insCheckRows = newCheckRows;
         				    console.log('잘 들고오네요...',insCheckRows);
 
@@ -240,16 +246,15 @@ button {
 							        });
 								    return;
 								}
+        				        
         				        // 검수날짜가 올바른 형식인지 확인
-        				        
-        				        
-        				        if (insCheckRows[0].matInsDate == null) {
-        				            Swal.fire({
-        					            icon: 'error',
-        					            text: '검수날짜를 선택해 주세요.'
-        					        });
-        				            return;
-        				        }
+//         				        if (insCheckRows[0].matInsDate == null) {
+//         				            Swal.fire({
+//         					            icon: 'error',
+//         					            text: '검수날짜를 선택해 주세요.'
+//         					        });
+//         				            return;
+//         				        }
         				        
         				        
         				        
@@ -317,8 +322,10 @@ button {
         				    .catch(error => {
         				        console.error('Error:', error);
         				    });
+        					}, 100);
         				});
-		})
+        				
+		
         				
                 		// 날짜 형식 지정 함수
                      	function formatDate({ value }) {
@@ -404,16 +411,18 @@ button {
             	            link.click();
             	        }
 						
+            		
 	
             			document.querySelector('#matupdate').addEventListener('click', function() {
     				    	
             				const insCheckRows = newCheckRows;
+            				
                  			if (insCheckRows === null) {
                  				alert("수정 할 내용이 없습니다.")
                  				return;
                  			}
                  			
-							if (Number(insCheckRows[0].matInsCount) > Number(insCheckRows[0].matOrCount)) {
+							if (parseInt(insCheckRows[0].matInsCount) > parseInt(insCheckRows[0].matOrCount)) {
 							    Swal.fire({
 							        icon: 'error',
 							        text: '검사량은 발주량을 넘을 수 없습니다.'
@@ -422,7 +431,7 @@ button {
 							}
 							
 							// 합격량이 발주량을 넘지 않는지 확인
-							if (Number(insCheckRows[0].matInsGood) > Number(insCheckRows[0].matOrCount)) {
+							if (parseInt(insCheckRows[0].matInsGood) > parseInt(insCheckRows[0].matOrCount)) {
 							    Swal.fire({
 							        icon: 'error',
 							        text: '합격량은 발주량을 넘을 수 없습니다.'
@@ -430,6 +439,7 @@ button {
 							    return;
 							}
     				        
+							
     				        
     				        // 날짜를 객체로 변환
 //     				        const matInputDate = new Date(insCheckRows[0].matInputDate);
@@ -451,6 +461,7 @@ button {
         			        data.matInsCount = insCheckRows[0].matInsCount;
         			        data.matInsBad = insCheckRows[0].matInsBad;
         			        data.matInsDate = insCheckRows[0].matInsDate;
+        			        data.matOrCount = insCheckRows[0].matOrCount;
 
         				    console.log('전송할 데이터:', data);
                  			
