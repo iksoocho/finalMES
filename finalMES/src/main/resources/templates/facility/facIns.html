@@ -100,72 +100,106 @@ input[type="text"], input[type="date"] {
     color: black; /* 텍스트 색상 변경 */
 }
 
+.modal-dialog {
+    max-width: 45%; /* 모달의 최대 너비를 조정합니다. */
+}
+.modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+
+.modal-body th,
+.modal-body td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.modal-body th {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:hover {
+    background-color: #ddd;
+}
 </style>
 </head>
 <body>
-
 	<section layout:fragment="content">
-		
-
 		<div class="container">
-		<h1>설비점검관리</h1>
-			<div class="col">
-				<br> <br>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>점검코드</th>
-							<th colspan="2"><input type="text" id="facInsCode"
-								name="facInsCode" required readonly></th>
-							<th>설비코드</th>
-							<th colspan="2"><input type="text" id="facCode"
-								name="facCode" required></th>
-							<th>설비명</th>
-							<th colspan="2"><input type="text" id="facName"
-								name="facName" th:data-facCode="${facCode}" required></th>
-
-						</tr>
-						<tr>
-							<th>점검사항</th>
-							<th colspan="2"><input type="text" id="facInsCheck"
-								name="facInsCheck"></th>
-							<!-- <th>판정</th>
-                     <th colspan="2"><input type="text" id="facInsJud"
-                        name="facInsJud"></th> -->
-							<th>담당자</th>
-							<th colspan="2"><input type="text" id="facInsPerson"
-								name="facInsPerson" th:value="${username}" required></th>
-						</tr>
-						<tr>
-						<tr>
-							<th style="vertical-align: middle;">판정</th>
-							<td colspan="2" style="vertical-align: middle;"><label
-								style="margin-right: 10px;"> <input type="radio"
-									id="facInsJud1" name="facInsJud" value="적합"> 적합
-							</label> <label> <input type="radio" id="facInsJud2"
-									name="facInsJud" value="부적합"> 부적합
-							</label></td>
-						</tr>
-					</thead>
-				</table>
-				<input type="hidden" id="facNotCode" name="facNotCode" required>
-				<input type="hidden" id="facNotSituation" name="facNotSituation"
-					required>
-				<div class="text-center">
-					<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
-					<button type="button" id="insertBtn"
-						class="btn btn-outline-success">등록</button>
-					<button type="button" id="selectBtn"
-						class="btn btn-outline-success" data-bs-toggle="modal"
-						data-bs-target="#staticBackdropOne">조회</button>
-					<button type="button" class="btn btn-outline-primary"
-						onclick="downloadCSV()">Excel</button>
-					<input type="text" id="searchInput" oninput="searchFunction()"
-						placeholder="검색...">
-				</div>
-				<br> <br> <br>
-				<div id="grid" class="container"></div>
+			<h1>설비점검관리</h1>
+				<div class="col">
+				<br>
+				<br>
+			<div class="text-left" style="margin-bottom: 20px;">
+    			<button type="button" id="selectBtn" class="btn btn-outline-success"
+    			 data-bs-toggle="modal" data-bs-target="#staticBackdropOne">조회
+    			 </button>
+    			<button type="button" class="btn btn-outline-primary"
+    			 onclick="downloadCSV()">Excel
+    			</button>
 			</div>
+
+			<table class="table">
+				<thead>
+				
+					<tr>
+						<th>점검코드</th>
+						<th colspan="2"><input type="text" id="facInsCode"
+							name="facInsCode" required readonly></th>
+						<th>설비코드</th>
+						<th colspan="2"><input type="text" id="facCode"
+							name="facCode" required></th>
+					</tr>
+					<tr>
+						<th>점검사항</th>
+						<th colspan="2"><input type="text" id="facInsCheck"
+							name="facInsCheck"></th>
+						<th>설비명</th>
+						<th colspan="2"><input type="text" id="facName"
+							name="facName" th:data-facCode="${facCode}" required></th>
+					</tr>
+					<tr>
+					<tr>
+						<th style="vertical-align: middle;">판정</th>
+						<td colspan="2" style="vertical-align: middle;">
+							<label
+							style="margin-right: 10px;"> <input type="radio"
+							id="facInsJud1" name="facInsJud" value="적합"> 적합
+							</label>
+							 <label>
+							 	<input type="radio" id="facInsJud2"
+									   name="facInsJud" value="부적합"> 부적합
+							</label>
+						</td>
+						<th>담당자</th>
+						<th colspan="2"><input type="text" id="facInsPerson"
+							name="facInsPerson" th:value="${username}" required></th>
+					</tr>
+					
+				</thead>
+				
+				</table>
+					<input type="hidden" id="facNotCode" name="facNotCode" required>
+					<input type="hidden" id="facNotSituation" name="facNotSituation"
+						required>
+					<div class="text-center">
+						<button type="button" id="saveBtn" class="btn btn-outline-success">저장</button>
+						<button type="button" id="insertBtn"
+							class="btn btn-outline-success">등록</button>
+					</div>
+				    <br>
+				    <div class="text-left" style="margin-bottom: 3px;">
+				    <input type="text" id="searchInput" oninput="searchFunction()"
+							placeholder="검색...">
+					</div>
+			</div>
+			<div id="grid" class="container"></div>
 		</div>
 
 
@@ -210,7 +244,7 @@ input[type="text"], input[type="date"] {
 									th:onclick="'displaySelectedFacNotIns(this)'">
 									<td th:text="${NotIns.facCode}"></td>
 									<td th:text="${NotIns.facName}"></td>
-									<td th:text="${NotIns.facNotPerson}"></td>
+									<!-- <td th:text="${NotIns.facNotPerson}"></td> -->
 									<td th:text="${NotIns.facNotReason}"></td>
 									<td th:text="${NotIns.facNotSituation}"></td>
 								</tr>

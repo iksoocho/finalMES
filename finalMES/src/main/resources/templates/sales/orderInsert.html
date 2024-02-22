@@ -182,7 +182,7 @@ button {
 
 .unitPrice {
 	text-align: right;
-	padding-right: 32px;
+	padding-right: 10px;
 }
 </style>
 </head>
@@ -546,6 +546,7 @@ button {
 		var cellOrdCount = newRow.cells[5] || newRow.insertCell(5);
 		var cellUnitPrice = newRow.cells[6] || newRow.insertCell(6);
 		var cellTtlPrice = newRow.cells[7] || newRow.insertCell(7);
+		console.log(cellTtlPrice)
 		// 선택된 또는 새로운 행의 데이터 업데이트
 		cellNumber.innerHTML = rowCount++;
 		cellCheckbox.innerHTML = '<input type="checkbox">';
@@ -553,19 +554,19 @@ button {
 		cellProdUnit.innerHTML = prodUnit;
 		cellDlvyDate.innerHTML = '<input type="date" name="dlvyDate" id="dlvyDate_' + rowCount + '" value="' + dlvyDate + '">';
 		cellOrdCount.innerHTML = '<input type="number" id="ordCount_' + rowCount + '" name="ordCount" value="' + quantity + '" oninput="updateTotalPrice(' + rowCount + ')">';
-		cellUnitPrice.innerHTML = unitPrice;
+		
+		var formattedPrice = unitPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		cellUnitPrice.innerHTML = formattedPrice + ' 원';
 
 		ttlPrice = ttlPrice || 0;
-		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice" id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '" readonly>원';
+
+		cellTtlPrice.innerHTML = '<input type="number" class="ttlPrice" id="ttlPrice_' + rowCount + '" name="ttlCount" value="' + ttlPrice + '"style="text-align: right;" readonly>원';
 		toggleEmptyRowsVisibility();
 
 		// 새로 추가된 행에 클래스 설정
 		newRow.classList.remove('initially-hidden');
 
 		updateTotalSum();
-
-		
-		
 		
 	  // 히든 필드에 prod_code 저장
     var prodCodeHiddenInput = newRow.querySelector('input[name="prodCode"]');
@@ -582,6 +583,48 @@ button {
 
 
 		updateTotalCount();
+	}
+	
+	function updateTotalSum() {
+	    var tbody = document.getElementById('productTableBody');
+	    var rows = tbody.getElementsByTagName('tr');
+	    var totalQuantity = 0;
+	    var totalUnitPrice = 0; // 총 단가를 저장할 변수 추가
+	    var totalAmount = 0; // 추가: 총금액의 총합을 저장할 변수
+
+	    // 각 행의 수량을 가져와서 총합 계산
+	    for (var i = 0; i < rows.length; i++) {
+	        var quantityInput = rows[i].querySelector('input[name="ordCount"]');
+	        
+	        var unitPriceCell = rows[i].cells[6]; // 단가 열에 해당하는 셀
+	        var extractedNumber = unitPriceCell.innerText.replace(/[^\d]/g, '').replace(/\s/g, '');
+	        var numericValue = parseInt(extractedNumber, 10);
+	        
+	        var amountCell = rows[i].cells[7];
+	        
+			
+	        if (quantityInput) {
+	            totalQuantity += parseFloat(quantityInput.value) || 0;
+	        }
+
+	        if (numericValue) {
+	            // totalUnitPrice를 계산할 때 쉼표를 제거하여 사용
+	            totalUnitPrice += numericValue || 0;
+	        }
+
+	        if (amountCell && amountCell.querySelector('input')) {
+	            totalAmount += parseFloat(amountCell.querySelector('input').value) || 0;
+	        }
+	    }
+
+	    var totalQuantityCell = document.querySelector('.total .numberOne');
+	    var totalUnitPriceCell = document.querySelector('.total .numberTwo'); // 수정된 부분
+	    var totalAmountCell = document.querySelector('.total .numberThree');
+
+	    totalQuantityCell.innerText = addCommasToNumber(totalQuantity) + ' EA';
+	    totalUnitPriceCell.innerText = addCommasToNumber(totalUnitPrice) + ' 원';
+	    totalAmountCell.innerText = addCommasToNumber(totalAmount) + ' 원';
+	    updateTotalCount();
 	}
 
 	// 초기에 빈 행의 가시성을 전환하는 함수
@@ -620,8 +663,10 @@ button {
 
 		// Check if the cell exists before attempting to access its value
 		var unitPriceCell = document.getElementById('productTableBody').rows[rowNumber - 2].cells[6];
-		var unitPrice = unitPriceCell ? parseFloat(unitPriceCell.innerText) : 0;
-
+		var numericUnitPrice = parseFloat(unitPriceCell.innerText.replace(/[^\d]/g, ''));
+		console.log(numericUnitPrice);
+		var unitPrice = numericUnitPrice;
+		console.log(unitPrice)
 		var ttlPriceInput = document.getElementById('ttlPrice_' + rowNumber);
 
 		// 수량과 단가를 곱하여 총금액을 계산
@@ -638,43 +683,12 @@ button {
 		updateTotalSum();
 	}
 
-	function updateTotalSum() {
-		var tbody = document.getElementById('productTableBody');
-		var rows = tbody.getElementsByTagName('tr');
-		var totalQuantity = 0;
-		var totalUnitPrice = 0; // 총 단가를 저장할 변수 추가
-		var totalAmount = 0; // 추가: 총금액의 총합을 저장할 변수
-
-		// 각 행의 수량을 가져와서 총합 계산
-		for (var i = 0; i < rows.length; i++) {
-			var quantityInput = rows[i].querySelector('input[name="ordCount"]');
-			var unitPriceCell = rows[i].cells[6]; // 단가 열에 해당하는 셀
-			var amountCell = rows[i].cells[7];
-
-			if (quantityInput) {
-				totalQuantity += parseFloat(quantityInput.value) || 0;
-			}
-
-			if (unitPriceCell) {
-				totalUnitPrice += parseFloat(unitPriceCell.innerText) || 0;
-			}
-
-			if (amountCell && amountCell.querySelector('input')) {
-				totalAmount += parseFloat(amountCell.querySelector('input').value) || 0;
-			}
-		}
-
-		var totalQuantityCell = document.querySelector('.total .numberOne');
-		var totalUnitPriceCell = document.querySelector('.total .numberTwo'); // 수정된 부분
-		var totalAmountCell = document.querySelector('.total .numberThree');
-
-		totalQuantityCell.innerText = totalQuantity + ' EA';
-		totalUnitPriceCell.innerText = totalUnitPrice + ' 원';
-		totalAmountCell.innerText = totalAmount + ' 원';
-		updateTotalCount();
-
-	}
-
+	
+	// 포맷 함수 정의
+    function addCommasToNumber(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+	
 	function updateTotalCount() {
 		var tbody = document.getElementById('productTableBody');
 		var rows = tbody.getElementsByTagName('tr');
