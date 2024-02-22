@@ -147,6 +147,7 @@
 		    MAX(pdp.d_plan_count) AS d_plan_count, 
 		    pdi.ins_code,
 		    pdi.d_ins_count,
+		    find_codename(pdi.d_ins_state) d_ins_state,
 		    MAX(pdi.d_ins_sdate) AS d_ins_sdate,
 		    MAX(pdi.d_ins_edate) AS d_ins_edate
 		FROM
@@ -159,7 +160,8 @@
 			pdi.d_ins_code,
 		    pdi.prod_code,
 		    pdi.ins_code,
-		    pdi.d_ins_count
+		    pdi.d_ins_count,
+		    pdi.d_ins_state
 		ORDER BY
 		    pdi.prod_code
 	

@@ -253,6 +253,37 @@
 			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
 		};
 		
+		function getOutStatus2(value, row) {
+			console.log("value : " ,value.value); // 값 확인용 로그
+			let statusText, bgColor;
+			
+			
+
+			// 주문 상태에 따라 원하는 문자열과 배경색 설정
+			switch (value.value) {
+				case "생산대기":
+					statusText = '생산대기';
+					bgColor = 'yellow'; // 등록완료에 대한 배경색 설정
+					break;
+				case "생산중":
+					statusText = '생산중';
+					bgColor = '#4475FD'; // 계획 진행중에 대한 배경색 설정
+					break;
+				case "생산완료":
+					statusText = '생산완료';
+					bgColor = 'green'; // 계획 진행중에 대한 배경색 설정
+					break;
+				case "":
+				case undefined:
+				case null:
+					statusText = '등록 중';
+					bgColor = 'red'; 
+					break;
+
+			}
+			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+		};
+		
 		
 			let plan = [[${list}]];
 			let planGrid, planDGrid, matUseGrid;
@@ -515,6 +546,13 @@
 									step: 10  // 증가량 설정
 								}
 							}
+						},
+						{
+							header: '상태',
+							name: 'dinsState',
+							align: "center",
+							formatter: getOutStatus2,
+
 						},
 						
 						
@@ -1009,6 +1047,7 @@
 
 			});
 			
+			
 			let selectedRowKey;
 			document.getElementById('planDGrid').addEventListener('change', function(e) {
 			    if (e.target.type === 'radio') {
@@ -1033,6 +1072,23 @@
 			        console.log("dinsdata : " , rowData.dinsCode)
 			        let dinsCode = rowData.dinsCode;
 			        let prodCode = rowData.prodCode;
+			        let dinsState = rowData.dinsState;
+			        
+			        if(dinsState == '생산중'){
+			        	Swal.fire({
+			                icon: 'error',
+			                text: '생산중인 지시입니다.'
+			            })
+			            return;
+			        }
+			        
+			        if(dinsState == '생산완료'){
+			        	Swal.fire({
+			                icon: 'error',
+			                text: '생산완료 된 지시입니다.'
+			            })
+			            return;
+			        }
 			        
 			         location.href = '/workRegist?dInsCode=' + dinsCode + '&prodCode=' + prodCode;
 					
