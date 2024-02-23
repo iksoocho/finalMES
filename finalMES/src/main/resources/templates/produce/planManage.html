@@ -55,6 +55,9 @@
 	background-color: #FDC0CE;
 	/* 예시로 빨간색을 지정했습니다. */
 }
+[data-column-name="planCode"]{
+cursor: pointer;
+}
 </style>
 </head>
 
@@ -857,8 +860,12 @@
 					ordcount = Math.round(parseInt(target.find('td:eq(5)').text()) * 1.1);
 					
 					obj.dplanCount = target.find('td:eq(6)').text();
-					if(ordcount > parseInt(target.find('td:eq(6)').text())){
-						plancount = parseInt(target.find('td:eq(6)').text());
+					if(Math.round(parseInt(target.find('td:eq(5)').text())*1.1) > parseInt(target.find('td:eq(6)').text())){
+						Swal.fire({
+				                icon: 'error',
+				                text: `최소 계획량은 ${Math.round(parseInt(target.find('td:eq(5)').text())*1.1)}개 입니다.`
+				            })
+						return;
 					}
 					
 					
