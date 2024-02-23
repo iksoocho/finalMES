@@ -17,7 +17,7 @@ public class MatInputVO {
 	private String matManager;
 	private String matCount; // 총재고량
 	// join
-//	private String InputDate; // 자재 입고일 디폴트 별칭
+	
 	private String matOrManager;
 	private String matOutCount;
 	private String matUnit;

@@ -617,7 +617,7 @@
 						end: '', // 종료 일자, 사용자 입력에 따라 설정
 						prodCount: detail.prodCount, // 현재 재고
 						ordCount: detail.ordCount, // 주문 수량
-						dplanCount: detail.ordCount*1.1, // 계획량, 사용자 입력에 따라 설정
+						dplanCount: Math.round(detail.ordCount*1.1), // 계획량, 사용자 입력에 따라 설정
 						dlvyDate: detail.dlvyDate, // 납기 일자
 						_attributes: {
 
@@ -1040,14 +1040,18 @@
 					}
 					console.log("st1, st2, end1, end2 : ", startDate, startDate2, endDate1, endDate2);
 					
-					ordcount = parseInt(target.find('td:eq(5)').text())*1.1;
+					
 					
 					obj.dplanCount = target.find('td:eq(6)').text();
 					console.log("dplanCount : ", obj.dplanCount)
-					if(ordcount > parseInt(target.find('td:eq(6)').text())){
-						plancount = parseInt(target.find('td:eq(6)').text());
+					if(Math.round(parseInt(target.find('td:eq(5)').text())*1.1) > parseInt(target.find('td:eq(6)').text())){
+						Swal.fire({
+				                icon: 'error',
+				                text: `최소 계획량은 ${Math.round(parseInt(target.find('td:eq(5)').text())*1.1)}개 입니다.`
+				            })
+						return;
 					}
-
+					
 					planDetailData.push(obj);
 
 				}
@@ -1076,13 +1080,7 @@
 					return;
 				}
 				
-				if(ordcount > plancount){
-					Swal.fire({
-			                icon: 'error',
-			                text: `최소 계획량은 ${ordcount}개 입니다.`
-			            })
-					return;
-				}
+				
 			
 				data.planDVOList = planDetailData;
 				

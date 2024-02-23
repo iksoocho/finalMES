@@ -279,33 +279,34 @@
 
 
             // 상단의 그리드의 제품리스트에서 해당 제품 클릭 후 추가버튼 누를 시 하단의 그리드의 추가
-            document.querySelector('#addRowBtn').addEventListener('click', function () {
-               // 선택한 행의 데이터 가져오기
-               const focusedCell = planGrid.getFocusedCell();
-
-               // 선택한 행의 데이터 가져오기
-               const rowData = planGrid.getRow(focusedCell.rowKey);
-
-               // rowData가 null인 경우 알림 표시 후 함수 종료
-              if (!rowData) {
-                Swal.fire({
-                icon: 'warning',
-                text: '제품을 선택하세요.'
-               });
-               return;
-               }
-
-               // 선택한 행의 제품 코드와 제품명 가져오기
-               const prodCode = rowData.prodCode;
-               const prodName = rowData.prodName;
-
-               // 하단 그리드에 새로운 행 추가
-               planDGrid.appendRow({prodCode: prodCode, prodName: prodName});
-
-               // 추가된 행을 하이라이트 표시합니다.
-               const lastRowIndex = planDGrid.getRowCount() - 1;
-               planDGrid.addRowClassName(lastRowIndex, 'new-row');
-            });
+           document.querySelector('#addRowBtn').addEventListener('click', function () {
+			    // 선택한 행의 데이터 가져오기
+			    const focusedCell = planGrid.getFocusedCell();
+			    const rowData = planGrid.getRow(focusedCell.rowKey);
+			    
+			    // rowData가 null인 경우 알림 표시 후 함수 종료
+			    if (!rowData) {
+			      Swal.fire({
+			        icon: 'warning',
+			        text: '제품을 선택하세요.'
+			      });
+			      return;
+			    }
+			
+			    // 선택한 행의 제품 코드와 제품명 가져오기
+			    const prodCode = rowData.prodCode;
+			    const prodName = rowData.prodName;
+			
+			    // 현재 그리드의 행 수를 기반으로 bomNum 계산
+			    const newBomNum = planDGrid.getRowCount() + 1;
+			
+			    // 하단 그리드에 새로운 행 추가, bomNum에 계산된 값을 사용합니다.
+			    planDGrid.appendRow({prodCode: prodCode, prodName: prodName, bomNum: newBomNum}, {focus: true});
+			
+			    // 새로 추가된 행을 하이라이트 표시합니다.
+			    const newRowKey = planDGrid.getRowAt(planDGrid.getRowCount() - 1).rowKey;
+			    planDGrid.addRowClassName(newRowKey, 'new-row');
+			});
             
             
             planGrid.on('click', function (ev) {
@@ -356,6 +357,11 @@
                      data.bomVO = bomObj;
 
                      console.log("data : " + data);
+                     if(bomCode == null){
+                    	 props.grid.removeRow(props.rowKey);
+                     }else{
+                    	 
+                     
                 
                      Swal.fire({
                            title: 'bom 정보를 삭제 하시겠습니까?',
@@ -402,7 +408,7 @@
                                )
                            }
                        });
-
+                     }
                   });
 
                   this.el = el;
@@ -427,7 +433,7 @@
                      header: '순번',
                      name: 'bomNum',
                      align: "center",
-                     editor: "text"
+                     
                   },
                   {
                      header: '제품 코드',

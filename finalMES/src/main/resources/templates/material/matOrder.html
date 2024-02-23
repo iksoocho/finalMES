@@ -384,15 +384,11 @@ input[type="text"]:focus {
                          					statusText = '발주 완료';
                          					bgColor = 'green'; // 등록완료에 대한 배경색 설정
                          					break;
-                         				case "발주대기":
-                         					statusText = '발주 대기';
-                         					bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
-                         					break;
                          				case "":
                          				case undefined:
                          				case null:
-                         					statusText = '알수없음';
-                         					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+                         					statusText = '발주대기';
+                         					bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
                          					break;
 
                          			}
