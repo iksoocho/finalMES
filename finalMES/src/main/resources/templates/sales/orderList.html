@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
 <style>
-input{
+input {
 	padding-left: 10px;
 }
+
 .btn.btn-outline-primary {
 	float: right;
 	margin-right: 10px;
@@ -18,7 +19,6 @@ input{
 }
 
 .orderStatus {
-	
 	width: 100px;
 	height: 34px;
 	border: solid 1px #ebebeb;
@@ -52,8 +52,20 @@ input{
 	padding-top: 10px;
 }
 
+.orderInfo {
+	display: inline-block;
+	font-family: 'Noto Sans KR';
+	font-size: 20px;
+	color: #666;
+	font-weight: 700;
+}
+
 .titleOne {
 	display: inline-block;
+	font-family: 'Noto Sans KR';
+	font-size: 20px;
+	color: #666;
+	font-weight: 700;
 }
 
 .ttlContainer {
@@ -74,7 +86,7 @@ input{
 		<div class="containerOne">
 			<h4 class="orderSearch">주문 조회</h4>
 			<h5 class="titleOne">목록</h5>
-			<small class="totalOrdCount" style="margin-right: 20px;"> (총 주문 수: <span th:text="${orderList.size()}"></span>)
+			<small class="totalOrdCount" style="margin-right: 20px;"> (총 주문 수: <span id="filteredOrdCount"></span>)
 			</small> <select id="orderStatus" class="orderStatus">
 				<option value="o" selected>상태</option>
 				<option value="o2">등록완료</option>
@@ -90,14 +102,14 @@ input{
 			<button type="button" class="btn btn-outline-primary" id="excel" onclick="downloadCSV()">EXCEL</button>
 
 			<div id="grid"></div>
-			<h5>상세</h5>
+			<h5 class="orderInfo">상세</h5>
 			<div></div>
 			<div id="detailGrid"></div>
 		</div>
 		<script th:inline="javascript">
 		let orderList = [[${orderList}]]
 		let grid = tui.Grid;
-		
+		let filteredOrdCount = orderList.length;
 		class CustomDivRenderer {
 		      constructor(props) {
 		        const el = document.createElement('div');
@@ -111,33 +123,38 @@ input{
 
 		      render(props) {
 		    	  let statusText, bgColor;
+		    	  
 		    	  switch (props.value) {
 		            case 'o2':
 		                statusText = '등록완료';
-		                bgColor = 'green'; // 등록완료에 대한 배경색 설정
+		                bgColor = 'bg-success'; // 등록완료에 대한 배경색 설정
 		                break;
 		            case 'o3':
 		                statusText = '처리중';
-		                bgColor = 'yellow'; // 처리중에 대한 배경색 설정
+		                bgColor = 'bg-warning'; // 처리중에 대한 배경색 설정
 		                break;
 		            case 'o4':
 		                statusText = '출고대기';
-		                bgColor = 'yellow'; // 종결에 대한 배경색 설정
+		                bgColor = 'bg-warning'; // 종결에 대한 배경색 설정
 		                break;
 		            case 'o5':
 		            	statusText = '출고중';
-		            	bgColor = 'yellow';
+		            	bgColor = 'bg-warning';
 		            	break;
 		            case 'o6':
 		            	statusText = '종결';
-		            	bgColor = 'red';
+		            	bgColor = 'bg-danger';
 		            	break;
 		            default:
 		                statusText = value;
-		                bgColor = 'gray'; // 기본 배경색
+		                bgColor = '#6c757d'; // 기본 배경색
 		        	}
-				this.el.style.backgroundColor = bgColor
+				this.el.style.backgroundColor = bgColor;
 		        this.el.innerText = String(statusText);
+		        this.el.style.color = '#f5f6f7';
+		        this.el.style.fontWeight = 'bold';
+		        this.el.className = bgColor;
+		        this.el.style.padding = '3px 0px';
 		      }
 		 }
 		
@@ -370,6 +387,7 @@ input{
 	        console.log("ordState", ordState)
 			if (ordState === 'o') {
 				grid.resetData(orderList);
+				updateFilteredOrdCount(orderList);
 		    } else {
 		        // 그 외에는 선택된 상태에 대한 목록을 가져오기 위해 상태 값을 전송
 		        data = {
@@ -397,6 +415,7 @@ input{
 		    	        });
 		            } else {
 		                grid.resetData(data);
+		                updateFilteredOrdCount(data);
 		            }
 			    })
 			    .catch(error => {
@@ -474,6 +493,7 @@ input{
 	    	        });
 	            } else {
 	                grid.resetData(data);
+	                updateFilteredOrdCount(data);
 	            }
 		    })
 		    .catch(error => {
@@ -584,6 +604,24 @@ input{
             document.body.appendChild(link);
             link.click();
         }
+		
+		// 필터링된 주문 수를 업데이트하는 함수
+	    function updateFilteredOrdCount(filteredData) {
+	        filteredOrdCount = filteredData.length;
+	        console.log('주문수',filteredOrdCount);
+	        document.getElementById('filteredOrdCount').innerText = filteredOrdCount;
+	    }
+
+	    // 필터링된 데이터가 변경될 때마다 호출되는 이벤트 리스너 등록
+	    grid.on('afterFilter', function (event) {
+	        const filteredData = grid.getFilteredItems();
+	        updateFilteredOrdCount(filteredData);
+	    });
+	    
+	    document.addEventListener('DOMContentLoaded', function () {
+	        // 페이지가 로드될 때 초기 필터링된 주문 수를 설정합니다.
+	        document.getElementById('filteredOrdCount').innerText = filteredOrdCount;
+	    });
 		
 		</script>
 	</section>
