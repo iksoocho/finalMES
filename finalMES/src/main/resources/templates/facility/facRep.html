@@ -22,7 +22,7 @@ table {
 	margin-bottom: 20px;
 }
 
-input[type="text"], input[type="date"] {
+input[type="text"], input[type="date"],  {
 	width: 200px;
 	box-sizing: border-box;
 }
@@ -61,7 +61,7 @@ h1 {
     margin-right: 5px; /* 버튼 간격 설정 */
 }
 
-input[type="text"], input[type="date"] {
+input[type="text"], input[type="date"], textarea {
     width: 100%; 
     padding: 8px;
     border-radius: 5px; 
@@ -180,25 +180,25 @@ option:checked {
 	                <thead>
 	                    <tr>
 	                        <th>수리코드</th>
-	                        <th colspan="2"><input type="text" id="facRepCode" name="facRepCode" required readonly></th>
+	                        <th><input type="text" id="facRepCode" name="facRepCode" required readonly></th>
 	                        <th>설비코드</th>
-	                        <th colspan="2"><input type="text" id="facCode" name="facCode" required readonly></th>
+	                        <th><input type="text" id="facCode" name="facCode" required readonly></th>
 	                    </tr>
 	                    <tr>
 	                        <th>수리사항</th>
-	                        <th colspan="2"><input type="text" id="facRepRepairs" name="facRepRepairs"></th>
+	                        <th><input type="text" id="facRepRepairs" name="facRepRepairs"></th>
 	                        <th>설비명</th>
-	                        <th colspan="2"><input type="text" id="facName" name="facName" th:data-facCode="${facCode}" required readonly></th>
+	                        <th><input type="text" id="facName" name="facName" th:data-facCode="${facCode}" required readonly></th>
 	                    </tr>
 	                    <tr>
 	                        <th>등록일자</th>
-	                        <th colspan="2"><input type="date" id="facRepDate" name="facRepDate" required></th>
+	                        <th><input type="date" id="facRepDate" name="facRepDate" required></th>
 	                        <th>담당자</th>
-	                        <th colspan="2"><input type="text" id="facRepPerson" name="facRepPerson" th:value="${username}" required></th>
+	                        <th><input type="text" id="facRepPerson" name="facRepPerson" th:value="${username}" required></th>
 	                    </tr>
 	                    <tr>
 	                        <th>수리내용</th>
-	                        <td colspan="2"><textarea rows="3" id="facRepContent" name="facRepContent" style="resize: none; width: 100%;"></textarea></td>
+	                        <td><textarea rows="3" id="facRepContent" name="facRepContent" style="resize: none; width: 100%;"></textarea></td>
 	                    </tr>
 	                </thead>
             	</table>
@@ -206,7 +206,7 @@ option:checked {
 		            <input type="hidden" id="facNotCode" name="facNotCode" value="">
 		            <input type="hidden" id="facNotSituation" name="facNotSituation" required>
 			            <div class="text-center">
-			                <button type="button" id="saveBtn" class="btn btn-outline-primary">수정</button>
+			                <button type="button" id="saveBtn" class="btn btn-outline-primary">저장</button>
 			                <button type="button" id="insertBtn" class="btn btn-outline-primary">등록</button>
 			            </div>
 			            <br>
@@ -500,8 +500,17 @@ option:checked {
 
          	
         // 그리드 페이징
-    
-        const grid = new tui.Grid({
+    	
+        document.addEventListener('DOMContentLoaded', function () {
+        	let grid = tui.Grid;
+        	grid.applyTheme('clean', {
+      			  row: {
+      			    hover: {
+      			      background: '#d4e9f2'
+      			    }
+      			  }
+      			});
+        	grid = new tui.Grid({
             el: document.getElementById('grid'),
             data: [],
             scrollX: false,
@@ -548,7 +557,7 @@ option:checked {
          	          name: 'facNotSituation',
          	          formatter: getOutStatus,
          	          align: 'center'
-         	        }
+         	    }
        
             ],
             rowHeaders: ['rowNum'],
@@ -570,8 +579,7 @@ option:checked {
             console.error('Error fetching data:', error);
             alert("데이터 불러오기 실패!");
         });
-        
-     	
+       
      	
         //  차기점검을 날짜포맷
         function formatDate(dateString) {
@@ -617,7 +625,7 @@ option:checked {
             }
         });
         
-        
+        });
         
         function displaySelectedFacNotIns(element) {
     		var facCode = element.getAttribute('data-facCode');

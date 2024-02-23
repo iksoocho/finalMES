@@ -303,17 +303,7 @@ option:checked {
              });
          });
    		
-   	//  차기점검을 날짜포맷
-        function formatDate(dateString) {
-   		if(dateString.value == null) {
-   			return '';
-   		}
-            // dateString을 Date 객체로 파싱
-            const date = new Date(dateString.value);
-            // 날짜 포맷 변경
-            const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-            return formattedDate;
-        } 
+   
    	
    	/* 	// 엑셀다운로드
    		function downloadCSV() {
@@ -334,9 +324,18 @@ option:checked {
  
    
    	 // 그리드 페이징
+   	 document.addEventListener('DOMContentLoaded', function () {
    	    let facNotList = [[${nlist}]];
-   	 	console.log("facNotList ",facNotList);
-   	    const grid = new tui.Grid({
+   	 	let grid = tui.Grid;
+   	 	grid.applyTheme('clean', {
+			  row: {
+			    hover: {
+			      background: '#d4e9f2'
+			    }
+			  }
+			});
+   	      grid = new tui.Grid({
+   	    	
    	      el: document.getElementById('grid'),
    	      data: facNotList,
    	      scrollX: false,
@@ -394,8 +393,48 @@ option:checked {
    	      }
    	    });
    	    
+   	// 설비코드 클릭 시 이벤트 처리해서 위에 input박스에 값넣기
+		function handleFacCodeClick(event) {
+    		// 클릭한 행의 데이터 가져오기
+		    const rowData = grid.getRowAt(event.rowKey);
+		
+		    // 설비명과 담당자 값을 가져와서 input 박스에 넣기
+		    const facName = rowData.facName;
+		    const facPerson = rowData.facPerson;
+		    const facNotCode = rowData.facNotCode;
+		    const facCode = rowData.facCode;
+		    const facNotSdate = rowData.facNotSdate;
+		    const facNotLdate = rowData.facNotLdate;
+		
+		    // 값을 input 요소에 할당
+		    document.getElementById('facNotCode').value = facNotCode;
+		    document.getElementById('facCode').value = facCode;
+		    document.getElementById('facName').value = facName;
+		    document.getElementById('facPerson').value = facPerson;
+		    document.getElementById('facNotSdate').value = facNotSdate;
+		    document.getElementById('facNotLdate').value = facNotLdate;
+		}
+
+   	    // grid 생성 코드 아래에 설비코드 클릭 이벤트 리스너 등록
+   	    grid.on('click', (event) => {
+   	      if (event.columnName === 'facCode') {
+   	        handleFacCodeClick(event);
+   	      }
+   	    });
    	    
-   	    
+   		//  차기점검을 날짜포맷
+        function formatDate(dateString) {
+   		if(dateString.value == null) {
+   			return '';
+   		}
+            // dateString을 Date 객체로 파싱
+            const date = new Date(dateString.value);
+            // 날짜 포맷 변경
+            const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+            return formattedDate;
+        } 
+   	 });
+   		
    	 function downloadCSV() {
          // 헤더 생성
          const header = [
@@ -436,34 +475,7 @@ option:checked {
          link.click();
      }
 
-   	    // 설비코드 클릭 시 이벤트 처리해서 위에 input박스에 값넣기
-		function handleFacCodeClick(event) {
-    		// 클릭한 행의 데이터 가져오기
-		    const rowData = grid.getRowAt(event.rowKey);
-		
-		    // 설비명과 담당자 값을 가져와서 input 박스에 넣기
-		    const facName = rowData.facName;
-		    const facPerson = rowData.facPerson;
-		    const facNotCode = rowData.facNotCode;
-		    const facCode = rowData.facCode;
-		    const facNotSdate = rowData.facNotSdate;
-		    const facNotLdate = rowData.facNotLdate;
-		
-		    // 값을 input 요소에 할당
-		    document.getElementById('facNotCode').value = facNotCode;
-		    document.getElementById('facCode').value = facCode;
-		    document.getElementById('facName').value = facName;
-		    document.getElementById('facPerson').value = facPerson;
-		    document.getElementById('facNotSdate').value = facNotSdate;
-		    document.getElementById('facNotLdate').value = facNotLdate;
-		}
-
-   	    // grid 생성 코드 아래에 설비코드 클릭 이벤트 리스너 등록
-   	    grid.on('click', (event) => {
-   	      if (event.columnName === 'facCode') {
-   	        handleFacCodeClick(event);
-   	      }
-   	    });
+   	    
    	    
       	// 검색 기능 추가
    		function searchFunction() {

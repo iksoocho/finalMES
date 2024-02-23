@@ -4,6 +4,20 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
+.detailInfo{
+	display: inline-block;
+	font-family: 'Noto Sans KR';
+	font-size: 20px;
+	color: #666;
+	font-weight: 700;
+}
+.outInfo{
+	display: inline-block;
+	font-family: 'Noto Sans KR';
+	font-size: 20px;
+	color: #666;
+	font-weight: 700;
+}
 .outManage{
 	font-family: 'Noto Sans KR';
 	font-size: 24px;
@@ -13,9 +27,6 @@
 .deleteButton{
 	margin: 0px;
 	margin-right: 9px;
-	background-color: #DC3545;
-	border: solid 0.3px gray;
-	border-radius: 5px;
 }
 .tui-grid-cell.tui-grid-cell-has-input.tui-grid-cell-editable.ttlPrice {
     background-color: #FDC0CE;
@@ -202,7 +213,7 @@ button {
 		<div class="mainContainerOne">
 			<h4 class="outManage">완제품출고 등록</h4>
 			<div class="mainContainerTwo">
-				<h5>출고서정보</h5>
+				<h5 class="outInfo">출고서정보</h5>
 				<button class="btn btn-secondary" onclick="resetForm()">초기화</button>
 				<button class="btn btn-secondary" id="prodDlvyInsert">등록</button>
 				<table class="orderInfoOne">
@@ -251,7 +262,7 @@ button {
 				</table>
 			</div>
 		<div class=containerOne>
-			<h5>상세정보</h5>
+			<h5 class="detailInfo">상세정보</h5>
 			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" id="addGrid">재고현황 불러오기</button>
 			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd" onclick="addToMainGridOrd()">주문서 불러오기</button>
 		</div>

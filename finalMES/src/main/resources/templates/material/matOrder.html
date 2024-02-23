@@ -164,7 +164,7 @@ input[type="text"]:focus {
 
                          	            
                          	           Swal.fire({
-               						    title: '사원정보를 삭제 하시겠습니까?',
+               						    title: '발주정보를 삭제 하시겠습니까?',
                						    icon: 'warning',
                						    showCancelButton: true,
                						    confirmButtonColor: '#3085d6',
@@ -382,21 +382,16 @@ input[type="text"]:focus {
                          			switch (value.value) {
                          				case "발주완료":
                          					statusText = '발주 완료';
-                         					bgColor = 'green'; // 등록완료에 대한 배경색 설정
-                         					break;
-                         				case "발주대기":
-                         					statusText = '발주 대기';
-                         					bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
+                         					bgColor = '#dc3545'; // 등록완료에 대한 배경색 설정
                          					break;
                          				case "":
                          				case undefined:
                          				case null:
-                         					statusText = '알수없음';
-                         					bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
-                         					break;
+                         					statusText = '발주 대기';
+                         					bgColor = '#ffc107'; // 계획 진행중에 대한 배경색 설정
 
                          			}
-                         			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+                         			return `<div style="background-color: ${bgColor}; font-weight: bold; padding: 3px 0px; color: #f5f6f7">${statusText}</div>`;
                          		};
                          	    
 
@@ -456,6 +451,9 @@ input[type="text"]:focus {
                          	            perPage: 5
                          	        }
                          	    });
+                         	    
+                            
+                         	   
                          	});
                          	
                          	// 날짜 형식 지정 함수
@@ -677,7 +675,17 @@ input[type="text"]:focus {
      	     }
      	 }
         
-    	// 엑셀 다운로드
+
+    	
+		// 총금액 포맷터 함수
+		function formatTotalTtlPrice({ value }) {
+		    if (value) {
+		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		    }
+		    return '';
+		}
+		
+		// 엑셀 다운로드
     	function downloadCSV() {
     		const grids = [
     			{ data : ordGrid.getData(),
@@ -727,15 +735,7 @@ input[type="text"]:focus {
             link.setAttribute('download', 'data.csv');
             document.body.appendChild(link);
             link.click();
-        }
-    	
-		// 총금액 포맷터 함수
-		function formatTotalTtlPrice({ value }) {
-		    if (value) {
-		        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-		    }
-		    return '';
-		}
+        } 
 
         
       </script>

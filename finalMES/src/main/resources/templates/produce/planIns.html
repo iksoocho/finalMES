@@ -245,21 +245,21 @@
 			switch (value.value) {
 				case "작업 등록":
 					statusText = '작업 등록';
-					bgColor = 'green'; // 등록완료에 대한 배경색 설정
+					bgColor = '#198754'; // 등록완료에 대한 배경색 설정
 					break;
 				case "지시 등록":
 					statusText = '지시 등록';
-					bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
+					bgColor = '#ffc107'; // 계획 진행중에 대한 배경색 설정
 					break;
 				case "":
 				case undefined:
 				case null:
 					statusText = '등록 중';
-					bgColor = 'red'; 
+					bgColor = '#dc3545'; 
 					break;
 
 			}
-			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+			return `<div style="background-color: ${bgColor}; font-weight: bold; padding: 3px 0px; color: #f5f6f7; ">${statusText}</div>`;
 		};
 		
 		function getOutStatus2(value, row) {
@@ -272,7 +272,7 @@
 			switch (value.value) {
 				case "생산대기":
 					statusText = '생산대기';
-					bgColor = 'yellow'; // 등록완료에 대한 배경색 설정
+					bgColor = '#ffc107'; // 등록완료에 대한 배경색 설정
 					break;
 				case "생산중":
 					statusText = '생산중';
@@ -280,7 +280,7 @@
 					break;
 				case "생산완료":
 					statusText = '생산완료';
-					bgColor = 'green'; // 계획 진행중에 대한 배경색 설정
+					bgColor = '#198754'; // 계획 진행중에 대한 배경색 설정
 					break;
 				case "":
 				case undefined:
@@ -290,7 +290,7 @@
 					break;
 
 			}
-			return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+			return `<div style="background-color: ${bgColor}; font-weight: bold; padding: 3px 0px; color: #f5f6f7; ">${statusText}</div>`;
 		};
 		
 		

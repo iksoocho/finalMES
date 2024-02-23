@@ -226,21 +226,21 @@ cursor: pointer;
 				switch (value.value) {
 					case "지시 등록":
 						statusText = '지시 등록';
-						bgColor = 'green'; // 등록완료에 대한 배경색 설정
+						bgColor = '#198754'; // 등록완료에 대한 배경색 설정
 						break;
 					case "계획 등록":
 						statusText = '계획등록';
-						bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
+						bgColor = '#ffc107'; // 계획 진행중에 대한 배경색 설정
 						break;
 					case "":
 					case undefined:
 					case null:
 						statusText = '등록 중';
-						bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+						bgColor = '#dc3545'; // 계획 진행중에 대한 배경색 설정
 						break;
 
 				}
-				return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+				return `<div style="background-color: ${bgColor}; font-weight: bold; color: #f5f6f7; padding: 3px 0px;">${statusText}</div>`;
 			};
 
 			class NumberEditor {
@@ -397,6 +397,7 @@ cursor: pointer;
 						{
 							header: '삭제',
 							name: 'deleteButton',
+							className: 'deleteButton',
 							align: "center",
 							renderer: {
 								type: DeleteButtonRenderer
