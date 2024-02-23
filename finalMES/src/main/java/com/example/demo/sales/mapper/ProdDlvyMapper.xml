@@ -43,7 +43,7 @@
 		FROM out_list outl
 		LEFT JOIN ord_list ordl ON(outl.ord_code = ordl.ord_code)
 		LEFT JOIN business bus ON(ordl.business_code = bus.business_code)
-		ORDER BY outl.out_date
+		ORDER BY outl.out_date DESC
 	</select>
 	
 	<!-- 출고 상세 조회 -->
