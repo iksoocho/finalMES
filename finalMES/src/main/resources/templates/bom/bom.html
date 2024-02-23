@@ -29,71 +29,88 @@
    background-color: #e0f7fa;
    /* 예시로 빨간색을 지정했습니다. */
 }
-/* 모달 스타일 */
-.modal-dialog {
-   max-width: 400px; /* 모달 창의 최대 너비를 600px로 설정 */
-}
-
 .modal-content {
-   border-radius: 10px;
+    border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .modal-header {
-   background-color: #007bff;
-   color: white;
-   border-radius: 10px 10px 0 0;
-}
-
-.modal-body {
-   padding: 20px;
+    background-color: #007bff; 
+    color: white; 
+    border-radius: 10px 10px 0 0;
 }
 
 .modal-footer {
-   border-radius: 0 0 10px 10px;
+    background-color: #f8f9fa; 
+    border-top: none; 
+    border-radius: 0 0 10px 10px; 
 }
-
 .modal-title {
-   font-size: 24px;
+    font-size: 24px; 
+    font-weight: bold; 
+    color: black; 
 }
 
-.table th, .table td {
-   text-align: center;
+select {
+    width: 100%;
+    padding: 8px; 
+    border-radius: 5px; 
+    border: 1px solid #ced4da; 
+    background-color: #fff; 
+    font-size: 16px; 
+    color: #495057; 
 }
 
-.modal-table {
-   width: 100%;
-   border-collapse: collapse;
+select:focus {
+    outline: none; 
+    border-color: #80bdff; 
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); 
 }
 
-.modal-table th, .modal-table td {
-   padding: 10px;
-   border-bottom: 1px solid #dee2e6;
+select::-ms-expand {
+    display: none; 
 }
 
-.modal-table th {
-   background-color: #f8f9fa;
+.select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; 
 }
 
-.modal-table tbody tr:hover {
-   background-color: #f2f2f2;
-}
 
-/* 모달 창 외부를 클릭하여 닫을 수 있도록 */
-.modal-backdrop {
-   opacity: 0.2;
+option:checked {
+    background-color: #007bff; 
+    color: #fff; 
 }
-
 .modal-body table {
-   margin: auto; /* 표를 수평 가운데로 정렬합니다. */
-   margin-bottom: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    cursor: pointer;
 }
 
-.modal-body table th,
-.modal-body table td {
-   text-align: center; 
-   padding: 15px;
+.modal-body th,
+.modal-body td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
 }
 
+.modal-body th {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.modal-body tr:hover {
+    background-color: #ddd;
+}
+[data-column-name="prodName"],[data-column-name="prodCode"]{
+cursor: pointer;
+}
 </style>
 </head>
 
@@ -312,7 +329,7 @@
             planGrid.on('click', function (ev) {
                console.log(ev.columnName);
                var columnName = ev.columnName;
-               if (columnName === 'prodCode') {
+               if (columnName === 'prodCode' || columnName === 'prodName') {
                   var rowKey = ev.rowKey;
                   var rowData = planGrid.getRow(rowKey);
 
@@ -501,7 +518,7 @@
                   materialModal.show();
                } 
             });
-            
+               
             planDGrid.on('click', function (ev) {
                if (ev.columnName === 'procCode') {
                   const rowData = planDGrid.getRow(ev.rowKey);
@@ -638,14 +655,17 @@
                      return response.text();
                   })
                   .then(data => {
-                     console.log('Success:', data);
-                     alert(data);
-                     location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
+                	  Swal.fire({
+                          icon: 'success',
+                          text: '등록이 완료되었습니다.'
+                      }).then(() => {
+                          location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
+                      });
                   })
                   .catch(error => {
-                     console.error('Error:', error);
+                      console.error('Error:', error);
                   });
-            }
+          }
 
             // 이 함수를 이벤트 핸들러나 다른 곳에서 호출
             performAction();
@@ -697,9 +717,12 @@
                   return response.text();
                })
                .then(data => {
-                  console.log('Success:', data);
-                  alert(data);
-                  location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
+            	   Swal.fire({
+                       icon: 'success',
+                       text: '수정이 완료되었습니다.'
+                   }).then(() => {
+                       location.href = '/bom'; // 성공적으로 처리된 후 리디렉트
+                   });
                })
                .catch(error => {
                   console.error('Error:', error);
