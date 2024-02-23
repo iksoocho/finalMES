@@ -29,6 +29,8 @@ public class MatOrderVO {
 	private int matOrICount;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date desiredDate;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date matOrDueDate;
 	private String businessName;
 	private String businessManager;
