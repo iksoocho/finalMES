@@ -353,7 +353,7 @@
                     등록취소
                   </button>
                 </div>
-                <input type="hidden" id="hiddenProcCode" value="proc01" />
+                <input type="hidden" id="hiddenProcCode" th:value="${proc[0].procCode}" />
               </div>
             </div>
           </div>
@@ -523,7 +523,7 @@
 		// 모달창 공정누르면 설비목록출력
         document.querySelectorAll(".proc-row").forEach((row) => {
                 row.addEventListener("click", function () {
-                  const procCode = this.getAttribute("data-proc-code");
+                  let procCode = this.getAttribute("data-proc-code");
                   console.log("procCode : ", procCode);
                   document.querySelector('input[id="hiddenProcCode"]').value = procCode;
                   fetch("facList?procCode=" + procCode)
