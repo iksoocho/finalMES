@@ -142,23 +142,17 @@ public class PlanServiceImpl implements PlanService{
 	public void insertInsWithDetail(InsCompositeVO insCompositeVO) {
 		planMapper.updatePlanStateZero(insCompositeVO.getPlanVO().getPlanCode());
 		
-		// prod_plan에 데이터 삽입
     	planMapper.insertPlanInsInfo(insCompositeVO.getPlanInsVO());
     	
-    	
-    	//루프 돌면서 상세 insert
         for (int i =0; i<insCompositeVO.getPlanInsDList().size(); i++) {
-        	insCompositeVO.getPlanInsDList().get(i).setInsCode(insCompositeVO.getPlanInsVO().getInsCode()); // prod_d_plan의 각 항목에 planCode 설정
-            planMapper.insertPlanDInsInfo(insCompositeVO.getPlanInsDList().get(i)); // prod_d_plan에 데이터 삽입
-            System.out.println("등록성공");
+        	insCompositeVO.getPlanInsDList().get(i).setInsCode(insCompositeVO.getPlanInsVO().getInsCode()); 
+            planMapper.insertPlanDInsInfo(insCompositeVO.getPlanInsDList().get(i)); 
             
             String prodCode = insCompositeVO.getPlanInsDList().get(i).getProdCode();
             String dinsCode = insCompositeVO.getPlanInsDList().get(i).getDinsCode();
             int dinsCount = insCompositeVO.getPlanInsDList().get(i).getDinsCount();
-            System.out.println("dinsCode : " + dinsCode);
             planMapper.selectBomByProd(prodCode);
             
-            System.out.println("bomList : " + planMapper.selectBomByProd(prodCode));
             for(int j = 0; j < planMapper.selectBomByProd(prodCode).size(); j++) {
             	String matCode = planMapper.selectBomByProd(prodCode).get(j).getMatCode();
             	String procCode = planMapper.selectBomByProd(prodCode).get(j).getProcCode();
@@ -172,11 +166,10 @@ public class PlanServiceImpl implements PlanService{
             	planMapper.insertMatUse(vo);
             }
         }
-        
-        
-		
 	}
 
+	
+	
 	@Override
 	public void deleteInsInfo(InsCompositeVO insCompositeVO) {
 		planMapper.updatePlanStateOne(insCompositeVO.getPlanVO().getPlanCode());
