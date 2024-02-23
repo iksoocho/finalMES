@@ -2,13 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
 <style>
+.detailInfo{
+	display: inline-block;
+	font-family: 'Noto Sans KR';
+	font-size: 20px;
+	color: #666;
+	font-weight: 700;
+}
 .btn.btn-outline-primary {
 	float: right;
 	margin-left: 10px;
 }
-input{
+
+input {
 	padding-left: 10px;
 }
+
 .dlvyStatus {
 	margin-left: 755px;
 	width: 100px;
@@ -19,6 +28,7 @@ input{
 	border-right-color: #d8d8d8;
 	border-radius: 3px;
 }
+
 .date {
 	width: 200px;
 	height: 34px;
@@ -28,14 +38,21 @@ input{
 	border-right-color: #d8d8d8;
 	border-radius: 3px;
 }
+
 .orderSearch {
 	font-family: 'Noto Sans KR';
 	font-size: 24px;
 	color: #333;
 	font-weight: 700;
 }
+
 .titleOne {
 	display: inline-block;
+	display: inline-block;
+	font-family: 'Noto Sans KR';
+	font-size: 20px;
+	color: #666;
+	font-weight: 700;
 }
 
 .outSearch {
@@ -62,7 +79,7 @@ input{
 		<div class="containerOne">
 			<h4 class="outSearch">출고 조회</h4>
 			<h5 class="titleOne">목록</h5>
-			<small class="totalDlvyCount" style="margin-right: 20px;"> (총 주문 수: <span th:text="${prodDlvyList.size()}"></span>)
+			<small class="totalOutCount" style="margin-right: 20px;"> (총 출고 수: <span id="filteredOutCount"></span>)
 			</small> <select id="dlvyStatus" class="dlvyStatus">
 				<option value="o" selected>상태</option>
 				<option value="dlvy2">등록완료</option>
@@ -71,10 +88,10 @@ input{
 			</select> <label for="startDate"></label> <input type="date" id="startDate" class="date" name="startDate"> <label for="endDate"> ~ </label> <input
 				type="date" id="endDate" class="date" name="endDate"
 			>
-			<button type="button" class="btn btn-outline-primary" id="excel" onclick="downloadCSV()" >EXCEL</button>
+			<button type="button" class="btn btn-outline-primary" id="excel" onclick="downloadCSV()">EXCEL</button>
 			<button type="button" class="btn btn-secondary" id="searchByDate" style="margin-bottom: 5px; float: right;">검색</button>
 			<div id="grid"></div>
-			<h5 style="float: left;">상세</h5>
+			<h5 style="float: left;" class="detailInfo">상세</h5>
 			<div>
 				<button type="button" id="updateOutDDate" class="btn btn-secondary" style="float: right; margin-bottom: 10px;">저장</button>
 			</div>
@@ -83,6 +100,7 @@ input{
 		<script th:inline="javascript">
 		let prodDlvyList = [[${prodDlvyList}]]
 		let grid = tui.Grid;
+		let filteredOutCount = prodDlvyList.length;
 		grid.applyTheme('clean', {
 			  row: {
 			    hover: {
@@ -180,22 +198,10 @@ input{
 		    	        // 주문 상세 목록 그리드 갱신
 		    	        detailGrid.resetData(prodDetailDlvyList);
 		    	    })
-		    	    .catch(error => console.error('상세 목록을 불러오는 도중 에러 발생:', error));    
-		};
+		    	    .catch(error => console.error('상세 목록을 불러오는 도중 에러 발생:', error));
+		 };
 		 };
 		 });
-		 
-		 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		let prodDetailDlvyList = [[${prodDetailDlvyList}]]
 		let detailGrid = tui.Grid;
@@ -330,46 +336,46 @@ input{
 		     switch (value.value) {
 		         case "대기중":
 		        	 statusText = '대기중';
-		             bgColor = 'yellow'; // 등록완료에 대한 배경색 설정
+		             bgColor = '#ffc107'; // 등록완료에 대한 배경색 설정
 		             break;
 		         case "출고완료":
 		        	 statusText = '출고완료';
-		             bgColor = 'red'; // 계획 진행중에 대한 배경색 설정
+		             bgColor = '#dc3545'; // 계획 진행중에 대한 배경색 설정
 		             break;
 		     }
 
 		     // 배경색을 포함한 HTML 반환
-		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+		     return `<div style="background-color: ${bgColor}; font-weight: bold; color: #f5f6f7; padding: 3px 0px;">${statusText}</div>`;
 		 }
 		
 		// 출고 상태 포매터
 		 function getOutStatus(value, row) {
 		     console.log(value.value); // 값 확인용 로그
 		     let statusText, bgColor;
-
+			
 		     // 주문 상태에 따라 원하는 문자열과 배경색 설정
 		     switch (value.value) {
 		         case "등록완료":
 		        	 statusText = '등록완료';
-		             bgColor = 'green'; // 등록완료에 대한 배경색 설정
+		             bgColor = '#198754'; // 등록완료에 대한 배경색 설정
 		             break;
 		         case "처리중":
 		        	 statusText = '처리중';
-		             bgColor = 'yellow'; // 계획 진행중에 대한 배경색 설정
+		             bgColor = '#ffc107'; // 계획 진행중에 대한 배경색 설정
 		             break;
 		         case "출고 완료":
 		             statusText = "출고 완료";
-		             bgColor = 'red';
+		             bgColor = '#dc3545';
 		             break;
 		         
 		     }
 
 		     // 배경색을 포함한 HTML 반환
-		     return `<div style="background-color: ${bgColor}; ">${statusText}</div>`;
+		     return `<div style="background-color: ${bgColor}; font-weight: bold; color: #f5f6f7; padding: 3px 0px;">${statusText}</div>`;
 		 }
 		 document.querySelector('#updateOutDDate').addEventListener('click', function () {
 			    const checkedRows = detailGrid.getCheckedRows();
-
+				
 			    if (checkedRows.length === 0) {
 			    	Swal.fire({
 	    	            icon: 'warning',
@@ -448,6 +454,7 @@ input{
 		        console.log("outState", outState)
 				if (outState === 'o') {
 					grid.resetData(prodDlvyList);
+					updateFilteredOutCount(prodDlvyList);
 			    } else {
 			        // 그 외에는 선택된 상태에 대한 목록을 가져오기 위해 상태 값을 전송
 			        data = {
@@ -475,6 +482,7 @@ input{
 			    	        });
 			            } else {
 			                grid.resetData(data);
+			                updateFilteredOutCount(data);
 			            }
 				    })
 				    .catch(error => {
@@ -552,6 +560,7 @@ input{
 	    	        });
 	            } else {
 	                grid.resetData(data);
+	                updateFilteredOutCount(data);
 	            }
 		    })
 		    .catch(error => {
@@ -611,6 +620,23 @@ input{
 	            document.body.appendChild(link);
 	            link.click();
 	        }
+			// 필터링된 주문 수를 업데이트하는 함수
+		    function updateFilteredOutCount(filteredData) {
+		        filteredOutCount = filteredData.length;
+		        console.log('주문수',filteredOutCount);
+		        document.getElementById('filteredOutCount').innerText = filteredOutCount;
+		    }
+
+		    // 필터링된 데이터가 변경될 때마다 호출되는 이벤트 리스너 등록
+		    grid.on('afterFilter', function (event) {
+		        const filteredData = grid.getFilteredItems();
+		        updateFilteredOutCount(filteredData);
+		    });
+		    
+		    document.addEventListener('DOMContentLoaded', function () {
+		        // 페이지가 로드될 때 초기 필터링된 주문 수를 설정합니다.
+		        document.getElementById('filteredOutCount').innerText = filteredOutCount;
+		    });
 		
 		</script>
 	</section>
