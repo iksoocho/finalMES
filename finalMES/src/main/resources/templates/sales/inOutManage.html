@@ -4,34 +4,39 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
-.detailInfo{
+.detailInfo {
 	display: inline-block;
 	font-family: 'Noto Sans KR';
 	font-size: 20px;
 	color: #666;
 	font-weight: 700;
 }
-.outInfo{
+
+.outInfo {
 	display: inline-block;
 	font-family: 'Noto Sans KR';
 	font-size: 20px;
 	color: #666;
 	font-weight: 700;
 }
-.outManage{
+
+.outManage {
 	font-family: 'Noto Sans KR';
 	font-size: 24px;
 	color: #333;
 	font-weight: 700;
 }
-.deleteButton{
+
+.deleteButton {
 	margin: 0px;
 	margin-right: 9px;
 }
+
 .tui-grid-cell.tui-grid-cell-has-input.tui-grid-cell-editable.ttlPrice {
-    background-color: #FDC0CE;
-	border: solid 0.3px white;    
+	background-color: #FDC0CE;
+	border: solid 0.3px white;
 }
+
 .mainContainerOne {
 	margin: 50px;
 }
@@ -204,6 +209,10 @@ button {
 .subTitle {
 	display: inline-block;
 }
+
+[data-column-name="outCount"] {
+	cursor: pointer;
+}
 </style>
 <meta charset="UTF-8">
 <title>출고관리</title>
@@ -234,7 +243,9 @@ button {
 					</tr>
 					<tr>
 						<th class="red">담당자</th>
-						<td class="serch"><input type="text" id="selectedUserCode" placeholder="사원번호" readonly> <input type="text" id="selectedUserName" name="outManager" placeholder="담당자이름" readonly>
+						<td class="serch"><input type="text" id="selectedUserCode" placeholder="사원번호" readonly> <input type="text" id="selectedUserName"
+							name="outManager" placeholder="담당자이름" readonly
+						>
 
 							<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdropEmployee">
 								<p>검색</p>
@@ -246,7 +257,9 @@ button {
 					<tr class="space"></tr>
 					<tr>
 						<th class="red">거래처</th>
-						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" placeholder="거래처코드" readonly> <input type="text" id="selectedBusinessName" placeholder="거래처이름" readonly>
+						<td class="serch"><input type="text" id="selectedBusinessCode" name="businessCode" placeholder="거래처코드" readonly> <input type="text"
+							id="selectedBusinessName" placeholder="거래처이름" readonly
+						>
 							<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdropBusiness">
 								<p>검색</p>
 							</button></td>
@@ -261,18 +274,21 @@ button {
 					</tr>
 				</table>
 			</div>
-		<div class=containerOne>
-			<h5 class="detailInfo">상세정보</h5>
-			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" id="addGrid">재고현황 불러오기</button>
-			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd" onclick="addToMainGridOrd()">주문서 불러오기</button>
-		</div>
-		<div id="grid" class="gridContainerOne"></div>
+			<div class=containerOne>
+				<h5 class="detailInfo">상세정보</h5>
+				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdropInventory" id="addGrid">재고현황 불러오기</button>
+				<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropOrd" onclick="addToMainGridOrd()">주문서
+					불러오기</button>
+			</div>
+			<div id="grid" class="gridContainerOne"></div>
 
-		<div id="outGrid" class="containerTwo"></div>
+			<div id="outGrid" class="containerTwo"></div>
 		</div>
 
 		<!-- 거래처 모달 -->
-		<div class="modal fade" id="staticBackdropEmployee" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade" id="staticBackdropEmployee" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #0d6efd;">
@@ -290,8 +306,9 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="employee : ${employeeList}" th:data-userCode="${employee.userCode}" th:data-userName="${employee.userName}" th:data-userPhone="${employee.userPhone}"
-									data-bs-dismiss="modal" onclick="updateInputFieldsTwo(this)">
+								<tr th:each="employee : ${employeeList}" th:data-userCode="${employee.userCode}" th:data-userName="${employee.userName}"
+									th:data-userPhone="${employee.userPhone}" data-bs-dismiss="modal" onclick="updateInputFieldsTwo(this)"
+								>
 									<td th:text="${employee.userCode}"></td>
 									<td th:text="${employee.userName}"></td>
 								</tr>
@@ -307,7 +324,9 @@ button {
 		</div>
 
 		<!-- 거래처 모달 -->
-		<div class="modal fade" id="staticBackdropBusiness" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade" id="staticBackdropBusiness" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #0d6efd;">
@@ -325,8 +344,10 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}" th:data-businessManager="${business.businessManager}"
-									th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal" onclick="updateInputFields(this)">
+								<tr th:each="business : ${businessList}" th:data-businessCode="${business.businessCode}" th:data-businessName="${business.businessName}"
+									th:data-businessManager="${business.businessManager}" th:data-businessManagerPhone="${business.businessManagerPhone}" data-bs-dismiss="modal"
+									onclick="updateInputFields(this)"
+								>
 									<td th:text="${business.businessCode}"></td>
 									<td th:text="${business.businessName}"></td>
 								</tr>
@@ -342,7 +363,9 @@ button {
 		</div>
 
 		<!-- 주문서 모달 -->
-		<div class="modal fade modal-xl" id="staticBackdropOrd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade modal-xl" id="staticBackdropOrd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #ffc107;">
@@ -364,9 +387,11 @@ button {
 								</tr>
 							</thead>
 							<tbody style="text-align: center;">
-								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}" th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}"
-									th:data-businessManager="${ord.businessManager}" th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
-									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'">
+								<tr th:each="ord : ${orderList}" th:data-ordCode="${ord.ordCode}" th:data-ordState="${ord.ordState}"
+									th:data-businessName="${ord.businessName}" th:data-businessCode="${ord.businessCode}" th:data-businessManager="${ord.businessManager}"
+									th:data-businessManagerPhone="${ord.businessManagerPhone}" th:data-ordDate="${ord.ordDate}" th:data-ordManager="${ord.ordManager}"
+									th:data-totalTtlPrice="${ord.totalTtlPrice}" th:data-ordNote="${ord.ordNote}" th:onclick="'displaySelectedProduct(this)'"
+								>
 									<td th:text="${ord.ordCode}"></td>
 									<td th:text="${ord.ordStateNm}"></td>
 									<td th:text="${ord.businessName}"></td>
@@ -406,7 +431,9 @@ button {
 		</div>
 
 		<!-- 재고현황 모달 -->
-		<div class="modal fade modal-xl" id="staticBackdropInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade modal-xl" id="staticBackdropInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #198754;">
