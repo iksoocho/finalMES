@@ -6,24 +6,27 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
-.subTitle{
+.subTitle {
 	font-family: 'Noto Sans KR';
 	font-size: 20px;
 	color: #666;
 	font-weight: 700;
 }
-.orderInfo{
+
+.orderInfo {
 	font-family: 'Noto Sans KR';
 	font-size: 20px;
 	color: #666;
 	font-weight: 700;
 }
-.orderManage{
+
+.orderManage {
 	font-family: 'Noto Sans KR';
 	font-size: 24px;
 	color: #333;
 	font-weight: 700;
 }
+
 input {
 	padding-left: 10px;
 }
@@ -189,7 +192,7 @@ button {
 <body>
 	<section layout:fragment="content">
 		<div class="containerOne">
-			<h4 class="orderManage">주문 관리</h4>
+			<h4 class="orderManage">주문 등록</h4>
 			<div class="containerTwo">
 				<h5 class="orderInfo">주문서정보</h5>
 				<button class="btn btn-secondary" onclick="resetForm()">초기화</button>
@@ -253,7 +256,7 @@ button {
 					<thead>
 						<tr>
 							<th rowspan="2" style="width: 50px;"></th>
-							<th rowspan="2" style="width: 50px;"><input type="checkbox"></th>
+							<th rowspan="2" style="width: 50px;"><input type="checkbox" id="allCheck"></th>
 							<th colspan="2" style="width: 300px;">품목정보</th>
 							<th rowspan="2" style="width: 400px;">납기일자</th>
 							<th colspan="3" style="width: 300px;">금액정보</th>
@@ -896,6 +899,7 @@ button {
 	    var rowsToDelete = [];
 
 	    // Iterate over the rows to find the checked ones
+	    let cnt = 1;
 	    for (var i = 0; i < rows.length; i++) {
 	        var checkbox = rows[i].cells[1].querySelector('input[type="checkbox"]');
 	        
@@ -903,18 +907,40 @@ button {
 	        if (checkbox && checkbox.checked) {
 	            // Add the row to the array for deletion
 	            rowsToDelete.push(rows[i]);
-	        }
+	        }else {
+	        	if(rows[i].cells[0].innerText.trim() != "")
+		        	rows[i].cells[0].innerHTML = cnt++;
+		        }
 	    }
-
+	    $("#allCheck").prop("checked", false);
 	    // Iterate over the rows to delete
 	    rowsToDelete.forEach(function(row) {
 	        tbody.removeChild(row);
+	        rowCount--;
+	        const emptyTr =  `<tr class="initially-hidden">
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td class="unitPrice">&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>`
+	        tbody.insertAdjacentHTML('beforeend', emptyTr);
+	       
 	    });
 
 	    // Recalculate total sum and count after deleting rows
 	    updateTotalSum();
 	    updateTotalCount();
 	}
+	document.querySelector("#allCheck").addEventListener("click", function(){
+		const checkYn = event.target.checked;
+		$('#productTableBody input[type="checkbox"]').prop("checked",checkYn);
+		
+	})
 </script>
 	</section>
 </html>
