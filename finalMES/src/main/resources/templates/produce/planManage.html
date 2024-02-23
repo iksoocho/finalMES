@@ -205,6 +205,15 @@
 			let plan = [[${list}]];
 			let planGrid, planDGrid, matUseGrid;
 			let pState;
+			
+			let Grid = tui.Grid;
+			Grid.applyTheme('clean', {
+    			  row: {
+    			    hover: {
+    			      background: '#d4e9f2'
+    			    }
+    			  }
+    			});
 
 			function getOutStatus(value, row) {
 				console.log(value.value); // 값 확인용 로그
@@ -416,7 +425,7 @@
 							fetch('/planDetail?planCode=' + planCode)
 								.then(response => response.json())
 								.then(data => {
-									console.log(data);
+									
 									// 상세 그리드에 데이터 표시
 									// grid는 상세 계획을 표시하는 Toast Grid의 인스턴스를 나타냅니다.
 									planDGrid.resetData(data);
@@ -609,7 +618,7 @@
 						end: '', // 종료 일자, 사용자 입력에 따라 설정
 						prodCount: detail.prodCount, // 현재 재고
 						ordCount: detail.ordCount, // 주문 수량
-						dplanCount: detail.ordCount*1.1, // 계획량, 사용자 입력에 따라 설정
+						dplanCount: Math.round(detail.ordCount*1.1), // 계획량, 사용자 입력에 따라 설정
 						dlvyDate: detail.dlvyDate, // 납기 일자
 						_attributes: {
 
@@ -742,9 +751,7 @@
 				planGrid.finishEditing();
 				planDGrid.finishEditing();
 				
-				var hiddenElement = document.getElementById('hiddenFocusElement');
-			    hiddenElement.focus();
-			    hiddenElement.blur();
+				
 			    setTimeout(function() {
 				const newPlan = document.querySelectorAll('.plan');
 				if (newPlan.length === 0) {
@@ -907,8 +914,8 @@
 
 				
 				
-			    
-				console.log(data);
+			   
+				
 				// AJAX 요청으로 서버에 데이터 전송
 				fetch('/planInsert', {
 					method: 'POST',
@@ -938,13 +945,15 @@
 					});
 
 
-
+			    }, 100);
 			});
 
 
 			//plan detail update
 			document.querySelector('#planDUpdate').addEventListener('click', function () {
-				
+				planGrid.finishEditing();
+				planDGrid.finishEditing();
+				setTimeout(function() {
 				let planDate = new Date(document.querySelector('td[data-column-name="planDate"] div').innerHTML);
 				let startDate;
 				let startDate2;
@@ -1009,7 +1018,7 @@
 						return;
 					}
 					
-					
+					obj.dplanCode = target.find('td:eq(0)').text();
 
 					obj.prodCode = target.find('td:eq(1)').text();
 					console.log("prodCode : " + obj.prodCode);
@@ -1032,13 +1041,18 @@
 					}
 					console.log("st1, st2, end1, end2 : ", startDate, startDate2, endDate1, endDate2);
 					
-					ordcount = parseInt(target.find('td:eq(5)').text())*1.1;
+					
 					
 					obj.dplanCount = target.find('td:eq(6)').text();
-					if(ordcount > parseInt(target.find('td:eq(6)').text())){
-						plancount = parseInt(target.find('td:eq(6)').text());
+					console.log("dplanCount : ", obj.dplanCount)
+					if(Math.round(parseInt(target.find('td:eq(5)').text())*1.1) > parseInt(target.find('td:eq(6)').text())){
+						Swal.fire({
+				                icon: 'error',
+				                text: `최소 계획량은 ${Math.round(parseInt(target.find('td:eq(5)').text())*1.1)}개 입니다.`
+				            })
+						return;
 					}
-
+					
 					planDetailData.push(obj);
 
 				}
@@ -1067,16 +1081,12 @@
 					return;
 				}
 				
-				if(ordcount > plancount){
-					Swal.fire({
-			                icon: 'error',
-			                text: `최소 계획량은 ${ordcount}개 입니다.`
-			            })
-					return;
-				}
-			}, 100);
+				
+			
 				data.planDVOList = planDetailData;
-				console.log(data);
+				
+				 
+				
 				// AJAX 요청으로 서버에 데이터 전송
 				fetch('/planDUpdate', {
 					method: 'put',
@@ -1104,6 +1114,7 @@
 					.catch(error => {
 						console.error('Error:', error);
 					});
+				}, 100);
 
 			});
 			

@@ -34,6 +34,16 @@
 		<div id="grid"></div>
 
 		<script th:inline="javascript">
+		
+			let Grid = tui.Grid;
+			Grid.applyTheme('clean', {
+				  row: {
+				    hover: {
+				      background: '#d4e9f2'
+				    }
+				  }
+				});
+			
 			function addRow() {
 				 // 이미 'isNew'가 true인 행이 있는지 확인
 			    const existingNewRows = grid.findRows(row => row.isNew);
@@ -126,7 +136,7 @@
 							.then(data => {
 								console.log('Success:', data);
 								Swal.fire({
-								    icon: 'error',
+								    icon: 'success',
 								    text: data
 								}).then(() => {
 								    // 사용자가 Swal 팝업을 닫으면 실행됩니다.
@@ -376,6 +386,10 @@
 			}
 
 			function saveNewRows() {
+				grid.finishEditing();
+				
+				
+			    setTimeout(function() {
 				// 새로 추가된 행만 필터링하여 가져옵니다.
 				const newData = grid.getData().filter(row => row.isNew);
 
@@ -426,7 +440,7 @@
 				if(newData[0].userAuthority == null){
 					Swal.fire({
 		                icon: 'error',
-		                text: '직급을 입력해 주세요.'
+		                text: '직급을 선택해 주세요.'
 		            })
 					return;
 				}
@@ -479,6 +493,7 @@
 					.catch(error => {
 						console.error('Error:', error);
 					});
+			    }, 100);
 			}
 
 			// "저장" 버튼에 이벤트 리스너를 등록합니다.

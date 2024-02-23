@@ -463,8 +463,16 @@ document.getElementById('insertBtn').addEventListener("click", function() {
 
             
         // 그리드 페이징
-    
-        const grid = new tui.Grid({
+    		document.addEventListener('DOMContentLoaded', function () {
+    		let grid = tui.Grid;
+        	grid.applyTheme('clean', {
+      			  row: {
+      			    hover: {
+      			      background: '#d4e9f2'
+      			    }
+      			  }
+      			});
+            grid = new tui.Grid({
             el: document.getElementById('grid'),
             data: [],
             scrollX: false,
@@ -579,7 +587,7 @@ document.getElementById('insertBtn').addEventListener("click", function() {
                 handleFacNameClick(event);
             }
         });
-      
+        });
         
         
        function displaySelectedFacNotIns(element) {

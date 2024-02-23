@@ -52,6 +52,7 @@
 		pc.proc_code
 		where bom.prod_code =
 		#{prodCode}
+		ORDER BY bom.bom_code
 	</select>
 
 	<delete id="bomDelete" parameterType="BomVO">

@@ -51,13 +51,14 @@ input[type="text"]:focus {
 	background-color: #FDC0CE;
 	/* 예시로 빨간색을 지정했습니다. */
 }
-.tui-grid-row-odd .matOrDate,
-.tui-grid-row-even .matOrDate {
+
+.tui-grid-row-odd .matOrDueDate,
+.tui-grid-row-even .matOrDueDate {
 	background-color: #FDC0CE;
 	/* 예시로 빨간색을 지정했습니다. */
 }
-.tui-grid-row-odd .matOrDueDate,
-.tui-grid-row-even .matOrDueDate {
+.tui-grid-row-odd .state,
+.tui-grid-row-even .state {
 	background-color: #FDC0CE;
 	/* 예시로 빨간색을 지정했습니다. */
 }
@@ -245,11 +246,18 @@ input[type="text"]:focus {
                          	            },
                          	           {
                          	                header: '상태', 
+                         	                
+                         	                className: 'state',
+                         	                align: 'center',
                          	               
-                         	                formatter: function({ row }) {
-                         	                    // 여기서 matStandard와 matSafeStock 비교
-                         	                    return row.matCount2 >= row.matSafeStock ? '' : '재고 부족';
-                         	                }
+                         	               formatter: function({ row }) {
+                         	            	    // 여기서 matCount2와 matSafeStock를 비교하여 재고 부족 여부를 판단
+                         	            	    if (row.matCount2 < row.matSafeStock) {
+                         	            	        return '<span style="color: red;">재고 부족</span>';
+                         	            	    } else {
+                         	            	        return '';
+                         	            	    }
+                         	            	}
                          	               
                          	            },
                          	           
@@ -385,7 +393,6 @@ input[type="text"]:focus {
                          				case null:
                          					statusText = '알수없음';
                          					bgColor = '#6c757d'; // 계획 진행중에 대한 배경색 설정
-                         					break;
 
                          			}
                          			return `<div style="background-color: ${bgColor}; font-weight: bold; padding: 3px 0px; color: #f5f6f7">${statusText}</div>`;
@@ -466,6 +473,10 @@ input[type="text"]:focus {
 
                     // =============== insert ===============
                     document.querySelector('#orderInsert').addEventListener('click', function() {
+                    ordGrid.finishEditing();
+                    
+                    
+                    setTimeout(function() {
                     let name = [[${session.userName}]]
                     const newData = ordGrid.getModifiedRows().createdRows;
                     console.log("data", newData);
@@ -581,6 +592,7 @@ input[type="text"]:focus {
 					.catch(error => {
 					    console.error('Error:', error);
 					});
+                    }, 100);
                     });
 
         		//plan detail update
