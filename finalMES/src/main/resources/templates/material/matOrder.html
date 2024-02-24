@@ -413,14 +413,21 @@ input[type="text"]:focus {
                          	            { name: 'matOrCount', header: '발주량' ,
                          	            	formatter: formatTotalTtlPrice,
                          	            	className:'matOrCount' , editor: 'text'},
-                         	            { name: 'matOrDate', header: '발주일',  className:'matOrDate' ,formatter: formatDate,
-                         	            	editor: {
-                								type: 'datePicker',
-                								options: {
-                									format: 'yyyy-MM-dd',
-                									language: 'ko'
-                								}
-                         	            }},
+                         	            { 
+                         	            		name: 'matOrDate', 
+                         	            		header: '발주일', 
+                         	            		formatter: formatDate,
+                         	            		formatter: function ({value}) {
+                    								if (value) {
+                    									var date = new Date(value);
+                    									var year = date.getFullYear();
+                    									var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    									var day = date.getDate().toString().padStart(2, '0');
+                    									return `${year}-${month}-${day}`;
+                    								}
+                    								return '';
+                    							}
+                         	            	},
                          	            { name: 'matOrDueDate', header: '납기요청일', className:'matOrDueDate', formatter: formatDate,
                          	           	editor: {
             								type: 'datePicker',
@@ -510,13 +517,13 @@ input[type="text"]:focus {
 	                  }
 	                   // 다른 필드에 대한 유효성 검사도 여기에 추가할 수 있습니다.  
 					  
-		              if (newData[0].matOrDate == null) {
-		                  Swal.fire({
-					            icon: 'error',
-					            text: '유효하지 않은 발주일입니다 다시 지정해 주세요'
-					      });
-		                  return;
-		              }
+// 		              if (newData[0].matOrDate == null) {
+// 		                  Swal.fire({
+// 					            icon: 'error',
+// 					            text: '유효하지 않은 발주일입니다 다시 지정해 주세요'
+// 					      });
+// 		                  return;
+// 		              }
 		              
 		              if(newData[0].matOrDueDate == null){
 		            	  Swal.fire({
