@@ -15,20 +15,17 @@
     margin-bottom: 20px; /* BOM관리 아래에 여백 추가 */
 }
 
-.tui-grid-row-odd .plan {
-   background-color: #e0f7fa;
-   /* 예시로 빨간색을 지정했습니다. */
-}
-
-.tui-grid-row-odd .detail {
-   background-color: #e0f7fa;
-   /* 예시로 빨간색을 지정했습니다. */
-}
-
-.tui-grid-row-even .detail {
-   background-color: #e0f7fa;
-   /* 예시로 빨간색을 지정했습니다. */
-}
+.tui-grid-row-odd .new-row.matCode,
+.tui-grid-row-odd .new-row.procCode,
+.tui-grid-row-odd .new-row.bomMatCount {
+	background-color: #FDC0CE;
+	}
+   
+.tui-grid-row-even .new-row.matCode,
+.tui-grid-row-even .new-row.procCode,
+.tui-grid-row-even .new-row.bomMatCount {
+	background-color: #FDC0CE;
+	}
 .modal-content {
     border-radius: 10px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -260,7 +257,7 @@ cursor: pointer;
                   {
                      header: '제품코드',
                      name: 'prodCode',
-                     className: 'prod-code',
+                     className: 'prodCode',
                      align: "center",
                   },
                   {
@@ -455,6 +452,7 @@ cursor: pointer;
                   {
                      header: '제품 코드',
                      name: 'prodCode',
+                     className: 'prodCode',
                      align: 'center'
                   },
                   {
@@ -465,6 +463,7 @@ cursor: pointer;
                   {
                      header: '자재코드',
                      name: 'matCode',
+                     className: 'matCode',
                      align: "center",
                   },
                   {
@@ -475,6 +474,7 @@ cursor: pointer;
                   {
                      header: '공정코드',
                      name: 'procCode',
+                     className: 'procCode',
                      align: "center",
                   },
                   {
@@ -485,6 +485,7 @@ cursor: pointer;
                   {
                      header: '수량',
                      name: 'bomMatCount',
+                     className: 'bomMatCount',
                      align: "center",
                      editor: "text"
                   },
@@ -625,9 +626,32 @@ cursor: pointer;
                   obj.bomCode = bomCode;
                   obj.bomNum = target.find('td:eq(1)').text();
                   obj.prodCode = target.find('td:eq(2)').text();
+                  
                   obj.matCode = target.find('td:eq(4)').text();
+                  if(obj.matCode == ''){
+					  Swal.fire({
+			                icon: 'error',
+			                text: '자재를 선택해주세요.'
+			            });
+			            return;
+				  }
                   obj.procCode = target.find('td:eq(6)').text();
+                  if(obj.procCode == ''){
+					  Swal.fire({
+			                icon: 'error',
+			                text: '공정을 선택해주세요.'
+			            });
+			            return;
+				  }
                   obj.bomMatCount = target.find('td:eq(8)').text();
+                  
+                  if(obj.bomMatCount == ''){
+					  Swal.fire({
+			                icon: 'error',
+			                text: '수량을 입력해주세요.'
+			            });
+			            return;
+				  }
                   
 
                   planDetailData.push(obj);
